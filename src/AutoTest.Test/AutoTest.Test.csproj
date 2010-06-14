@@ -81,7 +81,7 @@
     <Compile Include="..\..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Core\Building\FileChangeConsumerTest.cs" />
+    <Compile Include="Core\Messaging\MessageConsumers\FileChangeConsumerTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeCacheTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeFileSystemServiceTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeRecord.cs" />
