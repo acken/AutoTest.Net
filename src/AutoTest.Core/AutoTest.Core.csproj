@@ -86,7 +86,9 @@
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
     <Compile Include="FileSystem\FileSystemService.cs" />
     <Compile Include="FileSystem\IFileSystemService.cs" />
+    <Compile Include="FileSystem\IWatchValidator.cs" />
     <Compile Include="FileSystem\VBProjectLocator.cs" />
+    <Compile Include="FileSystem\WatchValidator.cs" />
     <Compile Include="Messaging\FileChangeMessage.cs" />
     <Compile Include="FileSystem\IDirectoryWatcher.cs" />
     <Compile Include="BuildRunners\BuildRunResults.cs" />

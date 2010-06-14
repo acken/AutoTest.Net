@@ -35,7 +35,8 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
                 .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<BuildLocator>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<CommandLineTestRunner>())
-                .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton);
+                .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
+                .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>());
             RegisterAssembly(Assembly.GetExecutingAssembly());
         }
 

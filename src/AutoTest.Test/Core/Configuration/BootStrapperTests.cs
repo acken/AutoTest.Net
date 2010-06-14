@@ -113,5 +113,12 @@ namespace AutoTest.Test.Core.Configuration
             var service = _locator.Locate<IFileSystemService>();
             service.ShouldBeOfType<IFileSystemService>();
         }
+
+        [Test]
+        public void Should_register_watch_validator()
+        {
+            var validator = _locator.Locate<IWatchValidator>();
+            validator.ShouldBeOfType<IWatchValidator>();
+        }
     }
 }

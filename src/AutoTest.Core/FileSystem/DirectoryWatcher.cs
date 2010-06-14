@@ -14,10 +14,12 @@ using System.Collections.Generic;
         private bool _timerIsRunning = false;
         private List<FileInfo> _buffer = new List<FileInfo>();
         private object _padLock = new object();
+        private IWatchValidator _validator;
 
-        public DirectoryWatcher(IMessageBus bus)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator)
         {
             _bus = bus;
+            _validator = validator;
             _batchTimer = new Timer(30);
             _batchTimer.Enabled = true;
             _batchTimer.Elapsed += _batchTimer_Elapsed;
@@ -57,6 +59,9 @@ using System.Collections.Generic;
 
         private void addToBuffer(FileInfo file)
         {
+            if (!_validator.ShouldPublish(file.FullName))
+                return;
+
             lock (_padLock)
             {
                 if (_buffer.FindIndex(0, f => f.FullName.Equals(file.FullName)) < 0)
