@@ -6,6 +6,7 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.TestRunners;
 using System;
 using AutoTest.Core.FileSystem;
+using AutoTest.Core.FileSystem.ProjectLocators;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -93,11 +94,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_bind_consumer_of_file_change_message()
         {
-            int i = 0;
-            var filChangeHandlers = _locator.LocateAll<IConsumerOf<FileChangeMessage>>();
-            foreach (var change in filChangeHandlers)
-                i++;
-            i.ShouldEqual(2);
+            var filChangeHandler = _locator.Locate<IConsumerOf<FileChangeMessage>>();
+            filChangeHandler.ShouldBeOfType<IConsumerOf<FileChangeMessage>>();
         }
 
         [Test]
@@ -119,6 +117,13 @@ namespace AutoTest.Test.Core.Configuration
         {
             var validator = _locator.Locate<IWatchValidator>();
             validator.ShouldBeOfType<IWatchValidator>();
+        }
+
+        [Test]
+        public void Should_register_project_locators()
+        {
+            var locators = _locator.LocateAll<ILocateProjects>();
+            locators.Length.ShouldEqual(2);
         }
     }
 }

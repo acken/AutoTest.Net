@@ -1,46 +1,23 @@
 using System;
+using System.Collections.Generic;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.Messaging
 {
-    using System.IO;
-
     public class FileChangeMessage : IMessage
     {
-        public FileChangeMessage(string fullFilePath, string name, string extension)
+        private List<ChangedFile> _files = new List<ChangedFile>();
+
+        public ChangedFile[] Files { get { return _files.ToArray(); } }
+
+        public void AddFile(ChangedFile file)
         {
-            _extension = extension;
-            _fullName = fullFilePath;
-            _name = name;
+            _files.Add(file);
         }
 
-        public FileChangeMessage(FileSystemInfo info)
+        public void AddFile(ChangedFile[] files)
         {
-            if (info == null)
-                throw new NullReferenceException("FileSystemInfo parameter is null");
-            _extension = info.Extension;
-            _fullName = info.FullName;
-            _name = info.Name;
-        }
-
-        readonly string _extension;
-
-        public string Extension
-        {
-            get { return _extension; }
-        }
-
-        readonly string _fullName;
-
-        public string FullName
-        {
-            get { return _fullName; }
-        }
-
-        readonly string _name;
-
-        public string Name
-        {
-            get { return _name; }
+            _files.AddRange(files);
         }
     }
 }

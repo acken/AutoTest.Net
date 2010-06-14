@@ -81,7 +81,7 @@
     <Compile Include="..\..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Core\Building\CSharpProjectLocatorTests.cs" />
+    <Compile Include="Core\Building\FileChangeConsumerTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeCacheTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeFileSystemServiceTest.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\FakeRecord.cs" />
@@ -95,11 +95,15 @@
     <Compile Include="Core\Caching\CacheTest.cs" />
     <Compile Include="Core\Caching\Projects\ProjectPreparerTest.cs" />
     <Compile Include="Core\Configuration\BootStrapperFullTest.cs" />
+    <Compile Include="Core\FileSystem\ProjectLocators\CSharpLocatorTest.cs" />
+    <Compile Include="Core\FileSystem\Fakes\FakeProjectFileCrawler.cs" />
+    <Compile Include="Core\FileSystem\ProjectLocators\VisualBasicLocatorTest.cs" />
     <Compile Include="Core\FileSystem\WatchValidatorTest.cs" />
+    <Compile Include="Core\Messaging\Fakes\FakeProjectLocator.cs" />
     <Compile Include="Core\TestRunners\TestResultTests.cs" />
     <Compile Include="Core\Configuration\BootStrapperTests.cs" />
     <Compile Include="Core\Building\IBuildEngine.cs" />
-    <Compile Include="Core\FileSystem\DirectoryCrawlerTests.cs" />
+    <Compile Include="Core\FileSystem\ProjectFileCrawlerTest.cs" />
     <Compile Include="Core\FileSystem\DirectoryWatcherTests.cs" />
     <Compile Include="Core\Messaging\FileChangeMessageTests.cs" />
     <Compile Include="Core\Messaging\MessageTestBase.cs" />

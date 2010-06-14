@@ -27,21 +27,24 @@ namespace AutoTest.Core.FileSystem
 
         public void Consume(ProjectChangeMessage message)
         {
-            var project = _cache.Get<Project>(message.FullName);
-            // Prioritized tests that test me
-            // Other prioritized tests
-            // Projects that tests me
-            // Other test projects
-            if (buildProject(project.Key))
+            foreach (var file in message.Files)
             {
-                if (project.Value.ContainsTests)
-                    runTests(project.Key);
-                foreach (var reference in project.Value.ReferencedBy)
+                var project = _cache.Get<Project>(file.FullName);
+                // Prioritized tests that test me
+                // Other prioritized tests
+                // Projects that tests me
+                // Other test projects
+                if (buildProject(project.Key))
                 {
-                    buildProject(reference);
-                    var referencedProject = _cache.Get<Project>(reference);
-                    if (referencedProject.Value.ContainsTests)
-                        runTests(referencedProject.Key);
+                    if (project.Value.ContainsTests)
+                        runTests(project.Key);
+                    foreach (var reference in project.Value.ReferencedBy)
+                    {
+                        buildProject(reference);
+                        var referencedProject = _cache.Get<Project>(reference);
+                        if (referencedProject.Value.ContainsTests)
+                            runTests(referencedProject.Key);
+                    }
                 }
             }
         }

@@ -1,18 +1,17 @@
 using System.Timers;
+using System.Collections.Generic;
+using AutoTest.Core.Messaging;
+using System.IO;
 
 namespace AutoTest.Core.FileSystem
 {
-    using System.IO;
-    using Messaging;
-using System.Collections.Generic;
-
     public class DirectoryWatcher : IDirectoryWatcher
     {
         private readonly IMessageBus _bus;
         private readonly FileSystemWatcher _watcher;
         private readonly System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
-        private List<FileInfo> _buffer = new List<FileInfo>();
+        private List<ChangedFile> _buffer = new List<ChangedFile>();
         private object _padLock = new object();
         private IWatchValidator _validator;
 
@@ -42,22 +41,26 @@ using System.Collections.Generic;
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
         {
-            addToBuffer(new FileInfo(e.FullPath));
+            addToBuffer(new ChangedFile(e.FullPath));
         }
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             lock (_padLock)
             {
-                foreach (var file in _buffer)
-                    _bus.Publish(new FileChangeMessage(file));
+                if (_buffer.Count > 0)
+                {
+                    var fileChange = new FileChangeMessage();
+                    fileChange.AddFile(_buffer.ToArray());
+                    _bus.Publish(fileChange);
+                }
                 _buffer.Clear();
                 _batchTimer.Stop();
                 _timerIsRunning = false;
             }
         }
 
-        private void addToBuffer(FileInfo file)
+        private void addToBuffer(ChangedFile file)
         {
             if (!_validator.ShouldPublish(file.FullName))
                 return;

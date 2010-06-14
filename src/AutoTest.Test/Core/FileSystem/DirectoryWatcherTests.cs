@@ -1,12 +1,10 @@
-﻿using System.IO;
-using System.Threading;
-
+﻿using System.Threading;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Messaging;
-
 using Rhino.Mocks;
 using NUnit.Framework;
 using System;
+using System.IO;
 
 namespace AutoTest.Test.Core
 {
@@ -48,9 +46,10 @@ namespace AutoTest.Test.Core
             _messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(
                          Arg<FileChangeMessage>.Matches(
-                             f => f.Extension.Equals(Path.GetExtension(_file)) &&
-                                  f.FullName.Equals(_file) &&
-                                  f.Name.Equals(Path.GetFileName(_file)))),
+                             f => f.Files.Length >  0 &&
+                                  f.Files[0].Extension.Equals(Path.GetExtension(_file)) &&
+                                  f.Files[0].FullName.Equals(_file) &&
+                                  f.Files[0].Name.Equals(Path.GetFileName(_file)))),
                 m => m.Repeat.Once());
         }
 
@@ -59,7 +58,7 @@ namespace AutoTest.Test.Core
         {
             _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(false);
             File.Create(_file).Dispose();
-            Thread.Sleep(400);
+            Thread.Sleep(50);
             _messageBus.AssertWasNotCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
         }
     }

@@ -82,12 +82,15 @@
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />
     <Compile Include="FileSystem\BuildLocator.cs" />
-    <Compile Include="FileSystem\CSharpProjectLocator.cs" />
+    <Compile Include="FileSystem\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
+    <Compile Include="FileSystem\ChangedFile.cs" />
     <Compile Include="FileSystem\FileSystemService.cs" />
     <Compile Include="FileSystem\IFileSystemService.cs" />
     <Compile Include="FileSystem\IWatchValidator.cs" />
-    <Compile Include="FileSystem\VBProjectLocator.cs" />
+    <Compile Include="FileSystem\ProjectLocators\CSharpLocator.cs" />
+    <Compile Include="FileSystem\ProjectLocators\ILocateProjects.cs" />
+    <Compile Include="FileSystem\ProjectLocators\VisualBasicLocator.cs" />
     <Compile Include="FileSystem\WatchValidator.cs" />
     <Compile Include="Messaging\FileChangeMessage.cs" />
     <Compile Include="FileSystem\IDirectoryWatcher.cs" />
@@ -96,7 +99,7 @@
     <Compile Include="BuildRunners\MSBuildRunner.cs" />
     <Compile Include="Configuration\BootStrapper.cs" />
     <Compile Include="Configuration\Config.cs" />
-    <Compile Include="FileSystem\DirectoryCrawler.cs" />
+    <Compile Include="FileSystem\ProjectFileCrawler.cs" />
     <Compile Include="ExtensionMethods\LinqExtensionMethods.cs" />
     <Compile Include="Messaging\IConsumerOf.cs" />
     <Compile Include="Messaging\IMessage.cs" />

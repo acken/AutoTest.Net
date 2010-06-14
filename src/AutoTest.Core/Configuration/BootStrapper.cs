@@ -10,6 +10,7 @@ using AutoTest.Core.FileSystem;
 using AutoTest.Core.TestRunners;
 using Castle.Windsor;
 using AutoTest.Core.Caching.Crawlers;
+using AutoTest.Core.FileSystem.ProjectLocators;
 
 namespace AutoTest.Core.Configuration
 {
@@ -36,7 +37,9 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<BuildLocator>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<CommandLineTestRunner>())
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
-                .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>());
+                .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
+                .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
+                .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>());
             RegisterAssembly(Assembly.GetExecutingAssembly());
         }
 
