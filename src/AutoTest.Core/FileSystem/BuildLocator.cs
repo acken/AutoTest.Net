@@ -58,7 +58,7 @@ namespace AutoTest.Core.FileSystem
 
         private void runTests(string project)
         {
-            string folder = Path.Combine(Path.GetDirectoryName(project), "bin\\Debug");
+            string folder = Path.Combine(Path.GetDirectoryName(project), string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
             var files = Directory.GetFiles(folder, string.Format("{0}.*", Path.GetFileNameWithoutExtension(project)));
             foreach (var file in files)
             {

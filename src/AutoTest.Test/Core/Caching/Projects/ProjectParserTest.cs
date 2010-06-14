@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using AutoTest.Core.FileSystem;
+using System.IO;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {
@@ -25,35 +26,35 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_mark_found_project_as_read()
         {
-            var document = _parser.Parse(@"TestResources\VS2008\CSharpNUnitTestProject.csproj", null);
+            var document = _parser.Parse(getCSharpProject(), null);
             document.IsReadFromFile.ShouldBeTrue();
         }
 
         [Test]
         public void Should_Find_CSharp_Project_With_NUnit_Tests()
         {
-            var document = _parser.Parse(@"TestResources\VS2008\CSharpNUnitTestProject.csproj", null);
+            var document = _parser.Parse(getCSharpProject(), null);
             document.ContainsTests.ShouldBeTrue();
         }
 
         [Test]
         public void Should_Find_VisualBasic_Project_With_NUnit_Tests()
         {
-            var document = _parser.Parse(@"TestResources\VS2008\NUnitTestProjectVisualBasic.vbproj", null);
+            var document = _parser.Parse(getVisualBasicProject(), null);
             document.ContainsTests.ShouldBeTrue();
         }
 
         [Test]
         public void Should_find_CSharp_references()
         {
-            var document = _parser.Parse(@"TestResources\VS2008\CSharpNUnitTestProject.csproj", null);
+            var document = _parser.Parse(getCSharpProject(), null);
             document.References.Length.ShouldEqual(1);
         }
 
         [Test]
         public void Should_find_VisualBasic_references()
         {
-            var document = _parser.Parse(@"TestResources\VS2008\NUnitTestProjectVisualBasic.vbproj", null);
+            var document = _parser.Parse(getVisualBasicProject(), null);
             document.References.Length.ShouldEqual(1);
         }
 
@@ -62,8 +63,18 @@ namespace AutoTest.Test.Core.Caching.Projects
         {
             var existingDocument = new ProjectDocument(ProjectType.CSharp);
             existingDocument.AddReferencedBy("someproject");
-            var document = _parser.Parse(@"TestResources\VS2008\CSharpNUnitTestProject.csproj", existingDocument);
+            var document = _parser.Parse(getCSharpProject(), existingDocument);
             document.ReferencedBy[0].ShouldEqual("someproject");
+        }
+
+        private string getCSharpProject()
+        {
+            return string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);
+        }
+
+        private string getVisualBasicProject()
+        {
+            return string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar);
         }
     }
 }

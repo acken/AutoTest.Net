@@ -22,7 +22,7 @@ namespace AutoTest.Core.BuildRunners
                 Path.GetFileName(projectName),
                 Path.GetFileName(_buildExecutable));
             ProcessStartInfo psi = new ProcessStartInfo(_buildExecutable,
-                                                        "\"" + projectName + "\"");
+                                                        string.Format("\"{0}\"", projectName));
             psi.RedirectStandardOutput = true;
             psi.WindowStyle = ProcessWindowStyle.Hidden;
             psi.UseShellExecute = false;
