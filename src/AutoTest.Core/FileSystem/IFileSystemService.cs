@@ -1,0 +1,8 @@
+namespace AutoTest.Core.FileSystem
+{
+    internal interface IFileSystemService
+    {
+        string[] GetFiles(string path, string searchPattern);
+        string ReadFileAsText(string path);
+    }
+}
