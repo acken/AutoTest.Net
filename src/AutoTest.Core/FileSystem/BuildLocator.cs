@@ -46,6 +46,8 @@ namespace AutoTest.Core.FileSystem
                             runTests(referencedProject.Key);
                     }
                 }
+                Console.WriteLine("Finished builds and tests");
+                Console.WriteLine("");
             }
         }
 
