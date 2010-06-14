@@ -23,7 +23,6 @@
             if(message.Extension != ".cs") return;
             var dir = Directory.GetParent(message.FullName);
             var parent = _crawler.FindParent(dir.FullName, f => f.Extension.Equals(".csproj"));
-            //if (parent == null) _crawler.FindParent(dir.FullName, f => f.Extension.Equals(".vbproj"));
             if(parent != null)
             {
                 _logger.DebugFormat("Project Locator found a signification change in file \"{0}\". Publishing {1}.", message.Name, typeof(ProjectChangeMessage).Name);

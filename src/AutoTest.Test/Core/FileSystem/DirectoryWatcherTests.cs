@@ -12,13 +12,12 @@ namespace AutoTest.Test.Core
     [TestFixture]
     public class DirectoryWatcherTests
     {
-        //this is not tagged as a fact as it actually modifies file system
-        //it's an integration test (clieanup integration tests later)
         [Test]
         public void Should_send_message_when_file_changes_once()
         {
+            var file = "watcher_test.txt";
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
-            var path = Path.GetFullPath("asldkfjasdlfkjasdf.txt");
+            var path = Path.GetFullPath(file);
             using (var subject = new DirectoryWatcher(messageBus))
             {
                 subject.Watch(Path.GetDirectoryName(path));
@@ -34,6 +33,7 @@ namespace AutoTest.Test.Core
                                   f.FullName.Equals(path) &&
                                   f.Name.Equals("asldkfjasdlfkjasdf.txt"))),
                 m => m.Repeat.Once());
+            File.Delete(file);
         }
     }
 }
