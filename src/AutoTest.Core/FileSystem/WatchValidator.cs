@@ -29,6 +29,8 @@ namespace AutoTest.Core.FileSystem
                 return false;
             if (contains(filePath, OBJ_X86))
                 return false;
+            if (Directory.Exists(filePath))
+                return false;
             return true;
         }
 

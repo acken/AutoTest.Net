@@ -25,11 +25,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var totalListOfProjects = new List<ChangedFile>();
             var locators = _services.LocateAll<ILocateProjects>();
+            string changeSet = "Changes found in ";
             foreach (var file in message.Files)
             {
+                changeSet += string.Format("{0}, ", file.Name);
                 var projects = getProjectsClosestToChangedFile(file, locators);
                 combineLists(projects, totalListOfProjects);
             }
+            Console.WriteLine(changeSet);
             publishProjects(totalListOfProjects);
         }
 

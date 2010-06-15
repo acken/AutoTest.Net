@@ -19,10 +19,15 @@ namespace AutoTest.Test.Core.FileSystem
         {
             _validator = new WatchValidator();
         }
+        
+        [Test]
+        public void Should_return_true_if_normal_file()
+        {
+            _validator
+                .ShouldPublish(Path.GetTempFileName())
+                .ShouldBeTrue();
+        }
 
-        //[Row("something{0}bin{0}debug{0}")]
-        //[Row("something{0}bin{0}release{0}")]
-        //[Row("something{0}bin{0}x86{0}")]
         [Test]
         public void Should_invalidate_bin_debug()
         {
@@ -68,6 +73,14 @@ namespace AutoTest.Test.Core.FileSystem
         {
             _validator
                 .ShouldPublish(getInfo("something{0}obj{0}x86{0}"))
+                .ShouldBeFalse();
+        }
+
+        [Test]
+        public void Should_invalidate_directories()
+        {
+            _validator
+                .ShouldPublish(Path.GetDirectoryName(Path.GetTempFileName()))
                 .ShouldBeFalse();
         }
 
