@@ -55,10 +55,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var buildRunner = new MSBuildRunner(_configuration.BuildExecutable);
             var buildReport = buildRunner.RunBuild(project);
-            Console.WriteLine(string.Format("Build finished with {0} errors and  {1} warningns", buildReport.Errors, buildReport.Warnings));
-            if (buildReport.Errors > 0)
-                Console.WriteLine(buildReport.BuildOutput);
-            return buildReport.Errors == 0;
+            Console.WriteLine(string.Format("Build finished with {0} errors and  {1} warningns", buildReport.ErrorCount, buildReport.WarningCount));
+            foreach (var error in buildReport.Errors)
+                Console.WriteLine("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition, error.ErrorMessage);
+            foreach (var warning in buildReport.Warnings)
+                Console.WriteLine("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber, warning.LinePosition, warning.ErrorMessage);
+            return buildReport.ErrorCount == 0;
         }
 
         private void runTests(string project)

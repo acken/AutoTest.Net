@@ -1,28 +1,24 @@
+using System.Collections.Generic;
 namespace AutoTest.Core.BuildRunners
 {
     public class BuildRunResults
     {
-        private readonly int _errors;
-        private readonly int _warnings;
-        private readonly string _buildOutput;
+        private List<BuildMessage> _errors = new List<BuildMessage>();
+        private List<BuildMessage> _warnings = new List<BuildMessage>();
 
-        public BuildRunResults(int errors, int warnings, string buildOutput)
+        public int ErrorCount { get { return _errors.Count; } }
+        public int WarningCount { get { return _warnings.Count; } }
+        public BuildMessage[] Errors { get { return _errors.ToArray(); } }
+        public BuildMessage[] Warnings { get { return _warnings.ToArray(); } }
+
+        public void AddError(BuildMessage error)
         {
-            _errors = errors;
-            _warnings = warnings;
-            _buildOutput = buildOutput;
+            _errors.Add(error);
         }
 
-        public int Errors
+        public void AddWarning(BuildMessage warning)
         {
-            get { return _errors; }
+            _warnings.Add(warning);
         }
-
-        public int Warnings
-        {
-            get { return _warnings; }
-        }
-
-        public string BuildOutput { get { return _buildOutput; } }
     }
 }

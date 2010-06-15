@@ -73,6 +73,8 @@
     <Compile Include="..\..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="BuildRunners\BuildMessage.cs" />
+    <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICreate.cs" />
     <Compile Include="Caching\IPrepare.cs" />

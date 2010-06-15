@@ -2,7 +2,7 @@
 
 using Microsoft.Build.BuildEngine;
 
-namespace AutoTest.Test.Core.Builders
+namespace AutoTest.Test.Core.BuildRunners
 {
     public interface IBuildEngine
     {

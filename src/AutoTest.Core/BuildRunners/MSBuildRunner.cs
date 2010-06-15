@@ -32,26 +32,17 @@ namespace AutoTest.Core.BuildRunners
 
             proc.WaitForExit();
 
-            int errors = 0;
-            int warnings = 0;
+            var buildResults = new BuildRunResults();
 
             var builder = new StringBuilder();
             while(!proc.StandardOutput.EndOfStream)
             {
                 string line = proc.StandardOutput.ReadLine().Trim();
                 builder.AppendLine(line);
-
-                if(line.EndsWith("Error(s)"))
-                {
-                    errors = Int32.Parse(line.Substring(0, line.IndexOf(" ")));
-                }
-                else if(line.EndsWith("Warning(s)"))
-                {
-                    warnings = Int32.Parse(line.Substring(0, line.IndexOf(" ")));
-                }
+                var parser = new MSBuildOutputParser(buildResults, line);
+                parser.Parse();
             }
-
-            return new BuildRunResults(errors, warnings, builder.ToString());
+            return buildResults;
         }
     }
 }
