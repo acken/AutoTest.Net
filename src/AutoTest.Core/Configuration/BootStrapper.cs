@@ -11,6 +11,7 @@ using AutoTest.Core.TestRunners;
 using Castle.Windsor;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.FileSystem.ProjectLocators;
+using AutoTest.Core.Messaging.MessageConsumers;
 
 namespace AutoTest.Core.Configuration
 {
@@ -34,7 +35,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IProjectParser>().ImplementedBy<ProjectParser>())
                 .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())
                 .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
-                .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<BuildLocator>())
+                .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<CommandLineTestRunner>())
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())

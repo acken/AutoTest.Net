@@ -81,7 +81,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />
-    <Compile Include="FileSystem\BuildLocator.cs" />
+    <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
     <Compile Include="FileSystem\ChangedFile.cs" />

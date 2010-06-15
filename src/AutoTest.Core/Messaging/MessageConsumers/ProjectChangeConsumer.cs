@@ -10,14 +10,14 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.TestRunners;
 using System.IO;
 
-namespace AutoTest.Core.FileSystem
+namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class BuildLocator : IConsumerOf<ProjectChangeMessage>
+    class ProjectChangeConsumer : IConsumerOf<ProjectChangeMessage>
     {
         private ICache _cache;
         private IConfiguration _configuration;
 
-        public BuildLocator(ICache cache, IConfiguration configuration)
+        public ProjectChangeConsumer(ICache cache, IConfiguration configuration)
         {
             _cache = cache;
             _configuration = configuration;
