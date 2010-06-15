@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Linq;
+using System.Text;
 using log4net;
 using AutoTest.Core.Configuration;
+using System.IO;
+using System.Diagnostics;
 
-namespace AutoTest.Core.TestRunners
+namespace AutoTest.Core.TestRunners.TestRunners
 {
-    public class CommandLineTestRunner : ITestRunner
+    class NUnitTestRunner : ITestRunner
     {
         readonly string _unitTestExe;
-        static readonly ILog _logger = LogManager.GetLogger(typeof(CommandLineTestRunner));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(NUnitTestRunner));
 
-        public CommandLineTestRunner(IConfiguration configuration)
+        public NUnitTestRunner(IConfiguration configuration)
         {
             _unitTestExe = configuration.NunitTestRunner;
         }
+
+        #region ITestRunner Members
 
         public TestRunResults RunTests(string assemblyName)
         {
@@ -33,7 +37,7 @@ namespace AutoTest.Core.TestRunners
             proc.WaitForExit();
 
             var results = new List<TestResult>();
-            while(!proc.StandardOutput.EndOfStream)
+            while (!proc.StandardOutput.EndOfStream)
             {
                 string line = proc.StandardOutput.ReadLine();
                 string detail = String.Empty;
@@ -41,23 +45,25 @@ namespace AutoTest.Core.TestRunners
                 // "Tests run: 1, Failures: 1, Not run: 0, Time: 0.116 seconds"
                 if (line.StartsWith("Tests run:"))
                     Console.WriteLine(line);
-                if(line.Contains("]"))
+                if (line.Contains("]"))
                     detail = line.Substring(line.IndexOf("]") + 1).Trim();
 
-                if(line.StartsWith("[pass") || line.StartsWith("[success"))
+                if (line.StartsWith("[pass") || line.StartsWith("[success"))
                 {
                     results.Add(new TestResult(TestStatus.Passed, detail));
                 }
-                else if(line.StartsWith("[fail"))
+                else if (line.StartsWith("[fail"))
                 {
                     results.Add(new TestResult(TestStatus.Failed, detail));
                 }
-                else if(line.StartsWith("[ignore"))
+                else if (line.StartsWith("[ignore"))
                 {
                     results.Add(new TestResult(TestStatus.Ignored, detail));
                 }
             }
             return new TestRunResults(results);
         }
+
+        #endregion
     }
 }

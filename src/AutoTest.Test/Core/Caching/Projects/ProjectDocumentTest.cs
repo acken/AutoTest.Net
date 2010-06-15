@@ -15,7 +15,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [SetUp]
         public void setUp()
         {
-            _document = new ProjectDocument(ProjectType.CSharp, false);
+            _document = new ProjectDocument(ProjectType.CSharp);
         }
 
         [Test]
@@ -88,6 +88,20 @@ namespace AutoTest.Test.Core.Caching.Projects
         {
             _document.AddReference("AnotherProject");
             _document.IsReferencing("AnotherProject").ShouldBeTrue();
+        }
+
+        [Test]
+        public void Has_NUnit_Tests()
+        {
+            _document.SetAsNUnitTestContainer();
+            _document.ContainsNUnitTests.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Has_MSTest_tests()
+        {
+            _document.SetAsMSTestContainer();
+            _document.ContainsMSTests.ShouldBeTrue();
         }
     }
 }

@@ -10,7 +10,8 @@ namespace AutoTest.Core.Caching.Projects
 {
     class ProjectParser : IProjectParser
     {
-        private const string NUNIT_REFERENCE = "<Reference Include=\"nunit.framework";
+        private const string NUNIT_REFERENCE = "<reference include=\"nunit.framework";
+        private const string MSTEST_REFERENCE = "<reference include=\"microsoft.visualstudio.qualitytools.unittestframework";
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
         private const string VB_PROJECT_EXTENTION = ".vbproj";
         private const string PROJECT_REFERENCE_START = "<ProjectReference Include=\"";
@@ -18,10 +19,10 @@ namespace AutoTest.Core.Caching.Projects
 
         private IFileSystemService _fsService;
         private string _projectFile;
-
         private string _fileContent;
+        private string _fileContentLower;
         private ProjectType _type;
-        private bool _containsTests;
+        private bool _containsNUnitTests;
         private string[] _references = new string[] {};
 
         public ProjectParser(IFileSystemService fsService)
@@ -29,56 +30,50 @@ namespace AutoTest.Core.Caching.Projects
             _fsService = fsService;
         }
 
-        public ProjectDocument Parse(string projectFile, ProjectDocument document)
+        public ProjectDocument Parse(string projectFile, ProjectDocument existingDocument)
         {
             _projectFile = projectFile;
             readFile();
-            setType();
-            setContainsTests();
-            setReferences();
-            return getDocument(document);
+            var newDocument = new ProjectDocument(getType());
+            setContainsTests(newDocument);
+            setReferences(newDocument);
+            setReferencedBy(newDocument, existingDocument);
+            return newDocument;
         }
 
         private void readFile()
         {
             _fileContent = _fsService.ReadFileAsText(_projectFile);
+            _fileContentLower = _fileContent.ToLower();
         }
 
-        private void setType()
+        private ProjectType getType()
         {
             switch (Path.GetExtension(_projectFile).ToLower())
             {
                 case CSHARP_PROJECT_EXTENTION:
-                    _type = ProjectType.CSharp;
-                    break;
+                    return ProjectType.CSharp;
                 case VB_PROJECT_EXTENTION:
-                    _type = ProjectType.VisualBasic;
-                    break;
+                    return ProjectType.VisualBasic;
             }
+            return ProjectType.None;
         }
 
-        private void setContainsTests()
+        private void setContainsTests(ProjectDocument document)
         {
-            _containsTests = _fileContent.Contains(NUNIT_REFERENCE);
+            if (_fileContentLower.Contains(NUNIT_REFERENCE))
+                document.SetAsNUnitTestContainer();
+            if (_fileContentLower.Contains(MSTEST_REFERENCE))
+                document.SetAsMSTestContainer();
         }
 
-        private ProjectDocument getDocument(ProjectDocument existingDocument)
-        {
-            var document = new ProjectDocument(_type, _containsTests);
-            document.AddReference(_references);
-            if (existingDocument != null)
-                document.AddReferencedBy(existingDocument.ReferencedBy);
-            document.HasBeenReadFromFile();
-            return document;
-        }
-
-        private void setReferences()
+        private void setReferences(ProjectDocument document)
         {
             var regExp = new Regex(string.Format("{0}.*?{1}", PROJECT_REFERENCE_START, PROJECT_REFERENCE_END));
             var matches = regExp.Matches(_fileContent);
             _references = new string[matches.Count];
             for (int i = 0; i < matches.Count; i++)
-                _references[i] = getReference(matches[i].Value);
+                document.AddReference(getReference(matches[i].Value));
         }
 
         private string getReference(string match)
@@ -89,6 +84,13 @@ namespace AutoTest.Core.Caching.Projects
             if (path.Substring(0, 2).Equals(".."))
                 return getAbsolutePath(path);
             return path;
+        }
+
+        private void setReferencedBy(ProjectDocument newDocument, ProjectDocument existingDocument)
+        {
+            if (existingDocument != null)
+                newDocument.AddReferencedBy(existingDocument.ReferencedBy);
+            newDocument.HasBeenReadFromFile();
         }
 
         private string getAbsolutePath(string relativePath)

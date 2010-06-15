@@ -22,7 +22,7 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
             return _documents.Pop();
         }
 
-        public ProjectDocument Parse(string projectFile, ProjectDocument document)
+        public ProjectDocument Parse(string projectFile, ProjectDocument existingDocument)
         {
             return _documents.Pop();
         }

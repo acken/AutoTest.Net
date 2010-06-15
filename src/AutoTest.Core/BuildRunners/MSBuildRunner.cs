@@ -8,7 +8,8 @@ namespace AutoTest.Core.BuildRunners
 
     public class MSBuildRunner : IBuildRunner
     {
-        readonly string _buildExecutable;
+        private readonly string _buildExecutable;
+        private BuildRunResults _buildResults;
         static readonly ILog _logger = LogManager.GetLogger(typeof(MSBuildRunner));
 
         public MSBuildRunner(string buildExecutable)
@@ -21,28 +22,24 @@ namespace AutoTest.Core.BuildRunners
             _logger.InfoFormat("Starting build of {0} using \"{1}\".",
                 Path.GetFileName(projectName),
                 Path.GetFileName(_buildExecutable));
-            ProcessStartInfo psi = new ProcessStartInfo(_buildExecutable,
-                                                        string.Format("\"{0}\"", projectName));
-            psi.RedirectStandardOutput = true;
-            psi.WindowStyle = ProcessWindowStyle.Hidden;
-            psi.UseShellExecute = false;
-            psi.CreateNoWindow = true;
+            _buildResults = new BuildRunResults();
+            Process process = new Process();
+            process.OutputDataReceived += process_OutputDataReceived;
+            process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
 
-            Process proc = Process.Start(psi);
+            process.Start();
+            process.WaitForExit();
+            return _buildResults;
+        }
 
-            proc.WaitForExit();
-
-            var buildResults = new BuildRunResults();
-
-            var builder = new StringBuilder();
-            while(!proc.StandardOutput.EndOfStream)
-            {
-                string line = proc.StandardOutput.ReadLine().Trim();
-                builder.AppendLine(line);
-                var parser = new MSBuildOutputParser(buildResults, line);
-                parser.Parse();
-            }
-            return buildResults;
+        void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            string line = e.Data.Trim();
+            var parser = new MSBuildOutputParser(_buildResults, line);
+            parser.Parse();
         }
     }
 }

@@ -6,7 +6,8 @@
 
   <appSettings>
     <add key="DirectoryToWatch" value="C:\CODE\" />
-    <add key="UnitTestExe" value="C:\Program Files\MbUnit\bin\MbUnit.Cons.exe" />
+    <add key="NunitTestRunner" value="C:\Program Files\MbUnit\bin\MbUnit.Cons.exe" />
+    <add key="MSTestRunner" value="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe" />
     <add key="BuildExecutable" value="C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe" />
     <!--<add key="IgnoreFolder" value="TestLibrary" />-->
   </appSettings>

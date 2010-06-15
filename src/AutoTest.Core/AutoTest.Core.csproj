@@ -121,6 +121,8 @@
     <Compile Include="TestRunners\CommandLineTestRunner.cs" />
     <Compile Include="TestRunners\ITestRunner.cs" />
     <Compile Include="TestRunners\TestResult.cs" />
+    <Compile Include="TestRunners\TestRunners\MSTestRunner.cs" />
+    <Compile Include="TestRunners\TestRunners\NUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
   </ItemGroup>

@@ -34,14 +34,28 @@ namespace AutoTest.Test.Core.Caching.Projects
         public void Should_Find_CSharp_Project_With_NUnit_Tests()
         {
             var document = _parser.Parse(getCSharpProject(), null);
-            document.ContainsTests.ShouldBeTrue();
+            document.ContainsNUnitTests.ShouldBeTrue();
         }
 
         [Test]
         public void Should_Find_VisualBasic_Project_With_NUnit_Tests()
         {
             var document = _parser.Parse(getVisualBasicProject(), null);
-            document.ContainsTests.ShouldBeTrue();
+            document.ContainsNUnitTests.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_Find_CSharp_Project_With_MS_Tests()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.ContainsMSTests.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_Find_VisualBasic_Project_With_MS_Tests()
+        {
+            var document = _parser.Parse(getVisualBasicProject(), null);
+            document.ContainsMSTests.ShouldBeTrue();
         }
 
         [Test]

@@ -9,6 +9,7 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.TestRunners;
 using System.IO;
+using AutoTest.Core.TestRunners.TestRunners;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -63,26 +64,33 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return buildReport.ErrorCount == 0;
         }
 
-        private void runTests(string project)
+        private void runTests(string projectPath)
         {
-            string folder = Path.Combine(Path.GetDirectoryName(project), string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
-            var files = Directory.GetFiles(folder, string.Format("{0}.*", Path.GetFileNameWithoutExtension(project)));
+            var project = _cache.Get<Project>(projectPath);
+            string folder = Path.Combine(Path.GetDirectoryName(projectPath), string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
+            var files = Directory.GetFiles(folder, string.Format("{0}.*", Path.GetFileNameWithoutExtension(projectPath)));
             foreach (var file in files)
             {
                 var extension = Path.GetExtension(file);
                 if (extension == ".dll" || extension == ".exe")
                 {
-                    var testRunner = new CommandLineTestRunner(_configuration);
-                    var results = testRunner.RunTests(file);
-                    foreach (var result in results.All)
-                    {
-                        Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
-                    }
+                    if (project.Value.ContainsNUnitTests)
+                        runTests(new NUnitTestRunner(_configuration), file);
+                    if (project.Value.ContainsMSTests)
+                        runTests(new MSTestRunner(_configuration), file);
                 }
             }
             
         }
 
         #endregion
+
+        private void runTests(ITestRunner testRunner, string assembly)
+        {
+            Console.WriteLine(string.Format("Running tests for {0} through {1}", Path.GetFileName(assembly), testRunner.GetType().ToString()));
+            var results = testRunner.RunTests(assembly);
+            foreach (var result in results.All)
+                Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
+        }
     }
 }

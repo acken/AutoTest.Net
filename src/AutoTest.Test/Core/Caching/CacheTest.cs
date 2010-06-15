@@ -17,7 +17,7 @@ namespace AutoTest.Test.Core.Caching
         [SetUp]
         public void SetUp()
         {
-            var document = new ProjectDocument(ProjectType.CSharp, true);
+            var document = new ProjectDocument(ProjectType.CSharp);
             document.HasBeenReadFromFile();
             var parser = new FakeProjectParser(new ProjectDocument[] { document });
             _cache = new Cache(new FakeServiceLocator(parser, delegate { return _cache; }));

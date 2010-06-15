@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.TestRunners;
+using AutoTest.Core.TestRunners.TestRunners;
 
 namespace AutoTest.Core.Caching.Projects
 {
@@ -9,26 +11,21 @@ namespace AutoTest.Core.Caching.Projects
     {
         private bool _isReadFromFile = false;
         private ProjectType _type;
-        private bool _containsTests;
+        private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
         public ProjectType Type { get { return _type; } }
-        public bool ContainsTests { get { return _containsTests; } }
+        public bool ContainsTests { get { return _containsTestsFor.Count > 0; } }
+        public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
+        public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
         public string[] References { get { return _references.ToArray(); } }
         public string[] ReferencedBy { get { return _referencedBy.ToArray(); } }
 
         public ProjectDocument(ProjectType type)
         {
             _type = type;
-            _containsTests = false;
-        }
-
-        public ProjectDocument(ProjectType type, bool containsTests)
-        {
-            _type = type;
-            _containsTests = containsTests;
         }
 
         public void AddReference(string reference)
@@ -64,6 +61,16 @@ namespace AutoTest.Core.Caching.Projects
         public void HasBeenReadFromFile()
         {
             _isReadFromFile = true;
+        }
+
+        public void SetAsNUnitTestContainer()
+        {
+            _containsTestsFor.Add(typeof (NUnitTestRunner));
+        }
+
+        public void SetAsMSTestContainer()
+        {
+            _containsTestsFor.Add(typeof(MSTestRunner));
         }
 
         public bool IsReferencedBy(string reference)

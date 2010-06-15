@@ -9,7 +9,8 @@ namespace AutoTest.Core.Configuration
     {
         string DirectoryToWatch { get; }
         string BuildExecutable { get; }
-        string UnitTestExe { get; }
+        string NunitTestRunner { get; }
+        string MSTestRunner { get; }
         string IgnoreFolder { get; }
     }
 }
