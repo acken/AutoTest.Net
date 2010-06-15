@@ -81,6 +81,46 @@ namespace AutoTest.Test.Core.Caching.Projects
             document.ReferencedBy[0].ShouldEqual("someproject");
         }
 
+        [Test]
+        public void Should_set_assembly_name()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.AssemblyName.ShouldEqual("CSharpNUnitTestProject.dll");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.AssemblyName.ShouldEqual("NUnitTestProjectVisualBasic.exe");
+        }
+
+        [Test]
+        public void Should_set_build_configuration()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.BuildConfiguration.ShouldEqual("Debug");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.BuildConfiguration.ShouldEqual("Debug");
+        }
+
+        [Test]
+        public void Should_set_build_platform()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.Platform.ShouldEqual("AnyCPU");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.Platform.ShouldEqual("AnyCPU");
+        }
+
+        [Test]
+        public void Should_set_output_path()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.OutputPath.ShouldEqual("bin\\Debug\\");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.OutputPath.ShouldEqual("bin\\Debug\\");
+        }
+
         private string getCSharpProject()
         {
             return string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);

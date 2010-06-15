@@ -11,12 +11,20 @@ namespace AutoTest.Core.Caching.Projects
     {
         private bool _isReadFromFile = false;
         private ProjectType _type;
+        private string _assemblyname;
+        private string _buildConfiguration;
+        private string _platform;
+        private string _outputPath;
         private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
         public ProjectType Type { get { return _type; } }
+        public string AssemblyName { get { return _assemblyname; } }
+        public string BuildConfiguration { get { return _buildConfiguration; } }
+        public string Platform { get { return _platform; } }
+        public string OutputPath { get { return _outputPath; } }
         public bool ContainsTests { get { return _containsTestsFor.Count > 0; } }
         public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
         public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
@@ -81,6 +89,26 @@ namespace AutoTest.Core.Caching.Projects
         public bool IsReferencing(string reference)
         {
             return _references.Contains(reference);
+        }
+
+        public void SetAssemblyName(string assemblyName)
+        {
+            _assemblyname = assemblyName;
+        }
+
+        public void SetConfiguration(string configuration)
+        {
+            _buildConfiguration = configuration;
+        }
+
+        public void SetPlatform(string platform)
+        {
+            _platform = platform;
+        }
+
+        public void SetOutputPath(string outputPath)
+        {
+            _outputPath = outputPath;
         }
     }
 }

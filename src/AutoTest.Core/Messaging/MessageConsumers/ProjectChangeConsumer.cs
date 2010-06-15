@@ -67,19 +67,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void runTests(string projectPath)
         {
             var project = _cache.Get<Project>(projectPath);
-            string folder = Path.Combine(Path.GetDirectoryName(projectPath), string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
-            var files = Directory.GetFiles(folder, string.Format("{0}.*", Path.GetFileNameWithoutExtension(projectPath)));
-            foreach (var file in files)
-            {
-                var extension = Path.GetExtension(file);
-                if (extension == ".dll" || extension == ".exe")
-                {
-                    if (project.Value.ContainsNUnitTests)
-                        runTests(new NUnitTestRunner(_configuration), file);
-                    if (project.Value.ContainsMSTests)
-                        runTests(new MSTestRunner(_configuration), file);
-                }
-            }
+            string folder = Path.Combine(Path.GetDirectoryName(projectPath), project.Value.OutputPath);
+
+            var file = Path.Combine(folder, project.Value.AssemblyName);
+            if (project.Value.ContainsNUnitTests)
+                runTests(new NUnitTestRunner(_configuration), file);
+            if (project.Value.ContainsMSTests)
+                runTests(new MSTestRunner(_configuration), file);
             
         }
 

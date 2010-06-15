@@ -103,5 +103,33 @@ namespace AutoTest.Test.Core.Caching.Projects
             _document.SetAsMSTestContainer();
             _document.ContainsMSTests.ShouldBeTrue();
         }
+
+        [Test]
+        public void Should_set_assembly_name()
+        {
+            _document.SetAssemblyName("some name");
+            _document.AssemblyName.ShouldEqual("some name");
+        }
+
+        [Test]
+        public void Should_set_configuration()
+        {
+            _document.SetConfiguration("Debug");
+            _document.BuildConfiguration.ShouldEqual("Debug");
+        }
+
+        [Test]
+        public void Should_set_Platform()
+        {
+            _document.SetPlatform("AnyCPU");
+            _document.Platform.ShouldEqual("AnyCPU");
+        }
+
+        [Test]
+        public void Should_set_outputpath()
+        {
+            _document.SetOutputPath("output path");
+            _document.OutputPath.ShouldEqual("output path");
+        }
     }
 }
