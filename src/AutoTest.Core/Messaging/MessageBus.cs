@@ -1,11 +1,13 @@
 using System;
 using AutoTest.Core.Configuration;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace AutoTest.Core.Messaging
 {
     public class MessageBus : IMessageBus
     {
-        readonly IServiceLocator _services;
+        private readonly IServiceLocator _services;
 
         public MessageBus(IServiceLocator services)
         {
@@ -16,7 +18,12 @@ namespace AutoTest.Core.Messaging
         {
             if (message == null)
                 throw new ArgumentNullException("message");
-            //ignore the sender for now...?
+            ThreadPool.QueueUserWorkItem(publish<T>, message);
+        }
+
+        private void publish<T>(object threadContext)
+        {
+            T message = (T) threadContext;
             var instances = _services.LocateAll<IConsumerOf<T>>();
             foreach (var instance in instances)
                 instance.Consume(message);

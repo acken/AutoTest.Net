@@ -5,6 +5,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Test.TestObjects;
 using NUnit.Framework;
 using Castle.MicroKernel.Registration;
+using System.Threading;
 
 namespace AutoTest.Test.Core.Messaging
 {
@@ -40,6 +41,7 @@ namespace AutoTest.Test.Core.Messaging
         public void Should_be_able_to_send_string_message_and_have_it_delivered_to_all_consumers()
         {
             _bus.Publish("Hi");
+            waitForAsyncCall();
             Listener.LastMessage.ShouldEqual("Hi");
             BigListener.LastStringMessage.ShouldEqual("Hi");
         }
@@ -49,9 +51,14 @@ namespace AutoTest.Test.Core.Messaging
         {
             BigListener.LastIntMessage.ShouldEqual(default(int));
             _bus.Publish(100);
+            waitForAsyncCall();
             BigListener.LastIntMessage.ShouldEqual(100);
         }
 
+        private void waitForAsyncCall()
+        {
+            Thread.Sleep(20);
+        }
 
         //TODO: need unsubscribe
         public void Dispose()
