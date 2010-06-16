@@ -1,9 +1,10 @@
 using AutoTest.Core.Configuration;
-using log4net;
-using log4net.Config;
 using System.Reflection;
+using Castle.Core.Logging;
+using log4net.Config;
+using log4net;
 
-[assembly: XmlConfigurator(Watch = true)]
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace AutoTest.Console
 {
@@ -13,7 +14,7 @@ namespace AutoTest.Console
 
         private static void Main(string[] args)
         {
-            _logger.Debug("Starting up AutoTester");
+            _logger.Info("Starting up AutoTester");
             BootStrapper.Configure();
             BootStrapper.RegisterAssembly(Assembly.GetExecutingAssembly());
             BootStrapper.InitializeCache();

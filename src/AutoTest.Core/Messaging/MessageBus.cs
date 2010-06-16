@@ -12,7 +12,6 @@ namespace AutoTest.Core.Messaging
             _services = services;
         }
 
-
         public void Publish<T>(T message)
         {
             if (message == null)

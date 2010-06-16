@@ -31,6 +31,7 @@ namespace AutoTest.Core.Configuration
             _services.Container
                 .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net))
                 .Register(Component.For<IServiceLocator>().Instance(_services))
+                .Register(Component.For<IMessageBus>().ImplementedBy<MessageBus>().LifeStyle.Singleton)
                 .Register(Component.For<IFileSystemService>().ImplementedBy<FileSystemService>())
                 .Register(Component.For<IProjectParser>().ImplementedBy<ProjectParser>())
                 .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())

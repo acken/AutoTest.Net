@@ -44,6 +44,7 @@ namespace AutoTest.Test.Core.Configuration
         {
             var bus = _locator.Locate<IMessageBus>();
             bus.ShouldBeOfType<IMessageBus>();
+            _locator.Locate<IMessageBus>().ShouldBeTheSameAs(bus);
         }
 
         [Test]
