@@ -1,15 +1,21 @@
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.IO;
+using Castle.Core.Logging;
+
 namespace AutoTest.Core.BuildRunners
 {
-    using System;
-    using System.Diagnostics;
-    using log4net;
-    using System.Text;
-    using System.IO;
-
     public class MSBuildRunner : IBuildRunner
     {
         private readonly string _buildExecutable;
-        static readonly ILog _logger = LogManager.GetLogger(typeof(MSBuildRunner));
+        private ILogger _logger;
+
+        public ILogger Logger
+        {
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
+            set { _logger = value; }
+        }
 
         public MSBuildRunner(string buildExecutable)
         {
@@ -18,7 +24,7 @@ namespace AutoTest.Core.BuildRunners
 
         public BuildRunResults RunBuild(string projectName)
         {
-            _logger.InfoFormat("Starting build of {0} using \"{1}\".",
+            Logger.InfoFormat("Starting build of {0} using \"{1}\".",
                 Path.GetFileName(projectName),
                 Path.GetFileName(_buildExecutable));
             Process process = new Process();

@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using log4net;
 using AutoTest.Core.Configuration;
+using Castle.Core.Logging;
 
 namespace AutoTest.Core.TestRunners
 {
     public class CommandLineTestRunner : ITestRunner
     {
-        readonly string _unitTestExe;
-        static readonly ILog _logger = LogManager.GetLogger(typeof(CommandLineTestRunner));
+        private readonly string _unitTestExe;
+        private ILogger _logger;
+
+        public ILogger Logger
+        {
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
+            set { _logger = value; }
+        }
 
         public CommandLineTestRunner(IConfiguration configuration)
         {
@@ -19,7 +25,7 @@ namespace AutoTest.Core.TestRunners
 
         public TestRunResults RunTests(string assemblyName)
         {
-            _logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
+            Logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
             ProcessStartInfo psi = new ProcessStartInfo(_unitTestExe,
                                                         "\"" + assemblyName + "\"");
             psi.WorkingDirectory = Path.GetDirectoryName(_unitTestExe);
@@ -40,7 +46,7 @@ namespace AutoTest.Core.TestRunners
 
                 // "Tests run: 1, Failures: 1, Not run: 0, Time: 0.116 seconds"
                 if (line.StartsWith("Tests run:"))
-                    Console.WriteLine(line);
+                    Logger.Info(line);
                 if(line.Contains("]"))
                     detail = line.Substring(line.IndexOf("]") + 1).Trim();
 

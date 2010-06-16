@@ -13,12 +13,7 @@ namespace AutoTest.Console
 
         public ILogger Logger
         {
-            get
-            {
-                if (_logger == null)
-                    _logger = NullLogger.Instance;
-                return _logger;
-            }
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
             set { _logger = value; }
         }
 
@@ -30,7 +25,7 @@ namespace AutoTest.Console
 
         public void Start()
         {
-            _logger.InfoFormat("Starting AutoTester and watching \"{0}\" and all subdirectories.", _configuration.DirectoryToWatch);
+            Logger.InfoFormat("Starting AutoTester and watching \"{0}\" and all subdirectories.", _configuration.DirectoryToWatch);
             _watcher.Watch(_configuration.DirectoryToWatch);
             System.Console.ReadLine();
             Stop();

@@ -108,6 +108,7 @@
     <Compile Include="Messaging\IMessageBus.cs" />
     <Compile Include="Messaging\IMessageConsumer.cs" />
     <Compile Include="Messaging\MessageBus.cs" />
+    <Compile Include="Messaging\MessageConsumers\RunReport.cs" />
     <Compile Include="Messaging\ProjectChangeMessage.cs" />
     <Compile Include="Caching\Projects\IProjectParser.cs" />
     <Compile Include="Caching\IRecord.cs" />

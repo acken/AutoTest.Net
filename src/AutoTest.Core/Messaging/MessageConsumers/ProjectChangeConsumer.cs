@@ -10,6 +10,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.TestRunners;
 using System.IO;
 using AutoTest.Core.TestRunners.TestRunners;
+using Castle.Core.Logging;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -17,6 +18,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private ICache _cache;
         private IConfiguration _configuration;
+        private ILogger _logger;
+
+        public ILogger Logger
+        {
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
+            set { _logger = value; }
+        }
 
         public ProjectChangeConsumer(ICache cache, IConfiguration configuration)
         {
@@ -28,6 +36,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
+            Logger.Info("");
+            Logger.Info("Preparing build(s) and test run(s)");
+            var runReport = new RunReport();
             foreach (var file in message.Files)
             {
                 var project = _cache.Get<Project>(file.FullName);
@@ -35,57 +46,91 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 // Other prioritized tests
                 // Projects that tests me
                 // Other test projects
-                if (buildProject(project.Key))
-                {
-                    if (project.Value.ContainsTests)
-                        runTests(project.Key);
-                    foreach (var reference in project.Value.ReferencedBy)
-                    {
-                        buildProject(reference);
-                        var referencedProject = _cache.Get<Project>(reference);
-                        if (referencedProject.Value.ContainsTests)
-                            runTests(referencedProject.Key);
-                    }
-                }
-                Console.WriteLine("Finished builds and tests");
-                Console.WriteLine("");
+                var report = buildAndRunTests(project);
+                runReport.NumberOfProjectsBuilt += report.NumberOfProjectsBuilt;
+                runReport.NumberOfTestsRan += report.NumberOfTestsRan;
             }
+            Logger.InfoFormat("Ran {0} build(s) and {1} test(s)", runReport.NumberOfProjectsBuilt, runReport.NumberOfTestsRan);
+        }
+
+        private RunReport buildAndRunTests(Project project)
+        {
+            var runReport = new RunReport();
+            runReport.NumberOfProjectsBuilt = 1;
+            if (!buildProject(project.Key))
+                return runReport;
+            if (project.Value.ContainsTests)
+                runReport.NumberOfTestsRan += runTests(project.Key);
+            foreach (var reference in project.Value.ReferencedBy)
+            {
+                var referencerunReport = buildAndRunTests(_cache.Get<Project>(reference));
+                runReport.NumberOfProjectsBuilt += referencerunReport.NumberOfProjectsBuilt;
+                runReport.NumberOfTestsRan += referencerunReport.NumberOfTestsRan;
+            }
+            return runReport;
         }
 
         private bool buildProject(string project)
         {
             var buildRunner = new MSBuildRunner(_configuration.BuildExecutable);
             var buildReport = buildRunner.RunBuild(project);
-            Console.WriteLine(string.Format("Build finished with {0} errors and  {1} warningns", buildReport.ErrorCount, buildReport.WarningCount));
-            foreach (var error in buildReport.Errors)
-                Console.WriteLine("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition, error.ErrorMessage);
-            foreach (var warning in buildReport.Warnings)
-                Console.WriteLine("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber, warning.LinePosition, warning.ErrorMessage);
+            if (buildReport.ErrorCount > 0 || buildReport.WarningCount > 0)
+            {
+                if (buildReport.ErrorCount > 0)
+                {
+                    Logger.InfoFormat(
+                        "Building {0} finished with {1} errors and  {2} warningns",
+                        Path.GetFileName(project),
+                        buildReport.ErrorCount,
+                        buildReport.WarningCount);
+                }
+                else
+                {
+                    Logger.InfoFormat(
+                        "Building {0} succeeded with {1} warnings",
+                        Path.GetFileName(project),
+                        buildReport.WarningCount);
+                }
+                foreach (var error in buildReport.Errors)
+                    Logger.InfoFormat("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition,
+                                      error.ErrorMessage);
+                foreach (var warning in buildReport.Warnings)
+                    Logger.InfoFormat("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber,
+                                      warning.LinePosition, warning.ErrorMessage);
+            }
             return buildReport.ErrorCount == 0;
         }
 
-        private void runTests(string projectPath)
+        private int runTests(string projectPath)
         {
+            int numberOfTests = 0;
             var project = _cache.Get<Project>(projectPath);
             string folder = Path.Combine(Path.GetDirectoryName(projectPath), project.Value.OutputPath);
 
             var file = Path.Combine(folder, project.Value.AssemblyName);
             if (project.Value.ContainsNUnitTests)
-                runTests(new NUnitTestRunner(_configuration), file);
+                numberOfTests += runTests(new NUnitTestRunner(_configuration), file);
             if (project.Value.ContainsMSTests)
-                runTests(new MSTestRunner(_configuration), file);
-            
+                numberOfTests += runTests(new MSTestRunner(_configuration), file);
+            return numberOfTests;
         }
 
         #endregion
 
-        private void runTests(ITestRunner testRunner, string assembly)
+        private int runTests(ITestRunner testRunner, string assembly)
         {
             var results = testRunner.RunTests(assembly);
-            foreach (var result in results.Failed)
-                Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
-            foreach (var result in results.Ignored)
-                Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
+            var failed = results.Failed;
+            var ignored = results.Ignored;
+            if (failed.Length > 0 || ignored.Length > 0)
+            {
+                Logger.InfoFormat("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly));
+                foreach (var result in results.Failed)
+                    Logger.InfoFormat("    {0} -> {1}", result.Status, result.Message);
+                foreach (var result in results.Ignored)
+                    Logger.InfoFormat("    {0} -> {1}", result.Status, result.Message);
+            }
+            return results.All.Length;
         }
     }
 }

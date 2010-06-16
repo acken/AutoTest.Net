@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using log4net;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using System.Collections.Generic;
 using AutoTest.Core.FileSystem;
+using Castle.Core.Logging;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -13,7 +13,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (FileChangeConsumer));
+        private ILogger _logger;
+
+        public ILogger Logger
+        {
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
+            set { _logger = value; }
+        }
 
         public FileChangeConsumer(IServiceLocator services, IMessageBus bus)
         {
@@ -25,14 +31,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var totalListOfProjects = new List<ChangedFile>();
             var locators = _services.LocateAll<ILocateProjects>();
-            string changeSet = "Changes found in ";
             foreach (var file in message.Files)
             {
-                changeSet += string.Format("{0}, ", file.Name);
                 var projects = getProjectsClosestToChangedFile(file, locators);
                 combineLists(projects, totalListOfProjects);
             }
-            Console.WriteLine(changeSet);
             publishProjects(totalListOfProjects);
         }
 
@@ -49,7 +52,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var closestProjects = new List<ChangedFile>();
             var currentLocation = 0;
-            _logger.DebugFormat("Project Locator found a signification change in file \"{0}\". Publishing {1}.", file.Name, typeof(ProjectChangeMessage).Name);
+            Logger.DebugFormat("Project Locator found a signification change in file \"{0}\". Publishing {1}.", file.Name, typeof(ProjectChangeMessage).Name);
             foreach (var locator in locators)
             {
                 var files = locator.Locate(file.FullName);

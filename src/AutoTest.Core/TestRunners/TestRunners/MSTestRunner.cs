@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net;
 using AutoTest.Core.Configuration;
 using System.Diagnostics;
 using System.IO;
+using Castle.Core.Logging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class MSTestRunner : ITestRunner
     {
         private readonly string _unitTestExe;
-        static readonly ILog _logger = LogManager.GetLogger(typeof(MSTestRunner));
+        private ILogger _logger;
+
+        public ILogger Logger
+        {
+            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
+            set { _logger = value; }
+        }
 
         public MSTestRunner(IConfiguration configuration)
         {
@@ -23,7 +29,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults RunTests(string assemblyName)
         {
-            _logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
+            Logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
                                                         "/testcontainer:\"" + assemblyName + "\"");
