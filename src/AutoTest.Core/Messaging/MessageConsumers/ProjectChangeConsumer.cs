@@ -81,9 +81,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private void runTests(ITestRunner testRunner, string assembly)
         {
-            Console.WriteLine(string.Format("Running tests for {0} through {1}", Path.GetFileName(assembly), testRunner.GetType().ToString()));
             var results = testRunner.RunTests(assembly);
-            foreach (var result in results.All)
+            foreach (var result in results.Failed)
+                Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
+            foreach (var result in results.Ignored)
                 Console.WriteLine(string.Format("{0} {1}", result.Status, result.Message));
         }
     }

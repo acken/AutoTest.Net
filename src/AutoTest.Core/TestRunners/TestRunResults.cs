@@ -1,19 +1,28 @@
+using System.Linq;
 using System.Collections.Generic;
 
 namespace AutoTest.Core.TestRunners
 {
     public class TestRunResults
     {
-        readonly IEnumerable<TestResult> _testResults;
+        readonly TestResult[] _testResults;
 
-        public TestRunResults(IEnumerable<TestResult> testResults)
+        public TestResult[] All { get { return _testResults; } }
+        public TestResult[] Passed { get { return queryByStatus(TestStatus.Passed); } }
+        public TestResult[] Failed { get { return queryByStatus(TestStatus.Failed); } }
+        public TestResult[] Ignored { get { return queryByStatus(TestStatus.Ignored); } }
+
+        public TestRunResults(TestResult[] testResults)
         {
             _testResults = testResults;
         }
 
-        public IEnumerable<TestResult> All
+        private TestResult[] queryByStatus(TestStatus status)
         {
-            get { return _testResults; }
+            var query = from t in _testResults
+                        where t.Status.Equals(status)
+                        select t;
+            return query.ToArray();
         }
     }
 }

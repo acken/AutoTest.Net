@@ -57,7 +57,7 @@ namespace AutoTest.Core.TestRunners
                     results.Add(new TestResult(TestStatus.Ignored, detail));
                 }
             }
-            return new TestRunResults(results);
+            return new TestRunResults(results.ToArray());
         }
     }
 }

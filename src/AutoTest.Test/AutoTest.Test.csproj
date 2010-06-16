@@ -102,6 +102,7 @@
     <Compile Include="Core\FileSystem\ProjectLocators\VisualBasicLocatorTest.cs" />
     <Compile Include="Core\FileSystem\WatchValidatorTest.cs" />
     <Compile Include="Core\Messaging\Fakes\FakeProjectLocator.cs" />
+    <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\TestResultTests.cs" />
     <Compile Include="Core\Configuration\BootStrapperTests.cs" />
     <Compile Include="Core\BuildRunners\IBuildEngine.cs" />

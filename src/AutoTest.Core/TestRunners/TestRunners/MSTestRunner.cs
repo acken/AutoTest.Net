@@ -35,24 +35,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             proc.Start();
             string line;
-            var testRunResults = new List<TestResult>();
+            var parser = new MSTestResponseParser();
             while ((line = proc.StandardOutput.ReadLine()) != null)
-            {
-                if (line.StartsWith("Passed"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Passed, line));
-                }
-                else if (line.StartsWith("Failed"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Failed, line));
-                }
-                else if (line.StartsWith("Ignored"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Ignored, line));
-                }
-            }
+                parser.ParseLine(line);
             proc.WaitForExit();
-            return new TestRunResults(testRunResults);
+            return parser.Result;
         }
 
         #endregion

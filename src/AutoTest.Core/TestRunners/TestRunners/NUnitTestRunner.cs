@@ -60,7 +60,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 }
             }
             proc.WaitForExit();
-            return new TestRunResults(testRunResults);
+            return new TestRunResults(testRunResults.ToArray());
         }
 
         #endregion
