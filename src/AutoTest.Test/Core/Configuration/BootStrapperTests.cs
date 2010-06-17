@@ -100,13 +100,6 @@ namespace AutoTest.Test.Core.Configuration
         }
 
         [Test]
-        public void Should_register_test_runner()
-        {
-            var testRunner = _locator.Locate<ITestRunner>();
-            testRunner.ShouldBeOfType<CommandLineTestRunner>();
-        }
-
-        [Test]
         public void Should_register_file_system_service()
         {
             var service = _locator.Locate<IFileSystemService>();

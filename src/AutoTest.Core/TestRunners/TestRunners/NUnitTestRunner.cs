@@ -22,7 +22,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public NUnitTestRunner(IConfiguration configuration)
         {
-            _unitTestExe = configuration.MSTestRunner;
+            _unitTestExe = configuration.NunitTestRunner;
         }
 
         #region ITestRunner Members
@@ -32,7 +32,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             Logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
-                                                        "\"" + assemblyName + "\"");
+                                                        "/noshadow /xmlconsole \"" + assemblyName + "\"");
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(assemblyName);
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -41,32 +41,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             proc.Start();
             string line;
-            var testRunResults = new List<TestResult>();
-            while ((line = proc.StandardOutput.ReadLine()) != null)
-            {
-                string detail = String.Empty;
-
-                // "Tests run: 1, Failures: 1, Not run: 0, Time: 0.116 seconds"
-                if (line.StartsWith("Tests run:"))
-                    Logger.Info(line);
-                if (line.Contains("]"))
-                    detail = line.Substring(line.IndexOf("]") + 1).Trim();
-
-                if (line.StartsWith("[pass") || line.StartsWith("[success"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Passed, detail));
-                }
-                else if (line.StartsWith("[fail"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Failed, detail));
-                }
-                else if (line.StartsWith("[ignore"))
-                {
-                    testRunResults.Add(new TestResult(TestStatus.Ignored, detail));
-                }
-            }
+            var parser = new NUnitTestResponseParser(_logger);
+            parser.Parse(proc.StandardOutput.ReadToEnd());
             proc.WaitForExit();
-            return new TestRunResults(testRunResults.ToArray());
+            return parser.Result;
         }
 
         #endregion

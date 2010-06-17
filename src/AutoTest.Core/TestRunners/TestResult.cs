@@ -3,7 +3,8 @@ namespace AutoTest.Core.TestRunners
     public class TestResult
     {
         private readonly TestStatus _status;
-        private readonly string _message;
+        private readonly string _message = "";
+        private readonly string _stackTrace;
         private static readonly TestResult _passResult;
 
         /// <summary>
@@ -31,6 +32,13 @@ namespace AutoTest.Core.TestRunners
             _message = message;
         }
 
+        public TestResult(TestStatus status, string message, string stackTrace)
+        {
+            _status = status;
+            _message = message;
+            _stackTrace = stackTrace;
+        }
+
         static TestResult()
         {
             _passResult = new TestResult(TestStatus.Passed, string.Empty);
@@ -44,6 +52,11 @@ namespace AutoTest.Core.TestRunners
         public string Message
         {
             get { return _message; }
+        }
+
+        public string StackTrace
+        {
+            get { return _stackTrace; }
         }
     }
 }

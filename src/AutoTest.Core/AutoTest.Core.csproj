@@ -115,11 +115,11 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestRunners\CommandLineTestRunner.cs" />
     <Compile Include="TestRunners\ITestRunner.cs" />
     <Compile Include="TestRunners\TestResult.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestResponseParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestRunner.cs" />
+    <Compile Include="TestRunners\TestRunners\NUnitTestResponseParser.cs" />
     <Compile Include="TestRunners\TestRunners\NUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
