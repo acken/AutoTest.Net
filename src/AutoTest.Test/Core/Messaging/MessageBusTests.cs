@@ -6,6 +6,7 @@ using AutoTest.Test.TestObjects;
 using NUnit.Framework;
 using Castle.MicroKernel.Registration;
 using System.Threading;
+using AutoTest.Test.Core.Messaging.TestClasses;
 
 namespace AutoTest.Test.Core.Messaging
 {
@@ -53,6 +54,17 @@ namespace AutoTest.Test.Core.Messaging
             _bus.Publish(100);
             waitForAsyncCall();
             BigListener.LastIntMessage.ShouldEqual(100);
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_information_message()
+        {
+            var consumer = new InformationMessageConsumer(_bus);
+            var message = new InformationMessage("");
+            _bus.Publish<InformationMessage>(message);
+            waitForAsyncCall();
+            consumer.EventWasCalled.ShouldBeTrue();
+
         }
 
         private void waitForAsyncCall()

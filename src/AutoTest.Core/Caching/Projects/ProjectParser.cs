@@ -31,8 +31,6 @@ namespace AutoTest.Core.Caching.Projects
         private IFileSystemService _fsService;
         private string _projectFile;
         private string _fileContent;
-        private ProjectType _type;
-        private bool _containsNUnitTests;
         private string[] _references = new string[] {};
 
         public ProjectParser(IFileSystemService fsService)

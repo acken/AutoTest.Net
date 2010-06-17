@@ -16,18 +16,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 {
     class ProjectChangeConsumer : IConsumerOf<ProjectChangeMessage>
     {
+        private IMessageBus _bus;
         private ICache _cache;
         private IConfiguration _configuration;
-        private ILogger _logger;
 
-        public ILogger Logger
+        public ProjectChangeConsumer(IMessageBus bus, ICache cache, IConfiguration configuration)
         {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
-
-        public ProjectChangeConsumer(ICache cache, IConfiguration configuration)
-        {
+            _bus = bus;
             _cache = cache;
             _configuration = configuration;
         }
@@ -36,8 +31,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
-            Logger.Info("");
-            Logger.Info("Preparing build(s) and test run(s)");
+            _bus.Publish(new InformationMessage(""));
+            _bus.Publish(new InformationMessage("Preparing build(s) and test run(s)"));
             var runReport = new RunReport();
             foreach (var file in message.Files)
             {
@@ -50,7 +45,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 runReport.NumberOfProjectsBuilt += report.NumberOfProjectsBuilt;
                 runReport.NumberOfTestsRan += report.NumberOfTestsRan;
             }
-            Logger.InfoFormat("Ran {0} build(s) and {1} test(s)", runReport.NumberOfProjectsBuilt, runReport.NumberOfTestsRan);
+            _bus.Publish(new InformationMessage(string.Format("Ran {0} build(s) and {1} test(s)", runReport.NumberOfProjectsBuilt, runReport.NumberOfTestsRan)));
         }
 
         private RunReport buildAndRunTests(Project project)
@@ -78,25 +73,25 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             {
                 if (buildReport.ErrorCount > 0)
                 {
-                    Logger.InfoFormat(
+                    _bus.Publish(new InformationMessage(string.Format(
                         "Building {0} finished with {1} errors and  {2} warningns",
                         Path.GetFileName(project),
                         buildReport.ErrorCount,
-                        buildReport.WarningCount);
+                        buildReport.WarningCount)));
                 }
                 else
                 {
-                    Logger.InfoFormat(
+                    _bus.Publish(new InformationMessage(string.Format(
                         "Building {0} succeeded with {1} warnings",
                         Path.GetFileName(project),
-                        buildReport.WarningCount);
+                        buildReport.WarningCount)));
                 }
                 foreach (var error in buildReport.Errors)
-                    Logger.InfoFormat("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition,
-                                      error.ErrorMessage);
+                    _bus.Publish(new InformationMessage(string.Format("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition,
+                                      error.ErrorMessage)));
                 foreach (var warning in buildReport.Warnings)
-                    Logger.InfoFormat("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber,
-                                      warning.LinePosition, warning.ErrorMessage);
+                    _bus.Publish(new InformationMessage(string.Format("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber,
+                                      warning.LinePosition, warning.ErrorMessage)));
             }
             return buildReport.ErrorCount == 0;
         }
@@ -124,11 +119,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var ignored = results.Ignored;
             if (failed.Length > 0 || ignored.Length > 0)
             {
-                Logger.InfoFormat("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly));
+                _bus.Publish(new InformationMessage(string.Format("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly))));
                 foreach (var result in results.Failed)
-                    Logger.InfoFormat("    {0} -> {1}", result.Status, result.Message);
+                    _bus.Publish(new InformationMessage(string.Format("    {0} -> {1}", result.Status, result.Message)));
                 foreach (var result in results.Ignored)
-                    Logger.InfoFormat("    {0} -> {1}", result.Status, result.Message);
+                    _bus.Publish(new InformationMessage(string.Format("    {0} -> {1}", result.Status, result.Message)));
             }
             return results.All.Length;
         }

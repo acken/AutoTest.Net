@@ -17,6 +17,12 @@ namespace AutoTest.Test.Core.Messaging
         }
 
         [Test]
+        public override void Should_be_immutable()
+        {
+            should_be_immutable_test();
+        }
+
+        [Test]
         public void Should_have_file_info() 
         { 
             var message = CreateMessage(); 

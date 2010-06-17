@@ -7,6 +7,7 @@ using AutoTest.Core.TestRunners;
 using System;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.FileSystem.ProjectLocators;
+using AutoTest.Core.Presenters;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -118,6 +119,13 @@ namespace AutoTest.Test.Core.Configuration
         {
             var locators = _locator.LocateAll<ILocateProjects>();
             locators.Length.ShouldEqual(2);
+        }
+
+        [Test]
+        public void Should_register_feedback_presenter()
+        {
+            var presenter = _locator.Locate<IFeedbackPresenter>();
+            presenter.ShouldBeOfType<IFeedbackPresenter>();
         }
     }
 }

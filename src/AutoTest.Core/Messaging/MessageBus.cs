@@ -9,6 +9,8 @@ namespace AutoTest.Core.Messaging
     {
         private readonly IServiceLocator _services;
 
+        public event EventHandler<InformationMessageEventArgs> OnInformationMessage;
+
         public MessageBus(IServiceLocator services)
         {
             _services = services;
@@ -18,15 +20,30 @@ namespace AutoTest.Core.Messaging
         {
             if (message == null)
                 throw new ArgumentNullException("message");
+            // TODO: Handle Blocking consumers pr message type
             ThreadPool.QueueUserWorkItem(publish<T>, message);
         }
 
         private void publish<T>(object threadContext)
         {
             T message = (T) threadContext;
+            if (handleByType<T>(message))
+                return;
             var instances = _services.LocateAll<IConsumerOf<T>>();
             foreach (var instance in instances)
                 instance.Consume(message);
+        }
+
+        private bool handleByType<T>(T message)
+        {
+            bool handled = false;
+            if (typeof(T) == typeof(InformationMessage))
+            {
+                if (OnInformationMessage != null)
+                    OnInformationMessage(this, new InformationMessageEventArgs((InformationMessage) (IMessage) message));
+                handled = true;
+            }
+            return handled;
         }
     }
 }

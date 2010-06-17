@@ -33,12 +33,22 @@ namespace AutoTest.Core.BuildRunners
         private BuildMessage parseMessage(string type)
         {
             var message = new BuildMessage();
-            message.File = _line.Substring(0, _line.IndexOf('('));
-            var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
-            message.LineNumber = int.Parse(position[0]);
-            message.LinePosition = int.Parse(position[1]);
-            message.ErrorMessage = _line.Substring(_line.IndexOf(type) + type.Length,
-                                                   _line.Length - (_line.IndexOf(type) + type.Length)).Trim();
+            try
+            {
+                message.File = _line.Substring(0, _line.IndexOf('('));
+                var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
+                message.LineNumber = int.Parse(position[0]);
+                message.LinePosition = int.Parse(position[1]);
+                message.ErrorMessage = _line.Substring(_line.IndexOf(type) + type.Length,
+                                                       _line.Length - (_line.IndexOf(type) + type.Length)).Trim();
+            }
+            catch (Exception)
+            {
+                message.File = "Unknown";
+                message.LineNumber = 0;
+                message.LinePosition = 0;
+                message.ErrorMessage = _line;
+            }
             return message;
         }
     }

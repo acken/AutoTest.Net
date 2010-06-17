@@ -9,9 +9,10 @@ namespace AutoTest.Test.Core.Messaging
     public abstract class MessageTestBase<T>
     {
         protected abstract T CreateMessage();
+        
+        public abstract void Should_be_immutable();
 
-        [Test]
-        public void Should_be_immutable()
+        protected void should_be_immutable_test()
         {
             var messageType = CreateMessage().GetType();
             var infos = messageType.GetProperties().Where(p => p.CanWrite);

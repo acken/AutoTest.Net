@@ -2,13 +2,16 @@ using System;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Configuration;
 using Castle.Core.Logging;
+using AutoTest.Core.Presenters;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Console
 {
-    public class ConsoleApplication : IConsoleApplication
+    public class ConsoleApplication : IConsoleApplication, IFeedbackView
     {
         private readonly IDirectoryWatcher _watcher;
         private readonly IConfiguration _configuration;
+        private readonly IFeedbackPresenter _feedback;
         private ILogger _logger;
 
         public ILogger Logger
@@ -17,10 +20,12 @@ namespace AutoTest.Console
             set { _logger = value; }
         }
 
-        public ConsoleApplication(IDirectoryWatcher watcher, IConfiguration configuration)
+        public ConsoleApplication(IFeedbackPresenter presenter, IDirectoryWatcher watcher, IConfiguration configuration)
         {
             _watcher = watcher;
             _configuration = configuration;
+            _feedback = presenter;
+            _feedback.View = this;
         }
 
         public void Start()
@@ -35,5 +40,14 @@ namespace AutoTest.Console
         {
             _watcher.Dispose();
         }
+
+        #region IFeedbackView Members
+
+        public void RecievingInformationMessage(InformationMessage message)
+        {
+            _logger.Info(message.Message);
+        }
+
+        #endregion
     }
 }

@@ -21,6 +21,8 @@ namespace AutoTest.Core.FileSystem
         {
             if(info == null)
                 return new ChangedFile[] { };
+            if (!info.Exists)
+                return new ChangedFile[] { };
             var files = info.GetFiles().Where(predicate).ToArray();
             if (files.Length > 0)
             {

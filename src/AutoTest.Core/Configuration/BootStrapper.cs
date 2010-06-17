@@ -12,6 +12,7 @@ using Castle.Windsor;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Core.Presenters;
 
 namespace AutoTest.Core.Configuration
 {
@@ -40,7 +41,8 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
                 .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
-                .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>());
+                .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>())
+                .Register(Component.For<IFeedbackPresenter>().ImplementedBy<FeedbackPresenter>());
             RegisterAssembly(Assembly.GetExecutingAssembly());
         }
 

@@ -19,7 +19,7 @@ namespace AutoTest.Core.FileSystem
         {
             _bus = bus;
             _validator = validator;
-            _batchTimer = new Timer(50);
+            _batchTimer = new Timer(100);
             _batchTimer.Enabled = true;
             _batchTimer.Elapsed += _batchTimer_Elapsed;
             _watcher = new FileSystemWatcher

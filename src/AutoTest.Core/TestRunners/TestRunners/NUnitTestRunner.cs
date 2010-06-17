@@ -40,7 +40,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
             proc.StartInfo.CreateNoWindow = true;
 
             proc.Start();
-            string line;
             var parser = new NUnitTestResponseParser(_logger);
             parser.Parse(proc.StandardOutput.ReadToEnd());
             proc.WaitForExit();
