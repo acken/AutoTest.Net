@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Castle.MicroKernel.Registration;
 using System.Threading;
 using AutoTest.Test.Core.Messaging.TestClasses;
+using AutoTest.Core.TestRunners;
 
 namespace AutoTest.Test.Core.Messaging
 {
@@ -71,11 +72,21 @@ namespace AutoTest.Test.Core.Messaging
         [Test]
         public void Should_be_able_to_consume_build_messages()
         {
-            var consumer = new BuildMessageConsumer(_bus);
+            var consumer = new RunMessageConsumer(_bus);
             var message = new BuildRunMessage(new BuildRunResults(""));
             _bus.Publish<BuildRunMessage>(message);
             waitForAsyncCall();
-            consumer.EventWasCalled.ShouldBeTrue();
+            consumer.BuildMessageEventWasCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_testrun_messages()
+        {
+            var consumer = new RunMessageConsumer(_bus);
+            var message = new TestRunMessage(new TestRunResults("", "", new TestResult[] {}));
+            _bus.Publish<TestRunMessage>(message);
+            waitForAsyncCall();
+            consumer.TestRunMessageEventWasCalled.ShouldBeTrue();
         }
 
         private void waitForAsyncCall()

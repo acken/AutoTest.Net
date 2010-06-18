@@ -16,7 +16,7 @@ namespace AutoTest.Test.Core.TestRunners
          [SetUp]
          public void SetUp()
          {
-             _parser = new MSTestResponseParser();
+             _parser = new MSTestResponseParser("", "");
          }
 
          [Test]

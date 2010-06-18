@@ -20,7 +20,7 @@ namespace AutoTest.Test.Core.Messaging
             if (writableProperites > 0)
             {
                 Assert.IsTrue(false,
-                            String.Format("RunMessage of type {1} has writable property {0}. Not immutable",
+                            String.Format("Message of type {1} has writable property {0}. Not immutable",
                                           infos.First().Name, messageType.Name));
             }
             var fields = messageType.GetFields();

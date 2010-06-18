@@ -20,10 +20,6 @@ namespace AutoTest.Core.BuildRunners
 
         public BuildRunResults RunBuild(string projectName)
         {
-            _bus.Publish(new InformationMessage(
-                             string.Format("Starting build of {0} using \"{1}\".",
-                                           Path.GetFileName(projectName),
-                                           Path.GetFileName(_buildExecutable))));
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
             process.StartInfo.RedirectStandardOutput = true;

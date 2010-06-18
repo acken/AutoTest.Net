@@ -12,13 +12,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
     class MSTestRunner : ITestRunner
     {
         private readonly string _unitTestExe;
-        private ILogger _logger;
-
-        public ILogger Logger
-        {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
 
         public MSTestRunner(IConfiguration configuration)
         {
@@ -27,9 +20,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         #region ITestRunner Members
 
-        public TestRunResults RunTests(string assemblyName)
+        public TestRunResults RunTests(string project, string assemblyName)
         {
-            Logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
                                                         "/testcontainer:\"" + assemblyName + "\"");
@@ -41,7 +33,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             proc.Start();
             string line;
-            var parser = new MSTestResponseParser();
+            var parser = new MSTestResponseParser(project, assemblyName);
             while ((line = proc.StandardOutput.ReadLine()) != null)
                 parser.ParseLine(line);
             proc.WaitForExit();

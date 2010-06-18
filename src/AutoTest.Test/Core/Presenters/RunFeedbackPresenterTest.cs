@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.Core.BuildRunners;
+using AutoTest.Core.TestRunners;
 using NUnit.Framework;
 using AutoTest.Core.Configuration;
 using Rhino.Mocks;
@@ -36,7 +37,16 @@ namespace AutoTest.Test.Core.Presenters
             var message = new BuildRunMessage(new BuildRunResults(""));
             _bus.Publish<BuildRunMessage>(message);
             waitForAsyncCall();
-            _view.RunMessage.ShouldBeTheSameAs(message);
+            _view.BuildRunMessage.ShouldBeTheSameAs(message);
+        }
+
+        [Test]
+        public void Should_subscribe_to_testrun_messages()
+        {
+            var message = new TestRunMessage(new TestRunResults("", "", null));
+            _bus.Publish(message);
+            waitForAsyncCall();
+            _view.TestRunMessage.ShouldBeTheSameAs(message);
         }
 
         private void waitForAsyncCall()

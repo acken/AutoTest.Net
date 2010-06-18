@@ -8,6 +8,7 @@ namespace AutoTest.Core.Presenters
 {
     public interface IRunFeedbackView
     {
-        void RecievingBuildMessage(BuildRunMessage runMessage);
+        void RecievingBuildMessage(BuildRunMessage message);
+        void RecievingTestRunMessage(TestRunMessage message);
     }
 }

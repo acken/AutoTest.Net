@@ -11,6 +11,7 @@ namespace AutoTest.Core.Messaging
 
         public event EventHandler<InformationMessageEventArgs> OnInformationMessage;
         public event EventHandler<BuildMessageEventArgs> OnBuildMessage;
+        public event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
 
         public MessageBus(IServiceLocator services)
         {
@@ -45,8 +46,17 @@ namespace AutoTest.Core.Messaging
                 handled = true;
             }
             if (typeof(T) == typeof(BuildRunMessage))
+            {
                 if (OnBuildMessage != null)
                     OnBuildMessage(this, new BuildMessageEventArgs((BuildRunMessage) (IMessage) message));
+                handled = true;
+            }
+            if (typeof(T) == typeof(TestRunMessage))
+            {
+                if (OnTestRunMessage != null)
+                    OnTestRunMessage(this, new TestRunMessageEventArgs((TestRunMessage)(IMessage)message));
+                handled = true;
+            }
             return handled;
         }
     }

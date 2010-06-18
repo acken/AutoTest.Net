@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Castle.Core.Logging;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class NUnitTestResponseParser
     {
-        private ILogger _logger;
+        private IMessageBus _bus;
+        private string _project;
+        private string _assembly;
         private List<TestResult> _result = new List<TestResult>();
 
-        public TestRunResults Result { get { return new TestRunResults(_result.ToArray()); } }
+        public TestRunResults Result { get { return new TestRunResults(_project, _assembly, _result.ToArray()); } }
 
-        public NUnitTestResponseParser(ILogger logger)
+        public NUnitTestResponseParser(IMessageBus bus, string project, string assembly)
         {
-            _logger = logger;
+            _bus = bus;
+            _project = project;
+            _assembly = assembly;
         }
 
         public void Parse(string content)
@@ -71,8 +76,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
             int endTag = content.IndexOf("</test-case>", start, StringComparison.CurrentCultureIgnoreCase);
             if (selfClosedEnd < 0 && endTag < 0)
             {
-                _logger.WarnFormat("Invalid NUnit response format. Could not find <testcase> closing tag for {0}",
-                                   content);
+                _bus.Publish(new InformationMessage(string.Format("Invalid NUnit response format. Could not find <testcase> closing tag for {0}",
+                                   content)));
                 return -1;
             }
 

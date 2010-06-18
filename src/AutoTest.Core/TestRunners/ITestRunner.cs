@@ -2,6 +2,6 @@ namespace AutoTest.Core.TestRunners
 {
     public interface ITestRunner
     {
-        TestRunResults RunTests(string assemblyName);
+        TestRunResults RunTests(string project, string assemblyName);
     }
 }

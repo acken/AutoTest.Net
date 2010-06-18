@@ -116,6 +116,7 @@
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
+    <Compile Include="Messaging\TestRunMessage.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackView.cs" />

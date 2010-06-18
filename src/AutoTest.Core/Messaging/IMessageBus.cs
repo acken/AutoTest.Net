@@ -15,11 +15,21 @@ namespace AutoTest.Core.Messaging
 
     public class BuildMessageEventArgs : EventArgs
     {
-        public BuildRunMessage RunMessage { get; private set; }
+        public BuildRunMessage Message { get; private set; }
 
         public BuildMessageEventArgs(BuildRunMessage runMessage)
         {
-            RunMessage = runMessage;
+            Message = runMessage;
+        }
+    }
+
+    public class TestRunMessageEventArgs : EventArgs
+    {
+        public TestRunMessage Message { get; private set; }
+
+        public TestRunMessageEventArgs(TestRunMessage message)
+        {
+            Message = message;
         }
     }
 
@@ -27,6 +37,7 @@ namespace AutoTest.Core.Messaging
     {
         event EventHandler<InformationMessageEventArgs> OnInformationMessage;
         event EventHandler<BuildMessageEventArgs> OnBuildMessage;
+        event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         void Publish<T>(T message);
     }
 }

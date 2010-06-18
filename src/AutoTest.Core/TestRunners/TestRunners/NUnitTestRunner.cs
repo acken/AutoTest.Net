@@ -6,30 +6,25 @@ using AutoTest.Core.Configuration;
 using System.IO;
 using System.Diagnostics;
 using Castle.Core.Logging;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class NUnitTestRunner : ITestRunner
     {
+        private IMessageBus _bus;
         private readonly string _unitTestExe;
-        private ILogger _logger;
 
-        public ILogger Logger
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration)
         {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
-
-        public NUnitTestRunner(IConfiguration configuration)
-        {
+            _bus = bus;
             _unitTestExe = configuration.NunitTestRunner;
         }
 
         #region ITestRunner Members
 
-        public TestRunResults RunTests(string assemblyName)
+        public TestRunResults RunTests(string project, string assemblyName)
         {
-            Logger.InfoFormat("Running unit tests using \"{0}\" against assembly {1}.", Path.GetFileName(_unitTestExe), Path.GetFileName(assemblyName));
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
                                                         "/noshadow /xmlconsole \"" + assemblyName + "\"");
@@ -40,7 +35,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             proc.StartInfo.CreateNoWindow = true;
 
             proc.Start();
-            var parser = new NUnitTestResponseParser(_logger);
+            var parser = new NUnitTestResponseParser(_bus, project, assemblyName);
             parser.Parse(proc.StandardOutput.ReadToEnd());
             proc.WaitForExit();
             return parser.Result;

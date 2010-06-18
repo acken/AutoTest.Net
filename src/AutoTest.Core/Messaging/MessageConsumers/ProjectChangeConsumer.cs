@@ -81,27 +81,18 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
             var file = Path.Combine(folder, project.Value.AssemblyName);
             if (project.Value.ContainsNUnitTests)
-                numberOfTests += runTests(new NUnitTestRunner(_configuration), file);
+                numberOfTests += runTests(new NUnitTestRunner(_bus, _configuration), projectPath, file);
             if (project.Value.ContainsMSTests)
-                numberOfTests += runTests(new MSTestRunner(_configuration), file);
+                numberOfTests += runTests(new MSTestRunner(_configuration), projectPath, file);
             return numberOfTests;
         }
 
         #endregion
 
-        private int runTests(ITestRunner testRunner, string assembly)
+        private int runTests(ITestRunner testRunner, string project, string assembly)
         {
-            var results = testRunner.RunTests(assembly);
-            var failed = results.Failed;
-            var ignored = results.Ignored;
-            if (failed.Length > 0 || ignored.Length > 0)
-            {
-                _bus.Publish(new InformationMessage(string.Format("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly))));
-                foreach (var result in results.Failed)
-                    _bus.Publish(new InformationMessage(string.Format("    {0} -> {1}", result.Status, result.Message)));
-                foreach (var result in results.Ignored)
-                    _bus.Publish(new InformationMessage(string.Format("    {0} -> {1}", result.Status, result.Message)));
-            }
+            var results = testRunner.RunTests(project, assembly);
+            _bus.Publish(new TestRunMessage(results));
             return results.All.Length;
         }
     }

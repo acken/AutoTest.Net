@@ -5,15 +5,21 @@ namespace AutoTest.Core.TestRunners
 {
     public class TestRunResults
     {
-        readonly TestResult[] _testResults;
+        private string _project;
+        private string _assembly;
+        private readonly TestResult[] _testResults;
 
+        public string Project { get { return _project; } }
+        public string Assembly { get { return _assembly; } }
         public TestResult[] All { get { return _testResults; } }
         public TestResult[] Passed { get { return queryByStatus(TestStatus.Passed); } }
         public TestResult[] Failed { get { return queryByStatus(TestStatus.Failed); } }
         public TestResult[] Ignored { get { return queryByStatus(TestStatus.Ignored); } }
 
-        public TestRunResults(TestResult[] testResults)
+        public TestRunResults(string project, string assembly, TestResult[] testResults)
         {
+            _project = project;
+            _assembly = assembly;
             _testResults = testResults;
         }
 

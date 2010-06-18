@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.TestRunners.TestRunners;
 using Castle.Core.Logging;
+using Rhino.Mocks;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -16,7 +18,8 @@ namespace AutoTest.Test.Core.TestRunners
         [SetUp]
         public void SetUp()
         {
-            _parser = new NUnitTestResponseParser(NullLogger.Instance);
+            var bus = MockRepository.GenerateMock<IMessageBus>();
+            _parser = new NUnitTestResponseParser(bus, "", "");
         }
 
         [Test]

@@ -9,15 +9,22 @@ namespace AutoTest.Test.Core.Presenters.Fakes
 {
     class FakeRunFeedbackView : IRunFeedbackView
     {
-        private BuildRunMessage _runMessage = null;
+        private BuildRunMessage _buildRunMessage = null;
+        private TestRunMessage _testRunMessage = null;
 
-        public BuildRunMessage RunMessage { get { return _runMessage; } }
+        public BuildRunMessage BuildRunMessage { get { return _buildRunMessage; } }
+        public TestRunMessage TestRunMessage { get { return _testRunMessage; } }
 
         #region IRunFeedbackView Members
 
         public void RecievingBuildMessage(BuildRunMessage runMessage)
         {
-            _runMessage = runMessage;
+            _buildRunMessage = runMessage;
+        }
+
+        public void RecievingTestRunMessage(TestRunMessage message)
+        {
+            _testRunMessage = message;
         }
 
         #endregion

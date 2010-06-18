@@ -86,6 +86,21 @@ namespace AutoTest.Console
             }
         }
 
+        public void RecievingTestRunMessage(TestRunMessage message)
+        {
+            var assembly = message.Results.Assembly;
+            var failed = message.Results.Failed;
+            var ignored = message.Results.Ignored;
+            if (failed.Length > 0 || ignored.Length > 0)
+            {
+                _logger.InfoFormat("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly));
+                foreach (var test in failed)
+                    _logger.InfoFormat("    {0} -> {1}", test.Status, test.Message);
+                foreach (var test in ignored)
+                    _logger.InfoFormat("    {0} -> {1}", test.Status, test.Message);
+            }
+        }
+
         #endregion
     }
 }

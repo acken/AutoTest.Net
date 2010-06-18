@@ -18,6 +18,7 @@ namespace AutoTest.Core.Presenters
             {
                 _view = value;
                 _bus.OnBuildMessage +=new EventHandler<BuildMessageEventArgs>(_bus_OnBuildMessage);
+                _bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(_bus_OnTestRunMessage);
             }
         }
 
@@ -28,7 +29,12 @@ namespace AutoTest.Core.Presenters
 
         void  _bus_OnBuildMessage(object sender, BuildMessageEventArgs e)
         {
- 	        _view.RecievingBuildMessage(e.RunMessage);
+ 	        _view.RecievingBuildMessage(e.Message);
+        }
+
+        void _bus_OnTestRunMessage(object sender, TestRunMessageEventArgs e)
+        {
+            _view.RecievingTestRunMessage(e.Message);
         }
     }
 }
