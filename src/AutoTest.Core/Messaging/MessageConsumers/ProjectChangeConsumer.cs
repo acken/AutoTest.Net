@@ -32,6 +32,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public void Consume(ProjectChangeMessage message)
         {
             _bus.Publish(new RunStartedMessage(message.Files));
+            var alreadyBuilt = new List<string>();
             var runReport = new RunReport();
             foreach (var file in message.Files)
             {
@@ -40,13 +41,18 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 // Other prioritized tests
                 // Projects that tests me
                 // Other test projects
-                buildAndRunTests(project, runReport);
+                buildAndRunTests(project, runReport, alreadyBuilt);
             }
             _bus.Publish(new RunFinishedMessage(runReport));
         }
 
-        private void buildAndRunTests(Project project, RunReport runReport)
+        private void buildAndRunTests(Project project, RunReport runReport, List<string> alreadyBuilt)
         {
+            if (alreadyBuilt.Contains(project.Key))
+                return;
+
+            alreadyBuilt.Add(project.Key);
+
             if (!buildProject(project.Key))
             {
                 runReport.NumberOfBuildsFailed++;
@@ -58,7 +64,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 runTests(project.Key, runReport);
 
             foreach (var reference in project.Value.ReferencedBy)
-                buildAndRunTests(_cache.Get<Project>(reference), runReport);
+                buildAndRunTests(_cache.Get<Project>(reference), runReport, alreadyBuilt);
         }
 
         private bool buildProject(string project)
