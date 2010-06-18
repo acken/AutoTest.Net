@@ -98,9 +98,12 @@
     <Compile Include="Core\FileSystem\ProjectLocators\VisualBasicLocatorTest.cs" />
     <Compile Include="Core\FileSystem\WatchValidatorTest.cs" />
     <Compile Include="Core\Messaging\Fakes\FakeProjectLocator.cs" />
+    <Compile Include="Core\Messaging\TestClasses\BuildMessageConsumer.cs" />
     <Compile Include="Core\Messaging\TestClasses\InformationMessageConsumer.cs" />
-    <Compile Include="Core\Presenters\Fakes\FakeIFeedbackView.cs" />
-    <Compile Include="Core\Presenters\FeedbackPresenterTest.cs" />
+    <Compile Include="Core\Presenters\Fakes\FakeInformationFeedbackView.cs" />
+    <Compile Include="Core\Presenters\Fakes\FakeRunFeedbackView.cs" />
+    <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
+    <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\TestResultTests.cs" />

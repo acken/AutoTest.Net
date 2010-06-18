@@ -6,12 +6,12 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.Presenters
 {
-    class FeedbackPresenter : IFeedbackPresenter
+    class InformationFeedbackPresenter : IInformationFeedbackPresenter
     {
         private IMessageBus _bus;
-        private IFeedbackView _view;
+        private IInformationFeedbackView _view;
 
-        public IFeedbackView View
+        public IInformationFeedbackView View
         {
             get { return _view; }
             set
@@ -21,11 +21,10 @@ namespace AutoTest.Core.Presenters
             }
         }
 
-        public FeedbackPresenter(IMessageBus bus)
+        public InformationFeedbackPresenter(IMessageBus bus)
         {
             _bus = bus;
         }
-
 
         void _bus_OnInformationMessage(object sender, InformationMessageEventArgs e)
         {

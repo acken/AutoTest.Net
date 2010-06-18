@@ -6,7 +6,7 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.Presenters
 {
-    public interface IFeedbackView
+    public interface IInformationFeedbackView
     {
         void RecievingInformationMessage(InformationMessage message);
     }

@@ -41,7 +41,7 @@ namespace AutoTest.Test.Core
             // Write twice
             File.Create(_file).Dispose();
             using (var writer = new StreamWriter(_file, true)) { writer.WriteLine("some text"); }
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             
             _messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(
@@ -52,13 +52,13 @@ namespace AutoTest.Test.Core
                                   f.Files[0].Name.Equals(Path.GetFileName(_file)))),
                 m => m.Repeat.Once());
         }
-
+        
         [Test]
         public void Should_not_publish_event_when_validator_invalidates_change()
         {
             _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(false);
             File.Create(_file).Dispose();
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             _messageBus.AssertWasNotCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
         }
     }

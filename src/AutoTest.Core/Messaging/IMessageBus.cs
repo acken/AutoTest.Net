@@ -1,4 +1,5 @@
 using System;
+using AutoTest.Core.BuildRunners;
 
 namespace AutoTest.Core.Messaging
 {
@@ -12,9 +13,20 @@ namespace AutoTest.Core.Messaging
         }
     }
 
+    public class BuildMessageEventArgs : EventArgs
+    {
+        public BuildRunMessage RunMessage { get; private set; }
+
+        public BuildMessageEventArgs(BuildRunMessage runMessage)
+        {
+            RunMessage = runMessage;
+        }
+    }
+
     public interface IMessageBus
     {
         event EventHandler<InformationMessageEventArgs> OnInformationMessage;
+        event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         void Publish<T>(T message);
     }
 }

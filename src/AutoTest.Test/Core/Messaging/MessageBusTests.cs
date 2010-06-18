@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using AutoTest.Core.BuildRunners;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Messaging;
 using AutoTest.Test.TestObjects;
@@ -65,6 +66,16 @@ namespace AutoTest.Test.Core.Messaging
             waitForAsyncCall();
             consumer.EventWasCalled.ShouldBeTrue();
 
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_build_messages()
+        {
+            var consumer = new BuildMessageConsumer(_bus);
+            var message = new BuildRunMessage(new BuildRunResults(""));
+            _bus.Publish<BuildRunMessage>(message);
+            waitForAsyncCall();
+            consumer.EventWasCalled.ShouldBeTrue();
         }
 
         private void waitForAsyncCall()

@@ -3,30 +3,27 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Castle.Core.Logging;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.BuildRunners
 {
     public class MSBuildRunner : IBuildRunner
     {
         private readonly string _buildExecutable;
-        private ILogger _logger;
+        private readonly IMessageBus _bus;
 
-        public ILogger Logger
-        {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
-
-        public MSBuildRunner(string buildExecutable)
+        public MSBuildRunner(string buildExecutable, IMessageBus bus)
         {
             _buildExecutable = buildExecutable;
+            _bus = bus;
         }
 
         public BuildRunResults RunBuild(string projectName)
         {
-            Logger.InfoFormat("Starting build of {0} using \"{1}\".",
-                Path.GetFileName(projectName),
-                Path.GetFileName(_buildExecutable));
+            _bus.Publish(new InformationMessage(
+                             string.Format("Starting build of {0} using \"{1}\".",
+                                           Path.GetFileName(projectName),
+                                           Path.GetFileName(_buildExecutable))));
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
             process.StartInfo.RedirectStandardOutput = true;
@@ -36,7 +33,7 @@ namespace AutoTest.Core.BuildRunners
 
             process.Start();
             string line;
-            var buildResults = new BuildRunResults();
+            var buildResults = new BuildRunResults(projectName);
             while ((line = process.StandardOutput.ReadLine()) != null)
             {
                 var parser = new MSBuildOutputParser(buildResults, line);

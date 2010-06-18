@@ -67,32 +67,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(string project)
         {
-            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable);
+            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable, _bus);
             var buildReport = buildRunner.RunBuild(project);
-            if (buildReport.ErrorCount > 0 || buildReport.WarningCount > 0)
-            {
-                if (buildReport.ErrorCount > 0)
-                {
-                    _bus.Publish(new InformationMessage(string.Format(
-                        "Building {0} finished with {1} errors and  {2} warningns",
-                        Path.GetFileName(project),
-                        buildReport.ErrorCount,
-                        buildReport.WarningCount)));
-                }
-                else
-                {
-                    _bus.Publish(new InformationMessage(string.Format(
-                        "Building {0} succeeded with {1} warnings",
-                        Path.GetFileName(project),
-                        buildReport.WarningCount)));
-                }
-                foreach (var error in buildReport.Errors)
-                    _bus.Publish(new InformationMessage(string.Format("Error: {0}({1},{2}) {3}", error.File, error.LineNumber, error.LinePosition,
-                                      error.ErrorMessage)));
-                foreach (var warning in buildReport.Warnings)
-                    _bus.Publish(new InformationMessage(string.Format("Warning: {0}({1},{2}) {3}", warning.File, warning.LineNumber,
-                                      warning.LinePosition, warning.ErrorMessage)));
-            }
+            _bus.Publish(new BuildRunMessage(buildReport));
             return buildReport.ErrorCount == 0;
         }
 

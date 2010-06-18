@@ -122,10 +122,17 @@ namespace AutoTest.Test.Core.Configuration
         }
 
         [Test]
-        public void Should_register_feedback_presenter()
+        public void Should_register_information_feedback_presenter()
         {
-            var presenter = _locator.Locate<IFeedbackPresenter>();
-            presenter.ShouldBeOfType<IFeedbackPresenter>();
+            var presenter = _locator.Locate<IInformationFeedbackPresenter>();
+            presenter.ShouldBeOfType<IInformationFeedbackPresenter>();
+        }
+
+        [Test]
+        public void Should_register_run_feedback_presenter()
+        {
+            var presenter = _locator.Locate<IRunFeedbackPresenter>();
+            presenter.ShouldBeOfType<IRunFeedbackPresenter>();
         }
     }
 }

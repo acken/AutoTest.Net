@@ -55,8 +55,7 @@ namespace AutoTest.Core.FileSystem
                     _bus.Publish(fileChange);
                 }
                 _buffer.Clear();
-                _batchTimer.Stop();
-                _timerIsRunning = false;
+                stopTimer();
             }
         }
 
@@ -70,13 +69,30 @@ namespace AutoTest.Core.FileSystem
                 if (_buffer.FindIndex(0, f => f.FullName.Equals(file.FullName)) < 0)
                 {
                     _buffer.Add(file);
-                    if (!_timerIsRunning)
-                    {
-                        _batchTimer.Start();
-                        _timerIsRunning = true;
-                    }
+                    reStartTimer();
                 }
             }
+        }
+
+        private void reStartTimer()
+        {
+            stopTimer();
+            startTimer();
+        }
+
+        private void startTimer()
+        {
+            if (!_timerIsRunning)
+            {
+                _batchTimer.Start();
+                _timerIsRunning = true;
+            }
+        }
+
+        private void stopTimer()
+        {
+            _batchTimer.Stop();
+            _timerIsRunning = false;
         }
 
         /// <summary>

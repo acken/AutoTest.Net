@@ -14,10 +14,10 @@ using System.Threading;
 namespace AutoTest.Test.Core.Presenters
 {
     [TestFixture]
-    public class FeedbackPresenterTest
+    public class InformationFeedbackPresenterTest
     {
-        private FakeIFeedbackView _view;
-        private FeedbackPresenter _presenter;
+        private FakeInformationFeedbackView _view;
+        private InformationFeedbackPresenter _presenter;
         private IMessageBus _bus;
 
         [SetUp]
@@ -25,8 +25,8 @@ namespace AutoTest.Test.Core.Presenters
         {
             var locator = MockRepository.GenerateMock<IServiceLocator>();
             _bus = new MessageBus(locator);
-            _view = new FakeIFeedbackView();
-            _presenter = new FeedbackPresenter(_bus);
+            _view = new FakeInformationFeedbackView();
+            _presenter = new InformationFeedbackPresenter(_bus);
             _presenter.View = _view;
         }
 

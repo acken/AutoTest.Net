@@ -15,7 +15,7 @@ namespace AutoTest.Test.Core.BuildRunners
         [SetUp]
         public void SetUp()
         {
-            _results = new BuildRunResults();
+            _results = new BuildRunResults("");
         }
 
         [Test]

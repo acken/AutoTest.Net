@@ -7,13 +7,13 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Test.Core.Presenters.Fakes
 {
-    class FakeIFeedbackView : IFeedbackView
+    class FakeInformationFeedbackView : IInformationFeedbackView
     {
         private InformationMessage _message = null;
 
         public string Message { get { return _message.Message; } }
 
-        #region IFeedbackView Members
+        #region IInformationFeedbackView Members
 
         public void RecievingInformationMessage(InformationMessage message)
         {

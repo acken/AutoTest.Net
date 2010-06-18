@@ -10,6 +10,7 @@ namespace AutoTest.Core.Messaging
         private readonly IServiceLocator _services;
 
         public event EventHandler<InformationMessageEventArgs> OnInformationMessage;
+        public event EventHandler<BuildMessageEventArgs> OnBuildMessage;
 
         public MessageBus(IServiceLocator services)
         {
@@ -43,6 +44,9 @@ namespace AutoTest.Core.Messaging
                     OnInformationMessage(this, new InformationMessageEventArgs((InformationMessage) (IMessage) message));
                 handled = true;
             }
+            if (typeof(T) == typeof(BuildRunMessage))
+                if (OnBuildMessage != null)
+                    OnBuildMessage(this, new BuildMessageEventArgs((BuildRunMessage) (IMessage) message));
             return handled;
         }
     }
