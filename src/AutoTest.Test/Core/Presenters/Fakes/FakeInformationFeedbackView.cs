@@ -9,15 +9,22 @@ namespace AutoTest.Test.Core.Presenters.Fakes
 {
     class FakeInformationFeedbackView : IInformationFeedbackView
     {
-        private InformationMessage _message = null;
+        private InformationMessage _informationmessage = null;
+        private WarningMessage _warningMessage = null;
 
-        public string Message { get { return _message.Message; } }
+        public string InformationMessage { get { return _informationmessage.Message; } }
+        public string WarningMessage { get { return _warningMessage.Warning; } }
 
         #region IInformationFeedbackView Members
 
         public void RecievingInformationMessage(InformationMessage message)
         {
-            _message = message;
+            _informationmessage = message;
+        }
+
+        public void RecievingWarningMessage(WarningMessage message)
+        {
+            _warningMessage = message;
         }
 
         #endregion

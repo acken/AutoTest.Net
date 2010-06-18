@@ -65,7 +65,7 @@ namespace AutoTest.Test.Core.Messaging
             var message = new InformationMessage("");
             _bus.Publish<InformationMessage>(message);
             waitForAsyncCall();
-            consumer.EventWasCalled.ShouldBeTrue();
+            consumer.InformationMessageEventWasCalled.ShouldBeTrue();
 
         }
 
@@ -87,6 +87,36 @@ namespace AutoTest.Test.Core.Messaging
             _bus.Publish<TestRunMessage>(message);
             waitForAsyncCall();
             consumer.TestRunMessageEventWasCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_run_started_messages()
+        {
+            var consumer = new RunMessageConsumer(_bus);
+            var message = new RunStartedMessage(null);
+            _bus.Publish(message);
+            waitForAsyncCall();
+            consumer.RunStartedMessageEventWasCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_run_finished_messages()
+        {
+            var consumer = new RunMessageConsumer(_bus);
+            var message = new RunFinishedMessage(null);
+            _bus.Publish(message);
+            waitForAsyncCall();
+            consumer.RunFinishedMessageEventWasCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_be_able_to_consume_warning_messages()
+        {
+            var consumer = new InformationMessageConsumer(_bus);
+            var message = new WarningMessage("some warning");
+            _bus.Publish(message);
+            waitForAsyncCall();
+            consumer.WarningMessageEventWasCalled.ShouldBeTrue();
         }
 
         private void waitForAsyncCall()

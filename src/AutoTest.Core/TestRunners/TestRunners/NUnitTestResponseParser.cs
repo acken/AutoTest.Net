@@ -76,7 +76,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             int endTag = content.IndexOf("</test-case>", start, StringComparison.CurrentCultureIgnoreCase);
             if (selfClosedEnd < 0 && endTag < 0)
             {
-                _bus.Publish(new InformationMessage(string.Format("Invalid NUnit response format. Could not find <testcase> closing tag for {0}",
+                _bus.Publish(new WarningMessage(string.Format("Invalid NUnit response format. Could not find <testcase> closing tag for {0}",
                                    content)));
                 return -1;
             }

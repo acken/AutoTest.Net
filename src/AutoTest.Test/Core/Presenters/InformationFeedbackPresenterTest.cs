@@ -33,9 +33,17 @@ namespace AutoTest.Test.Core.Presenters
         [Test]
         public void Should_subscribe_to_information_messages()
         {
-            _bus.Publish<InformationMessage>(new InformationMessage("some value"));
+            _bus.Publish(new InformationMessage("some value"));
             waitForAsyncCall();
-            _view.Message.ShouldEqual("some value");
+            _view.InformationMessage.ShouldEqual("some value");
+        }
+
+        [Test]
+        public void Should_subscribe_to_warning_messages()
+        {
+            _bus.Publish(new WarningMessage("some warning"));
+            waitForAsyncCall();
+            _view.WarningMessage.ShouldEqual("some warning");
         }
 
         private void waitForAsyncCall()

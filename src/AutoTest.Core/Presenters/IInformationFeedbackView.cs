@@ -9,5 +9,6 @@ namespace AutoTest.Core.Presenters
     public interface IInformationFeedbackView
     {
         void RecievingInformationMessage(InformationMessage message);
+        void RecievingWarningMessage(WarningMessage message);
     }
 }

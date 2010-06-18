@@ -18,6 +18,7 @@ namespace AutoTest.Core.Presenters
             {
                 _view = value;
                 _bus.OnInformationMessage += new EventHandler<InformationMessageEventArgs>(_bus_OnInformationMessage);
+                _bus.OnWarningMessage += new EventHandler<WarningMessageEventArgs>(_bus_OnWarningMessage);
             }
         }
 
@@ -29,6 +30,11 @@ namespace AutoTest.Core.Presenters
         void _bus_OnInformationMessage(object sender, InformationMessageEventArgs e)
         {
             _view.RecievingInformationMessage(e.Message);
+        }
+
+        void _bus_OnWarningMessage(object sender, WarningMessageEventArgs e)
+        {
+            _view.RecievingWarningMessage(e.Message);
         }
     }
 }

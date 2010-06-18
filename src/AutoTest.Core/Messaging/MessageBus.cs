@@ -9,7 +9,10 @@ namespace AutoTest.Core.Messaging
     {
         private readonly IServiceLocator _services;
 
+        public event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
+        public event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
         public event EventHandler<InformationMessageEventArgs> OnInformationMessage;
+        public event EventHandler<WarningMessageEventArgs> OnWarningMessage;
         public event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         public event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
 
@@ -45,16 +48,34 @@ namespace AutoTest.Core.Messaging
                     OnInformationMessage(this, new InformationMessageEventArgs((InformationMessage) (IMessage) message));
                 handled = true;
             }
-            if (typeof(T) == typeof(BuildRunMessage))
+            else if (typeof(T) == typeof(BuildRunMessage))
             {
                 if (OnBuildMessage != null)
                     OnBuildMessage(this, new BuildMessageEventArgs((BuildRunMessage) (IMessage) message));
                 handled = true;
             }
-            if (typeof(T) == typeof(TestRunMessage))
+            else if (typeof(T) == typeof(TestRunMessage))
             {
                 if (OnTestRunMessage != null)
                     OnTestRunMessage(this, new TestRunMessageEventArgs((TestRunMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(RunStartedMessage))
+            {
+                if (OnRunStartedMessage != null)
+                    OnRunStartedMessage(this, new RunStartedMessageEventArgs((RunStartedMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(RunFinishedMessage))
+            {
+                if (OnRunFinishedMessage != null)
+                    OnRunFinishedMessage(this, new RunFinishedMessageEventArgs((RunFinishedMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(WarningMessage))
+            {
+                if (OnWarningMessage != null)
+                    OnWarningMessage(this, new WarningMessageEventArgs((WarningMessage)(IMessage)message));
                 handled = true;
             }
             return handled;

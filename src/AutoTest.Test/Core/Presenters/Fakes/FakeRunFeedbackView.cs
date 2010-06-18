@@ -9,9 +9,13 @@ namespace AutoTest.Test.Core.Presenters.Fakes
 {
     class FakeRunFeedbackView : IRunFeedbackView
     {
+        private RunStartedMessage _runStartedMessage = null;
+        private RunFinishedMessage _runFinishedMessage = null;
         private BuildRunMessage _buildRunMessage = null;
         private TestRunMessage _testRunMessage = null;
 
+        public RunStartedMessage RunStartedMessage { get { return _runStartedMessage; } }
+        public RunFinishedMessage RunFinishedMessage { get { return _runFinishedMessage; } }
         public BuildRunMessage BuildRunMessage { get { return _buildRunMessage; } }
         public TestRunMessage TestRunMessage { get { return _testRunMessage; } }
 
@@ -25,6 +29,16 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public void RecievingTestRunMessage(TestRunMessage message)
         {
             _testRunMessage = message;
+        }
+
+        public void RecievingRunStartedMessage(RunStartedMessage message)
+        {
+            _runStartedMessage = message;
+        }
+
+        public void RecievingRunFinishedMessage(RunFinishedMessage message)
+        {
+            _runFinishedMessage = message;
         }
 
         #endregion

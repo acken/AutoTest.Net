@@ -52,6 +52,11 @@ namespace AutoTest.Console
             _logger.Info(message.Message);
         }
 
+        public void RecievingWarningMessage(WarningMessage message)
+        {
+            _logger.Warn(message.Warning);
+        }
+
         #endregion
 
         #region IRunFeedbackView Members
@@ -99,6 +104,26 @@ namespace AutoTest.Console
                 foreach (var test in ignored)
                     _logger.InfoFormat("    {0} -> {1}", test.Status, test.Message);
             }
+        }
+
+        public void RecievingRunStartedMessage(RunStartedMessage message)
+        {
+            _logger.Info("");
+            _logger.Info("Preparing build(s) and test run(s)");
+        }
+
+        public void RecievingRunFinishedMessage(RunFinishedMessage message)
+        {
+            var report = message.Report;
+            _logger.InfoFormat(
+                "Ran {0} build(s) ({1} succeeded, {2} failed) and {3} test(s) ({4} passed, {5} failed, {6} ignored)",
+                report.NumberOfProjectsBuilt,
+                report.NumberOfBuildsSucceeded,
+                report.NumberOfBuildsFailed,
+                report.NumberOfTestsRan,
+                report.NumberOfTestsPassed,
+                report.NumberOfTestsFailed,
+                report.NumberOfTestsIgnored);
         }
 
         #endregion

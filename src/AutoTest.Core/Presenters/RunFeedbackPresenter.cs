@@ -6,7 +6,7 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.Presenters
 {
-    class RunFeedbackPresenter : IRunFeedbackPresenter
+    class RunFeedbackPresenter : IRunFeedbackPresenter, IDisposable
     {
         private IMessageBus _bus;
         private IRunFeedbackView _view;
@@ -17,9 +17,21 @@ namespace AutoTest.Core.Presenters
             set
             {
                 _view = value;
+                _bus.OnRunStartedMessage += new EventHandler<RunStartedMessageEventArgs>(_bus_OnRunStartedMessage);
+                _bus.OnRunFinishedMessage += new EventHandler<RunFinishedMessageEventArgs>(_bus_OnRunFinishedMessage);
                 _bus.OnBuildMessage +=new EventHandler<BuildMessageEventArgs>(_bus_OnBuildMessage);
                 _bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(_bus_OnTestRunMessage);
             }
+        }
+
+        void _bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)
+        {
+            _view.RecievingRunStartedMessage(e.Message);
+        }
+
+        void _bus_OnRunFinishedMessage(object sender, RunFinishedMessageEventArgs e)
+        {
+            _view.RecievingRunFinishedMessage(e.Message);
         }
 
         public RunFeedbackPresenter(IMessageBus bus)
@@ -36,5 +48,17 @@ namespace AutoTest.Core.Presenters
         {
             _view.RecievingTestRunMessage(e.Message);
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _bus.OnRunStartedMessage -= _bus_OnRunStartedMessage;
+            _bus.OnRunFinishedMessage -= _bus_OnRunFinishedMessage;
+            _bus.OnBuildMessage -= _bus_OnBuildMessage;
+            _bus.OnTestRunMessage -= _bus_OnTestRunMessage;
+        }
+
+        #endregion
     }
 }

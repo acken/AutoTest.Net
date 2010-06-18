@@ -13,13 +13,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
-        private ILogger _logger;
-
-        public ILogger Logger
-        {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
 
         public FileChangeConsumer(IServiceLocator services, IMessageBus bus)
         {
@@ -52,7 +45,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var closestProjects = new List<ChangedFile>();
             var currentLocation = 0;
-            Logger.DebugFormat("Project Locator found a signification change in file \"{0}\". Publishing {1}.", file.Name, typeof(ProjectChangeMessage).Name);
             foreach (var locator in locators)
             {
                 var files = locator.Locate(file.FullName);

@@ -31,8 +31,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
-            _bus.Publish(new InformationMessage(""));
-            _bus.Publish(new InformationMessage("Preparing build(s) and test run(s)"));
+            _bus.Publish(new RunStartedMessage(message.Files));
             var runReport = new RunReport();
             foreach (var file in message.Files)
             {
@@ -41,28 +40,25 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 // Other prioritized tests
                 // Projects that tests me
                 // Other test projects
-                var report = buildAndRunTests(project);
-                runReport.NumberOfProjectsBuilt += report.NumberOfProjectsBuilt;
-                runReport.NumberOfTestsRan += report.NumberOfTestsRan;
+                buildAndRunTests(project, runReport);
             }
-            _bus.Publish(new InformationMessage(string.Format("Ran {0} build(s) and {1} test(s)", runReport.NumberOfProjectsBuilt, runReport.NumberOfTestsRan)));
+            _bus.Publish(new RunFinishedMessage(runReport));
         }
 
-        private RunReport buildAndRunTests(Project project)
+        private void buildAndRunTests(Project project, RunReport runReport)
         {
-            var runReport = new RunReport();
-            runReport.NumberOfProjectsBuilt = 1;
             if (!buildProject(project.Key))
-                return runReport;
-            if (project.Value.ContainsTests)
-                runReport.NumberOfTestsRan += runTests(project.Key);
-            foreach (var reference in project.Value.ReferencedBy)
             {
-                var referencerunReport = buildAndRunTests(_cache.Get<Project>(reference));
-                runReport.NumberOfProjectsBuilt += referencerunReport.NumberOfProjectsBuilt;
-                runReport.NumberOfTestsRan += referencerunReport.NumberOfTestsRan;
+                runReport.NumberOfBuildsFailed++;
+                return;
             }
-            return runReport;
+            runReport.NumberOfBuildsSucceeded++;
+
+            if (project.Value.ContainsTests)
+                runTests(project.Key, runReport);
+
+            foreach (var reference in project.Value.ReferencedBy)
+                buildAndRunTests(_cache.Get<Project>(reference), runReport);
         }
 
         private bool buildProject(string project)
@@ -73,27 +69,27 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return buildReport.ErrorCount == 0;
         }
 
-        private int runTests(string projectPath)
+        private void runTests(string projectPath, RunReport runReport)
         {
-            int numberOfTests = 0;
             var project = _cache.Get<Project>(projectPath);
             string folder = Path.Combine(Path.GetDirectoryName(projectPath), project.Value.OutputPath);
 
             var file = Path.Combine(folder, project.Value.AssemblyName);
             if (project.Value.ContainsNUnitTests)
-                numberOfTests += runTests(new NUnitTestRunner(_bus, _configuration), projectPath, file);
+                runTests(new NUnitTestRunner(_bus, _configuration), projectPath, file, runReport);
             if (project.Value.ContainsMSTests)
-                numberOfTests += runTests(new MSTestRunner(_configuration), projectPath, file);
-            return numberOfTests;
+                runTests(new MSTestRunner(_configuration), projectPath, file, runReport);
         }
 
         #endregion
 
-        private int runTests(ITestRunner testRunner, string project, string assembly)
+        private void runTests(ITestRunner testRunner, string project, string assembly, RunReport runReport)
         {
             var results = testRunner.RunTests(project, assembly);
+            runReport.NumberOfTestsPassed += results.Passed.Length;
+            runReport.NumberOfTestsFailed += results.Failed.Length;
+            runReport.NumberOfTestsIgnored += results.Ignored.Length;
             _bus.Publish(new TestRunMessage(results));
-            return results.All.Length;
         }
     }
 }

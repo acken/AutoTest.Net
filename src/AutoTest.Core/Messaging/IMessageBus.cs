@@ -3,11 +3,41 @@ using AutoTest.Core.BuildRunners;
 
 namespace AutoTest.Core.Messaging
 {
+    public class RunStartedMessageEventArgs : EventArgs
+    {
+        public RunStartedMessage Message { get; private set; }
+
+        public RunStartedMessageEventArgs(RunStartedMessage message)
+        {
+            Message = message;
+        }
+    }
+
+    public class RunFinishedMessageEventArgs : EventArgs
+    {
+        public RunFinishedMessage Message { get; private set; }
+
+        public RunFinishedMessageEventArgs(RunFinishedMessage message)
+        {
+            Message = message;
+        }
+    }
+
     public class InformationMessageEventArgs : EventArgs
     {
         public InformationMessage Message { get; private set; }
 
         public InformationMessageEventArgs(InformationMessage message)
+        {
+            Message = message;
+        }
+    }
+
+    public class WarningMessageEventArgs : EventArgs
+    {
+        public WarningMessage Message { get; private set; }
+
+        public WarningMessageEventArgs(WarningMessage message)
         {
             Message = message;
         }
@@ -35,7 +65,10 @@ namespace AutoTest.Core.Messaging
 
     public interface IMessageBus
     {
+        event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
+        event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
         event EventHandler<InformationMessageEventArgs> OnInformationMessage;
+        event EventHandler<WarningMessageEventArgs> OnWarningMessage;
         event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         void Publish<T>(T message);

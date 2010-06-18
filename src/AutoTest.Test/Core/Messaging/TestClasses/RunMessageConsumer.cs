@@ -8,13 +8,27 @@ namespace AutoTest.Test.Core.Messaging.TestClasses
 {
     class RunMessageConsumer
     {
+        public bool RunStartedMessageEventWasCalled = false;
+        public bool RunFinishedMessageEventWasCalled = false;
         public bool BuildMessageEventWasCalled = false;
         public bool TestRunMessageEventWasCalled = false;
 
         public RunMessageConsumer(IMessageBus bus)
         {
+            bus.OnRunStartedMessage += new EventHandler<RunStartedMessageEventArgs>(bus_OnRunStartedMessage);
+            bus.OnRunFinishedMessage += new EventHandler<RunFinishedMessageEventArgs>(bus_OnRunFinishedMessage);
             bus.OnBuildMessage += new EventHandler<BuildMessageEventArgs>(bus_OnOnBuildMessage);
             bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(bus_OnTestRunMessage);
+        }
+
+        void bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)
+        {
+            RunStartedMessageEventWasCalled = true;
+        }
+
+        void bus_OnRunFinishedMessage(object sender, RunFinishedMessageEventArgs e)
+        {
+            RunFinishedMessageEventWasCalled = true;
         }
 
         void bus_OnOnBuildMessage(object sender, BuildMessageEventArgs e)

@@ -5,15 +5,23 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class RunReport
+    public class RunReport
     {
-        public int NumberOfProjectsBuilt { get; set; }
-        public int NumberOfTestsRan { get; set; }
+        public int NumberOfBuildsSucceeded { get; set; }
+        public int NumberOfBuildsFailed { get; set; }
+        public int NumberOfProjectsBuilt { get { return NumberOfBuildsSucceeded + NumberOfBuildsFailed; } }
+        public int NumberOfTestsPassed { get; set; }
+        public int NumberOfTestsFailed { get; set; }
+        public int NumberOfTestsIgnored { get; set; }
+        public int NumberOfTestsRan { get { return NumberOfTestsPassed + NumberOfTestsFailed + NumberOfTestsIgnored; } }
 
         public RunReport()
         {
-            NumberOfProjectsBuilt = 0;
-            NumberOfTestsRan = 0;
+            NumberOfBuildsSucceeded = 0;
+            NumberOfBuildsFailed = 0;
+            NumberOfTestsPassed = 0;
+            NumberOfTestsFailed = 0;
+            NumberOfTestsIgnored = 0;
         }
     }
 }
