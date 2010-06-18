@@ -100,9 +100,9 @@ namespace AutoTest.Console
             {
                 _logger.InfoFormat("Test(s) {0} for assembly {1}", failed.Length > 0 ? "failed" : "was ignored", Path.GetFileName(assembly));
                 foreach (var test in failed)
-                    _logger.InfoFormat("    {0} -> {1}", test.Status, test.Message);
+                    _logger.InfoFormat("    {0} -> {1}: {2}", test.Status, test.Name, test.Message);
                 foreach (var test in ignored)
-                    _logger.InfoFormat("    {0} -> {1}", test.Status, test.Message);
+                    _logger.InfoFormat("    {0} -> {1}: {2}", test.Status, test.Name, test.Message);
             }
         }
 

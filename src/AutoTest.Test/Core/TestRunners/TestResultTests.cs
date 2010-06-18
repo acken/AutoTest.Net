@@ -34,13 +34,13 @@ namespace AutoTest.Test.Core.TestRunners
         {
             var failedMessage = TestResult.Fail("omg!");
             failedMessage.Status.ShouldEqual(TestStatus.Failed);
-            failedMessage.Message.ShouldEqual("omg!");
+            failedMessage.Name.ShouldEqual("omg!");
         }
 
         [Test]
         public void Should_map_message()
         {
-            new TestResult(TestStatus.Failed, "asdf").Message.ShouldEqual("asdf");
+            new TestResult(TestStatus.Failed, "asdf").Name.ShouldEqual("asdf");
         }
     }
 }

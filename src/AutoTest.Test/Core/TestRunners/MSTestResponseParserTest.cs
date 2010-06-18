@@ -27,7 +27,7 @@ namespace AutoTest.Test.Core.TestRunners
 
              result.Passed.Length.ShouldEqual(1);
              result.All[0].Status.ShouldEqual(TestStatus.Passed);
-             result.All[0].Message.ShouldEqual("The_name_of_the_test");
+             result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
          [Test]
@@ -38,7 +38,7 @@ namespace AutoTest.Test.Core.TestRunners
 
              result.Failed.Length.ShouldEqual(1);
              result.All[0].Status.ShouldEqual(TestStatus.Failed);
-             result.All[0].Message.ShouldEqual("The_name_of_the_test");
+             result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
          [Test]
@@ -49,7 +49,7 @@ namespace AutoTest.Test.Core.TestRunners
 
              result.Ignored.Length.ShouldEqual(1);
              result.All[0].Status.ShouldEqual(TestStatus.Ignored);
-             result.All[0].Message.ShouldEqual("The_name_of_the_test");
+             result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
          [Test]
@@ -60,7 +60,7 @@ namespace AutoTest.Test.Core.TestRunners
 
              result.Ignored.Length.ShouldEqual(1);
              result.All[0].Status.ShouldEqual(TestStatus.Ignored);
-             result.All[0].Message.ShouldEqual("The_name_of_the_test");
+             result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
     }
 }

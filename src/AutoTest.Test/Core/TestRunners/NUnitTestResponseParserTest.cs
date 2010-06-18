@@ -32,6 +32,13 @@ namespace AutoTest.Test.Core.TestRunners
         }
 
         [Test]
+        public void Should_find_test_name()
+        {
+            _parser.Parse("<test-case name=\"CSharpNUnitTestProject.Class1.Test1\" executed=\"True\" success=\"True\" time=\"0.026\" asserts=\"1\" />");
+            _parser.Result.All[0].Name.ShouldEqual("CSharpNUnitTestProject.Class1.Test1");
+        }
+
+        [Test]
         public void Should_find_ignored_test()
         {
             _parser.Parse("<test-case name=\"CSharpNUnitTestProject.Class1.Test1\" executed=\"False\"><reason><message><![CDATA[ignored message]]></message></reason></test-case>");

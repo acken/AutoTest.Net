@@ -28,6 +28,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
             string[] testCases = getTestCases(content);
             foreach (var testCase in testCases)
             {
+                string name = getname(testCase);
+
                 var status = TestStatus.Passed;
                 if (testCase.Contains("executed=\"False\""))
                     status = TestStatus.Ignored;
@@ -43,7 +45,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 string stackTrace = "";
                 if (status.Equals(TestStatus.Failed))
                     stackTrace = getStackTrace(testCase);
-                _result.Add(new TestResult(status, message, stackTrace));
+                _result.Add(new TestResult(status, name, message, stackTrace));
             }
         }
 
@@ -87,6 +89,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
             else
                 end = selfClosedEnd + "/>".Length;
             return end;
+        }
+
+        private string getname(string testCase)
+        {
+            string tagStart = "name=\"";
+            string tagEnd = "\"";
+            return getStringContent(testCase, tagStart, tagEnd);
         }
 
         private string getMessage(string testCase)
