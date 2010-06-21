@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Test", "src\AutoTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Console", "src\AutoTest.Console\AutoTest.Console.csproj", "{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.WinForms", "src\AutoTest.WinForms\AutoTest.WinForms.csproj", "{156E0A36-C747-49B2-A8D1-A85894145989}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

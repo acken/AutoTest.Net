@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Caching;
@@ -30,7 +29,6 @@ namespace AutoTest.Core.Configuration
         {
             _services = new ServiceLocator();
             _services.Container
-                .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net))
                 .Register(Component.For<IServiceLocator>().Instance(_services))
                 .Register(Component.For<IMessageBus>().ImplementedBy<MessageBus>().LifeStyle.Singleton)
                 .Register(Component.For<IFileSystemService>().ImplementedBy<FileSystemService>())
