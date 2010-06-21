@@ -95,21 +95,21 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             string tagStart = "name=\"";
             string tagEnd = "\"";
-            return getStringContent(testCase, tagStart, tagEnd);
+            return getStringContent(testCase, tagStart, tagEnd).Trim();
         }
 
         private string getMessage(string testCase)
         {
             string tagStart = "<message><![CDATA[";
             string tagEnd = "]]></message>";
-            return getStringContent(testCase, tagStart, tagEnd);
+            return getStringContent(testCase, tagStart, tagEnd).TrimEnd();
         }
 
         private string getStackTrace(string testCase)
         {
             string tagStart = "<stack-trace><![CDATA[";
             string tagEnd = "]]></stack-trace>";
-            return getStringContent(testCase, tagStart, tagEnd);
+            return getStringContent(testCase, tagStart, tagEnd).TrimEnd();
         }
 
         private string getStringContent(string testCase, string tagStart, string tagEnd)
@@ -120,7 +120,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             int end = testCase.IndexOf(tagEnd, start, StringComparison.CurrentCultureIgnoreCase);
             if (end < 0)
                 return "";
-            return testCase.Substring(start, end - start).Trim();
+            return testCase.Substring(start, end - start);
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Threading;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
+using AutoTest.WinForms.ResultsCache;
 
 namespace AutoTest.WinForms
 {
@@ -23,6 +24,7 @@ namespace AutoTest.WinForms
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
         private IConfiguration _configuration;
+        private Cache _cache = new Cache();
 
         public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter)
         {
@@ -48,7 +50,12 @@ namespace AutoTest.WinForms
 
         public void  RecievingRunStartedMessage(RunStartedMessage message)
         {
-            _syncContext.Post(s => labelRunState.Text = "Detected changes, running..", null);
+
+            _syncContext.Post(s =>
+                                  {
+                                      labelRunState.Text = "Detected changes, running..";
+                                      labelRunState.ForeColor = Color.Black;
+                                  }, null);
         }
 
         public void  RecievingRunFinishedMessage(RunFinishedMessage message)
@@ -66,6 +73,12 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsPassed,
                         report.NumberOfTestsFailed,
                         report.NumberOfTestsIgnored);
+                    labelRunState.ForeColor =
+                        report.NumberOfBuildsFailed > 0 ||
+                        report.NumberOfTestsFailed > 0 ||
+                        report.NumberOfTestsIgnored > 0
+                            ? Color.Red
+                            : Color.Green;
                 },
                 message.Report);
         }
@@ -75,16 +88,8 @@ namespace AutoTest.WinForms
             _syncContext.Post(m =>
                                   {
                                       var results = (BuildRunResults) m;
-                                      foreach (var error in results.Errors)
-                                      {
-                                          runFeedbackList.Items.Add("Error")
-                                              .SubItems.Add(error.ErrorMessage);
-                                      }
-                                      foreach (var warning in results.Warnings)
-                                      {
-                                          runFeedbackList.Items.Add("Warning")
-                                              .SubItems.Add(warning.ErrorMessage);
-                                      }
+                                      _cache.Merge(results);
+                                      relistFromCache();
                                   },
                               message.Results);
         }
@@ -94,20 +99,60 @@ namespace AutoTest.WinForms
             _syncContext.Post(m =>
                                   {
                                       var results = (TestRunResults) m;
-                                      foreach (var failed in results.Failed)
-                                      {
-                                          runFeedbackList.Items.Add("Failed")
-                                              .SubItems.Add(failed.Name);
-                                      }
-                                      foreach (var ignored in results.Ignored)
-                                      {
-                                          runFeedbackList.Items.Add("Ignored")
-                                              .SubItems.Add(ignored.Name);
-                                      }
+                                      _cache.Merge(results);
+                                      relistFromCache();
                                   },
                               message.Results);
         }
 
         #endregion
+
+        private void relistFromCache()
+        {
+            runFeedbackList.Items.Clear();
+            foreach (var error in _cache.Errors)
+                addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error);
+
+            foreach (var failed in _cache.Failed)
+                addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed);
+
+            foreach (var warning in _cache.Warnings)
+                addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning);
+            
+            foreach (var ignored in _cache.Ignored)
+                addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored);
+        }
+
+        private void addFeedbackItem(string type, string message, Color colour, object tag)
+        {
+            var item = runFeedbackList.Items.Add(type);
+            item.SubItems.Add(message);
+            item.ForeColor = colour;
+            item.Tag = tag;
+        }
+
+        private string formatBuildResult(BuildItem item)
+        {
+            var buildMessage = item.Value;
+            return string.Format("{0}, {1}", buildMessage.ErrorMessage, buildMessage.File);
+        }
+
+        private string formatTestResult(TestItem item)
+        {
+            var test = item.Value;
+            return string.Format("{0} -> {1}", test.Status, test.Name);
+        }
+
+        private void runFeedbackList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (runFeedbackList.SelectedItems.Count != 1)
+            {
+                richTextBoxInfo.Text = "";
+                return;
+            }
+
+            richTextBoxInfo.Text = runFeedbackList.Items[runFeedbackList.SelectedItems[0].Index]
+                .Tag.ToString();
+        }
     }
 }

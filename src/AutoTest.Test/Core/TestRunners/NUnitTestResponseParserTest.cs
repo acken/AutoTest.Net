@@ -59,7 +59,7 @@ namespace AutoTest.Test.Core.TestRunners
             _parser.Parse(response);
             _parser.Result.All.Length.ShouldEqual(1);
             _parser.Result.Failed.Length.ShouldEqual(1);
-            _parser.Result.Failed[0].Message.ShouldEqual("String lengths are both 4. Strings differ at index 2. Expected: \"bleh\" But was:  \"blah\" -------------^");
+            _parser.Result.Failed[0].Message.ShouldEqual("  String lengths are both 4. Strings differ at index 2. Expected: \"bleh\" But was:  \"blah\" -------------^");
             _parser.Result.Failed[0].StackTrace.ShouldEqual("at CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:line 16");
         }
     }

@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace AutoTest.Test
+namespace AutoTest
 {
     public static class TestingExtensionMethods
     {

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{156E0A36-C747-49B2-A8D1-A85894145989}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{34B13716-6F2A-4894-B586-51956BB03F54}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.WinForms</RootNamespace>
-    <AssemblyName>AutoTest.WinForms</AssemblyName>
+    <RootNamespace>AutoTest.WinForms.Test</RootNamespace>
+    <AssemblyName>AutoTest.WinForms.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,17 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MicroKernel, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle.Windsor\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
+      <HintPath>..\lib\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -54,51 +46,24 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FeedbackForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FeedbackForm.Designer.cs">
-      <DependentUpon>FeedbackForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IOverviewForm.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FeedbackForm.resx">
-      <DependentUpon>FeedbackForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="App.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="ResultsCache\BuildItem.cs" />
-    <Compile Include="ResultsCache\Cache.cs" />
-    <Compile Include="ResultsCache\TestItem.cs" />
+    <Compile Include="ResultsCache\CacheTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AutoTest.TestCore\AutoTest.TestCore.csproj">
+      <Project>{D2BE27D7-36C9-4C0E-92A6-E2768666F430}</Project>
+      <Name>AutoTest.TestCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
       <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
       <Name>AutoTest.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.WinForms\AutoTest.WinForms.csproj">
+      <Project>{156E0A36-C747-49B2-A8D1-A85894145989}</Project>
+      <Name>AutoTest.WinForms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

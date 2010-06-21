@@ -42,5 +42,21 @@ namespace AutoTest.Test.Core.TestRunners
         {
             new TestResult(TestStatus.Failed, "asdf").Name.ShouldEqual("asdf");
         }
+
+        [Test]
+        public void Should_be_equal()
+        {
+            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
+            var result2 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
+            result1.Equals(result2).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_not_be_equal()
+        {
+            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
+            var result2 = new TestResult(TestStatus.Failed, "another test name", "test message", "stack trace");
+            result1.Equals(result2).ShouldBeFalse();
+        }
     }
 }

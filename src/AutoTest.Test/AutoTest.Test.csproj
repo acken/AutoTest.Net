@@ -74,9 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SolutionVersion.cs">
-      <Link>SolutionVersion.cs</Link>
-    </Compile>
+    <Compile Include="Core\BuildRunners\BuildMessageTest.cs" />
     <Compile Include="Core\BuildRunners\BuildRunResultTest.cs" />
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\FileChangeConsumerTest.cs" />
@@ -119,13 +117,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\ExtensionMethods\LinqExtensionMethodsTests.cs" />
     <Compile Include="Core\Messaging\MessageBusTests.cs" />
-    <Compile Include="TestingExtensionMethods.cs" />
-    <Compile Include="TestingExtensionMethodsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
       <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
       <Name>AutoTest.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.TestCore\AutoTest.TestCore.csproj">
+      <Project>{D2BE27D7-36C9-4C0E-92A6-E2768666F430}</Project>
+      <Name>AutoTest.TestCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

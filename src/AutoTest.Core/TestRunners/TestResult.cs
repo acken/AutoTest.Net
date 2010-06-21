@@ -72,5 +72,16 @@ namespace AutoTest.Core.TestRunners
         {
             get { return _stackTrace; }
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = (TestResult) obj;
+            return GetHashCode().Equals(other.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            return string.Format("{0}|{1}|{2}|{3}", _status, _name, _message, _stackTrace).GetHashCode();
+        }
     }
 }
