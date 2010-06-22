@@ -26,6 +26,10 @@ namespace AutoTest.WinForms
         private IConfiguration _configuration;
         private Cache _cache = new Cache();
 
+        private int _rightSpacing = 0;
+        private int _listBottomSpacing = 0;
+        private int _infoBottomSpacing = 0;
+
         public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
@@ -35,6 +39,14 @@ namespace AutoTest.WinForms
             _runPresenter.View = this;
             InitializeComponent();
             _watcher.Watch(configuration.DirectoryToWatch);
+            readFormSpacing();
+        }
+
+        private void readFormSpacing()
+        {
+            _rightSpacing = Width - (runFeedbackList.Left + runFeedbackList.Width);
+            _listBottomSpacing = linkLabelInfo.Top - (runFeedbackList.Top + runFeedbackList.Height);
+            _infoBottomSpacing = Height - (linkLabelInfo.Top + linkLabelInfo.Height);
         }
 
         #region IOverviewForm Members
@@ -110,6 +122,7 @@ namespace AutoTest.WinForms
         private void relistFromCache()
         {
             runFeedbackList.Items.Clear();
+            setInfoText("");
             foreach (var error in _cache.Errors)
                 addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error);
 
@@ -147,12 +160,40 @@ namespace AutoTest.WinForms
         {
             if (runFeedbackList.SelectedItems.Count != 1)
             {
-                richTextBoxInfo.Text = "";
+                setInfoText("");
                 return;
             }
 
-            richTextBoxInfo.Text = runFeedbackList.Items[runFeedbackList.SelectedItems[0].Index]
-                .Tag.ToString();
+            setInfoText(runFeedbackList.Items[runFeedbackList.SelectedItems[0].Index].Tag.ToString());
+        }
+
+        private void setInfoText(string text)
+        {
+            int previousHeight = linkLabelInfo.Height;
+            var parser = new LinkParser(text);
+            var links = parser.Parse();
+            linkLabelInfo.Text = parser.ParsedText;
+            linkLabelInfo.LinkArea = new LinkArea(0, 0);
+            foreach (var link in links)
+                linkLabelInfo.Links.Add(link.Start, link.Length);
+            var difference = linkLabelInfo.Height - previousHeight;
+            Height = Height + difference;
+        }
+
+        private void FeedbackForm_Resize(object sender, EventArgs e)
+        {
+            linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
+            linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
+            runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
+            runFeedbackList.Width = Width - (runFeedbackList.Left + _rightSpacing);
+        }
+
+        private void linkLabelInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (runFeedbackList.SelectedItems.Count != 1)
+                return;
+            var item = (IItem) runFeedbackList.SelectedItems[0].Tag;
+            item.HandleLink(linkLabelInfo.Text.Substring(e.Link.Start, e.Link.Length));
         }
     }
 }

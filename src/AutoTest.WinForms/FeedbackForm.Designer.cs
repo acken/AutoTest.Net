@@ -32,14 +32,11 @@
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.labelRunState = new System.Windows.Forms.Label();
-            this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
+            this.linkLabelInfo = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // runFeedbackList
             // 
-            this.runFeedbackList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.runFeedbackList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.runFeedbackList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -47,7 +44,7 @@
             this.runFeedbackList.FullRowSelect = true;
             this.runFeedbackList.Location = new System.Drawing.Point(12, 25);
             this.runFeedbackList.Name = "runFeedbackList";
-            this.runFeedbackList.Size = new System.Drawing.Size(853, 217);
+            this.runFeedbackList.Size = new System.Drawing.Size(853, 334);
             this.runFeedbackList.TabIndex = 0;
             this.runFeedbackList.UseCompatibleStateImageBehavior = false;
             this.runFeedbackList.View = System.Windows.Forms.View.Details;
@@ -71,28 +68,26 @@
             this.labelRunState.Size = new System.Drawing.Size(0, 13);
             this.labelRunState.TabIndex = 1;
             // 
-            // richTextBoxInfo
+            // linkLabelInfo
             // 
-            this.richTextBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBoxInfo.Location = new System.Drawing.Point(12, 248);
-            this.richTextBoxInfo.Name = "richTextBoxInfo";
-            this.richTextBoxInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBoxInfo.Size = new System.Drawing.Size(853, 141);
-            this.richTextBoxInfo.TabIndex = 2;
-            this.richTextBoxInfo.Text = "";
+            this.linkLabelInfo.AutoSize = true;
+            this.linkLabelInfo.Location = new System.Drawing.Point(12, 362);
+            this.linkLabelInfo.Name = "linkLabelInfo";
+            this.linkLabelInfo.Size = new System.Drawing.Size(0, 13);
+            this.linkLabelInfo.TabIndex = 2;
+            this.linkLabelInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelInfo_LinkClicked);
             // 
             // FeedbackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 401);
-            this.Controls.Add(this.richTextBoxInfo);
+            this.ClientSize = new System.Drawing.Size(877, 384);
+            this.Controls.Add(this.linkLabelInfo);
             this.Controls.Add(this.labelRunState);
             this.Controls.Add(this.runFeedbackList);
             this.Name = "FeedbackForm";
             this.Text = "FeedbackForm";
+            this.Resize += new System.EventHandler(this.FeedbackForm_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,7 +99,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label labelRunState;
-        private System.Windows.Forms.RichTextBox richTextBoxInfo;
+        private System.Windows.Forms.LinkLabel linkLabelInfo;
     }
 }
 

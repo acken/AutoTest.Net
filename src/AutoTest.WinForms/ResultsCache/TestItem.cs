@@ -6,7 +6,7 @@ using AutoTest.Core.TestRunners;
 
 namespace AutoTest.WinForms.ResultsCache
 {
-    class TestItem
+    class TestItem : IItem
     {
         public string Key { get; private set; }
         public string Project { get; private set; }
@@ -32,6 +32,22 @@ namespace AutoTest.WinForms.ResultsCache
 
         public override string ToString()
         {
+            var stackTrace = new StringBuilder();
+            var stackLines = Value.StackTrace.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in stackLines)
+            {
+                if (line.IndexOf(") in ") > 0)
+                {
+                    stackTrace.AppendLine(string.Format("{0}{1}",
+                                                        line.Replace(") in ",
+                                                                     string.Format(") in {0}", LinkParser.TAG_START)),
+                                                        LinkParser.TAG_END));
+                }
+                else
+                {
+                    stackTrace.AppendLine(line);
+                }
+            }
             return string.Format(
                 "Assembly: {0}\r\n" +
                 "Test: {1}\r\n" +
@@ -40,7 +56,29 @@ namespace AutoTest.WinForms.ResultsCache
                 Key,
                 Value.Name,
                 Value.Message,
-                Value.StackTrace);
+                stackTrace.ToString());
         }
+
+        #region IItem Members
+
+
+        public void HandleLink(string link)
+        {
+            var file = link.Substring(0, link.IndexOf(":line"));
+            var lineNumber = getLineNumber(link);
+            var launcher = new ApplicatonLauncher(file, lineNumber);
+            launcher.Launch();
+        }
+
+        private int getLineNumber(string link)
+        {
+            var start = link.IndexOf(":line");
+            if (start < 0)
+                return 0;
+            start += ":line".Length;
+            return int.Parse(link.Substring(start, link.Length - start));
+        }
+
+        #endregion
     }
 }
