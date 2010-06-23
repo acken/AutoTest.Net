@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.Core.TestRunners;
+using System.IO;
 
 namespace AutoTest.WinForms.ResultsCache
 {
@@ -33,20 +34,22 @@ namespace AutoTest.WinForms.ResultsCache
         public override string ToString()
         {
             var stackTrace = new StringBuilder();
-            var stackLines = Value.StackTrace.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in stackLines)
+            foreach (var line in Value.StackTrace)
             {
-                if (line.IndexOf(") in ") > 0)
+                if (File.Exists(line.File))
                 {
-                    stackTrace.AppendLine(string.Format("{0}{1}",
-                                                        line.Replace(") in ",
-                                                                     string.Format(") in {0}", LinkParser.TAG_START)),
+                    stackTrace.AppendLine(string.Format("at {0} in {1}{2}:line {3}{4}",
+                                                        line.Method,
+                                                        LinkParser.TAG_START,
+                                                        line.File,
+                                                        line.LineNumber,
                                                         LinkParser.TAG_END));
                 }
                 else
                 {
-                    stackTrace.AppendLine(line);
+                    stackTrace.AppendLine(line.ToString());
                 }
+
             }
             return string.Format(
                 "Assembly: {0}\r\n" +

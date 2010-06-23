@@ -131,7 +131,7 @@ namespace AutoTest.WinForms.Test.ResultsCache
         {
             var results = new TestResult[]
                               {
-                                  new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace")
+                                  new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] {})
                               };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
@@ -143,11 +143,11 @@ namespace AutoTest.WinForms.Test.ResultsCache
         [Test]
         public void Should_merge_failed_tests()
         {
-            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace") };
+            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] { }) };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
-            results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace") };
+            results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] { }) };
             runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
@@ -157,11 +157,11 @@ namespace AutoTest.WinForms.Test.ResultsCache
         [Test]
         public void Should_not_merge_same_failed_tests_from_different_assemblies()
         {
-            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace") };
+            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] { }) };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
-            results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace") };
+            results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] { }) };
             runResults = new TestRunResults("project", "another assembly", results);
             _cache.Merge(runResults);
 
@@ -171,7 +171,7 @@ namespace AutoTest.WinForms.Test.ResultsCache
         [Test]
         public void Should_remove_cached_failed_tests_that_now_passes()
         {
-            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", "Stack trace") };
+            var results = new TestResult[] { new TestResult(TestStatus.Failed, "Test name", "Message", new IStackLine[] { }) };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
             
@@ -186,7 +186,7 @@ namespace AutoTest.WinForms.Test.ResultsCache
         {
             var results = new TestResult[]
                               {
-                                  new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace")
+                                  new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] {})
                               };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
@@ -198,11 +198,11 @@ namespace AutoTest.WinForms.Test.ResultsCache
         [Test]
         public void Should_merge_ignored_tests()
         {
-            var results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace") };
+            var results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] { }) };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
-            results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace") };
+            results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] { }) };
             runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
@@ -212,11 +212,11 @@ namespace AutoTest.WinForms.Test.ResultsCache
         [Test]
         public void Should_not_merge_same_ignored_tests_from_different_assemblies()
         {
-            var results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace") };
+            var results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] { }) };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
-            results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace") };
+            results = new TestResult[] { new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] { }) };
             runResults = new TestRunResults("project", "another assembly", results);
             _cache.Merge(runResults);
 
@@ -228,13 +228,13 @@ namespace AutoTest.WinForms.Test.ResultsCache
         {
             var results = new TestResult[]
                               {
-                                  new TestResult(TestStatus.Ignored, "Test name", "Message", "Stack trace"),
-                                  new TestResult(TestStatus.Ignored, "Another test", "Message", "Stack trace")
+                                  new TestResult(TestStatus.Ignored, "Test name", "Message", new IStackLine[] {}),
+                                  new TestResult(TestStatus.Ignored, "Another test", "Message", new IStackLine[] {})
                               };
             var runResults = new TestRunResults("project", "assembly", results);
             _cache.Merge(runResults);
 
-            runResults = new TestRunResults("project", "assembly", new TestResult[] { new TestResult(TestStatus.Ignored, "Another test", "Message", "Stack trace") });
+            runResults = new TestRunResults("project", "assembly", new TestResult[] { new TestResult(TestStatus.Ignored, "Another test", "Message", new IStackLine[] { }) });
             _cache.Merge(runResults);
 
             _cache.Ignored.Length.ShouldEqual(1);

@@ -46,16 +46,16 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_be_equal()
         {
-            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
-            var result2 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
+            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", new IStackLine[] { });
+            var result2 = new TestResult(TestStatus.Failed, "test name", "test message", new IStackLine[] { });
             result1.Equals(result2).ShouldBeTrue();
         }
 
         [Test]
         public void Should_not_be_equal()
         {
-            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", "stack trace");
-            var result2 = new TestResult(TestStatus.Failed, "another test name", "test message", "stack trace");
+            var result1 = new TestResult(TestStatus.Failed, "test name", "test message", new IStackLine[] { });
+            var result2 = new TestResult(TestStatus.Failed, "another test name", "test message", new IStackLine[] { });
             result1.Equals(result2).ShouldBeFalse();
         }
     }

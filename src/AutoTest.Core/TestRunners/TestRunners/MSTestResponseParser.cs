@@ -23,23 +23,43 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             if (line.StartsWith("Passed"))
             {
-                _result.Add(new TestResult(TestStatus.Passed, getTestName(line, "Passed")));
+                _result.Add(new TestResult(TestStatus.Passed, getChunk(line, "Passed")));
             }
             else if (line.StartsWith("Failed"))
             {
-                _result.Add(new TestResult(TestStatus.Failed, getTestName(line, "Failed")));
+                _result.Add(new TestResult(TestStatus.Failed, getChunk(line, "Failed")));
             }
             else if (line.StartsWith("Ignored"))
             {
-                _result.Add(new TestResult(TestStatus.Ignored, getTestName(line, "Ignored")));
+                _result.Add(new TestResult(TestStatus.Ignored, getChunk(line, "Ignored")));
             }
             else if (line.StartsWith("Inconclusive"))
             {
-                _result.Add(new TestResult(TestStatus.Ignored, getTestName(line, "Inconclusive")));
+                _result.Add(new TestResult(TestStatus.Ignored, getChunk(line, "Inconclusive")));
+            }
+            else if (line.StartsWith("[errormessage] =") && _result.Count > 0)
+            {
+                _result[_result.Count - 1].Message = getChunk(line, "[errormessage] =");
+            }
+            else if (line.StartsWith("[errorstacktrace] =") && _result.Count > 0)
+            {
+                _result[_result.Count - 1].StackTrace = getStackTrace(line, "[errorstacktrace] =");
             }
         }
 
-        private string getTestName(string line, string lineStart)
+        private IStackLine[] getStackTrace(string line, string lineStart)
+        {
+            List<IStackLine> stackLines = new List<IStackLine>();
+            if (_result[_result.Count - 1].StackTrace != null)
+                stackLines.AddRange(_result[_result.Count - 1].StackTrace);
+            var stackString = getChunk(line, lineStart);
+            var lines = stackString.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var stackLine in lines)
+                stackLines.Add(new MSTestStackLine(stackLine));
+            return stackLines.ToArray();
+        }
+
+        private string getChunk(string line, string lineStart)
         {
             return line.Substring(lineStart.Length, line.Length - lineStart.Length).Trim();
         }

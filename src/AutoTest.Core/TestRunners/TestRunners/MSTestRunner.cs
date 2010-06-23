@@ -24,7 +24,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
-                                                        "/testcontainer:\"" + assemblyName + "\"");
+                                                        "/testcontainer:\"" + assemblyName + "\" /detail:errorstacktrace /detail:errormessage");
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(assemblyName);
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

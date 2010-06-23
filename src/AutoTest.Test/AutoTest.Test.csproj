@@ -104,6 +104,7 @@
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />
+    <Compile Include="Core\TestRunners\NUnitStackLineTest.cs" />
     <Compile Include="Core\TestRunners\TestResultTests.cs" />
     <Compile Include="Core\Configuration\BootStrapperTests.cs" />
     <Compile Include="Core\BuildRunners\IBuildEngine.cs" />

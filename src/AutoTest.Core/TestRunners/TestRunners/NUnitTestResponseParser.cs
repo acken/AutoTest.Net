@@ -42,7 +42,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 else if (status.Equals(TestStatus.Failed))
                     message = getMessage(testCase);
 
-                string stackTrace = "";
+                IStackLine[] stackTrace = new IStackLine[] {};
                 if (status.Equals(TestStatus.Failed))
                     stackTrace = getStackTrace(testCase);
                 _result.Add(new TestResult(status, name, message, stackTrace));
@@ -105,11 +105,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return getStringContent(testCase, tagStart, tagEnd).TrimEnd();
         }
 
-        private string getStackTrace(string testCase)
+        private IStackLine[] getStackTrace(string testCase)
         {
-            string tagStart = "<stack-trace><![CDATA[";
-            string tagEnd = "]]></stack-trace>";
-            return getStringContent(testCase, tagStart, tagEnd).TrimEnd();
+            var tagStart = "<stack-trace><![CDATA[";
+            var tagEnd = "]]></stack-trace>";
+            var lines = getStringContent(testCase, tagStart, tagEnd).TrimEnd().Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            List<IStackLine> stackLines = new List<IStackLine>();
+            foreach (var line in lines)
+                stackLines.Add(new NUnitStackLine(line));
+            return stackLines.ToArray();
         }
 
         private string getStringContent(string testCase, string tagStart, string tagEnd)

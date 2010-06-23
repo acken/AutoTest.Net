@@ -31,16 +31,30 @@ namespace AutoTest.WinForms.ResultsCache
 
         public override string ToString()
         {
-            return string.Format(
-                "Project: {0}\r\n" +
-                "File: {4}{1}:line {2}{5}\r\n" +
-                "Message:\r\n{3}",
-                Key,
-                Value.File,
-                Value.LineNumber,
-                Value.ErrorMessage,
-                LinkParser.TAG_START,
-                LinkParser.TAG_END);
+            if (File.Exists(getFilePath()))
+            {
+                return string.Format(
+                    "Project: {0}\r\n" +
+                    "File: {4}{1}:line {2}{5}\r\n" +
+                    "Message:\r\n{3}",
+                    Key,
+                    Value.File,
+                    Value.LineNumber,
+                    Value.ErrorMessage,
+                    LinkParser.TAG_START,
+                    LinkParser.TAG_END);
+            }
+            else
+            {
+                return string.Format(
+                    "Project: {0}\r\n" +
+                    "File: {1}:line {2}\r\n" +
+                    "Message:\r\n{3}",
+                    Key,
+                    Value.File,
+                    Value.LineNumber,
+                    Value.ErrorMessage);
+            }
         }
 
         #region IItem Members
@@ -48,9 +62,14 @@ namespace AutoTest.WinForms.ResultsCache
 
         public void HandleLink(string link)
         {
-            var file = Path.Combine(Path.GetDirectoryName(Key), Value.File);
+            var file = getFilePath();
             var launcher = new ApplicatonLauncher(file, Value.LineNumber);
             launcher.Launch();
+        }
+
+        private string getFilePath()
+        {
+            return Path.Combine(Path.GetDirectoryName(Key), Value.File);
         }
 
         private int getLineNumber(string link)

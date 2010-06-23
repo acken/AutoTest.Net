@@ -4,8 +4,8 @@ namespace AutoTest.Core.TestRunners
     {
         private readonly TestStatus _status;
         private readonly string _name;
-        private readonly string _message = "";
-        private readonly string _stackTrace;
+        private string _message = "";
+        private IStackLine[] _stackTrace;
         private static readonly TestResult _passResult;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace AutoTest.Core.TestRunners
             _message = message;
         }
 
-        public TestResult(TestStatus status, string name, string message, string stackTrace)
+        public TestResult(TestStatus status, string name, string message, IStackLine[] stackTrace)
         {
             _status = status;
             _name = name;
@@ -65,12 +65,12 @@ namespace AutoTest.Core.TestRunners
 
         public string Message
         {
-            get { return _message; }
+            get { return _message; } set { _message = value; }
         }
 
-        public string StackTrace
+        public IStackLine[] StackTrace
         {
-            get { return _stackTrace; }
+            get { return _stackTrace; } set { _stackTrace = value; }
         }
 
         public override bool Equals(object obj)
