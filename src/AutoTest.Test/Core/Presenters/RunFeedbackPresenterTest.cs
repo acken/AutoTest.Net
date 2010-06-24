@@ -69,7 +69,7 @@ namespace AutoTest.Test.Core.Presenters
 
         private void waitForAsyncCall()
         {
-            Thread.Sleep(20);
+            Thread.Sleep(30);
         }
     }
 }

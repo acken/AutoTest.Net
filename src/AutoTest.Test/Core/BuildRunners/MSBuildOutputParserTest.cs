@@ -39,5 +39,29 @@ namespace AutoTest.Test.Core.BuildRunners
             result.Warnings[0].LinePosition.ShouldEqual(46);
             result.Warnings[0].ErrorMessage.ShouldEqual("CS0109: The member `Desktopcouch.Session.GType' does not hide an inherited member. The new keyword is not required");
         }
+
+        [Test]
+        public void Should_not_add_duplicate_errors()
+        {
+            var result = new BuildRunResults("");
+            var line =
+                "Class1.cs(5,7): error CS0246: The type or namespace name 'Nunit' could not be found (are you missing a using directive or an assembly reference?)";
+            var parser = new MSBuildOutputParser(result, line);
+            parser.Parse();
+            parser.Parse();
+            result.ErrorCount.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_not_add_duplicate_warnings()
+        {
+            var result = new BuildRunResults("");
+            var line =
+                "Session.cs(32,46): warning CS0109: The member `Desktopcouch.Session.GType' does not hide an inherited member. The new keyword is not required";
+            var parser = new MSBuildOutputParser(result, line);
+            parser.Parse();
+            parser.Parse();
+            result.WarningCount.ShouldEqual(1);
+        }
     }
 }

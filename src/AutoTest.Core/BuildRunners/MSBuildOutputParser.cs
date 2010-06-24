@@ -21,12 +21,14 @@ namespace AutoTest.Core.BuildRunners
             if (_line.Contains(": error"))
             {
                 BuildMessage message = parseMessage(": error");
-                _results.AddError(message);
+                if (!_results.Errors.Contains(message))
+                    _results.AddError(message);
             }
             else if (_line.Contains(": warning"))
             {
                 BuildMessage message = parseMessage(": warning");
-                _results.AddWarning(message);
+                if (!_results.Warnings.Contains(message))
+                    _results.AddWarning(message);
             }
         }
 
@@ -35,7 +37,7 @@ namespace AutoTest.Core.BuildRunners
             var message = new BuildMessage();
             try
             {
-                message.File = _line.Substring(0, _line.IndexOf('('));
+                message.File = _line.Substring(0, _line.IndexOf('(')).Trim();
                 var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
                 message.LineNumber = int.Parse(position[0]);
                 message.LinePosition = int.Parse(position[1]);
