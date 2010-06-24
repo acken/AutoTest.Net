@@ -11,6 +11,6 @@ namespace AutoTest.Core.Configuration
         string BuildExecutable { get; }
         string NunitTestRunner { get; }
         string MSTestRunner { get; }
-        string IgnoreFolder { get; }
+        CodeEditor CodeEditor { get; }
     }
 }

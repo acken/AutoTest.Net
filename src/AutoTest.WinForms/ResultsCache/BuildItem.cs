@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.BuildRunners;
 using System.IO;
+using AutoTest.Core.Launchers;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.WinForms.ResultsCache
 {
@@ -63,8 +65,8 @@ namespace AutoTest.WinForms.ResultsCache
         public void HandleLink(string link)
         {
             var file = getFilePath();
-            var launcher = new ApplicatonLauncher(file, Value.LineNumber);
-            launcher.Launch();
+            var launcher = BootStrapper.Services.Locate<ApplicatonLauncher>();
+            launcher.LaunchEditor(file, Value.LineNumber);
         }
 
         private string getFilePath()

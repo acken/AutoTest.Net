@@ -92,7 +92,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ResultsCache\ApplicatonLauncher.cs" />
     <Compile Include="ResultsCache\BuildItem.cs" />
     <Compile Include="ResultsCache\Cache.cs" />
     <Compile Include="ResultsCache\IItem.cs" />

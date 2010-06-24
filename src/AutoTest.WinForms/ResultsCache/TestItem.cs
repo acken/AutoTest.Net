@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.TestRunners;
 using System.IO;
+using AutoTest.Core.Launchers;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.WinForms.ResultsCache
 {
@@ -69,8 +71,8 @@ namespace AutoTest.WinForms.ResultsCache
         {
             var file = link.Substring(0, link.IndexOf(":line"));
             var lineNumber = getLineNumber(link);
-            var launcher = new ApplicatonLauncher(file, lineNumber);
-            launcher.Launch();
+            var launcher = BootStrapper.Services.Locate<ApplicatonLauncher>();
+            launcher.LaunchEditor(file, lineNumber);
         }
 
         private int getLineNumber(string link)

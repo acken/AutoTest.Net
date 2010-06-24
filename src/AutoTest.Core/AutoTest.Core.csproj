@@ -65,9 +65,12 @@
     <Compile Include="Caching\IPrepare.cs" />
     <Compile Include="Caching\Projects\ProjectFactory.cs" />
     <Compile Include="Caching\Projects\ProjectPreparer.cs" />
+    <Compile Include="Configuration\CodeEditor.cs" />
+    <Compile Include="Configuration\CoreSection.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />
+    <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BuildRunMessage.cs" />
     <Compile Include="Messaging\InformationMessage.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />

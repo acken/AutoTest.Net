@@ -8,18 +8,17 @@ namespace AutoTest.Core.Configuration
         private string _buildExecutable;
         private string _nunitTestRunner;
         private string _msTestRunner;
-        private string _ignoreFolder;
+        private CodeEditor _codeEditor;
 
 
         public Config()
         {
-            _directoryToWatch = ConfigurationManager.AppSettings["DirectoryToWatch"];
-            _buildExecutable = ConfigurationManager.AppSettings["BuildExecutable"];
-
-            _nunitTestRunner = ConfigurationManager.AppSettings["NUnitTestRunner"];
-            _msTestRunner = ConfigurationManager.AppSettings["MSTestRunner"];
-            
-            _ignoreFolder = ConfigurationManager.AppSettings["IgnoreFolder"];
+            var core = (CoreSection) ConfigurationManager.GetSection("AutoTestCore");
+            _directoryToWatch = core.DirectoryToWatch;
+            _buildExecutable = core.BuildExecutable;
+            _nunitTestRunner = core.NUnitTestRunner;
+            _msTestRunner = core.MSTestRunner;
+            _codeEditor = core.CodeEditor;
         }
 
         public string DirectoryToWatch
@@ -46,10 +45,10 @@ namespace AutoTest.Core.Configuration
             set { _msTestRunner = value; }
         }
 
-        public string IgnoreFolder
+        public CodeEditor CodeEditor
         {
-            get { return _ignoreFolder; }
-            set { _ignoreFolder = value; }
+            get { return _codeEditor; }
+            set { _codeEditor = value; }
         }
     }
 }

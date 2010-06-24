@@ -8,6 +8,7 @@ using System;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Presenters;
+using AutoTest.Core.Launchers;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -133,6 +134,13 @@ namespace AutoTest.Test.Core.Configuration
         {
             var presenter = _locator.Locate<IRunFeedbackPresenter>();
             presenter.ShouldBeOfType<IRunFeedbackPresenter>();
+        }
+
+        [Test]
+        public void Should_register_application_launcher()
+        {
+            var launcher = _locator.Locate<ApplicatonLauncher>();
+            launcher.ShouldBeOfType<ApplicatonLauncher>();
         }
     }
 }
