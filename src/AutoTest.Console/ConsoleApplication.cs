@@ -30,6 +30,7 @@ namespace AutoTest.Console
             _informationFeedback.View = this;
             _runFeedback = runFeedbackPresenter;
             _runFeedback.View = this;
+            configuration.ValidateSettings();
         }
 
         public void Start()
