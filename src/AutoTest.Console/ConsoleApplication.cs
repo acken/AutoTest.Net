@@ -34,7 +34,6 @@ namespace AutoTest.Console
 
         public void Start()
         {
-            Logger.InfoFormat("Starting AutoTester and watching \"{0}\" and all subdirectories.", _configuration.DirectoryToWatch);
             _watcher.Watch(_configuration.DirectoryToWatch);
             System.Console.ReadLine();
             Stop();
@@ -124,6 +123,11 @@ namespace AutoTest.Console
                 report.NumberOfTestsPassed,
                 report.NumberOfTestsFailed,
                 report.NumberOfTestsIgnored);
+        }
+
+        public void RevievingErrorMessage(ErrorMessage message)
+        {
+            _logger.Info(message.Error);
         }
 
         #endregion

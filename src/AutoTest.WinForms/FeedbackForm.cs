@@ -23,20 +23,21 @@ namespace AutoTest.WinForms
         private SynchronizationContext _syncContext;
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
-        private IConfiguration _configuration;
+        private IInformationForm _informationForm;
         private Cache _cache = new Cache();
 
         private int _rightSpacing = 0;
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
 
-        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter)
+        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
             _watcher = watcher;
-            _configuration = configuration;
             _runPresenter = runPresenter;
             _runPresenter.View = this;
+            _informationForm = informationForm;
+            _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
             _watcher.Watch(configuration.DirectoryToWatch);
             readFormSpacing();
@@ -47,6 +48,15 @@ namespace AutoTest.WinForms
             _rightSpacing = Width - (runFeedbackList.Left + runFeedbackList.Width);
             _listBottomSpacing = linkLabelInfo.Top - (runFeedbackList.Top + runFeedbackList.Height);
             _infoBottomSpacing = Height - (linkLabelInfo.Top + linkLabelInfo.Height);
+        }
+
+        void _informationForm_MessageArrived(object sender, MessageRecievedEventArgs e)
+        {
+            buttonInformation.Text = "|||";
+            if (e.Type.Equals(MessageType.Warning))
+                buttonInformation.ForeColor = Color.Yellow;
+            else if (e.Type.Equals(MessageType.Error))
+                buttonInformation.ForeColor = Color.Red;
         }
 
         #region IOverviewForm Members
@@ -194,6 +204,22 @@ namespace AutoTest.WinForms
                 return;
             var item = (IItem) runFeedbackList.SelectedItems[0].Tag;
             item.HandleLink(linkLabelInfo.Text.Substring(e.Link.Start, e.Link.Length));
+        }
+
+        private void buttonInformation_Click(object sender, EventArgs e)
+        {
+            buttonInformation.Text = "";
+            buttonInformation.ForeColor = BackColor;
+            var form = _informationForm.Form;
+            if (form.Visible == false)
+                form.Visible = true;
+            else
+                form.Show(this);
+        }
+
+        private void FeedbackForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _informationForm.Form.Dispose();
         }
     }
 }

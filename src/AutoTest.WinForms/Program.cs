@@ -25,10 +25,16 @@ namespace AutoTest.WinForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            BootstrapApplication();
+            BootStrapper.InitializeCache();
+        }
+
+        public static void BootstrapApplication()
+        {
             BootStrapper.Configure();
             BootStrapper.Container
-                .Register(Component.For<IOverviewForm>().ImplementedBy<FeedbackForm>());
-            BootStrapper.InitializeCache();
+                .Register(Component.For<IOverviewForm>().ImplementedBy<FeedbackForm>())
+                .Register(Component.For<IInformationForm>().ImplementedBy<InformationForm>());
         }
     }
 }

@@ -15,6 +15,7 @@ namespace AutoTest.Core.Messaging
         public event EventHandler<WarningMessageEventArgs> OnWarningMessage;
         public event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         public event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
+        public event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
 
         public MessageBus(IServiceLocator services)
         {
@@ -76,6 +77,12 @@ namespace AutoTest.Core.Messaging
             {
                 if (OnWarningMessage != null)
                     OnWarningMessage(this, new WarningMessageEventArgs((WarningMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(ErrorMessage))
+            {
+                if (OnErrorMessage != null)
+                    OnErrorMessage(this, new ErrorMessageEventArgs((ErrorMessage)(IMessage)message));
                 handled = true;
             }
             return handled;

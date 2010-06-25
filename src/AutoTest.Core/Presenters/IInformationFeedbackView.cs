@@ -10,5 +10,6 @@ namespace AutoTest.Core.Presenters
     {
         void RecievingInformationMessage(InformationMessage message);
         void RecievingWarningMessage(WarningMessage message);
+        void RevievingErrorMessage(ErrorMessage message);
     }
 }

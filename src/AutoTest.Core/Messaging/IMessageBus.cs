@@ -43,6 +43,16 @@ namespace AutoTest.Core.Messaging
         }
     }
 
+    public class ErrorMessageEventArgs : EventArgs
+    {
+        public ErrorMessage Message { get; private set; }
+
+        public ErrorMessageEventArgs(ErrorMessage message)
+        {
+            Message = message;
+        }
+    }
+
     public class BuildMessageEventArgs : EventArgs
     {
         public BuildRunMessage Message { get; private set; }
@@ -71,6 +81,7 @@ namespace AutoTest.Core.Messaging
         event EventHandler<WarningMessageEventArgs> OnWarningMessage;
         event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
+        event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         void Publish<T>(T message);
     }
 }

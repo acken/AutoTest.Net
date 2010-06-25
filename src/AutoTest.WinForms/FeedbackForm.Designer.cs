@@ -33,6 +33,7 @@
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.labelRunState = new System.Windows.Forms.Label();
             this.linkLabelInfo = new System.Windows.Forms.LinkLabel();
+            this.buttonInformation = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // runFeedbackList
@@ -78,16 +79,27 @@
             this.linkLabelInfo.TabIndex = 2;
             this.linkLabelInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelInfo_LinkClicked);
             // 
+            // buttonInformation
+            // 
+            this.buttonInformation.Location = new System.Drawing.Point(839, 4);
+            this.buttonInformation.Name = "buttonInformation";
+            this.buttonInformation.Size = new System.Drawing.Size(25, 17);
+            this.buttonInformation.TabIndex = 3;
+            this.buttonInformation.UseVisualStyleBackColor = true;
+            this.buttonInformation.Click += new System.EventHandler(this.buttonInformation_Click);
+            // 
             // FeedbackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(877, 384);
+            this.Controls.Add(this.buttonInformation);
             this.Controls.Add(this.linkLabelInfo);
             this.Controls.Add(this.labelRunState);
             this.Controls.Add(this.runFeedbackList);
             this.Name = "FeedbackForm";
-            this.Text = "FeedbackForm";
+            this.Text = "AutoTest.Net - Build and test run feedback";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FeedbackForm_FormClosing);
             this.Resize += new System.EventHandler(this.FeedbackForm_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -101,6 +113,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label labelRunState;
         private System.Windows.Forms.LinkLabel linkLabelInfo;
+        private System.Windows.Forms.Button buttonInformation;
     }
 }
 

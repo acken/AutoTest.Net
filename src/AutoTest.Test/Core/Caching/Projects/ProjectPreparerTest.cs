@@ -55,6 +55,7 @@ namespace AutoTest.Test.Core.Caching.Projects
                                                      referenceWasAdded = true;
                                                  });
             var project = _preparer.Prepare(record, action);
+            project.ShouldNotBeNull();
             referenceWasAdded.ShouldBeTrue();
         }
 
@@ -66,6 +67,7 @@ namespace AutoTest.Test.Core.Caching.Projects
             _cache.WhenGeting("ReferencedProject")
                 .Return(new Project("", referencedProject));
             var project = _preparer.Prepare(record, null);
+            project.ShouldNotBeNull();
             referencedProject.ReferencedBy[0].ShouldEqual("someproject");
         }
     }

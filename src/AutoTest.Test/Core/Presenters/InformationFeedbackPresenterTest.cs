@@ -46,6 +46,14 @@ namespace AutoTest.Test.Core.Presenters
             _view.WarningMessage.ShouldEqual("some warning");
         }
 
+        [Test]
+        public void Should_subscribe_to_error_messages()
+        {
+            _bus.Publish(new ErrorMessage("some error"));
+            waitForAsyncCall();
+            _view.ErrorMessage.ShouldEqual("some error");
+        }
+
         private void waitForAsyncCall()
         {
             Thread.Sleep(20);

@@ -11,9 +11,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
     {
         private InformationMessage _informationmessage = null;
         private WarningMessage _warningMessage = null;
+        private ErrorMessage _errorMessage = null;
 
         public string InformationMessage { get { return _informationmessage.Message; } }
         public string WarningMessage { get { return _warningMessage.Warning; } }
+        public string ErrorMessage { get { return _errorMessage.Error; } }
 
         #region IInformationFeedbackView Members
 
@@ -25,6 +27,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public void RecievingWarningMessage(WarningMessage message)
         {
             _warningMessage = message;
+        }
+
+        public void RevievingErrorMessage(ErrorMessage message)
+        {
+            _errorMessage = message;
         }
 
         #endregion

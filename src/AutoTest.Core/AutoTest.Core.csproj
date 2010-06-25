@@ -72,6 +72,7 @@
     <Compile Include="Configuration\ServiceLocator.cs" />
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BuildRunMessage.cs" />
+    <Compile Include="Messaging\ErrorMessage.cs" />
     <Compile Include="Messaging\InformationMessage.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
