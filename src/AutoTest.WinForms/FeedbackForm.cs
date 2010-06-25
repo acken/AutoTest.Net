@@ -39,6 +39,7 @@ namespace AutoTest.WinForms
             _informationForm = informationForm;
             _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
+            configuration.ValidateSettings();
             _watcher.Watch(configuration.DirectoryToWatch);
             readFormSpacing();
         }
@@ -53,7 +54,7 @@ namespace AutoTest.WinForms
         void _informationForm_MessageArrived(object sender, MessageRecievedEventArgs e)
         {
             buttonInformation.Text = "|||";
-            if (e.Type.Equals(MessageType.Warning))
+            if (e.Type.Equals(MessageType.Warning) && buttonInformation.ForeColor != Color.Red)
                 buttonInformation.ForeColor = Color.Yellow;
             else if (e.Type.Equals(MessageType.Error))
                 buttonInformation.ForeColor = Color.Red;

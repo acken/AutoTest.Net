@@ -12,5 +12,7 @@ namespace AutoTest.Core.Configuration
         string NunitTestRunner { get; }
         string MSTestRunner { get; }
         CodeEditor CodeEditor { get; }
+
+        void ValidateSettings();
     }
 }

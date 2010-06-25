@@ -28,6 +28,14 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
+        public void Should_exit_if_invalid_folder()
+        {
+            _fsService.WhenValidatingDirectoryReturn(false);
+            _crawler.Crawl("");
+            _fsService.GetFilesWasNotCalled();
+        }
+
+        [Test]
         public void Should_Find_CSharp_Projects()
         {
             _fsService.WhenCrawlingFor("*.csproj").Return("AProject.csproj");

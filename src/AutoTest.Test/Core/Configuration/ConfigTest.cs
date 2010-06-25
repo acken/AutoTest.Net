@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.Configuration;
+using Rhino.Mocks;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -11,11 +13,13 @@ namespace AutoTest.Test.Core.Configuration
     public class ConfigTest
     {
         private Config _config;
+        private IMessageBus _bus;
 
         [SetUp]
         public void SetUp()
         {
-            _config = new Config();
+            _bus = MockRepository.GenerateMock<IMessageBus>();
+            _config = new Config(_bus);
         }
 
         [Test]

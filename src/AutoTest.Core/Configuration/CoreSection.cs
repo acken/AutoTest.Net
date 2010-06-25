@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace AutoTest.Core.Configuration
 {
@@ -19,7 +20,7 @@ namespace AutoTest.Core.Configuration
 
     class CoreSection : ConfigurationSection
     {
-        private string _sectionXml = "";
+        private XmlDocument _xml = new XmlDocument();
 
         public string DirectoryToWatch { get; private set; }
         public string BuildExecutable { get; private set; }
@@ -29,52 +30,27 @@ namespace AutoTest.Core.Configuration
 
         protected override void DeserializeElement(System.Xml.XmlReader reader, bool serializeCollectionKey)
         {
-            _sectionXml = reader.ReadInnerXml();
-            DirectoryToWatch = getValue("DirectoryToWatch", "", _sectionXml);
-            BuildExecutable = getValue("BuildExecutable", "", _sectionXml);
-            NUnitTestRunner = getValue("NUnitTestRunner", "", _sectionXml);
-            MSTestRunner = getValue("MSTestRunner", "", _sectionXml);
+            _xml.LoadXml(reader.ReadOuterXml());
+            DirectoryToWatch = getValue("AutoTestCore/DirectoryToWatch", "");
+            BuildExecutable = getValue("AutoTestCore/BuildExecutable", "");
+            NUnitTestRunner = getValue("AutoTestCore/NUnitTestRunner", "");
+            MSTestRunner = getValue("AutoTestCore/MSTestRunner", "");
             CodeEditor = getCodeEditor();
         }
 
         private CodeEditor getCodeEditor()
         {
-            var chunk = getValue("CodeEditor", _sectionXml);
-            if (chunk == null)
-                return new CodeEditor("", "");
-            var executable = getValue("Executable", "", chunk);
-            var arguments = getValue("Arguments", "", chunk);
+            var executable = getValue("AutoTestCore/CodeEditor/Executable", "");
+            var arguments = getValue("AutoTestCore/CodeEditor/Arguments", "");
             return new CodeEditor(executable, arguments);
         }
 
-        private string getValue(string nodeName, string defaultValue, string xml)
+        private string getValue(string nodeName, string defaultValue)
         {
-            var value = getValue(nodeName, xml);
-            if (value == null)
+            var node = _xml.SelectSingleNode(nodeName);
+            if (node == null)
                 return defaultValue;
-            return value;
-        }
-
-        private string getValue(string nodeName, string xml)
-        {
-            var value = getInnerValue(nodeName, xml);
-            if (value.Length == 0)
-                return null;
-            return value;
-        }
-
-        private string getInnerValue(string nodeName, string xml)
-        {
-            var nodeStart = string.Format("<{0}>", nodeName);
-            var nodeEnd = string.Format("</{0}>", nodeName);
-            var start = xml.IndexOf(nodeStart);
-            if (start < 0)
-                return null;
-            start += nodeStart.Length;
-            var end = xml.IndexOf(nodeEnd, start);
-            if (end < 0)
-                return null;
-            return xml.Substring(start, end - start);
+            return node.InnerText;
         }
     }
 }

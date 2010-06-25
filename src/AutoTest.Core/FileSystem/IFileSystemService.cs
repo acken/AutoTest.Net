@@ -4,5 +4,6 @@ namespace AutoTest.Core.FileSystem
     {
         string[] GetFiles(string path, string searchPattern);
         string ReadFileAsText(string path);
+        bool DirectoryExists(string path);
     }
 }

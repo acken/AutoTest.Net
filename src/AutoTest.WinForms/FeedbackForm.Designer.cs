@@ -81,6 +81,7 @@
             // 
             // buttonInformation
             // 
+            this.buttonInformation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInformation.Location = new System.Drawing.Point(839, 4);
             this.buttonInformation.Name = "buttonInformation";
             this.buttonInformation.Size = new System.Drawing.Size(25, 17);

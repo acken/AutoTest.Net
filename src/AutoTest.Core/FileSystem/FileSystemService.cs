@@ -20,5 +20,10 @@ namespace AutoTest.Core.FileSystem
                 return reader.ReadToEnd();
             }
         }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
     }
 }

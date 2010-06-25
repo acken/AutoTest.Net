@@ -33,6 +33,14 @@ namespace AutoTest.Test.Core
             File.Delete(_file);
         }
 
+        [Test]
+        public void Should_not_start_watch_when_folder_is_invalid()
+        {
+            var bus = MockRepository.GenerateMock<IMessageBus>();
+            var watcher = new DirectoryWatcher(bus, null);
+            _watcher.Watch("");
+            bus.AssertWasNotCalled(m => m.Publish<InformationMessage>(null), m => m.IgnoreArguments());
+        }
 
         [Test]
         public void Should_send_message_when_file_changes_once()

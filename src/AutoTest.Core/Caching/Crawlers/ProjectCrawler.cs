@@ -24,6 +24,8 @@ namespace AutoTest.Core.Caching.Crawlers
 
         public void Crawl(string path)
         {
+            if (!_fsService.DirectoryExists(path))
+                return;
             getCSharpProjects(path);
             getVisualBasicProjects(path);
         }
