@@ -92,7 +92,6 @@
     <Compile Include="Configuration\BootStrapper.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="FileSystem\ProjectFileCrawler.cs" />
-    <Compile Include="ExtensionMethods\LinqExtensionMethods.cs" />
     <Compile Include="Messaging\IConsumerOf.cs" />
     <Compile Include="Messaging\IMessage.cs" />
     <Compile Include="Messaging\IMessageBus.cs" />
@@ -131,7 +130,7 @@
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

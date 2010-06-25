@@ -31,7 +31,6 @@ namespace AutoTest.Core.Caching.Projects
         private IFileSystemService _fsService;
         private string _projectFile;
         private string _fileContent;
-        private string[] _references = new string[] {};
 
         public ProjectParser(IFileSystemService fsService)
         {
@@ -122,7 +121,6 @@ namespace AutoTest.Core.Caching.Projects
         {
             var regExp = new Regex(string.Format("{0}.*?{1}", PROJECT_REFERENCE_START, PROJECT_REFERENCE_END));
             var matches = regExp.Matches(_fileContent);
-            _references = new string[matches.Count];
             for (int i = 0; i < matches.Count; i++)
                 document.AddReference(getReference(matches[i].Value));
         }

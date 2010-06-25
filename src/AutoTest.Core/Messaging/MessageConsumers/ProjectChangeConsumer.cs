@@ -69,7 +69,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(string project)
         {
-            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable, _bus);
+            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable);
             var buildReport = buildRunner.RunBuild(project);
             _bus.Publish(new BuildRunMessage(buildReport));
             return buildReport.ErrorCount == 0;

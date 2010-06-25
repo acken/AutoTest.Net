@@ -10,12 +10,10 @@ namespace AutoTest.Core.BuildRunners
     public class MSBuildRunner : IBuildRunner
     {
         private readonly string _buildExecutable;
-        private readonly IMessageBus _bus;
 
-        public MSBuildRunner(string buildExecutable, IMessageBus bus)
+        public MSBuildRunner(string buildExecutable)
         {
             _buildExecutable = buildExecutable;
-            _bus = bus;
         }
 
         public BuildRunResults RunBuild(string projectName)

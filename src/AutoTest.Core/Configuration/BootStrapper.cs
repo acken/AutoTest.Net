@@ -36,6 +36,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())
                 .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
                 .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
+                .Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<FileChangeConsumer>())
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
                 .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
