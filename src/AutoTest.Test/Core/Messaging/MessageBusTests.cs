@@ -9,6 +9,7 @@ using Castle.MicroKernel.Registration;
 using System.Threading;
 using AutoTest.Test.Core.Messaging.TestClasses;
 using AutoTest.Core.TestRunners;
+using BlockedMessage=AutoTest.Core.Messaging.BlockedMessage;
 
 namespace AutoTest.Test.Core.Messaging
 {
@@ -21,8 +22,10 @@ namespace AutoTest.Test.Core.Messaging
         {
             BootStrapper.Configure();
             BootStrapper.Container
-                .Register(Component.For<IConsumerOf<string>>().ImplementedBy<Listener>())
-                .Register(Component.For<IConsumerOf<string>>().Forward<IConsumerOf<int>>().ImplementedBy<BigListener>());
+                .Register(Component.For<IConsumerOf<StringMessage>>().ImplementedBy<Listener>())
+                .Register(Component.For<IConsumerOf<StringMessage>>().Forward<IConsumerOf<IntMessage>>().ImplementedBy<BigListener>())
+                .Register(Component.For<IBlockingConsumerOf<BlockingMessage>>().ImplementedBy<BlockingConsumer>())
+                .Register(Component.For<IBlockingConsumerOf<BlockingMessage2>>().ImplementedBy<BlockingConsumer2>());
 
             _bus = BootStrapper.Services.Locate<IMessageBus>();
         }
@@ -43,19 +46,44 @@ namespace AutoTest.Test.Core.Messaging
         [Test]
         public void Should_be_able_to_send_string_message_and_have_it_delivered_to_all_consumers()
         {
-            _bus.Publish("Hi");
+            var message = new StringMessage();
+            _bus.Publish(message);
             waitForAsyncCall();
-            Listener.LastMessage.ShouldEqual("Hi");
-            BigListener.LastStringMessage.ShouldEqual("Hi");
+            message.TimesConsumed.ShouldEqual(2);
         }
 
         [Test]
         public void Should_be_able_to_send_int_message()
         {
-            BigListener.LastIntMessage.ShouldEqual(default(int));
-            _bus.Publish(100);
+            var message = new IntMessage() {Consumed = false};
+            _bus.Publish(message);
             waitForAsyncCall();
-            BigListener.LastIntMessage.ShouldEqual(100);
+            message.Consumed.ShouldBeTrue();
+        }
+
+        [Test]
+        public void When_blocking_consumer_is_running_it_should_block()
+        {
+            var message1 = new BlockingMessage();
+            var message2 = new BlockingMessage();
+            BlockingConsumer.SleepTime = 30;
+            _bus.Publish(message1);
+            _bus.Publish(message2);
+            waitForAsyncCall();
+            message1.Consumed.ShouldBeTrue();
+            message2.Consumed.ShouldBeFalse();
+        }
+
+        [Test]
+        public void On_blocking_message_it_should_consme_withheld_messages()
+        {
+            var message1 = new BlockingMessage2();
+            var message2 = new BlockingMessage2();
+            _bus.Publish(message1);
+            _bus.Publish(message2);
+            waitForAsyncCall();
+            message1.Consumed.ShouldBeTrue();
+            message2.Consumed.ShouldBeTrue();
         }
 
         [Test]

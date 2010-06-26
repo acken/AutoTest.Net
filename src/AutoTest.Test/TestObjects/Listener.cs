@@ -1,30 +1,74 @@
 using AutoTest.Core.Messaging;
+using System.Threading;
 
 namespace AutoTest.Test.TestObjects
 {
-    internal class Listener : IConsumerOf<string>
+    class StringMessage : IMessage
     {
-        public static string LastMessage { get; private set; }
+        private object _padLock = new object();
+        private int _timesConsumed = 0;
 
-        public void Consume(string message)
+        public int TimesConsumed { get { return _timesConsumed; } }
+
+        public void Consume()
         {
-            LastMessage = message;
+            lock (_padLock)
+            {
+                _timesConsumed++;
+            }
         }
     }
 
-    internal class BigListener : IConsumerOf<string>, IConsumerOf<int>
+    class IntMessage : IMessage { public bool Consumed { get; set; } }
+
+    class BlockingMessage : IMessage { public bool Consumed { get; set; } }
+    class BlockingMessage2 : IMessage { public bool Consumed { get; set; } }
+
+    internal class Listener : IConsumerOf<StringMessage>
     {
-        public static string LastStringMessage { get; private set; }
-        public static int LastIntMessage { get; private set; }
-
-        public void Consume(string message)
+        public void Consume(StringMessage message)
         {
-            LastStringMessage = message;
+            message.Consume();
+        }
+    }
+
+    internal class BigListener : IConsumerOf<StringMessage>, IConsumerOf<IntMessage>
+    {
+        public void Consume(StringMessage message)
+        {
+            message.Consume();
         }
 
-        public void Consume(int message)
+        public void Consume(IntMessage message)
         {
-            LastIntMessage = message;
+            message.Consumed = true;
         }
+    }
+
+    internal class BlockingConsumer : IBlockingConsumerOf<BlockingMessage>
+    {
+        public static int SleepTime { get; set; }
+
+        #region IBlockingConsumerOf<BlockingMessage> Members
+
+        public void Consume(BlockingMessage message)
+        {
+            message.Consumed = true;
+            Thread.Sleep(SleepTime);
+        }
+
+        #endregion
+    }
+
+    internal class BlockingConsumer2 : IBlockingConsumerOf<BlockingMessage2>
+    {
+        #region IBlockingConsumerOf<BlockingMessage2> Members
+
+        public void Consume(BlockingMessage2 message)
+        {
+            message.Consumed = true;
+        }
+
+        #endregion
     }
 }
