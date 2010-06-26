@@ -189,8 +189,39 @@ namespace AutoTest.Core.Caching.Projects
 
         private string getAbsolutePath(string relativePath)
         {
-            var path = Path.Combine(Path.GetDirectoryName(_projectFile), relativePath);
+            var chunks = Path.Combine(Path.GetDirectoryName(_projectFile), relativePath)
+                .Split(Path.DirectorySeparatorChar);
+            var folders = makeAbsolute(chunks);
+            var path = buildPathFromArray(folders);
             return Path.GetFullPath(path);
+        }
+
+        private List<string> makeAbsolute(string[] chunks)
+        {
+            List<string> folders = new List<string>();
+            foreach (var chunk in chunks)
+            {
+                if (chunk.Equals(".."))
+                {
+                    folders.RemoveAt(folders.Count - 1);
+                    continue;
+                }
+                folders.Add(chunk);
+            }
+            return folders;
+        }
+
+        private string buildPathFromArray(List<string> folders)
+        {
+            var path = "";
+            foreach (var item in folders)
+            {
+                if (path.Length == 0)
+                    path += item;
+                else
+                    path += string.Format("{0}{1}", Path.DirectorySeparatorChar, item);
+            }
+            return path;
         }
     }
 }

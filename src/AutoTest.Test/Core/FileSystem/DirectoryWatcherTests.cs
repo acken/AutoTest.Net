@@ -38,7 +38,7 @@ namespace AutoTest.Test.Core
         {
             var bus = MockRepository.GenerateMock<IMessageBus>();
             var watcher = new DirectoryWatcher(bus, null);
-            _watcher.Watch("");
+            watcher.Watch("");
             bus.AssertWasNotCalled(m => m.Publish<InformationMessage>(null), m => m.IgnoreArguments());
         }
 
