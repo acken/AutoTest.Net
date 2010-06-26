@@ -8,6 +8,7 @@ namespace AutoTest.Core.Messaging
     public class MessageBus : IMessageBus
     {
         private readonly IServiceLocator _services;
+        private object _padLock = new object();
 
         public event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
         public event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
@@ -16,6 +17,7 @@ namespace AutoTest.Core.Messaging
         public event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         public event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         public event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
+        public event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
 
         public MessageBus(IServiceLocator services)
         {
@@ -24,10 +26,13 @@ namespace AutoTest.Core.Messaging
 
         public void Publish<T>(T message)
         {
-            if (message == null)
-                throw new ArgumentNullException("message");
-            // TODO: Handle Blocking consumers pr message type
-            ThreadPool.QueueUserWorkItem(publish<T>, message);
+            lock (_padLock)
+            {
+                if (message == null)
+                    throw new ArgumentNullException("message");
+                // TODO: Handle Blocking consumers pr message type
+                ThreadPool.QueueUserWorkItem(publish<T>, message);
+            }
         }
 
         private void publish<T>(object threadContext)
@@ -83,6 +88,12 @@ namespace AutoTest.Core.Messaging
             {
                 if (OnErrorMessage != null)
                     OnErrorMessage(this, new ErrorMessageEventArgs((ErrorMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(RunInformationMessage))
+            {
+                if (OnRunInformationMessage != null)
+                    OnRunInformationMessage(this, new RunInformationMessageEventArgs((RunInformationMessage)(IMessage)message));
                 handled = true;
             }
             return handled;

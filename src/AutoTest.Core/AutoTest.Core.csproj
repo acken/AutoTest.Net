@@ -109,6 +109,7 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Messaging\RunFinishedMessage.cs" />
+    <Compile Include="Messaging\RunInformationMessage.cs" />
     <Compile Include="Messaging\RunStartedMessage.cs" />
     <Compile Include="Messaging\TestRunMessage.cs" />
     <Compile Include="Messaging\WarningMessage.cs" />

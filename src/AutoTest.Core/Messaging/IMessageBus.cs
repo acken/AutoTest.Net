@@ -73,6 +73,16 @@ namespace AutoTest.Core.Messaging
         }
     }
 
+    public class RunInformationMessageEventArgs : EventArgs
+    {
+        public RunInformationMessage Message { get; private set; }
+
+        public RunInformationMessageEventArgs(RunInformationMessage message)
+        {
+            Message = message;
+        }
+    }
+
     public interface IMessageBus
     {
         event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
@@ -82,6 +92,7 @@ namespace AutoTest.Core.Messaging
         event EventHandler<BuildMessageEventArgs> OnBuildMessage;
         event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
+        event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
         void Publish<T>(T message);
     }
 }

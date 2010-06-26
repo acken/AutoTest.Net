@@ -12,6 +12,7 @@ namespace AutoTest.Test.Core.Messaging.TestClasses
         public bool RunFinishedMessageEventWasCalled = false;
         public bool BuildMessageEventWasCalled = false;
         public bool TestRunMessageEventWasCalled = false;
+        public bool RunInformationMessageEventCalled = false;
 
         public RunMessageConsumer(IMessageBus bus)
         {
@@ -19,6 +20,12 @@ namespace AutoTest.Test.Core.Messaging.TestClasses
             bus.OnRunFinishedMessage += new EventHandler<RunFinishedMessageEventArgs>(bus_OnRunFinishedMessage);
             bus.OnBuildMessage += new EventHandler<BuildMessageEventArgs>(bus_OnOnBuildMessage);
             bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(bus_OnTestRunMessage);
+            bus.OnRunInformationMessage += new EventHandler<RunInformationMessageEventArgs>(bus_OnRunInformationMessage);
+        }
+
+        void bus_OnRunInformationMessage(object sender, RunInformationMessageEventArgs e)
+        {
+            RunInformationMessageEventCalled = true;
         }
 
         void bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)

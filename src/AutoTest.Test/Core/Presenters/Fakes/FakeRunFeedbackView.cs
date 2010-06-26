@@ -13,11 +13,13 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         private RunFinishedMessage _runFinishedMessage = null;
         private BuildRunMessage _buildRunMessage = null;
         private TestRunMessage _testRunMessage = null;
+        private RunInformationMessage _runInformationMessage = null;
 
         public RunStartedMessage RunStartedMessage { get { return _runStartedMessage; } }
         public RunFinishedMessage RunFinishedMessage { get { return _runFinishedMessage; } }
         public BuildRunMessage BuildRunMessage { get { return _buildRunMessage; } }
         public TestRunMessage TestRunMessage { get { return _testRunMessage; } }
+        public RunInformationMessage RunInformationMessage { get { return _runInformationMessage; } }
 
         #region IRunFeedbackView Members
 
@@ -39,6 +41,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public void RecievingRunFinishedMessage(RunFinishedMessage message)
         {
             _runFinishedMessage = message;
+        }
+
+        public void RecievingRunInformationMessage(RunInformationMessage message)
+        {
+            _runInformationMessage = message;
         }
 
         #endregion

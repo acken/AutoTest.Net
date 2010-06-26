@@ -129,6 +129,16 @@ namespace AutoTest.Test.Core.Messaging
             consumer.ErrorMessageEventCalled.ShouldBeTrue();
         }
 
+        [Test]
+        public void Should_be_able_to_consume_run_information_messages()
+        {
+            var consumer = new RunMessageConsumer(_bus);
+            var message = new RunInformationMessage(InformationType.Build, "", "", "".GetType());
+            _bus.Publish(message);
+            waitForAsyncCall();
+            consumer.RunInformationMessageEventCalled.ShouldBeTrue();
+        }
+
         private void waitForAsyncCall()
         {
             Thread.Sleep(20);

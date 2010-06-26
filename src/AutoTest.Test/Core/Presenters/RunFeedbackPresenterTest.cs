@@ -67,6 +67,15 @@ namespace AutoTest.Test.Core.Presenters
             _view.RunFinishedMessage.ShouldBeTheSameAs(message);
         }
 
+        [Test]
+        public void Should_subscribe_to_run_information_messages()
+        {
+            var message = new RunInformationMessage(InformationType.Build, "", "", "".GetType());
+            _bus.Publish(message);
+            waitForAsyncCall();
+            _view.RunInformationMessage.ShouldBeTheSameAs(message);
+        }
+
         private void waitForAsyncCall()
         {
             Thread.Sleep(30);

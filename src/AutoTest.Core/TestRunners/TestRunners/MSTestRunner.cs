@@ -22,6 +22,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults RunTests(string project, string assemblyName)
         {
+            if (!File.Exists(_unitTestExe))
+                return new TestRunResults(project, assemblyName, new TestResult[] { });
+
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(_unitTestExe,
                                                         "/testcontainer:\"" + assemblyName + "\" /detail:errorstacktrace /detail:errormessage");

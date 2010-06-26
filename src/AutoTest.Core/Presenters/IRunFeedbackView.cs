@@ -12,5 +12,6 @@ namespace AutoTest.Core.Presenters
         void RecievingRunFinishedMessage(RunFinishedMessage message);
         void RecievingBuildMessage(BuildRunMessage message);
         void RecievingTestRunMessage(TestRunMessage message);
+        void RecievingRunInformationMessage(RunInformationMessage message);
     }
 }

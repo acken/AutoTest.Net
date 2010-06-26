@@ -53,12 +53,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
             alreadyBuilt.Add(project.Key);
 
-            if (!buildProject(project.Key))
+            if (File.Exists(_configuration.BuildExecutable))
             {
-                runReport.NumberOfBuildsFailed++;
-                return;
+                _bus.Publish(new RunInformationMessage(
+                                 InformationType.Build,
+                                 project.Key,
+                                 project.Value.AssemblyName,
+                                 typeof(MSBuildRunner)));
+                if (!buildProject(project.Key))
+                {
+                    runReport.NumberOfBuildsFailed++;
+                    return;
+                }
+                runReport.NumberOfBuildsSucceeded++;
             }
-            runReport.NumberOfBuildsSucceeded++;
 
             if (project.Value.ContainsTests)
                 runTests(project.Key, runReport);
@@ -91,6 +99,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private void runTests(ITestRunner testRunner, string project, string assembly, RunReport runReport)
         {
+            _bus.Publish(new RunInformationMessage(InformationType.TestRun, project, assembly, testRunner.GetType()));
             var results = testRunner.RunTests(project, assembly);
             runReport.NumberOfTestsPassed += results.Passed.Length;
             runReport.NumberOfTestsFailed += results.Failed.Length;

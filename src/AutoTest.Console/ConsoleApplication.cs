@@ -131,6 +131,11 @@ namespace AutoTest.Console
             _logger.Info(message.Error);
         }
 
+        public void RecievingRunInformationMessage(RunInformationMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

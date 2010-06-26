@@ -15,6 +15,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
 using AutoTest.WinForms.ResultsCache;
+using System.IO;
 
 namespace AutoTest.WinForms
 {
@@ -76,9 +77,17 @@ namespace AutoTest.WinForms
 
             _syncContext.Post(s =>
                                   {
-                                      labelRunState.Text = "Detected changes, running..";
-                                      labelRunState.ForeColor = Color.Black;
+                                      setRunInProgressFeedback("");
                                   }, null);
+        }
+
+        private void setRunInProgressFeedback(string additionalInfo)
+        {
+            var text = "Detected changes, running..";
+            if (additionalInfo.Length > 0)
+                text += string.Format(" ({0})", additionalInfo);
+            labelRunState.Text = text;
+            labelRunState.ForeColor = Color.Black;
         }
 
         public void  RecievingRunFinishedMessage(RunFinishedMessage message)
@@ -126,6 +135,21 @@ namespace AutoTest.WinForms
                                       relistFromCache();
                                   },
                               message.Results);
+        }
+
+        public void RecievingRunInformationMessage(RunInformationMessage message)
+        {
+            var text = "";
+            switch (message.Type)
+            {
+                case InformationType.Build:
+                    text = string.Format("building {0}", Path.GetFileName(message.Project));
+                    break;
+                case InformationType.TestRun:
+                    text = string.Format("testing {0}", Path.GetFileName(message.Assembly));
+                    break;
+            }
+            _syncContext.Post(m => setRunInProgressFeedback(m.ToString()), text);
         }
 
         #endregion

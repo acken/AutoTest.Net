@@ -21,6 +21,7 @@ namespace AutoTest.Core.Presenters
                 _bus.OnRunFinishedMessage += new EventHandler<RunFinishedMessageEventArgs>(_bus_OnRunFinishedMessage);
                 _bus.OnBuildMessage +=new EventHandler<BuildMessageEventArgs>(_bus_OnBuildMessage);
                 _bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(_bus_OnTestRunMessage);
+                _bus.OnRunInformationMessage += new EventHandler<RunInformationMessageEventArgs>(_bus_OnRunInformationMessage);
             }
         }
 
@@ -47,6 +48,11 @@ namespace AutoTest.Core.Presenters
         void _bus_OnTestRunMessage(object sender, TestRunMessageEventArgs e)
         {
             _view.RecievingTestRunMessage(e.Message);
+        }
+
+        void _bus_OnRunInformationMessage(object sender, RunInformationMessageEventArgs e)
+        {
+            _view.RecievingRunInformationMessage(e.Message);
         }
 
         #region IDisposable Members
