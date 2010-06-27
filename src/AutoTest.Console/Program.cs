@@ -23,6 +23,7 @@ namespace AutoTest.Console
             BootStrapper.InitializeCache();
             var application = BootStrapper.Services.Locate<IConsoleApplication>();
             application.Start();
+            BootStrapper.ShutDown();
         }
     }
 }

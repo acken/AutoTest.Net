@@ -38,7 +38,7 @@ namespace AutoTest.Core.Messaging
                 }
                 if (hasBlockingConsumers<T>())
                     block<T>();
-                ThreadPool.QueueUserWorkItem(publish<T>, message);
+                ThreadPool.QueueUserWorkItem(tryPublish<T>, message);
             }
         }
 
@@ -66,9 +66,20 @@ namespace AutoTest.Core.Messaging
             _blockedMessages.Add(new BlockedMessage(typeof(T)));
         }
 
+        private void tryPublish<T>(object threadContext)
+        {
+            try
+            {
+                publish<T>(threadContext);
+            }
+            catch (Exception exception)
+            {
+                Publish(new ErrorMessage(exception));
+            }
+        }
+
         private void publish<T>(object threadContext)
         {
-            System.Threading.Thread.Sleep(5);
             T message = (T) threadContext;
             if (handleByType<T>(message))
                 return;
@@ -90,11 +101,14 @@ namespace AutoTest.Core.Messaging
         private void publishWithheldMessages<T>()
         {
             var item = _blockedMessages.Find(m => m.Type.Equals(typeof (T)));
+            if (item ==  null)
+                return;
 
             while (item.HasBlockedMessages)
             {
                 publish<T>(item.Pop());
-            }   
+            }
+            _blockedMessages.Remove(item);
         }
 
         private bool handleByType<T>(T message)

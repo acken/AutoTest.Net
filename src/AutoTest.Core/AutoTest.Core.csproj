@@ -67,6 +67,7 @@
     <Compile Include="Caching\Projects\ProjectPreparer.cs" />
     <Compile Include="Configuration\CodeEditor.cs" />
     <Compile Include="Configuration\CoreSection.cs" />
+    <Compile Include="Configuration\DIContainer.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />

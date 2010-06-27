@@ -19,6 +19,7 @@ namespace AutoTest.WinForms
             ConfigureApplication();
             var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
             Application.Run(overviewForm.Form);
+            BootStrapper.ShutDown();
         }
 
         private static void ConfigureApplication()

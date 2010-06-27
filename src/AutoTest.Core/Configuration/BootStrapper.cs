@@ -20,49 +20,30 @@ namespace AutoTest.Core.Configuration
     /// </summary>
     public static class BootStrapper
     {
-        private static ServiceLocator _services;
+        private static DIContainer _container = new DIContainer();
 
-        public static IServiceLocator Services { get { return _services; } }
-        public static IWindsorContainer Container { get { return _services.Container; } }
+        public static IServiceLocator Services { get { return _container.Services; } }
+        public static IWindsorContainer Container { get { return _container.Services.Container; } }
 
         public static void Configure()
         {
-            _services = new ServiceLocator();
-            _services.Container
-                .Register(Component.For<IServiceLocator>().Instance(_services))
-                .Register(Component.For<IMessageBus>().ImplementedBy<MessageBus>().LifeStyle.Singleton)
-                .Register(Component.For<IFileSystemService>().ImplementedBy<FileSystemService>())
-                .Register(Component.For<IProjectParser>().ImplementedBy<ProjectParser>())
-                .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())
-                .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
-                .Register(Component.For<IConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
-                .Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<FileChangeConsumer>())
-                .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
-                .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
-                .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
-                .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>())
-                .Register(Component.For<IInformationFeedbackPresenter>().ImplementedBy<InformationFeedbackPresenter>())
-                .Register(Component.For<IRunFeedbackPresenter>().ImplementedBy<RunFeedbackPresenter>());
-            RegisterAssembly(Assembly.GetExecutingAssembly());
+            _container.Configure();
         }
 
         public static void InitializeCache()
         {
-            var configuration = _services.Locate<IConfiguration>();
-            var fsService = _services.Locate<IFileSystemService>();
-            var cache = _services.Locate<ICache>();
-            var cacheCrawler = new ProjectCrawler(cache, fsService);
-            cacheCrawler.Crawl(configuration.DirectoryToWatch);
+            _container.InitializeCache();
         }
 
         public static void RegisterAssembly(Assembly assembly)
         {
-            _services.Container
-                .Register(AllTypes
-                              .Pick()
-                              .FromAssembly(assembly)
-                              .WithService
-                              .FirstInterface());
+            _container.RegisterAssembly(assembly);
+        }
+
+        public static void ShutDown()
+        {
+            _container.Dispose();
+            _container = new DIContainer();
         }
     }
 }

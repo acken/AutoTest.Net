@@ -9,14 +9,15 @@ using AutoTest.Core.Caching;
 namespace AutoTest.Test.Core.Configuration
 {
     [TestFixture]
-    public class BootStrapperFullTest
+    public class DIContainerFullTest
     {
         [Test]
         public void Should_perform_full_bootstrap()
         {
-            BootStrapper.Configure();
-            BootStrapper.InitializeCache();
-            var cache = BootStrapper.Services.Locate<ICache>();
+            var container = new DIContainer();
+            container.Configure();
+            container.InitializeCache();
+            var cache = container.Services.Locate<ICache>();
             cache.Count.ShouldEqual(4);
         }
     }

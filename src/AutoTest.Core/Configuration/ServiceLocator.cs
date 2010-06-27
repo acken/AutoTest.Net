@@ -21,5 +21,11 @@ namespace AutoTest.Core.Configuration
         {
             return _container.ResolveAll<T>();
         }
+
+        public void UnregisterAll()
+        {
+            _container.Dispose();
+            _container = new WindsorContainer();
+        }
     }
 }

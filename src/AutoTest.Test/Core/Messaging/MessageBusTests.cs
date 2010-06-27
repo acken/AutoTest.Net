@@ -16,18 +16,42 @@ namespace AutoTest.Test.Core.Messaging
     [TestFixture]
     public class MessageBusTests : IDisposable
     {
-        private readonly IMessageBus _bus; 
+        private DIContainer _container;
+        private IMessageBus _bus;
+        private string _threadException;
         
         public MessageBusTests()
         {
-            BootStrapper.Configure();
-            BootStrapper.Container
+            
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _container = new DIContainer();
+            _container.Configure();
+            _container.Services.Container
                 .Register(Component.For<IConsumerOf<StringMessage>>().ImplementedBy<Listener>())
                 .Register(Component.For<IConsumerOf<StringMessage>>().Forward<IConsumerOf<IntMessage>>().ImplementedBy<BigListener>())
                 .Register(Component.For<IBlockingConsumerOf<BlockingMessage>>().ImplementedBy<BlockingConsumer>())
                 .Register(Component.For<IBlockingConsumerOf<BlockingMessage2>>().ImplementedBy<BlockingConsumer2>());
 
-            _bus = BootStrapper.Services.Locate<IMessageBus>();
+            _bus = _container.Services.Locate<IMessageBus>();
+            _threadException = "";
+            _bus.OnErrorMessage += new EventHandler<ErrorMessageEventArgs>(_bus_OnErrorMessage);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _container.Dispose();
+            if (_threadException.Length > 0)
+                Assert.Fail("Caught thread exception\r\n{0}", _threadException);
+        }
+
+        void _bus_OnErrorMessage(object sender, ErrorMessageEventArgs e)
+        {
+            _threadException = e.Message.Error;
         }
 
         [Test]
@@ -66,7 +90,7 @@ namespace AutoTest.Test.Core.Messaging
         {
             var message1 = new BlockingMessage();
             var message2 = new BlockingMessage();
-            BlockingConsumer.SleepTime = 30;
+            BlockingConsumer.SleepTime = 60;
             _bus.Publish(message1);
             _bus.Publish(message2);
             waitForAsyncCall();
@@ -80,6 +104,19 @@ namespace AutoTest.Test.Core.Messaging
             var message1 = new BlockingMessage2();
             var message2 = new BlockingMessage2();
             _bus.Publish(message1);
+            _bus.Publish(message2);
+            waitForAsyncCall();
+            message1.Consumed.ShouldBeTrue();
+            message2.Consumed.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_remove_block_when_witheld_messages_are_published()
+        {
+            var message1 = new BlockingMessage2();
+            var message2 = new BlockingMessage2();
+            _bus.Publish(message1);
+            Thread.Sleep(20);
             _bus.Publish(message2);
             waitForAsyncCall();
             message1.Consumed.ShouldBeTrue();
@@ -150,6 +187,8 @@ namespace AutoTest.Test.Core.Messaging
         [Test]
         public void Should_be_able_to_consume_error_messages()
         {
+            // Remove error message override made in setup function
+            _bus.OnErrorMessage -= _bus_OnErrorMessage;
             var consumer = new InformationMessageConsumer(_bus);
             var message = new ErrorMessage("some error");
             _bus.Publish(message);
@@ -169,7 +208,7 @@ namespace AutoTest.Test.Core.Messaging
 
         private void waitForAsyncCall()
         {
-            Thread.Sleep(20);
+            Thread.Sleep(50);
         }
 
         //TODO: need unsubscribe

@@ -14,7 +14,7 @@ using Castle.Core.Logging;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class ProjectChangeConsumer : IConsumerOf<ProjectChangeMessage>
+    class ProjectChangeConsumer : IBlockingConsumerOf<ProjectChangeMessage>
     {
         private IMessageBus _bus;
         private ICache _cache;

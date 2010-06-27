@@ -13,19 +13,17 @@ using AutoTest.Core.Launchers;
 namespace AutoTest.Test.Core.Configuration
 {
     [TestFixture]
-    public class BootStrapperTests
+    public class DIContainerTests
     {
+        private DIContainer _container;
         private IServiceLocator _locator;
 
-        public BootStrapperTests()
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
         {
-            BootStrapper.Configure();
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            _locator = BootStrapper.Services;
+            _container = new DIContainer();
+            _container.Configure();
+            _locator = _container.Services;
         }
 
         [Test]
@@ -90,8 +88,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_build_locator()
         {
-            var buildLocator = _locator.Locate<IConsumerOf<ProjectChangeMessage>>();
-            buildLocator.ShouldBeOfType<IConsumerOf<ProjectChangeMessage>>();
+            var buildLocator = _locator.Locate<IBlockingConsumerOf<ProjectChangeMessage>>();
+            buildLocator.ShouldBeOfType<IBlockingConsumerOf<ProjectChangeMessage>>();
         }
 
         [Test]
