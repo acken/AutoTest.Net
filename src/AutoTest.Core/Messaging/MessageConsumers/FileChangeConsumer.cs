@@ -52,12 +52,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             foreach (var locator in locators)
             {
                 if (locator.IsProject(file.FullName))
-                {
-                    if (_cache.Exists(file.FullName))
-                        _cache.MarkAsDirty<Project>(file.FullName);
-                    else
-                        _cache.Add<Project>(file.FullName);
-                }
+                    updateCache(file.FullName);
 
                 var files = locator.Locate(file.FullName);
                 if (files.Length == 0)
@@ -65,6 +60,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 currentLocation = addIfCloser(files, currentLocation, closestProjects);
             }
             return closestProjects.ToArray();
+        }
+
+        private void updateCache(string file)
+        {
+            if (_cache.Exists(file))
+                _cache.Reload<Project>(file);
+            else
+                _cache.Add<Project>(file);
         }
 
         private int addIfCloser(ChangedFile[] suggestedProjects, int currentLocation, List<ChangedFile> closestProjects)
