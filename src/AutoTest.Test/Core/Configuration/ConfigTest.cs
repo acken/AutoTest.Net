@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +25,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_read_directory_to_watch()
         {
-            _config.DirectoryToWatch.ShouldEqual("TestResources\\");
+            _config.DirectoryToWatch.ShouldEqual("TestResources");
         }
 
         [Test]

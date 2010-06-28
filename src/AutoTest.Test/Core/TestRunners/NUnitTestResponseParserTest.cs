@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,8 +53,9 @@ namespace AutoTest.Test.Core.TestRunners
             string response = "<test-case name=\"CSharpNUnitTestProject.Class1.Test1\" executed=\"True\" " +
                               "success=\"False\" time=\"0.052\" asserts=\"1\"><failure><message><![CDATA[  " +
                               "String lengths are both 4. Strings differ at index 2. Expected: \"bleh\" But " +
-                              "was:  \"blah\" -------------^]]></message><stack-trace><![CDATA[stacktrace\r\nat CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:line 16]]>" +
+                              "was:  \"blah\" -------------^]]></message><stack-trace><![CDATA[stacktrace{0}at CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:line 16]]>" +
                               "</stack-trace></failure></test-case>";
+			response = string.Format(response, Environment.NewLine);
             _parser.Parse(response);
             _parser.Result.All.Length.ShouldEqual(1);
             _parser.Result.Failed.Length.ShouldEqual(1);

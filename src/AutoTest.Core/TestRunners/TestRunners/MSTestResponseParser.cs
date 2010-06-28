@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,7 +53,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (_result[_result.Count - 1].StackTrace != null)
                 stackLines.AddRange(_result[_result.Count - 1].StackTrace);
             var stackString = getChunk(line, lineStart);
-            var lines = stackString.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            var lines = stackString.Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var stackLine in lines)
                 stackLines.Add(new MSTestStackLine(stackLine));
             return stackLines.ToArray();

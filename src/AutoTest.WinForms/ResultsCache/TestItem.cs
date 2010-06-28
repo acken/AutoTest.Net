@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,14 +54,15 @@ namespace AutoTest.WinForms.ResultsCache
 
             }
             return string.Format(
-                "Assembly: {0}\r\n" +
-                "Test: {1}\r\n" +
-                "Message:\r\n{2}\r\n" +
-                "Stack trace\r\n{3}",
+                "Assembly: {0}{4}" +
+                "Test: {1}{4}" +
+                "Message:{4}{2}{4}" +
+                "Stack trace{4}{3}",
                 Key,
                 Value.Name,
                 Value.Message,
-                stackTrace.ToString());
+                stackTrace.ToString(),
+			    Environment.NewLine);
         }
 
         #region IItem Members

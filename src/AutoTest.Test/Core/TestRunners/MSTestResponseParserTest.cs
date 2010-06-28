@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,7 +67,7 @@ namespace AutoTest.Test.Core.TestRunners
          public void Should_find_error_message_and_stacktrace()
          {
              _parser.ParseLine("Failed               The_name_of_the_test");
-             _parser.ParseLine("[errorstacktrace] =    at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99\r\nat Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99");
+             _parser.ParseLine(string.Format("[errorstacktrace] =    at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99{0}at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99", Environment.NewLine));
              _parser.ParseLine("[errormessage] = Assert.AreEqual failed. Expected:<2>. Actual:<9>. ");
              var result = _parser.Result;
 

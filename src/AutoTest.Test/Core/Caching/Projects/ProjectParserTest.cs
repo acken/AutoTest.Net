@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,7 +63,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         {
             var document = _parser.Parse(getCSharpProject(), null);
             document.References.Length.ShouldEqual(1);
-            document.References[0].ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}CSharpClassLibrary{0}CSharpClassLibrary.csproj", Path.DirectorySeparatorChar)));
+            document.References[0].ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}CSharpClassLibrary{0}CSharpClassLibrary.csproj", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
         }
 
         [Test]

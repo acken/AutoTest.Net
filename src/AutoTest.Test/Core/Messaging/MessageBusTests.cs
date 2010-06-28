@@ -46,7 +46,7 @@ namespace AutoTest.Test.Core.Messaging
         {
             _container.Dispose();
             if (_threadException.Length > 0)
-                Assert.Fail("Caught thread exception\r\n{0}", _threadException);
+                Assert.Fail("Caught thread exception{1}{0}", _threadException, Environment.NewLine);
         }
 
         void _bus_OnErrorMessage(object sender, ErrorMessageEventArgs e)

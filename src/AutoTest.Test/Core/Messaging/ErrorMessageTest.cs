@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +15,7 @@ namespace AutoTest.Test.Core.Messaging
         {
             var exception = new Exception("Error message");
             var message = new ErrorMessage(exception);
-            message.Error.ShouldEqual("Error message\r\n");
+            message.Error.ShouldEqual(string.Format("Error message{0}", Environment.NewLine));
         }
     }
 }

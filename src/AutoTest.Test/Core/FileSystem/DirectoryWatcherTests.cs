@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Messaging;
 using Rhino.Mocks;
@@ -49,7 +49,9 @@ namespace AutoTest.Test.Core
             // Write twice
             File.Create(_file).Dispose();
             using (var writer = new StreamWriter(_file, true)) { writer.WriteLine("some text"); }
-            Thread.Sleep(100);
+			// Set this to 1 sec since on linux in worst case scenario mono will poll every
+			// 750 millisecond
+            Thread.Sleep(1000);
             
             _messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(

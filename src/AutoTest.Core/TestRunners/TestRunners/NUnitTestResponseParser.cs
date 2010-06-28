@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,7 +109,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             var tagStart = "<stack-trace><![CDATA[";
             var tagEnd = "]]></stack-trace>";
-            var lines = getStringContent(testCase, tagStart, tagEnd).TrimEnd().Split(new string[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            var lines = getStringContent(testCase, tagStart, tagEnd).TrimEnd().Split(new string[]{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
             List<IStackLine> stackLines = new List<IStackLine>();
             foreach (var line in lines)
                 stackLines.Add(new NUnitStackLine(line));

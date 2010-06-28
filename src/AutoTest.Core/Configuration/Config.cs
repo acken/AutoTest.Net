@@ -1,3 +1,4 @@
+using System;
 using System.Configuration;
 using System.IO;
 using AutoTest.Core.Messaging;
@@ -28,7 +29,7 @@ namespace AutoTest.Core.Configuration
         public void ValidateSettings()
         {
             if (!Directory.Exists(_directoryToWatch))
-                _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory {0}\r\nChange the watch directory in the configuration file to a valid directory.", _directoryToWatch)));
+                _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory {0}{1}Change the watch directory in the configuration file to a valid directory.", _directoryToWatch, Environment.NewLine)));
             if (!File.Exists(_buildExecutable))
                 _bus.Publish(new WarningMessage("Invalid build executable specified in the configuration file. Builds will not be run."));
             if (!File.Exists(_nunitTestRunner))
