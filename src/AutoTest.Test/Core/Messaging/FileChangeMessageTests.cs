@@ -12,7 +12,7 @@ namespace AutoTest.Test.Core.Messaging
         protected override FileChangeMessage CreateMessage()
         {
             var fileChange = new FileChangeMessage();
-            fileChange.AddFile(new ChangedFile("C:\\windows\\regedit.exe"));
+            fileChange.AddFile(new ChangedFile(Path.GetFullPath("App.config")));
             return fileChange;
         }
 
@@ -26,9 +26,9 @@ namespace AutoTest.Test.Core.Messaging
         public void Should_have_file_info() 
         { 
             var message = CreateMessage(); 
-            message.Files[0].FullName.ShouldEqual("C:\\windows\\regedit.exe");
-            message.Files[0].Extension.ShouldEqual(".exe");
-            message.Files[0].Name.ShouldEqual("regedit.exe");
+            message.Files[0].FullName.ShouldEqual(Path.GetFullPath("App.config"));
+            message.Files[0].Extension.ShouldEqual(".config");
+            message.Files[0].Name.ShouldEqual("App.config");
         }
 
         [Test]

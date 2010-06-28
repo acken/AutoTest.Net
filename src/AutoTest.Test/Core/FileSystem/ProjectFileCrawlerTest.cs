@@ -1,6 +1,7 @@
 ﻿using AutoTest.Core.FileSystem;
 using NUnit.Framework;
 using System.IO;
+using System.Linq;
 
 namespace AutoTest.Test.Core
 {
@@ -21,7 +22,10 @@ namespace AutoTest.Test.Core
         public void Should_find_dlls_two_steps_down()
         {
             var dlls = _fileCrawler.FindParent(_path, ".config");
-            dlls.Length.ShouldEqual(1);
+            // Does a foreach since it's 1 in visual studio and 2 in monodevelop
+            // The important part is that all fetched are .config files
+            foreach (var dll in dlls)
+                dll.Extension.ShouldEqual(".config");
         }
 
         [Test]
