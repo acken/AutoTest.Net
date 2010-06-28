@@ -45,7 +45,7 @@ namespace AutoTest.Core.Caching
             return (T)_records[index];
         }
 
-        public void MarkAsDirty<T>(string key) where T : IRecord
+        public void Reload<T>(string key) where T : IRecord
         {
             var index = findIndex(key);
             if (index < 0)

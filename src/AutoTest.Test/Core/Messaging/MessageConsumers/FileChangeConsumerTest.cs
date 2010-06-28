@@ -105,7 +105,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             fileChange.AddFile(new ChangedFile("someproject.csproj"));
             _cache.Stub(c => c.Exists("someproject.csproj")).Return(true);
             _subject.Consume(fileChange);
-            _cache.AssertWasCalled(c => c.MarkAsDirty<Project>("someproject.csproj"));
+            _cache.AssertWasCalled(c => c.Reload<Project>("someproject.csproj"));
         }
 
         [Test]
