@@ -15,5 +15,10 @@ namespace AutoTest.Core.Caching.Projects
             Key = key;
             Value = value;
         }
+
+        public void Reload()
+        {
+            Value = new ProjectDocument(Value.Type);
+        }
     }
 }

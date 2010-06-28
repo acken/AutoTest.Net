@@ -8,6 +8,8 @@ using AutoTest.Core.Configuration;
 using AutoTest.Test.Core.Messaging.Fakes;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
@@ -17,13 +19,15 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IServiceLocator _services;
         private IMessageBus _bus;
         private FileChangeConsumer _subject;
+        private ICache _cache;
 
         [SetUp]
         public void testSetup()
         {
             _services = MockRepository.GenerateMock<IServiceLocator>();
+            _cache = MockRepository.GenerateMock<ICache>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _subject = new FileChangeConsumer(_services, _bus);
+            _subject = new FileChangeConsumer(_services, _bus, _cache);
         }
 
         [Test]
@@ -89,6 +93,31 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
                                                    p.Files[0].Name.Equals("FirstSubProject.vbproj") &&
                                                    p.Files[1].Name.Equals("SecondSubProject.xproj") &&
                                                    p.Files[2].Name.Equals("ThirdSubProject.xproj"))));
+        }
+        
+        [Test]
+        public void When_changed_file_is_project_mark_project_as_dirty()
+        {
+            var locator = new FakeProjectLocator(new ChangedFile[] { new ChangedFile("someproject.csproj") });
+            locator.WhenAskedIfFileIsProjectReturn(true);
+            _services.Stub(s => s.LocateAll<ILocateProjects>()).Return(new ILocateProjects[] { locator });
+            var fileChange = new FileChangeMessage();
+            fileChange.AddFile(new ChangedFile("someproject.csproj"));
+            _cache.Stub(c => c.Exists("someproject.csproj")).Return(true);
+            _subject.Consume(fileChange);
+            _cache.AssertWasCalled(c => c.MarkAsDirty<Project>("someproject.csproj"));
+        }
+
+        [Test]
+        public void When_changed_file_is_non_existing_project_add_project()
+        {
+            var locator = new FakeProjectLocator(new ChangedFile[] { new ChangedFile("someproject.csproj") });
+            locator.WhenAskedIfFileIsProjectReturn(true);
+            _services.Stub(s => s.LocateAll<ILocateProjects>()).Return(new ILocateProjects[] { locator });
+            var fileChange = new FileChangeMessage();
+            fileChange.AddFile(new ChangedFile("someproject.csproj"));
+            _subject.Consume(fileChange);
+            _cache.AssertWasCalled(c => c.Add<Project>("someproject.csproj"));
         }
     }
 }

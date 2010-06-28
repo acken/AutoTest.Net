@@ -6,6 +6,8 @@ using AutoTest.Core.FileSystem.ProjectLocators;
 using System.Collections.Generic;
 using AutoTest.Core.FileSystem;
 using Castle.Core.Logging;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -13,11 +15,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
+        private readonly ICache _cache;
 
-        public FileChangeConsumer(IServiceLocator services, IMessageBus bus)
+        public FileChangeConsumer(IServiceLocator services, IMessageBus bus, ICache cache)
         {
             _services = services;
             _bus = bus;
+            _cache = cache;
         }
 
         public void Consume(FileChangeMessage message)
@@ -47,6 +51,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var currentLocation = 0;
             foreach (var locator in locators)
             {
+                if (locator.IsProject(file.FullName))
+                {
+                    if (_cache.Exists(file.FullName))
+                        _cache.MarkAsDirty<Project>(file.FullName);
+                    else
+                        _cache.Add<Project>(file.FullName);
+                }
+
                 var files = locator.Locate(file.FullName);
                 if (files.Length == 0)
                     continue;

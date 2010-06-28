@@ -22,6 +22,11 @@ namespace AutoTest.Core.FileSystem.ProjectLocators
             return _filesLocator.FindParent(Path.GetDirectoryName(file), ".csproj");
         }
 
+        public bool IsProject(string file)
+        {
+            return Path.GetExtension(file).ToLower().Equals(".csproj");
+        }
+
         #endregion
     }
 }

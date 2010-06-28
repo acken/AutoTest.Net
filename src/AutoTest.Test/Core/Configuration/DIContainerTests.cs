@@ -140,5 +140,12 @@ namespace AutoTest.Test.Core.Configuration
             var launcher = _locator.Locate<ApplicatonLauncher>();
             launcher.ShouldBeOfType<ApplicatonLauncher>();
         }
+
+        [Test]
+        public void Should_register_project_dirtifier()
+        {
+            var dirtifier = _locator.Locate<IReload<Project>>();
+            dirtifier.ShouldBeOfType<IReload<Project>>();
+        }
     }
 }

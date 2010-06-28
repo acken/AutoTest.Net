@@ -22,6 +22,11 @@ namespace AutoTest.Core.FileSystem.ProjectLocators
             return _filesLocator.FindParent(Path.GetDirectoryName(file), ".vbproj");
         }
 
+        public bool IsProject(string file)
+        {
+            return Path.GetExtension(file).ToLower().Equals(".vbproj");
+        }
+
         #endregion
     }
 }

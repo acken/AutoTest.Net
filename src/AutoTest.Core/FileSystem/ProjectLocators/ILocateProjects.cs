@@ -9,5 +9,6 @@ namespace AutoTest.Core.FileSystem.ProjectLocators
     interface ILocateProjects
     {
         ChangedFile[] Locate(string file);
+        bool IsProject(string file);
     }
 }

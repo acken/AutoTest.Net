@@ -12,15 +12,30 @@ namespace AutoTest.Test.Core.FileSystem.ProjectLocators
     [TestFixture]
     public class CSharpLocatorTest
     {
+        private ChangedFile[] _changedProjects;
+        private CSharpLocator _locator;
+        private FakeProjectFileCrawler _crawler;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _changedProjects = new ChangedFile[] { };
+            _crawler = new FakeProjectFileCrawler(_changedProjects);
+            _locator = new CSharpLocator(_crawler);
+        }
+
         [Test]
         public void Should_locate_csharp_project()
         {
-            var changedProjects = new ChangedFile[] {};
-            var fileLocator = new FakeProjectFileCrawler(changedProjects);
-            var locator = new CSharpLocator(fileLocator);
-            var files = locator.Locate("somechangedfile.cs");
-            files.ShouldBeTheSameAs(changedProjects);
-            fileLocator.ShouldHaveBeenAskedToLookFor(".csproj");
+            var files = _locator.Locate("somechangedfile.cs");
+            files.ShouldBeTheSameAs(_changedProjects);
+            _crawler.ShouldHaveBeenAskedToLookFor(".csproj");
+        }
+
+        [Test]
+        public void Should_verify_that_file_is_project()
+        {
+            _locator.IsProject("somefile.csproj").ShouldBeTrue();
         }
     }
 }

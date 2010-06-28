@@ -44,6 +44,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IDirectoryWatcher>().ImplementedBy<DirectoryWatcher>())
                 .Register(Component.For<IConfiguration>().ImplementedBy<Config>())
                 .Register(Component.For<ICrawlForProjectFiles>().ImplementedBy<ProjectFileCrawler>())
+                .Register(Component.For<IReload<Project>>().ImplementedBy<ProjectReloader>())
                 .Register(Component.For<ApplicatonLauncher>());
         }
 

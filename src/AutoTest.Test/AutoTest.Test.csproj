@@ -78,6 +78,7 @@
     <Compile Include="Core\BuildRunners\BuildMessageTest.cs" />
     <Compile Include="Core\BuildRunners\BuildRunResultTest.cs" />
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
+    <Compile Include="Core\Caching\Projects\ProjectReloaderTest.cs" />
     <Compile Include="Core\Configuration\ConfigTest.cs" />
     <Compile Include="Core\Messaging\ErrorMessageTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\FileChangeConsumerTest.cs" />

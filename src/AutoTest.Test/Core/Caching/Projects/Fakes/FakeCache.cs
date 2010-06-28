@@ -64,6 +64,11 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
             throw new NotImplementedException();
         }
 
+        public void MarkAsDirty<T>(string key) where T : IRecord
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

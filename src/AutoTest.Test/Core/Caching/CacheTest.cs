@@ -13,13 +13,17 @@ namespace AutoTest.Test.Core.Caching
     public class CacheTest
     {
         private Cache _cache;
+        private ProjectDocument _firstDocument;
+        private ProjectDocument _secondDocument;
 
         [SetUp]
         public void SetUp()
         {
-            var document = new ProjectDocument(ProjectType.CSharp);
-            document.HasBeenReadFromFile();
-            var parser = new FakeProjectParser(new ProjectDocument[] { document });
+            _firstDocument = new ProjectDocument(ProjectType.CSharp);
+            _firstDocument.HasBeenReadFromFile();
+            _secondDocument = new ProjectDocument(ProjectType.CSharp);
+            _secondDocument.HasBeenReadFromFile();
+            var parser = new FakeProjectParser(new ProjectDocument[] { _secondDocument, _firstDocument });
             _cache = new Cache(new FakeServiceLocator(parser, delegate { return _cache; }));
         }
 
@@ -50,6 +54,13 @@ namespace AutoTest.Test.Core.Caching
             _cache.Add<Project>("project");
             _cache.Add<Project>("project");
             _cache.Count.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_read_project_only_once()
+        {
+            _cache.Add<Project>("project");
+            _cache.Get<Project>("project").Value.ShouldBeTheSameAs(_firstDocument);
         }
 
         [Test]

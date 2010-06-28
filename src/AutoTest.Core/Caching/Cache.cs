@@ -45,6 +45,16 @@ namespace AutoTest.Core.Caching
             return (T)_records[index];
         }
 
+        public void MarkAsDirty<T>(string key) where T : IRecord
+        {
+            var index = findIndex(key);
+            if (index < 0)
+                return;
+            var dirtyMarker = _services.Locate<IReload<T>>();
+            T record = (T) _records[index];
+            dirtyMarker.MarkAsDirty(record);
+        }
+
         private int createRecord<T>(string key) where T : IRecord
         {
             var creator = _services.Locate<ICreate<T>>();
