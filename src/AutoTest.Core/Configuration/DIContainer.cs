@@ -14,6 +14,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using System.Reflection;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.Launchers;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Configuration
 {
@@ -33,7 +34,8 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IProjectParser>().ImplementedBy<ProjectParser>())
                 .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())
                 .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
-                .Register(Component.For<IBlockingConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
+                .Register(
+                Component.For<IBlockingConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
                 .Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<FileChangeConsumer>())
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())

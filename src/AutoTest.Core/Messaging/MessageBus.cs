@@ -2,6 +2,7 @@ using System;
 using AutoTest.Core.Configuration;
 using System.Threading;
 using System.Collections.Generic;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Messaging
 {
@@ -31,6 +32,7 @@ namespace AutoTest.Core.Messaging
             {
                 if (message == null)
                     throw new ArgumentNullException("message");
+                Debug.Publishing<T>();
                 if (isBlockingConsumers<T>())
                 {
                     withhold(message);
@@ -49,6 +51,7 @@ namespace AutoTest.Core.Messaging
 
         private void withhold(object message)
         {
+            Debug.WitholdingMessage(message);
             var item = _blockedMessages.Find(m => m.Type.Equals(message.GetType()));
             item.Push(message);
         }
@@ -63,6 +66,7 @@ namespace AutoTest.Core.Messaging
 
         private void block<T>()
         {
+            Debug.Blocking<T>();
             _blockedMessages.Add(new BlockedMessage(typeof(T)));
         }
 

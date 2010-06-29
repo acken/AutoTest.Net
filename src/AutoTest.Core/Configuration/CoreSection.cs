@@ -27,6 +27,7 @@ namespace AutoTest.Core.Configuration
         public string NUnitTestRunner { get; private set; }
         public string MSTestRunner { get; private set; }
         public CodeEditor CodeEditor { get; private set; }
+        public bool DebuggingEnabled { get; private set; }
 
         protected override void DeserializeElement(System.Xml.XmlReader reader, bool serializeCollectionKey)
         {
@@ -36,6 +37,16 @@ namespace AutoTest.Core.Configuration
             NUnitTestRunner = getValue("AutoTestCore/NUnitTestRunner", "");
             MSTestRunner = getValue("AutoTestCore/MSTestRunner", "");
             CodeEditor = getCodeEditor();
+            DebuggingEnabled = getDebuggingEnabled();
+        }
+
+        private bool getDebuggingEnabled()
+        {
+            bool state;
+            var value = getValue("AutoTestCore/Debugging", "false");
+            if (bool.TryParse(value, out state))
+                return state;
+            return false;
         }
 
         private CodeEditor getCodeEditor()

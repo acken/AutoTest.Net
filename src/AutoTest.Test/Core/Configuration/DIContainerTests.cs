@@ -9,6 +9,7 @@ using AutoTest.Core.FileSystem;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Launchers;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Test.Core.Configuration
 {

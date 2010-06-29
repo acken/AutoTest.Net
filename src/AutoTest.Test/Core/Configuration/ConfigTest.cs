@@ -53,5 +53,12 @@ namespace AutoTest.Test.Core.Configuration
             editor.Executable.ShouldEqual(@"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv");
             editor.Arguments.ShouldEqual("/Edit \"[[CodeFile]]\" /command \"Edit.Goto [[LineNumber]]\"");
         }
+
+        [Test]
+        public void Should_read_debug_flag()
+        {
+            var state = _config.DebuggingEnabled;
+            state.ShouldBeTrue();
+        }
     }
 }

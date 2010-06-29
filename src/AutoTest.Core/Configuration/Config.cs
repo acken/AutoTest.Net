@@ -14,6 +14,7 @@ namespace AutoTest.Core.Configuration
         private string _nunitTestRunner;
         private string _msTestRunner;
         private CodeEditor _codeEditor;
+        private bool _debuggingEnabled;
 
         public Config(IMessageBus bus)
         {
@@ -24,6 +25,7 @@ namespace AutoTest.Core.Configuration
             _nunitTestRunner = core.NUnitTestRunner;
             _msTestRunner = core.MSTestRunner;
             _codeEditor = core.CodeEditor;
+            _debuggingEnabled = core.DebuggingEnabled;
         }
 
         public void ValidateSettings()
@@ -68,6 +70,12 @@ namespace AutoTest.Core.Configuration
         {
             get { return _codeEditor; }
             set { _codeEditor = value; }
+        }
+
+        public bool DebuggingEnabled
+        {
+            get { return _debuggingEnabled; }
+            set { _debuggingEnabled = value; }
         }
     }
 }

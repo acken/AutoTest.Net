@@ -2,6 +2,7 @@ using System.Timers;
 using System.Collections.Generic;
 using AutoTest.Core.Messaging;
 using System.IO;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -44,6 +45,7 @@ namespace AutoTest.Core.FileSystem
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
         {
+            Debug.RawFileChangeDetected(e.FullPath);
             addToBuffer(new ChangedFile(e.FullPath));
         }
 
@@ -53,6 +55,7 @@ namespace AutoTest.Core.FileSystem
             {
                 if (_buffer.Count > 0)
                 {
+                    Debug.AboutToPublishFileChanges(_buffer.Count);
                     var fileChange = new FileChangeMessage();
                     fileChange.AddFile(_buffer.ToArray());
                     _bus.Publish(fileChange);

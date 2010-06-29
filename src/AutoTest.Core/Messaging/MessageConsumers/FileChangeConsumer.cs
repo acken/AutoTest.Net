@@ -8,6 +8,7 @@ using AutoTest.Core.FileSystem;
 using Castle.Core.Logging;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -26,6 +27,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(FileChangeMessage message)
         {
+            Debug.ConsumingFileChange(message);
             var totalListOfProjects = new List<ChangedFile>();
             var locators = _services.LocateAll<ILocateProjects>();
             foreach (var file in message.Files)
@@ -42,6 +44,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 return;
             var projectChange = new ProjectChangeMessage();
             projectChange.AddFile(totalListOfProjects.ToArray());
+            Debug.AboutToPublishProjectChanges(projectChange);
             _bus.Publish(projectChange);
         }
 

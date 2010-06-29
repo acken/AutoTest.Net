@@ -11,6 +11,7 @@ using AutoTest.Core.TestRunners;
 using System.IO;
 using AutoTest.Core.TestRunners.TestRunners;
 using Castle.Core.Logging;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -31,6 +32,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
+            Debug.ConsumingProjectChangeMessage(message);
             _bus.Publish(new RunStartedMessage(message.Files));
             var alreadyBuilt = new List<string>();
             var runReport = new RunReport();

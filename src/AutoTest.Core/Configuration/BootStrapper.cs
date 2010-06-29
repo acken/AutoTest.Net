@@ -12,6 +12,7 @@ using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Presenters;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Configuration
 {
@@ -28,20 +29,26 @@ namespace AutoTest.Core.Configuration
         public static void Configure()
         {
             _container.Configure();
+            if (_container.Services.Locate<IConfiguration>().DebuggingEnabled)
+                Debug.EnableLogging();
+            Debug.InitialConfigurationFinished();
         }
 
         public static void InitializeCache()
         {
             _container.InitializeCache();
+            Debug.InitializedCache();
         }
 
         public static void RegisterAssembly(Assembly assembly)
         {
             _container.RegisterAssembly(assembly);
+            Debug.RegisteredAssembly(assembly);
         }
 
         public static void ShutDown()
         {
+            Debug.ShutingDownContainer();
             _container.Dispose();
             _container = new DIContainer();
         }
