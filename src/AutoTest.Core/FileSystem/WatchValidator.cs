@@ -16,6 +16,7 @@ namespace AutoTest.Core.FileSystem
         private const string OBJ_X86 = "obj{0}x86";
         private const string OBJ = "obj{0}";
         private const string MONO_FILE_LIST_ABSOLUTE = ".FileListAbsolute.txt";
+        private const string MONO_FILES_WRITTEN_ABSOLUTE = ".FilesWrittenAbsolute.txt";
 
         public bool ShouldPublish(string filePath)
         {
@@ -34,6 +35,8 @@ namespace AutoTest.Core.FileSystem
             if (Directory.Exists(filePath))
                 return false;
             if (contains(filePath, OBJ) && filePath.EndsWith(MONO_FILE_LIST_ABSOLUTE))
+                return false;
+            if (contains(filePath, OBJ) && filePath.EndsWith(MONO_FILES_WRITTEN_ABSOLUTE))
                 return false;
             return true;
         }

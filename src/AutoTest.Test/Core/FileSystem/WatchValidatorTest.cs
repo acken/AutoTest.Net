@@ -91,6 +91,13 @@ namespace AutoTest.Test.Core.FileSystem
                 .ShouldBeFalse();
         }
 
+        [Test]
+        public void Should_invalidate_monos_fileswrittenabsolute_file()
+        {
+            _validator.ShouldPublish(getInfo("something{0}obj{0}SomeProject.csproj.FilesWrittenAbsolute.txt"))
+                .ShouldBeFalse();
+        }
+
         private string getInfo(string path)
         {
             return string.Format(path, Path.DirectorySeparatorChar);

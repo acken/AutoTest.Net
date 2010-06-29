@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 
 namespace AutoTest.Test.Core.Messaging
 {
-    [TestFixture]
     public abstract class MessageTestBase<T>
     {
         protected abstract T CreateMessage();

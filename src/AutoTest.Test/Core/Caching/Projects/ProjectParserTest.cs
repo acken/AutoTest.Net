@@ -120,10 +120,10 @@ namespace AutoTest.Test.Core.Caching.Projects
         public void Should_set_output_path()
         {
             var document = _parser.Parse(getCSharpProject(), null);
-            document.OutputPath.ShouldEqual("bin\\Debug\\");
+            document.OutputPath.ShouldEqual(string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar));
 
             document = _parser.Parse(getVisualBasicProject(), null);
-            document.OutputPath.ShouldEqual("bin\\Debug\\");
+            document.OutputPath.ShouldEqual(string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar));
         }
 
         private string getCSharpProject()
