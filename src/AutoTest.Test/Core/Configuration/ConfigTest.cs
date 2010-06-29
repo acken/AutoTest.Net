@@ -31,7 +31,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_read_build_executable()
         {
-            _config.BuildExecutable.ShouldEqual(@"C:\Somefolder\MSBuild.exe");
+            _config.BuildExecutable().ShouldEqual(@"C:\Somefolder\MSBuild.exe");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_read_mstest_testrunner_path()
         {
-            _config.MSTestRunner.ShouldEqual(@"C:\Somefolder\MSTest.exe");
+            _config.MSTestRunner().ShouldEqual(@"C:\Somefolder\MSTest.exe");
         }
 
         [Test]

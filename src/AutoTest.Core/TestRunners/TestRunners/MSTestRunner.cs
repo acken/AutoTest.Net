@@ -15,7 +15,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public MSTestRunner(IConfiguration configuration)
         {
-            _unitTestExe = configuration.MSTestRunner;
+            _unitTestExe = configuration.MSTestRunner();
         }
 
         #region ITestRunner Members

@@ -8,9 +8,9 @@ namespace AutoTest.Core.Configuration
     public interface IConfiguration
     {
         string DirectoryToWatch { get; }
-        string BuildExecutable { get; }
+        string BuildExecutable();
         string NunitTestRunner { get; }
-        string MSTestRunner { get; }
+        string MSTestRunner();
         CodeEditor CodeEditor { get; }
         bool DebuggingEnabled { get; }
 

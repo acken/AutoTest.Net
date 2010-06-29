@@ -48,10 +48,9 @@ namespace AutoTest.Core.Configuration
             set { _directoryToWatch = value; }
         }
 
-        public string BuildExecutable
+        public string BuildExecutable()
         {
-            get { return _buildExecutable; }
-            set { _buildExecutable = value; }
+            return _buildExecutable;
         }
 
         public string NunitTestRunner
@@ -60,10 +59,9 @@ namespace AutoTest.Core.Configuration
             set { _nunitTestRunner = value; }
         }
 
-        public string MSTestRunner
+        public string MSTestRunner()
         {
-            get { return _msTestRunner; }
-            set { _msTestRunner = value; }
+            return _msTestRunner;
         }
 
         public CodeEditor CodeEditor

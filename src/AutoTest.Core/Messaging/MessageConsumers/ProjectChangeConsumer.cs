@@ -55,7 +55,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
             alreadyBuilt.Add(project.Key);
 
-            if (File.Exists(_configuration.BuildExecutable))
+            if (File.Exists(_configuration.BuildExecutable()))
             {
                 _bus.Publish(new RunInformationMessage(
                                  InformationType.Build,
@@ -79,7 +79,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(string project)
         {
-            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable);
+            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable());
             var buildReport = buildRunner.RunBuild(project);
             _bus.Publish(new BuildRunMessage(buildReport));
             return buildReport.ErrorCount == 0;
