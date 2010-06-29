@@ -6,27 +6,29 @@ using AutoTest.Core.Configuration;
 using System.Diagnostics;
 using System.IO;
 using Castle.Core.Logging;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class MSTestRunner : ITestRunner
     {
-        private readonly string _unitTestExe;
+        private IConfiguration _configuration;
 
         public MSTestRunner(IConfiguration configuration)
         {
-            _unitTestExe = configuration.MSTestRunner();
+            _configuration = configuration;
         }
 
         #region ITestRunner Members
 
-        public TestRunResults RunTests(string project, string assemblyName)
+        public TestRunResults RunTests(Project project, string assemblyName)
         {
-            if (!File.Exists(_unitTestExe))
-                return new TestRunResults(project, assemblyName, new TestResult[] { });
+            var unitTestExe = _configuration.MSTestRunner(project.Value.Framework);
+            if (!File.Exists(unitTestExe))
+                return new TestRunResults(project.Key, assemblyName, new TestResult[] { });
 
             var proc = new Process();
-            proc.StartInfo = new ProcessStartInfo(_unitTestExe,
+            proc.StartInfo = new ProcessStartInfo(unitTestExe,
                                                         "/testcontainer:\"" + assemblyName + "\" /detail:errorstacktrace /detail:errormessage");
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(assemblyName);
@@ -36,7 +38,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             proc.Start();
             string line;
-            var parser = new MSTestResponseParser(project, assemblyName);
+            var parser = new MSTestResponseParser(project.Key, assemblyName);
             while ((line = proc.StandardOutput.ReadLine()) != null)
                 parser.ParseLine(line);
             proc.WaitForExit();

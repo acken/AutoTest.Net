@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    enum ProjectType
+    public enum ProjectType
     {
         None,
         CSharp,

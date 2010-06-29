@@ -130,14 +130,20 @@ namespace AutoTest.Test.Core.Caching.Projects
         public void Should_set_framework_version()
         {
             var document = _parser.Parse(getCSharpProject(), null);
-            document.Framework.Major.Equals(3);
-            document.Framework.Minor.Equals(5);
-            document.Framework.Build.Equals(0);
+            document.Framework.Equals("v3.5");
 
             document = _parser.Parse(getVisualBasicProject(), null);
-            document.Framework.Major.Equals(3);
-            document.Framework.Minor.Equals(5);
-            document.Framework.Build.Equals(0);
+            document.Framework.Equals("v3.5");
+        }
+
+        [Test]
+        public void Should_set_product_version()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.ProductVersion.Equals("9.0.30729");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.ProductVersion.Equals("9.0.30729");
         }
 
         private string getCSharpProject()

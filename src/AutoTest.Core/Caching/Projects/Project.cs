@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class Project : IRecord
+    public class Project : IRecord
     {
         public string Key { get; private set; }
         public ProjectDocument Value { get; private set; }

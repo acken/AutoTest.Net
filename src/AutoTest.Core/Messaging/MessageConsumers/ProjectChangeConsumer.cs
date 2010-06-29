@@ -55,14 +55,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
             alreadyBuilt.Add(project.Key);
 
-            if (File.Exists(_configuration.BuildExecutable()))
+            if (File.Exists(_configuration.BuildExecutable(project.Value)))
             {
                 _bus.Publish(new RunInformationMessage(
                                  InformationType.Build,
                                  project.Key,
                                  project.Value.AssemblyName,
                                  typeof(MSBuildRunner)));
-                if (!buildProject(project.Key))
+                if (!buildProject(project))
                 {
                     runReport.NumberOfBuildsFailed++;
                     return;
@@ -71,37 +71,36 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             }
 
             if (project.Value.ContainsTests)
-                runTests(project.Key, runReport);
+                runTests(project, runReport);
 
             foreach (var reference in project.Value.ReferencedBy)
                 buildAndRunTests(_cache.Get<Project>(reference), runReport, alreadyBuilt);
         }
 
-        private bool buildProject(string project)
+        private bool buildProject(Project project)
         {
-            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable());
-            var buildReport = buildRunner.RunBuild(project);
+            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable(project.Value));
+            var buildReport = buildRunner.RunBuild(project.Key);
             _bus.Publish(new BuildRunMessage(buildReport));
             return buildReport.ErrorCount == 0;
         }
 
-        private void runTests(string projectPath, RunReport runReport)
+        private void runTests(Project project, RunReport runReport)
         {
-            var project = _cache.Get<Project>(projectPath);
-            string folder = Path.Combine(Path.GetDirectoryName(projectPath), project.Value.OutputPath);
+            string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
 
             var file = Path.Combine(folder, project.Value.AssemblyName);
             if (project.Value.ContainsNUnitTests)
-                runTests(new NUnitTestRunner(_bus, _configuration), projectPath, file, runReport);
+                runTests(new NUnitTestRunner(_bus, _configuration), project, file, runReport);
             if (project.Value.ContainsMSTests)
-                runTests(new MSTestRunner(_configuration), projectPath, file, runReport);
+                runTests(new MSTestRunner(_configuration), project, file, runReport);
         }
 
         #endregion
 
-        private void runTests(ITestRunner testRunner, string project, string assembly, RunReport runReport)
+        private void runTests(ITestRunner testRunner, Project project, string assembly, RunReport runReport)
         {
-            _bus.Publish(new RunInformationMessage(InformationType.TestRun, project, assembly, testRunner.GetType()));
+            _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, testRunner.GetType()));
             var results = testRunner.RunTests(project, assembly);
             runReport.NumberOfTestsPassed += results.Passed.Length;
             runReport.NumberOfTestsFailed += results.Failed.Length;

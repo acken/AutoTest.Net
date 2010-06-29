@@ -28,6 +28,7 @@ namespace AutoTest.Core.Caching.Projects
         private const string PROPERTYGROUP_END = "</PropertyGroup>";
         private const string OUTPUTPATH_NODE = "OutputPath";
         private const string FRAMEWORK_NODE = "TargetFrameworkVersion";
+        private const string PRODUCTVERSION_NODE = "ProductVersion";
 
         private IFileSystemService _fsService;
         private string _projectFile;
@@ -48,6 +49,7 @@ namespace AutoTest.Core.Caching.Projects
             setPlatform(newDocument);
             setOutputPath(newDocument);
             setFrameworkVersion(newDocument);
+            setProductVersion(newDocument);
             setContainsTests(newDocument);
             setReferences(newDocument);
             setReferencedBy(newDocument, existingDocument);
@@ -82,19 +84,12 @@ namespace AutoTest.Core.Caching.Projects
 
         private void setFrameworkVersion(ProjectDocument newDocument)
         {
-            var frameworkString = getNode(FRAMEWORK_NODE);
-            frameworkString = frameworkString.Substring(1, frameworkString.Length - 1);
-            var chunks = frameworkString.Split('.');
-            int major = 0;
-            int minor = 0;
-            int build = 0;
-            if (chunks.Length > 0)
-                major = int.Parse(chunks[0]);
-            if (chunks.Length > 1)
-                minor = int.Parse(chunks[1]);
-            if (chunks.Length > 2)
-                build = int.Parse(chunks[2]);
-            newDocument.SetFramework(new Version(major, minor, build));
+            newDocument.SetFramework(getNode(FRAMEWORK_NODE));
+        }
+
+        private void setProductVersion(ProjectDocument newDocument)
+        {
+            newDocument.SetVSVersion(getNode(PRODUCTVERSION_NODE));
         }
 
         private void setPlatform(ProjectDocument newDocument)

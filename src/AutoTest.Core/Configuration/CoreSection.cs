@@ -23,9 +23,9 @@ namespace AutoTest.Core.Configuration
         private XmlDocument _xml = new XmlDocument();
 
         public string DirectoryToWatch { get; private set; }
-        public string BuildExecutable { get; private set; }
-        public string NUnitTestRunner { get; private set; }
-        public string MSTestRunner { get; private set; }
+        public List<KeyValuePair<string, string>> BuildExecutables { get; private set; }
+        public List<KeyValuePair<string, string>> NUnitTestRunner { get; private set; }
+        public List<KeyValuePair<string, string>> MSTestRunner { get; private set; }
         public CodeEditor CodeEditor { get; private set; }
         public bool DebuggingEnabled { get; private set; }
 
@@ -33,11 +33,27 @@ namespace AutoTest.Core.Configuration
         {
             _xml.LoadXml(reader.ReadOuterXml());
             DirectoryToWatch = getValue("AutoTestCore/DirectoryToWatch", "");
-            BuildExecutable = getValue("AutoTestCore/BuildExecutable", "");
-            NUnitTestRunner = getValue("AutoTestCore/NUnitTestRunner", "");
-            MSTestRunner = getValue("AutoTestCore/MSTestRunner", "");
+            BuildExecutables = getVersionedSetting("AutoTestCore/BuildExecutables");
+            NUnitTestRunner = getVersionedSetting("AutoTestCore/NUnitTestRunner");
+            MSTestRunner = getVersionedSetting("AutoTestCore/MSTestRunner");
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getDebuggingEnabled();
+        }
+
+        private List<KeyValuePair<string, string>> getVersionedSetting(string xpath)
+        {
+            List<KeyValuePair<string, string>> executables = new List<KeyValuePair<string, string>>();
+            var nodes = _xml.SelectNodes(xpath);
+            foreach (XmlNode node in nodes)
+            {
+                var executable = node.InnerText;
+                var version = "";
+                var attribute = node.SelectSingleNode("@framework");
+                if (attribute != null)
+                    version = attribute.InnerText;
+                executables.Add(new KeyValuePair<string, string>(version, executable));
+            }
+            return executables;
         }
 
         private bool getDebuggingEnabled()

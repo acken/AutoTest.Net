@@ -1,7 +1,8 @@
+using AutoTest.Core.Caching.Projects;
 namespace AutoTest.Core.TestRunners
 {
     public interface ITestRunner
     {
-        TestRunResults RunTests(string project, string assemblyName);
+        TestRunResults RunTests(Project project, string assemblyName);
     }
 }

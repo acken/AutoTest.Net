@@ -135,10 +135,15 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_set_framework()
         {
-            _document.SetFramework(new Version(2, 1, 0));
-            _document.Framework.Major.Equals(2);
-            _document.Framework.Minor.Equals(1);
-            _document.Framework.Build.Equals(0);
+            _document.SetFramework("v3.5");
+            _document.Framework.ShouldEqual("v3.5");
+        }
+
+        [Test]
+        public void Should_set_VSVersion()
+        {
+            _document.SetVSVersion("9.0");
+            _document.ProductVersion.ShouldEqual("9.0");
         }
     }
 }

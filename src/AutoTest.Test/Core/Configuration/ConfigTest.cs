@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.Configuration;
 using Rhino.Mocks;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -29,21 +30,51 @@ namespace AutoTest.Test.Core.Configuration
         }
 
         [Test]
-        public void Should_read_build_executable()
+        public void Should_read_default_build_executable()
         {
-            _config.BuildExecutable().ShouldEqual(@"C:\Somefolder\MSBuild.exe");
+            var document = new ProjectDocument(ProjectType.CSharp);
+            _config.BuildExecutable(document).ShouldEqual(@"C:\Somefolder\MSBuild.exe");
+        }
+
+        [Test]
+        public void Should_get_framework_spesific_build_executable()
+        {
+            var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("v3.5");
+            _config.BuildExecutable(document).ShouldEqual(@"C:\SomefolderOther\MSBuild.exe");
+        }
+
+        [Test]
+        public void Should_get_product_version_spesific_build_executable()
+        {
+            var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("v3.5");
+            document.SetVSVersion("9.0.30729");
+            _config.BuildExecutable(document).ShouldEqual(@"C:\ProductVersionFolder\MSBuild.exe");
+        }
+
+        [Test]
+        public void Should_read_default_nunit_testrunner_path()
+        {
+            _config.NunitTestRunner("").ShouldEqual(@"C:\Somefolder\NUnit\nunit-console.exe");
         }
 
         [Test]
         public void Should_read_nunit_testrunner_path()
         {
-            _config.NunitTestRunner.ShouldEqual(@"C:\Somefolder\NUnit\nunit-console.exe");
+            _config.NunitTestRunner("v3.5").ShouldEqual(@"C:\SomefolderOther\NUnit\nunit-console.exe");
+        }
+
+        [Test]
+        public void Should_read_default_mstest_testrunner_path()
+        {
+            _config.MSTestRunner("").ShouldEqual(@"C:\Somefolder\MSTest.exe");
         }
 
         [Test]
         public void Should_read_mstest_testrunner_path()
         {
-            _config.MSTestRunner().ShouldEqual(@"C:\Somefolder\MSTest.exe");
+            _config.MSTestRunner("v3.5").ShouldEqual(@"C:\SomefolderOther\MSTest.exe");
         }
 
         [Test]

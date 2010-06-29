@@ -7,7 +7,7 @@ using AutoTest.Core.TestRunners.TestRunners;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectDocument
+    public class ProjectDocument
     {
         private bool _isReadFromFile = false;
         private ProjectType _type;
@@ -15,7 +15,8 @@ namespace AutoTest.Core.Caching.Projects
         private string _buildConfiguration;
         private string _platform;
         private string _outputPath;
-        private Version _framework;
+        private string _framework;
+        private string _vsVersion;
         private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
@@ -26,7 +27,8 @@ namespace AutoTest.Core.Caching.Projects
         public string BuildConfiguration { get { return _buildConfiguration; } }
         public string Platform { get { return _platform; } }
         public string OutputPath { get { return _outputPath; } }
-        public Version Framework { get { return _framework; } }
+        public string Framework { get { return _framework; } }
+        public string ProductVersion { get { return _vsVersion; } }
         public bool ContainsTests { get { return _containsTestsFor.Count > 0; } }
         public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
         public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
@@ -113,9 +115,14 @@ namespace AutoTest.Core.Caching.Projects
             _outputPath = outputPath;
         }
 
-        public void SetFramework(Version version)
+        public void SetFramework(string version)
         {
             _framework = version;
+        }
+
+        public void SetVSVersion(string version)
+        {
+            _vsVersion = version;
         }
     }
 }
