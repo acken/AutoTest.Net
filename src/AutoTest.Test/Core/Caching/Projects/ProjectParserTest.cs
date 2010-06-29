@@ -126,6 +126,20 @@ namespace AutoTest.Test.Core.Caching.Projects
             document.OutputPath.ShouldEqual(string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar));
         }
 
+        [Test]
+        public void Should_set_framework_version()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.Framework.Major.Equals(3);
+            document.Framework.Minor.Equals(5);
+            document.Framework.Build.Equals(0);
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.Framework.Major.Equals(3);
+            document.Framework.Minor.Equals(5);
+            document.Framework.Build.Equals(0);
+        }
+
         private string getCSharpProject()
         {
             return string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);

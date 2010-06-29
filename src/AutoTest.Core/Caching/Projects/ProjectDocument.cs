@@ -15,6 +15,7 @@ namespace AutoTest.Core.Caching.Projects
         private string _buildConfiguration;
         private string _platform;
         private string _outputPath;
+        private Version _framework;
         private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
@@ -25,6 +26,7 @@ namespace AutoTest.Core.Caching.Projects
         public string BuildConfiguration { get { return _buildConfiguration; } }
         public string Platform { get { return _platform; } }
         public string OutputPath { get { return _outputPath; } }
+        public Version Framework { get { return _framework; } }
         public bool ContainsTests { get { return _containsTestsFor.Count > 0; } }
         public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
         public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
@@ -109,6 +111,11 @@ namespace AutoTest.Core.Caching.Projects
         public void SetOutputPath(string outputPath)
         {
             _outputPath = outputPath;
+        }
+
+        public void SetFramework(Version version)
+        {
+            _framework = version;
         }
     }
 }
