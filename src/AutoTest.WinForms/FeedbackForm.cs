@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -74,7 +74,6 @@ namespace AutoTest.WinForms
 
         public void  RecievingRunStartedMessage(RunStartedMessage message)
         {
-
             _syncContext.Post(s =>
                                   {
                                       setRunInProgressFeedback("");
@@ -217,6 +216,7 @@ namespace AutoTest.WinForms
 
         private void FeedbackForm_Resize(object sender, EventArgs e)
         {
+			labelRunState.Width = Width - ((Width - buttonInformation.Left) + _rightSpacing);
             linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
             linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
             runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
