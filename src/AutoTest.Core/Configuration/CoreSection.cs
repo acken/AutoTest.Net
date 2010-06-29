@@ -33,7 +33,7 @@ namespace AutoTest.Core.Configuration
         {
             _xml.LoadXml(reader.ReadOuterXml());
             DirectoryToWatch = getValue("AutoTestCore/DirectoryToWatch", "");
-            BuildExecutables = getVersionedSetting("AutoTestCore/BuildExecutables");
+            BuildExecutables = getVersionedSetting("AutoTestCore/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("AutoTestCore/NUnitTestRunner");
             MSTestRunner = getVersionedSetting("AutoTestCore/MSTestRunner");
             CodeEditor = getCodeEditor();

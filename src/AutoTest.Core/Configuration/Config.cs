@@ -84,6 +84,8 @@ namespace AutoTest.Core.Configuration
 
         public string BuildExecutable(ProjectDocument project)
         {
+            if (_buildExecutables.Count == 0)
+                return "";
             int index;
             if ((index = _buildExecutables.FindIndex(0, b => b.Key.Equals(project.ProductVersion))) >= 0)
                 return _buildExecutables[index].Value;
@@ -96,6 +98,8 @@ namespace AutoTest.Core.Configuration
 
         private string getVersionedSetting(string version, List<KeyValuePair<string, string>> setting)
         {
+            if (setting.Count == 0)
+                return "";
             int index;
             if ((index = setting.FindIndex(0, b => b.Key.Equals(version))) >= 0)
                 return setting[index].Value;

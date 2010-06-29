@@ -175,6 +175,8 @@ namespace AutoTest.Core.Caching.Projects
         {
             int start = node.IndexOf(">") + 1;
             int end = node.IndexOf("<", start);
+            if (start == -1 || end == -1)
+                return "";
             return node.Substring(start, end - start);
         }
 
