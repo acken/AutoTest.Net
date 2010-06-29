@@ -76,15 +76,6 @@ namespace AutoTest.WinForms.ResultsCache
             return Path.Combine(Path.GetDirectoryName(Key), Value.File);
         }
 
-        private int getLineNumber(string link)
-        {
-            var start = link.IndexOf(":line");
-            if (start < 0)
-                return 0;
-            start += ":line".Length;
-            return int.Parse(link.Substring(start, link.Length - start));
-        }
-
         #endregion
     }
 }

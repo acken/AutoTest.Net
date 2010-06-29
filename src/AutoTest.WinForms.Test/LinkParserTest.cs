@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace AutoTest.WinForms.Test
             var parser = new LinkParser("some text <<Link>>some more text<</Link>> and yet <<Link>>some more<</Link>>");
             var links = parser.Parse();
             parser.ParsedText.ShouldEqual("some text some more text and yet some more");
+			links.Length.ShouldEqual(2);
         }
 
         [Test]
