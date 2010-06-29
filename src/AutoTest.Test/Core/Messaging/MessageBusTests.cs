@@ -90,7 +90,7 @@ namespace AutoTest.Test.Core.Messaging
         {
             var message1 = new BlockingMessage();
             var message2 = new BlockingMessage();
-            BlockingConsumer.SleepTime = 60;
+            BlockingConsumer.SleepTime = 100;
             _bus.Publish(message1);
             _bus.Publish(message2);
             waitForAsyncCall();

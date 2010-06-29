@@ -120,5 +120,53 @@ namespace AutoTest.Core.DebugLog
                 builder.AppendLine(string.Format("    {0}", file.FullName));
             write(builder.ToString());
         }
+
+        internal static void PresenterRecievedRunStartedMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received run start message");
+        }
+
+        internal static void PresenterRecievedRunFinishedMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received run finished message");
+        }
+
+        internal static void PresenterRecievedBuildMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received build message");
+        }
+
+        internal static void PresenterRecievedTestRunMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received test run message");
+        }
+
+        internal static void PresenterRecievedRunInformationMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received run information message");
+        }
+
+        internal static void PresenterRecievedInformationMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received information message");
+        }
+
+        internal static void PresenterRecievedWarningMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received warning message");
+        }
+
+        internal static void PresenterRecievedErrorMessage()
+        {
+            if (_isDisabled) return;
+            write("Presenter received error message");
+        }
     }
 }

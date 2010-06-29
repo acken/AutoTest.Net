@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Presenters
 {
@@ -25,33 +26,38 @@ namespace AutoTest.Core.Presenters
             }
         }
 
-        void _bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)
-        {
-            _view.RecievingRunStartedMessage(e.Message);
-        }
-
-        void _bus_OnRunFinishedMessage(object sender, RunFinishedMessageEventArgs e)
-        {
-            _view.RecievingRunFinishedMessage(e.Message);
-        }
-
         public RunFeedbackPresenter(IMessageBus bus)
         {
             _bus = bus;
         }
 
+        void _bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)
+        {
+            Debug.PresenterRecievedRunStartedMessage();
+            _view.RecievingRunStartedMessage(e.Message);
+        }
+
+        void _bus_OnRunFinishedMessage(object sender, RunFinishedMessageEventArgs e)
+        {
+            Debug.PresenterRecievedRunFinishedMessage();
+            _view.RecievingRunFinishedMessage(e.Message);
+        }
+
         void  _bus_OnBuildMessage(object sender, BuildMessageEventArgs e)
         {
+            Debug.PresenterRecievedBuildMessage();
  	        _view.RecievingBuildMessage(e.Message);
         }
 
         void _bus_OnTestRunMessage(object sender, TestRunMessageEventArgs e)
         {
+            Debug.PresenterRecievedTestRunMessage();
             _view.RecievingTestRunMessage(e.Message);
         }
 
         void _bus_OnRunInformationMessage(object sender, RunInformationMessageEventArgs e)
         {
+            Debug.PresenterRecievedRunInformationMessage();
             _view.RecievingRunInformationMessage(e.Message);
         }
 

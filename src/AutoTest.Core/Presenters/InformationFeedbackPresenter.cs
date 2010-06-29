@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Presenters
 {
@@ -30,16 +31,19 @@ namespace AutoTest.Core.Presenters
 
         void _bus_OnInformationMessage(object sender, InformationMessageEventArgs e)
         {
+            Debug.PresenterRecievedInformationMessage();
             _view.RecievingInformationMessage(e.Message);
         }
 
         void _bus_OnWarningMessage(object sender, WarningMessageEventArgs e)
         {
+            Debug.PresenterRecievedWarningMessage();
             _view.RecievingWarningMessage(e.Message);
         }
 
         void _bus_OnErrorMessage(object sender, ErrorMessageEventArgs e)
         {
+            Debug.PresenterRecievedErrorMessage();
             _view.RevievingErrorMessage(e.Message);
         }
     }
