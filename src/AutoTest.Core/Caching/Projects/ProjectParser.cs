@@ -70,7 +70,9 @@ namespace AutoTest.Core.Caching.Projects
                 var content = configurations[i];
                 if (content.Contains(configuration))
                 {
-                    newDocument.SetOutputPath(getNode(OUTPUTPATH_NODE, content));
+                    newDocument.SetOutputPath(
+                        getNode(OUTPUTPATH_NODE, content)
+                        .Replace("\\", Path.DirectorySeparatorChar.ToString()));
                     break;
                 }
             }
@@ -174,7 +176,8 @@ namespace AutoTest.Core.Caching.Projects
         {
             var path = match.Substring(
                 PROJECT_REFERENCE_START.Length,
-                match.Length - (PROJECT_REFERENCE_START.Length + PROJECT_REFERENCE_END.Length));
+                match.Length - (PROJECT_REFERENCE_START.Length + PROJECT_REFERENCE_END.Length))
+                .Replace("\\", Path.DirectorySeparatorChar.ToString());
             if (path.Substring(0, 2).Equals(".."))
                 return getAbsolutePath(path);
             return path;
