@@ -48,3 +48,4 @@ Fix deployment.bat
 Add XUnit.net support
 Fixe build prioritet (hvis dependency1 er avhengig av dependency2)
 Add MbUnit support
+Cleanup files in repo

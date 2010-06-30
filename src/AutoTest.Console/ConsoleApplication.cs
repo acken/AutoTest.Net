@@ -133,7 +133,7 @@ namespace AutoTest.Console
 
         public void RecievingRunInformationMessage(RunInformationMessage message)
         {
-            throw new NotImplementedException();
+            
         }
 
         #endregion
