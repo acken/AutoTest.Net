@@ -1,0 +1,13 @@
+AutoTest.Net
+
+This product provides automatic builds and testruns through detecting
+file changes. It contains a winforms and a console app.
+
+Geting started
+To get started using this application edit the configuration for the
+runner you have decided to run (AutoTest.WinForms.exe.config /
+AutoTest.Console.exe.config). When done start the application.
+In the winforms application the little button in the right corner
+will display some nice to know messages now and then.
+When set up just edit a file and builds and testing will start
+automatically.

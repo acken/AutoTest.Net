@@ -6,14 +6,36 @@
   </configSections>
 
   <AutoTestCore>
-    <DirectoryToWatch>C:\Users\sveina\src\DotNET\Private\AutoTest.Net - Copy\src</DirectoryToWatch>
+    <!-- Directory to watch -->
+    <DirectoryToWatch>C:\Users\sveina\src\DotNET\Work\MBS\Main\Synchronization Service\JobExchangeClient</DirectoryToWatch>
+
+    <!-- Build executables. Supported are MSBuild.exe and Mono's xbuild -->
+    <!-- You have the posibility to specify multiple build executables based on framework version or -->
+    <!-- product version from within the csproj/vbproj file using the framework attribute -->
     <BuildExecutable>C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe</BuildExecutable>
+    <BuildExecutable framework="9.0.30729">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
+
+    <!-- NUnit test runner. Spesifies the path to the nunit console test runner -->
+    <!-- You have the posibility to specify multiple build executables based on framework version -->
+    <!-- from within the csproj/vbproj file using the framework attribute. -->
+    <!-- (framework only, not framework and product version like with the build exe) -->
+    <NUnitTestRunner>C:\Users\sveina\src\DotNET\Private\AutoTest.Net\lib\NUnit\nunit-console.exe</NUnitTestRunner>
+
+    <!-- MSTest test runner. -->
+    <!-- Has support for the framework attribute like NUnit test runner config -->
+    <MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe</MSTestRunner>
+
+    <!-- Code editor configuration. You can specify a code editor to open files in. -->
+    <!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
+    <!-- the line to goto. These will be filled in by the application when executing -->
+    <!-- the statement -->
     <CodeEditor>
       <Executable>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe</Executable>
       <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
     </CodeEditor>
-    <NUnitTestRunner>C:\Users\sveina\src\libraries\autotestnet\src\autotestnet-read-only\lib\NUnit\nunit-console.exe</NUnitTestRunner>
-    <MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe</MSTestRunner>
+
+    <!-- When set this will enable logging to the debug.log file in the root directory -->
+    <Debugging>false</Debugging>
   </AutoTestCore>
 
   <log4net>
