@@ -38,14 +38,14 @@ done - Figure out why it crashes when projects are added
 done - Handled added / changed project files
 done - Different MSBuild versions for different project files, based on framework version <BuildExecutable framework="4.0>
 done - Different MSTest versions for different project files, based on framework version
+done - Add MIT license
 Add test to ProjectChangeConsumer
 Add system tests doing real work
 Implement error handling
 Implement service locator properly (blog post)
 Use a panel to make the link label scrolleable
-Add MIT license
 Fix deployment.bat
 Add XUnit.net support
-Fixe build prioritet (hvis dependency1 er avhengig av dependency2)
+Fix build prioritet (hvis dependency1 er avhengig av dependency2)
 Add MbUnit support
 Cleanup files in repo
