@@ -3,11 +3,22 @@ AutoTest.Net
 This product provides automatic builds and testruns through detecting
 file changes. It contains a winforms and a console app.
 
+Features
+	* Automatic build and testrun through file change detection
+	* Cross platform support through Mono
+	* Supports C# and Visual Basic projects
+	* Supported build tools
+		* MSBuild.exe
+		* Mono's xbuild
+	* Supported test runners
+		* MSTest
+		* NUnit
+
 Geting started
 To get started using this application edit the configuration for the
 runner you have decided to run (AutoTest.WinForms.exe.config /
 AutoTest.Console.exe.config). When done start the application.
 In the winforms application the little button in the right corner
 will display some nice to know messages now and then.
-When set up just edit a file and builds and testing will start
-automatically.
+When set up just edit a file and save it. AutoTest.Net will detect
+the changes and start builds and run tests.
