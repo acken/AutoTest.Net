@@ -48,10 +48,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _bus.Publish(new RunFinishedMessage(runReport));
         }
 
-        private void buildAndRunTests(Project project, RunReport runReport, List<string> alreadyBuilt)
+        private bool buildAndRunTests(Project project, RunReport runReport, List<string> alreadyBuilt)
         {
             if (alreadyBuilt.Contains(project.Key))
-                return;
+                return true;
 
             alreadyBuilt.Add(project.Key);
 
@@ -65,7 +65,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (!buildProject(project))
                 {
                     runReport.NumberOfBuildsFailed++;
-                    return;
+                    return false;
                 }
                 runReport.NumberOfBuildsSucceeded++;
             }
@@ -74,7 +74,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 runTests(project, runReport);
 
             foreach (var reference in project.Value.ReferencedBy)
-                buildAndRunTests(_cache.Get<Project>(reference), runReport, alreadyBuilt);
+            {
+                if (!buildAndRunTests(_cache.Get<Project>(reference), runReport, alreadyBuilt))
+                    return false;
+            }
+
+            return true;
         }
 
         private bool buildProject(Project project)
