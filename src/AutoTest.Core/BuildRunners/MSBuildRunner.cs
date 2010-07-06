@@ -9,15 +9,15 @@ namespace AutoTest.Core.BuildRunners
 {
     public class MSBuildRunner : IBuildRunner
     {
-        private readonly string _buildExecutable;
+        private string _buildExecutable;
 
-        public MSBuildRunner(string buildExecutable)
+        public MSBuildRunner()
         {
-            _buildExecutable = buildExecutable;
         }
 
-        public BuildRunResults RunBuild(string projectName)
+        public BuildRunResults RunBuild(string projectName, string buildExecutable)
         {
+            _buildExecutable = buildExecutable;
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
             process.StartInfo.RedirectStandardOutput = true;

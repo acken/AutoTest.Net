@@ -15,6 +15,10 @@ using System.Reflection;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.BuildRunners;
+using AutoTest.Core.TestRunners;
+using AutoTest.Core.TestRunners.TestRunners;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 
 namespace AutoTest.Core.Configuration
 {
@@ -27,6 +31,7 @@ namespace AutoTest.Core.Configuration
         public void Configure()
         {
             _services = new ServiceLocator();
+            _services.Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(_services.Container.Kernel));
             _services.Container
                 .Register(Component.For<IServiceLocator>().Instance(_services))
                 .Register(Component.For<IMessageBus>().ImplementedBy<MessageBus>().LifeStyle.Singleton)
@@ -47,6 +52,10 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IConfiguration>().ImplementedBy<Config>())
                 .Register(Component.For<ICrawlForProjectFiles>().ImplementedBy<ProjectFileCrawler>())
                 .Register(Component.For<IReload<Project>>().ImplementedBy<ProjectReloader>())
+                .Register(Component.For<IPrioritizeReferences>().ImplementedBy<ReferencePrioritizer>())
+                .Register(Component.For<IBuildRunner>().ImplementedBy<MSBuildRunner>())
+                .Register(Component.For<ITestRunner>().ImplementedBy<NUnitTestRunner>())
+                .Register(Component.For<ITestRunner>().ImplementedBy<MSTestRunner>())
                 .Register(Component.For<ApplicatonLauncher>());
         }
 

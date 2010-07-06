@@ -10,6 +10,8 @@ using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Core.BuildRunners;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -145,8 +147,29 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_project_dirtifier()
         {
-            var dirtifier = _locator.Locate<IReload<Project>>();
-            dirtifier.ShouldBeOfType<IReload<Project>>();
+            var reloader = _locator.Locate<IReload<Project>>();
+            reloader.ShouldBeOfType<IReload<Project>>();
+        }
+
+        [Test]
+        public void Should_register_reference_prioritizer()
+        {
+            var prioritizer = _locator.Locate<IPrioritizeReferences>();
+            prioritizer.ShouldBeOfType<IPrioritizeReferences>();
+        }
+
+        [Test]
+        public void Should_register_build_runner()
+        {
+            var buildRunner = _locator.Locate<IBuildRunner>();
+            buildRunner.ShouldBeOfType<MSBuildRunner>();
+        }
+
+        [Test]
+        public void Should_register_test_runners()
+        {
+            var testRunners = _locator.LocateAll<ITestRunner>();
+            testRunners.Length.ShouldEqual(2);
         }
     }
 }

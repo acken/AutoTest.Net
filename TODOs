@@ -42,7 +42,6 @@ done - Add MIT license
 Figure out why it displays duplicate errors when having build error in multiple projects
 Add test to ProjectChangeConsumer
 Add system tests doing real work
-Implement error handling
 Implement service locator properly (blog post)
 Use a panel to make the link label scrolleable
 Fix deployment.bat

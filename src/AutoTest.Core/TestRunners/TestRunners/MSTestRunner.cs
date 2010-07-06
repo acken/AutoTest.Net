@@ -21,6 +21,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         #region ITestRunner Members
 
+        public bool CanHandleTestFor(ProjectDocument document)
+        {
+            return document.ContainsMSTests;
+        }
+
         public TestRunResults RunTests(Project project, string assemblyName)
         {
             var unitTestExe = _configuration.MSTestRunner(project.Value.Framework);

@@ -20,12 +20,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IMessageBus _bus;
         private ICache _cache;
         private IConfiguration _configuration;
+        private IBuildRunner _buildRunner;
+        private ITestRunner[] _testRunners;
 
-        public ProjectChangeConsumer(IMessageBus bus, ICache cache, IConfiguration configuration)
+        public ProjectChangeConsumer(IMessageBus bus, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners)
         {
             _bus = bus;
             _cache = cache;
             _configuration = configuration;
+            _buildRunner = buildRunner;
+            _testRunners = testRunners;
         }
 
         #region IConsumerOf<ProjectChangeMessage> Members
@@ -84,8 +88,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(Project project)
         {
-            var buildRunner = new MSBuildRunner(_configuration.BuildExecutable(project.Value));
-            var buildReport = buildRunner.RunBuild(project.Key);
+            var buildReport = _buildRunner.RunBuild(project.Key, _configuration.BuildExecutable(project.Value));
             _bus.Publish(new BuildRunMessage(buildReport));
             return buildReport.ErrorCount == 0;
         }
@@ -93,12 +96,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void runTests(Project project, RunReport runReport)
         {
             string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
-
             var file = Path.Combine(folder, project.Value.AssemblyName);
-            if (project.Value.ContainsNUnitTests)
-                runTests(new NUnitTestRunner(_bus, _configuration), project, file, runReport);
-            if (project.Value.ContainsMSTests)
-                runTests(new MSTestRunner(_configuration), project, file, runReport);
+            foreach (var runner in _testRunners)
+            {
+                if (runner.CanHandleTestFor(project.Value))
+                    runTests(runner, project, file, runReport);
+            }
         }
 
         #endregion

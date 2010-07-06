@@ -2,6 +2,6 @@ namespace AutoTest.Core.BuildRunners
 {
     public interface IBuildRunner
     {
-        BuildRunResults RunBuild(string projectName);
+        BuildRunResults RunBuild(string projectName, string buildExecutable);
     }
 }

@@ -19,7 +19,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void SetUp()
         {
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _consumer = new ProjectChangeConsumer(_bus, null, null);
+            _consumer = new ProjectChangeConsumer(_bus, null, null, null, null);
         }
 
         [Test]

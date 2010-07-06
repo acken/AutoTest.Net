@@ -3,6 +3,7 @@ namespace AutoTest.Core.TestRunners
 {
     public interface ITestRunner
     {
+        bool CanHandleTestFor(ProjectDocument document);
         TestRunResults RunTests(Project project, string assemblyName);
     }
 }
