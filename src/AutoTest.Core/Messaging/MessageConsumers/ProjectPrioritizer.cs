@@ -7,18 +7,18 @@ using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class ReferencePrioritizer : IPrioritizeReferences
+    class ProjectPrioritizer : IPrioritizeProjects
     {
         private ICache _cache;
         private List<string> _prioritized;
         private string[] _references;
 
-        public ReferencePrioritizer(ICache cache)
+        public ProjectPrioritizer(ICache cache)
         {
             _cache = cache;
         }
 
-        #region IPrioritizeReferences Members
+        #region IPrioritizeProjects Members
 
         public string[] Prioritize(string[] references)
         {

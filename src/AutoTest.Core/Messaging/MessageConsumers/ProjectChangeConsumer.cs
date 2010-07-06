@@ -18,14 +18,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     class ProjectChangeConsumer : IBlockingConsumerOf<ProjectChangeMessage>
     {
         private IMessageBus _bus;
+        private IGenerateBuildList _listGenerator;
         private ICache _cache;
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner[] _testRunners;
 
-        public ProjectChangeConsumer(IMessageBus bus, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners)
         {
             _bus = bus;
+            _listGenerator = listGenerator;
             _cache = cache;
             _configuration = configuration;
             _buildRunner = buildRunner;
@@ -38,27 +40,33 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             Debug.ConsumingProjectChangeMessage(message);
             _bus.Publish(new RunStartedMessage(message.Files));
-            var alreadyBuilt = new List<string>();
-            var runReport = new RunReport();
-            foreach (var file in message.Files)
-            {
-                var project = _cache.Get<Project>(file.FullName);
-                // Prioritized tests that test me
-                // Other prioritized tests
-                // Projects that tests me
-                // Other test projects
-                buildAndRunTests(project, runReport, alreadyBuilt);
-            }
+            var runReport = execute(message);
             _bus.Publish(new RunFinishedMessage(runReport));
         }
 
-        private bool buildAndRunTests(Project project, RunReport runReport, List<string> alreadyBuilt)
+        private RunReport execute(ProjectChangeMessage message)
         {
-            if (alreadyBuilt.Contains(project.Key))
-                return true;
+            // Prioritized tests that test me
+            // Other prioritized tests
+            // Projects that tests me
+            // Other test projects
+            var runReport = new RunReport();
+            var list = _listGenerator.Generate(getListOfChangedProjects(message));
+            foreach (var file in list)
+                buildAndRunTests(_cache.Get<Project>(file), runReport);
+            return runReport;
+        }
 
-            alreadyBuilt.Add(project.Key);
+        private string[] getListOfChangedProjects(ProjectChangeMessage message)
+        {
+            var projects = new List<string>();
+            foreach (var file in message.Files)
+                projects.Add(file.FullName);
+            return projects.ToArray();
+        }
 
+        private bool buildAndRunTests(Project project, RunReport runReport)
+        {
             if (File.Exists(_configuration.BuildExecutable(project.Value)))
             {
                 _bus.Publish(new RunInformationMessage(
@@ -76,12 +84,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
             if (project.Value.ContainsTests)
                 runTests(project, runReport);
-
-            foreach (var reference in project.Value.ReferencedBy)
-            {
-                if (!buildAndRunTests(_cache.Get<Project>(reference), runReport, alreadyBuilt))
-                    return false;
-            }
 
             return true;
         }

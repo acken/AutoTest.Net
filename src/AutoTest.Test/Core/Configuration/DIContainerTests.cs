@@ -154,8 +154,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_reference_prioritizer()
         {
-            var prioritizer = _locator.Locate<IPrioritizeReferences>();
-            prioritizer.ShouldBeOfType<IPrioritizeReferences>();
+            var prioritizer = _locator.Locate<IPrioritizeProjects>();
+            prioritizer.ShouldBeOfType<IPrioritizeProjects>();
         }
 
         [Test]
@@ -170,6 +170,13 @@ namespace AutoTest.Test.Core.Configuration
         {
             var testRunners = _locator.LocateAll<ITestRunner>();
             testRunners.Length.ShouldEqual(2);
+        }
+
+        [Test]
+        public void Should_register_build_list_generator()
+        {
+            var generator = _locator.Locate<IGenerateBuildList>();
+            generator.ShouldBeOfType<IGenerateBuildList>();
         }
     }
 }

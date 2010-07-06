@@ -13,14 +13,14 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
     [TestFixture]
     public class ReferencePrioritizerTest
     {
-        private ReferencePrioritizer _prioritizer;
+        private ProjectPrioritizer _prioritizer;
         private ICache _cache;
 
         [SetUp]
         public void SetUp()
         {
             _cache = MockRepository.GenerateMock<ICache>();
-            _prioritizer = new ReferencePrioritizer(_cache);
+            _prioritizer = new ProjectPrioritizer(_cache);
         }
 
         [Test]

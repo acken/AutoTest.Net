@@ -80,7 +80,9 @@
     <Compile Include="Messaging\ErrorMessage.cs" />
     <Compile Include="Messaging\IBlockingConsumerOf.cs" />
     <Compile Include="Messaging\InformationMessage.cs" />
-    <Compile Include="Messaging\MessageConsumers\IPrioritizeReferences.cs" />
+    <Compile Include="Messaging\MessageConsumers\BuildListGenerator.cs" />
+    <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
+    <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
@@ -105,7 +107,7 @@
     <Compile Include="Messaging\IMessageBus.cs" />
     <Compile Include="Messaging\IMessageConsumer.cs" />
     <Compile Include="Messaging\MessageBus.cs" />
-    <Compile Include="Messaging\MessageConsumers\ReferencePrioritizer.cs" />
+    <Compile Include="Messaging\MessageConsumers\ProjectPrioritizer.cs" />
     <Compile Include="Messaging\MessageConsumers\RunReport.cs" />
     <Compile Include="Messaging\ProjectChangeMessage.cs" />
     <Compile Include="Caching\Projects\IProjectParser.cs" />

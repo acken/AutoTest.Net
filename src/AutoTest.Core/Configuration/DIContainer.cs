@@ -52,10 +52,11 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IConfiguration>().ImplementedBy<Config>())
                 .Register(Component.For<ICrawlForProjectFiles>().ImplementedBy<ProjectFileCrawler>())
                 .Register(Component.For<IReload<Project>>().ImplementedBy<ProjectReloader>())
-                .Register(Component.For<IPrioritizeReferences>().ImplementedBy<ReferencePrioritizer>())
+                .Register(Component.For<IPrioritizeProjects>().ImplementedBy<ProjectPrioritizer>())
                 .Register(Component.For<IBuildRunner>().ImplementedBy<MSBuildRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<NUnitTestRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<MSTestRunner>())
+                .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
                 .Register(Component.For<ApplicatonLauncher>());
         }
 
