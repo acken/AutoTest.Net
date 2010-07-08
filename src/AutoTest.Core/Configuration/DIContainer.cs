@@ -19,6 +19,7 @@ using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
 using AutoTest.Core.TestRunners.TestRunners;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.Configuration
 {
@@ -57,6 +58,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ITestRunner>().ImplementedBy<NUnitTestRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<MSTestRunner>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
+                .Register(Component.For<IMergeRunResults>().Forward<IRunResultCache>().ImplementedBy<RunResultCache>())
                 .Register(Component.For<ApplicatonLauncher>());
         }
 

@@ -11,6 +11,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.Presenters;
 using AutoTest.Test.Core.Presenters.Fakes;
 using System.Threading;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core.Presenters
 {
@@ -20,14 +21,16 @@ namespace AutoTest.Test.Core.Presenters
         private FakeRunFeedbackView _view;
         private RunFeedbackPresenter _presenter;
         private IMessageBus _bus;
+        private FakeRunResultMerger _resultMerger;
 
         [SetUp]
         public void SetUp()
         {
             var locator = MockRepository.GenerateMock<IServiceLocator>();
             _bus = new MessageBus(locator);
+            _resultMerger = new FakeRunResultMerger();
             _view = new FakeRunFeedbackView();
-            _presenter = new RunFeedbackPresenter(_bus);
+            _presenter = new RunFeedbackPresenter(_bus, _resultMerger);
             _presenter.View = _view;
         }
 
@@ -37,6 +40,7 @@ namespace AutoTest.Test.Core.Presenters
             var message = new BuildRunMessage(new BuildRunResults(""));
             _bus.Publish<BuildRunMessage>(message);
             waitForAsyncCall();
+            _resultMerger.HasMergedBuildResults.ShouldBeTrue();
             _view.BuildRunMessage.ShouldBeTheSameAs(message);
         }
 
@@ -46,6 +50,7 @@ namespace AutoTest.Test.Core.Presenters
             var message = new TestRunMessage(new TestRunResults("", "", null));
             _bus.Publish(message);
             waitForAsyncCall();
+            _resultMerger.HasMergedTestResults.ShouldBeTrue();
             _view.TestRunMessage.ShouldBeTheSameAs(message);
         }
 

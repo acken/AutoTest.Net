@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.Presenters
 {
     class RunFeedbackPresenter : IRunFeedbackPresenter, IDisposable
     {
         private IMessageBus _bus;
+        private IMergeRunResults _runResultMerger;
         private IRunFeedbackView _view;
 
         public IRunFeedbackView View
@@ -26,9 +28,10 @@ namespace AutoTest.Core.Presenters
             }
         }
 
-        public RunFeedbackPresenter(IMessageBus bus)
+        public RunFeedbackPresenter(IMessageBus bus, IMergeRunResults runResultMerger)
         {
             _bus = bus;
+            _runResultMerger = runResultMerger;
         }
 
         void _bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)
@@ -46,12 +49,14 @@ namespace AutoTest.Core.Presenters
         void  _bus_OnBuildMessage(object sender, BuildMessageEventArgs e)
         {
             Debug.PresenterRecievedBuildMessage();
+            _runResultMerger.Merge(e.Message.Results);
  	        _view.RecievingBuildMessage(e.Message);
         }
 
         void _bus_OnTestRunMessage(object sender, TestRunMessageEventArgs e)
         {
             Debug.PresenterRecievedTestRunMessage();
+            _runResultMerger.Merge(e.Message.Results);
             _view.RecievingTestRunMessage(e.Message);
         }
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AutoTest.WinForms.ResultsCache
+namespace AutoTest.Core.Caching.RunResultCache
 {
-    interface IItem
+    public interface IItem
     {
         string ToString();
         void HandleLink(string link);

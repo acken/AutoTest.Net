@@ -43,6 +43,7 @@
             this.columnHeader1,
             this.columnHeader2});
             this.runFeedbackList.FullRowSelect = true;
+            this.runFeedbackList.HideSelection = false;
             this.runFeedbackList.Location = new System.Drawing.Point(12, 25);
             this.runFeedbackList.Name = "runFeedbackList";
             this.runFeedbackList.Size = new System.Drawing.Size(853, 334);

@@ -53,7 +53,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var runReport = new RunReport();
             var list = _listGenerator.Generate(getListOfChangedProjects(message));
             foreach (var file in list)
-                buildAndRunTests(_cache.Get<Project>(file), runReport);
+            {
+                if (!buildAndRunTests(_cache.Get<Project>(file), runReport))
+                    break;
+            }
             return runReport;
         }
 

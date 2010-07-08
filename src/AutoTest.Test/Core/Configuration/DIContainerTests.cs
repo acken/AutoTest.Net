@@ -12,6 +12,7 @@ using AutoTest.Core.Launchers;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -177,6 +178,20 @@ namespace AutoTest.Test.Core.Configuration
         {
             var generator = _locator.Locate<IGenerateBuildList>();
             generator.ShouldBeOfType<IGenerateBuildList>();
+        }
+
+        [Test]
+        public void Should_register_run_result_merger()
+        {
+            var merger = _locator.Locate<IMergeRunResults>();
+            merger.ShouldBeOfType<IMergeRunResults>();
+        }
+
+        [Test]
+        public void Should_register_run_result_cache()
+        {
+            var cache = _locator.Locate<IRunResultCache>();
+            cache.ShouldBeOfType<IRunResultCache>();
         }
     }
 }

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.RunResultCache;
 
-namespace AutoTest.WinForms.Test
+namespace AutoTest.Test.Core.Caching
 {
     [TestFixture]
     public class LinkParserTest

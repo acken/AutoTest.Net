@@ -73,7 +73,6 @@
       <DependentUpon>InformationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="IOverviewForm.cs" />
-    <Compile Include="LinkParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FeedbackForm.resx">
@@ -104,10 +103,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ResultsCache\BuildItem.cs" />
-    <Compile Include="ResultsCache\Cache.cs" />
-    <Compile Include="ResultsCache\IItem.cs" />
-    <Compile Include="ResultsCache\TestItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
 
-namespace AutoTest.WinForms
+namespace AutoTest.Core.Caching.RunResultCache
 {
-    class LinkParser
+    public class LinkParser
     {
         public const string TAG_START = "<<Link>>";
         public const string TAG_END = "<</Link>>";
@@ -21,22 +20,22 @@ namespace AutoTest.WinForms
             _text = text;
         }
         
-        public LinkArea[] Parse()
+        public Link[] Parse()
         {
             var links = getLinks();
             removePlaceholders();
             return links.ToArray();
         }
 
-        private List<LinkArea> getLinks()
+        private List<Link> getLinks()
         {
             var matches = getLinkMatches();
             return getLinkList(matches);
         }
 
-        private List<LinkArea> getLinkList(MatchCollection matches)
+        private List<Link> getLinkList(MatchCollection matches)
         {
-            List<LinkArea> links = new List<LinkArea>();
+            List<Link> links = new List<Link>();
             for (int i = 0; i < matches.Count; i++)
                 addLink(i, matches, links);
             return links;
@@ -48,9 +47,9 @@ namespace AutoTest.WinForms
             return regExp.Matches(_text);
         }
 
-        private void addLink(int i, MatchCollection matches, List<LinkArea> links)
+        private void addLink(int i, MatchCollection matches, List<Link> links)
         {
-            links.Add(new LinkArea(getLinkStart(i, matches), getLinkLength(i, matches)));
+            links.Add(new Link(getLinkStart(i, matches), getLinkLength(i, matches)));
         }
         private int getLinkStart(int i, MatchCollection matches)
         {

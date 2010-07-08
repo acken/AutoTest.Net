@@ -14,8 +14,9 @@ using System.Threading;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
-using AutoTest.WinForms.ResultsCache;
 using System.IO;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.WinForms
 {
@@ -25,16 +26,19 @@ namespace AutoTest.WinForms
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
         private IInformationForm _informationForm;
-        private Cache _cache = new Cache();
+        private IRunResultCache _runResultCache;
+
+        private bool _isRefreshingFeedback = false;
 
         private int _rightSpacing = 0;
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
 
-        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm)
+        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
             _watcher = watcher;
+            _runResultCache = runResultCache;
             _runPresenter = runPresenter;
             _runPresenter.View = this;
             _informationForm = informationForm;
@@ -74,10 +78,7 @@ namespace AutoTest.WinForms
 
         public void  RecievingRunStartedMessage(RunStartedMessage message)
         {
-            _syncContext.Post(s =>
-                                  {
-                                      setRunInProgressFeedback("");
-                                  }, null);
+            _syncContext.Post(s => setRunInProgressFeedback(""), null);
         }
 
         private void setRunInProgressFeedback(string additionalInfo)
@@ -116,24 +117,12 @@ namespace AutoTest.WinForms
 
         public void  RecievingBuildMessage(BuildRunMessage message)
         {
-            _syncContext.Post(m =>
-                                  {
-                                      var results = (BuildRunResults) m;
-                                      _cache.Merge(results);
-                                      relistFromCache();
-                                  },
-                              message.Results);
+            _syncContext.Post(m => relistFromCache(), null);
         }
 
         public void  RecievingTestRunMessage(TestRunMessage message)
         {
-            _syncContext.Post(m =>
-                                  {
-                                      var results = (TestRunResults) m;
-                                      _cache.Merge(results);
-                                      relistFromCache();
-                                  },
-                              message.Results);
+            _syncContext.Post(m => relistFromCache(), null);
         }
 
         public void RecievingRunInformationMessage(RunInformationMessage message)
@@ -155,27 +144,36 @@ namespace AutoTest.WinForms
 
         private void relistFromCache()
         {
+            _isRefreshingFeedback = true;
+
+            IItem selected = null;
+            if (runFeedbackList.SelectedItems.Count == 1)
+                selected = (IItem) runFeedbackList.SelectedItems[0].Tag;
+
             runFeedbackList.Items.Clear();
-            setInfoText("");
-            foreach (var error in _cache.Errors)
-                addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error);
+            foreach (var error in _runResultCache.Errors)
+                addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error, selected);
 
-            foreach (var failed in _cache.Failed)
-                addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed);
+            foreach (var failed in _runResultCache.Failed)
+                addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed, selected);
 
-            foreach (var warning in _cache.Warnings)
-                addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning);
+            foreach (var warning in _runResultCache.Warnings)
+                addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning, selected);
             
-            foreach (var ignored in _cache.Ignored)
-                addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored);
+            foreach (var ignored in _runResultCache.Ignored)
+                addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected);
+
+            _isRefreshingFeedback = false;
         }
 
-        private void addFeedbackItem(string type, string message, Color colour, object tag)
+        private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected)
         {
             var item = runFeedbackList.Items.Add(type);
             item.SubItems.Add(message);
             item.ForeColor = colour;
             item.Tag = tag;
+            if (selected != null && tag.Equals(selected))
+                item.Selected = true;
         }
 
         private string formatBuildResult(BuildItem item)
@@ -192,6 +190,9 @@ namespace AutoTest.WinForms
 
         private void runFeedbackList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isRefreshingFeedback)
+                return;
+
             if (runFeedbackList.SelectedItems.Count != 1)
             {
                 setInfoText("");

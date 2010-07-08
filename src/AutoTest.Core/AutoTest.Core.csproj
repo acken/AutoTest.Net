@@ -60,13 +60,21 @@
   <ItemGroup>
     <Compile Include="BuildRunners\BuildMessage.cs" />
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
+    <Compile Include="Caching\RunResultCache\BuildItem.cs" />
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICreate.cs" />
+    <Compile Include="Caching\RunResultCache\IItem.cs" />
+    <Compile Include="Caching\RunResultCache\IMergeRunResults.cs" />
     <Compile Include="Caching\IReload.cs" />
     <Compile Include="Caching\IPrepare.cs" />
+    <Compile Include="Caching\RunResultCache\IRunResultCache.cs" />
+    <Compile Include="Caching\RunResultCache\Link.cs" />
+    <Compile Include="Caching\RunResultCache\LinkParser.cs" />
     <Compile Include="Caching\Projects\ProjectReloader.cs" />
     <Compile Include="Caching\Projects\ProjectFactory.cs" />
     <Compile Include="Caching\Projects\ProjectPreparer.cs" />
+    <Compile Include="Caching\RunResultCache\RunResultCache.cs" />
+    <Compile Include="Caching\RunResultCache\TestItem.cs" />
     <Compile Include="Configuration\CodeEditor.cs" />
     <Compile Include="Configuration\CoreSection.cs" />
     <Compile Include="Configuration\DIContainer.cs" />

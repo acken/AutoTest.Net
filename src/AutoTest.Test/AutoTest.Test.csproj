@@ -78,7 +78,10 @@
     <Compile Include="Core\BuildRunners\BuildMessageTest.cs" />
     <Compile Include="Core\BuildRunners\BuildRunResultTest.cs" />
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
+    <Compile Include="Core\Caching\Fakes\FakeStackLine.cs" />
+    <Compile Include="Core\Caching\RunResultCache\LinkParserTest.cs" />
     <Compile Include="Core\Caching\Projects\ProjectReloaderTest.cs" />
+    <Compile Include="Core\Caching\RunResultCache\RunResultCacheTest.cs" />
     <Compile Include="Core\Configuration\ConfigTest.cs" />
     <Compile Include="Core\Messaging\ErrorMessageTest.cs" />
     <Compile Include="Core\Messaging\Fakes\FakeProjectPrioritizer.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Core\Messaging\TestClasses\InformationMessageConsumer.cs" />
     <Compile Include="Core\Presenters\Fakes\FakeInformationFeedbackView.cs" />
     <Compile Include="Core\Presenters\Fakes\FakeRunFeedbackView.cs" />
+    <Compile Include="Core\Presenters\Fakes\FakeRunResultMerger.cs" />
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />

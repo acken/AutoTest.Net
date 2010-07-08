@@ -7,9 +7,9 @@ using System.IO;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.Configuration;
 
-namespace AutoTest.WinForms.ResultsCache
+namespace AutoTest.Core.Caching.RunResultCache
 {
-    class BuildItem : IItem
+    public class BuildItem : IItem
     {
         public string Key { get; private set; }
         public BuildMessage Value { get; private set; }
