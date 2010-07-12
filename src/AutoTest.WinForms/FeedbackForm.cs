@@ -163,6 +163,9 @@ namespace AutoTest.WinForms
             foreach (var ignored in _runResultCache.Ignored)
                 addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected);
 
+            if (runFeedbackList.Items.Count != 1)
+                setInfoText("");
+
             _isRefreshingFeedback = false;
         }
 
