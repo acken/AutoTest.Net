@@ -31,5 +31,12 @@ namespace AutoTest.Test.Core.BuildRunners
             _results.AddWarning(new BuildMessage());
             _results.WarningCount.ShouldEqual(1);
         }
+
+        [Test]
+        public void Should_set_time_spent()
+        {
+            _results.SetTimeSpent(new TimeSpan(0, 2, 10));
+            _results.TimeSpent.ShouldEqual(new TimeSpan(0, 2, 10));
+        }
     }
 }

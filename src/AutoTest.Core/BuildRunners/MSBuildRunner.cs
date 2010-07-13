@@ -17,6 +17,7 @@ namespace AutoTest.Core.BuildRunners
 
         public BuildRunResults RunBuild(string projectName, string buildExecutable)
         {
+            var timer = Stopwatch.StartNew();
             _buildExecutable = buildExecutable;
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
@@ -34,6 +35,8 @@ namespace AutoTest.Core.BuildRunners
                 parser.Parse();
             }
             process.WaitForExit();
+            timer.Stop();
+            buildResults.SetTimeSpent(timer.Elapsed);
             return buildResults;
         }
     }

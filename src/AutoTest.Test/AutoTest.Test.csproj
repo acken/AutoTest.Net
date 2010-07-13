@@ -107,6 +107,7 @@
     <Compile Include="Core\Messaging\Fakes\FakeProjectLocator.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\ProjectChangeConsumerTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\ReferencePrioritizerTest.cs" />
+    <Compile Include="Core\Messaging\MessageConsumers\RunReportTest.cs" />
     <Compile Include="Core\Messaging\TestClasses\RunMessageConsumer.cs" />
     <Compile Include="Core\Messaging\TestClasses\InformationMessageConsumer.cs" />
     <Compile Include="Core\Presenters\Fakes\FakeInformationFeedbackView.cs" />

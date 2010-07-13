@@ -31,6 +31,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults RunTests(Project project, string assemblyName)
         {
+            var timer = Stopwatch.StartNew();
             var unitTestExe = _configuration.NunitTestRunner(project.Value.Framework);
             if (!File.Exists(unitTestExe))
                 return new TestRunResults(project.Key, assemblyName, new TestResult[] {});
@@ -48,7 +49,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var parser = new NUnitTestResponseParser(_bus, project.Key, assemblyName);
             parser.Parse(proc.StandardOutput.ReadToEnd());
             proc.WaitForExit();
-            return parser.Result;
+            timer.Stop();
+            var result = parser.Result;
+            result.SetTimeSpent(timer.Elapsed);
+            return result;
         }
 
         #endregion

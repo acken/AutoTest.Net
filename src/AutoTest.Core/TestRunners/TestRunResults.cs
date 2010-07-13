@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace AutoTest.Core.TestRunners
 {
@@ -7,10 +8,12 @@ namespace AutoTest.Core.TestRunners
     {
         private string _project;
         private string _assembly;
+        private TimeSpan _timeSpent;
         private readonly TestResult[] _testResults;
 
         public string Project { get { return _project; } }
         public string Assembly { get { return _assembly; } }
+        public TimeSpan TimeSpent { get { return _timeSpent; } }
         public TestResult[] All { get { return _testResults; } }
         public TestResult[] Passed { get { return queryByStatus(TestStatus.Passed); } }
         public TestResult[] Failed { get { return queryByStatus(TestStatus.Failed); } }
@@ -21,6 +24,11 @@ namespace AutoTest.Core.TestRunners
             _project = project;
             _assembly = assembly;
             _testResults = testResults;
+        }
+
+        public void SetTimeSpent(TimeSpan timeSpent)
+        {
+            _timeSpent = timeSpent;
         }
 
         private TestResult[] queryByStatus(TestStatus status)

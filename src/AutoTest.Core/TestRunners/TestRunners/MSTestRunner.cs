@@ -28,6 +28,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults RunTests(Project project, string assemblyName)
         {
+            var timer = Stopwatch.StartNew();
             var unitTestExe = _configuration.MSTestRunner(project.Value.Framework);
             if (!File.Exists(unitTestExe))
                 return new TestRunResults(project.Key, assemblyName, new TestResult[] { });
@@ -47,6 +48,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
             while ((line = proc.StandardOutput.ReadLine()) != null)
                 parser.ParseLine(line);
             proc.WaitForExit();
+            timer.Stop();
+            parser.Result.SetTimeSpent(timer.Elapsed);
             return parser.Result;
         }
 

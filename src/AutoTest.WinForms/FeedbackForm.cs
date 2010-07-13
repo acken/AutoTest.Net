@@ -28,6 +28,7 @@ namespace AutoTest.WinForms
         private IInformationForm _informationForm;
         private IRunResultCache _runResultCache;
 
+        private ToolTip _toolTipProvider = new ToolTip();
         private bool _isRefreshingFeedback = false;
 
         private int _rightSpacing = 0;
@@ -37,6 +38,7 @@ namespace AutoTest.WinForms
         public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
+            _toolTipProvider.AutoPopDelay = 30000;
             _watcher = watcher;
             _runResultCache = runResultCache;
             _runPresenter = runPresenter;
@@ -78,7 +80,11 @@ namespace AutoTest.WinForms
 
         public void  RecievingRunStartedMessage(RunStartedMessage message)
         {
-            _syncContext.Post(s => setRunInProgressFeedback(""), null);
+            _syncContext.Post(s =>
+                                  {
+                                      setRunInProgressFeedback("");
+                                      generateSummary(null);
+                                  }, null);
         }
 
         private void setRunInProgressFeedback(string additionalInfo)
@@ -111,8 +117,21 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsIgnored > 0
                             ? Color.Red
                             : Color.Green;
+                    generateSummary(report);
                 },
                 message.Report);
+        }
+
+        private void generateSummary(RunReport report)
+        {
+            if (report == null)
+            {
+                _toolTipProvider.RemoveAll();
+                return;
+            }
+
+            var builder = new SummaryBuilder(report);
+            _toolTipProvider.SetToolTip(labelRunState, builder.Build());
         }
 
         public void  RecievingBuildMessage(BuildRunMessage message)

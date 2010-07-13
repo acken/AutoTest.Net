@@ -77,12 +77,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                                  project.Key,
                                  project.Value.AssemblyName,
                                  typeof(MSBuildRunner)));
-                if (!buildProject(project))
-                {
-                    runReport.NumberOfBuildsFailed++;
+                if (!buildProject(project, runReport))
                     return false;
-                }
-                runReport.NumberOfBuildsSucceeded++;
             }
 
             if (project.Value.ContainsTests)
@@ -91,11 +87,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return true;
         }
 
-        private bool buildProject(Project project)
+        private bool buildProject(Project project, RunReport report)
         {
             var buildReport = _buildRunner.RunBuild(project.Key, _configuration.BuildExecutable(project.Value));
+            var succeeded = buildReport.ErrorCount == 0;
+            report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);
             _bus.Publish(new BuildRunMessage(buildReport));
-            return buildReport.ErrorCount == 0;
+            return succeeded;
         }
 
         private void runTests(Project project, RunReport runReport)
@@ -115,9 +113,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, testRunner.GetType()));
             var results = testRunner.RunTests(project, assembly);
-            runReport.NumberOfTestsPassed += results.Passed.Length;
-            runReport.NumberOfTestsFailed += results.Failed.Length;
-            runReport.NumberOfTestsIgnored += results.Ignored.Length;
+            runReport.AddTestRun(
+                results.Project,
+                results.Assembly,
+                results.TimeSpent,
+                results.Passed.Length,
+                results.Ignored.Length,
+                results.Failed.Length);
             _bus.Publish(new TestRunMessage(results));
         }
     }
