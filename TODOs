@@ -39,13 +39,18 @@ done - Handled added / changed project files
 done - Different MSBuild versions for different project files, based on framework version <BuildExecutable framework="4.0>
 done - Different MSTest versions for different project files, based on framework version
 done - Add MIT license
-Figure out why it displays duplicate errors when having build error in multiple projects
+done - Figure out why it displays duplicate errors when having build error in multiple projects
+done - Fix build prioritet (hvis dependency1 er avhengig av dependency2)
+Implement support for VS2005 7.10.3077 and VS2003 project files
+Add XUnit.net support
+Add MbUnit support
+Choose watch path on startup or as parameter
+======== Beta ========
+Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
 Add system tests doing real work
 Implement service locator properly (blog post)
 Use a panel to make the link label scrolleable
 Fix deployment.bat
-Add XUnit.net support
-Fix build prioritet (hvis dependency1 er avhengig av dependency2)
-Add MbUnit support
 Cleanup files in repo
+Create vs addin to open file on right line
