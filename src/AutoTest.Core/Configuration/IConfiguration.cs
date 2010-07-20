@@ -12,6 +12,7 @@ namespace AutoTest.Core.Configuration
         string BuildExecutable(ProjectDocument project);
         string NunitTestRunner(string version);
         string MSTestRunner(string version);
+        string XunitTestRunner(string version);
         CodeEditor CodeEditor { get; }
         bool DebuggingEnabled { get; }
 

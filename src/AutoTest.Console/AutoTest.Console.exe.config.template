@@ -25,6 +25,10 @@
     <!-- Has support for the framework attribute like NUnit test runner config -->
     <MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe</MSTestRunner>
 
+    <!-- XUnit test runner. (Optional) -->
+    <!-- Has support for the framework attribute like NUnit test runner config -->
+    <XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>
+
     <!-- Code editor configuration. You can specify a code editor to open files in. -->
     <!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
     <!-- the line to goto. These will be filled in by the application when executing -->

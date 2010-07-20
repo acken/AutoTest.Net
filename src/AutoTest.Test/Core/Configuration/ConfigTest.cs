@@ -91,5 +91,17 @@ namespace AutoTest.Test.Core.Configuration
             var state = _config.DebuggingEnabled;
             state.ShouldBeTrue();
         }
+
+        [Test]
+        public void Should_read_default_xunit_testrunner_path()
+        {
+            _config.XunitTestRunner("").ShouldEqual(@"C:\Somefolder\XUnit\xunit.console.exe");
+        }
+
+        [Test]
+        public void Should_read_xunit_testrunner_path()
+        {
+            _config.XunitTestRunner("v3.5").ShouldEqual(@"C:\SomefolderOther\XUnit\xunit.console.exe");
+        }
     }
 }

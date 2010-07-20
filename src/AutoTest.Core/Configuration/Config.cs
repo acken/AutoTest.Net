@@ -15,6 +15,7 @@ namespace AutoTest.Core.Configuration
         private List<KeyValuePair<string, string>> _buildExecutables;
         private List<KeyValuePair<string, string>> _nunitTestRunners;
         private List<KeyValuePair<string, string>> _msTestRunner;
+        private List<KeyValuePair<string, string>> _xunitTestRunner;
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
 
@@ -26,6 +27,7 @@ namespace AutoTest.Core.Configuration
             _buildExecutables = core.BuildExecutables;
             _nunitTestRunners = core.NUnitTestRunner;
             _msTestRunner = core.MSTestRunner;
+            _xunitTestRunner = core.XUnitTestRunner;
             _codeEditor = core.CodeEditor;
             _debuggingEnabled = core.DebuggingEnabled;
         }
@@ -68,6 +70,11 @@ namespace AutoTest.Core.Configuration
         public string MSTestRunner(string version)
         {
             return getVersionedSetting(version, _msTestRunner);
+        }
+
+        public string XunitTestRunner(string version)
+        {
+            return getVersionedSetting(version, _xunitTestRunner);
         }
 
         public CodeEditor CodeEditor
