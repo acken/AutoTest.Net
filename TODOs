@@ -41,8 +41,8 @@ done - Different MSTest versions for different project files, based on framework
 done - Add MIT license
 done - Figure out why it displays duplicate errors when having build error in multiple projects
 done - Fix build prioritet (hvis dependency1 er avhengig av dependency2)
+done - Add XUnit.net support
 Implement support for VS2005 7.10.3077 and VS2003 project files
-Add XUnit.net support
 Add MbUnit support
 Choose watch path on startup or as parameter
 ======== Beta ========
