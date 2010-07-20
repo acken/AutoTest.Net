@@ -13,6 +13,7 @@ Features
 	* Supported test runners
 		* MSTest
 		* NUnit
+		* XUnit
 
 Geting started
 To get started using this application edit the configuration for the
