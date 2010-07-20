@@ -148,6 +148,7 @@
     <Compile Include="TestRunners\TestRunners\NUnitTestResponseParser.cs" />
     <Compile Include="TestRunners\TestRunners\NUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\NUnitStackLine.cs" />
+    <Compile Include="TestRunners\TestRunners\XUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
   </ItemGroup>

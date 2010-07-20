@@ -12,6 +12,7 @@ namespace AutoTest.Core.Caching.Projects
     {
         private const string NUNIT_REFERENCE = "<Reference Include=\"nunit.framework";
         private const string MSTEST_REFERENCE = "<Reference Include=\"Microsoft.VisualStudio.QualityTools.UnitTestFramework";
+        private const string XUNIT_REFERENCE = "<Reference Include=\"xunit,";
         private const string ASSEMBLYNAME_NODE = "AssemblyName";
         private const string OUTPUT_TYPE = "OutputType";
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
@@ -131,6 +132,8 @@ namespace AutoTest.Core.Caching.Projects
                 document.SetAsNUnitTestContainer();
             if (_fileContent.Contains(MSTEST_REFERENCE))
                 document.SetAsMSTestContainer();
+            if (_fileContent.Contains(XUNIT_REFERENCE))
+                document.SetAsXUnitTestContainer();
         }
 
         private void setReferences(ProjectDocument document)

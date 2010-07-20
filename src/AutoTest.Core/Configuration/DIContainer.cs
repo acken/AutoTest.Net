@@ -57,6 +57,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IBuildRunner>().ImplementedBy<MSBuildRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<NUnitTestRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<MSTestRunner>())
+                .Register(Component.For<ITestRunner>().ImplementedBy<XUnitTestRunner>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
                 .Register(Component.For<IMergeRunResults>().Forward<IRunResultCache>().ImplementedBy<RunResultCache>())
                 .Register(Component.For<ApplicatonLauncher>());
