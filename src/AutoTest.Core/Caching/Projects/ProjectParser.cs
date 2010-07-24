@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -211,8 +211,12 @@ namespace AutoTest.Core.Caching.Projects
 
         private string getAbsolutePath(string relativePath)
         {
-            var chunks = Path.Combine(Path.GetDirectoryName(_projectFile), relativePath)
-                .Split(Path.DirectorySeparatorChar);
+			var combinedPath = Path.Combine(Path.GetDirectoryName(_projectFile), relativePath);
+			var chunkList = new List<string>();
+			if (combinedPath.StartsWith(Path.DirectorySeparatorChar.ToString()))
+				chunkList.Add(Path.DirectorySeparatorChar.ToString());
+            chunkList.AddRange(combinedPath.Split(Path.DirectorySeparatorChar));
+			var chunks = chunkList.ToArray();
             var folders = makeAbsolute(chunks);
             var path = buildPathFromArray(folders);
             return Path.GetFullPath(path);
@@ -241,7 +245,12 @@ namespace AutoTest.Core.Caching.Projects
                 if (path.Length == 0)
                     path += item;
                 else
-                    path += string.Format("{0}{1}", Path.DirectorySeparatorChar, item);
+				{
+					if (path.Equals(Path.DirectorySeparatorChar.ToString()))
+						path += item;
+					else
+                    	path += string.Format("{0}{1}", Path.DirectorySeparatorChar, item);
+				}
             }
             return path;
         }
