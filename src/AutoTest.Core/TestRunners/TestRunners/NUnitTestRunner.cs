@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,10 +35,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var unitTestExe = _configuration.NunitTestRunner(project.Value.Framework);
             if (!File.Exists(unitTestExe))
                 return new TestRunResults(project.Key, assemblyName, new TestResult[] {});
-
+			
+			var arguments = getExecutableArguments(assemblyName);
             var proc = new Process();
-            proc.StartInfo = new ProcessStartInfo(unitTestExe,
-                                                        "/noshadow /xmlconsole \"" + assemblyName + "\"");
+            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(assemblyName);
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -54,6 +54,24 @@ namespace AutoTest.Core.TestRunners.TestRunners
             result.SetTimeSpent(timer.Elapsed);
             return result;
         }
+        
+        string getExecutableArguments (string assemblyName)
+		{
+			var arguments = "";
+			if (System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32NT) ||
+			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32S) ||
+			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32Windows) ||
+			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.WinCE) ||
+			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Xbox))
+			{
+				arguments = "/noshadow /xmlconsole \"" + assemblyName + "\"";
+			}
+			else
+			{
+				arguments = "--noshadow --xmlconsole \"" + assemblyName + "\"";
+			}
+			return arguments;
+		}
 
         #endregion
     }
