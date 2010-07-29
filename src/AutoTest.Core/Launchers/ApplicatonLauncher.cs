@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
@@ -22,6 +21,7 @@ namespace AutoTest.Core.Launchers
             var arguments = _configuration.CodeEditor.Arguments;
             arguments = arguments.Replace("[[CodeFile]]", file);
             arguments = arguments.Replace("[[LineNumber]]", lineNumber.ToString());
+			AutoTest.Core.DebugLog.Debug.LaunchingEditor(executable, arguments);
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(executable, arguments);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

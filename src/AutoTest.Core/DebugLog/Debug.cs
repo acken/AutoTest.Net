@@ -168,5 +168,11 @@ namespace AutoTest.Core.DebugLog
             if (_isDisabled) return;
             write("Presenter received error message");
         }
-    }
+    	
+		public static void LaunchingEditor(string executable, string arguments)
+		{
+			if (_isDisabled) return;
+			write(string.Format("Launching {0} with {1}", executable, arguments));
+		}
+}
 }

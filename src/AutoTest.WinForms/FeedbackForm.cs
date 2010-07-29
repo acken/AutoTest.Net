@@ -49,6 +49,7 @@ namespace AutoTest.WinForms
             configuration.ValidateSettings();
             _watcher.Watch(configuration.DirectoryToWatch);
             readFormSpacing();
+			FeedbackForm_Resize(this, new EventArgs());
         }
 
         private void readFormSpacing()
@@ -241,9 +242,18 @@ namespace AutoTest.WinForms
         {
 			labelRunState.Width = Width - ((Width - buttonInformation.Left) + _rightSpacing);
             linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
-            linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
-            runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
-            runFeedbackList.Width = Width - (runFeedbackList.Left + _rightSpacing);
+			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
+			{
+				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 100);
+				runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
+            	runFeedbackList.Width = Width - (runFeedbackList.Left + _rightSpacing + 10);
+			}
+			else
+			{
+				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
+            	runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
+            	runFeedbackList.Width = Width - (runFeedbackList.Left + _rightSpacing);
+			}
         }
 
         private void linkLabelInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
