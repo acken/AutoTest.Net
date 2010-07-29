@@ -242,6 +242,7 @@ namespace AutoTest.WinForms
         {
 			labelRunState.Width = Width - ((Width - buttonInformation.Left) + _rightSpacing);
             linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
+			// This is truely horrendous but it does the job for now
 			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
 			{
 				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 100);
