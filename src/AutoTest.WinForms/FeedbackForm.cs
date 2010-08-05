@@ -187,6 +187,8 @@ namespace AutoTest.WinForms
                 setInfoText("");
 
             _isRefreshingFeedback = false;
+
+            setInfoFromSelectedItem();
         }
 
         private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected)
@@ -195,7 +197,7 @@ namespace AutoTest.WinForms
             item.SubItems.Add(message);
             item.ForeColor = colour;
             item.Tag = tag;
-            if (selected != null && tag.Equals(selected))
+            if (selected != null && tag.GetType().Equals(selected.GetType()) && tag.Equals(selected))
                 item.Selected = true;
         }
 
@@ -212,6 +214,11 @@ namespace AutoTest.WinForms
         }
 
         private void runFeedbackList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            setInfoFromSelectedItem();
+        }
+
+        private void setInfoFromSelectedItem()
         {
             if (_isRefreshingFeedback)
                 return;
