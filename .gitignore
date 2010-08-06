@@ -2,6 +2,7 @@ obj
 bin
 deploy
 deploy/*
+test-results/
 _ReSharper.*
 *.csproj.user
 *.resharper.user
