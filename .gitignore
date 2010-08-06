@@ -1,0 +1,17 @@
+obj
+bin
+deploy
+deploy/*
+_ReSharper.*
+*.csproj.user
+*.resharper.user
+*.resharper
+*.suo
+*.cache
+*.userprefs
+SolutionVersion.cs
+lib/MoMA/Reports/submit.xml
+build_output
+code_drop
+TestResult.xml
+~$*
