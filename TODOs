@@ -45,6 +45,7 @@ done - Add XUnit.net support
 Implement support for VS2005 7.10.3077 and VS2003 project files
 Add MbUnit support
 Choose watch path on startup or as parameter
+Fix window resize for status window
 ======== Beta ========
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
