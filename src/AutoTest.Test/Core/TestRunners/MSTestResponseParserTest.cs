@@ -67,14 +67,16 @@ namespace AutoTest.Test.Core.TestRunners
          public void Should_find_error_message_and_stacktrace()
          {
              _parser.ParseLine("Failed               The_name_of_the_test");
-             _parser.ParseLine(string.Format("[errorstacktrace] =    at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99{0}at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99", Environment.NewLine));
              _parser.ParseLine("[errormessage] = Assert.AreEqual failed. Expected:<2>. Actual:<9>. ");
+             _parser.ParseLine("an error message can have multiple lines");
+             _parser.ParseLine("[errorstacktrace] =    at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99");
+             _parser.ParseLine("at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99");
              var result = _parser.Result;
 
              result.Failed.Length.ShouldEqual(1);
              result.All[0].Status.ShouldEqual(TestStatus.Failed);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
-             result.All[0].Message.ShouldEqual("Assert.AreEqual failed. Expected:<2>. Actual:<9>.");
+             result.All[0].Message.ShouldEqual(string.Format("Assert.AreEqual failed. Expected:<2>. Actual:<9>.{0}an error message can have multiple lines", Environment.NewLine));
              result.All[0].StackTrace.Length.ShouldEqual(2);
              result.All[0].StackTrace[0].Method.ShouldEqual("Order.Test.UnitTest1.MyFourthTest()");
              result.All[0].StackTrace[0].File.ShouldEqual("c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs");

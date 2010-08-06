@@ -46,7 +46,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
             string line;
             var parser = new MSTestResponseParser(project.Key, assemblyName);
             while ((line = proc.StandardOutput.ReadLine()) != null)
+            {
                 parser.ParseLine(line);
+                using (var writer = new StreamWriter("test.log", true))
+                {
+                    writer.WriteLine(line);
+                }
+            }
             proc.WaitForExit();
             timer.Stop();
             parser.Result.SetTimeSpent(timer.Elapsed);
