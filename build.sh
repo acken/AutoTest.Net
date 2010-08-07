@@ -1,10 +1,13 @@
 #!/bin/bash
 # stty -echo
 
-function useage
+# ::Project UppercuT - http://uppercut.googlecode.com
+# ::No edits to this file are required - http://uppercut.pbwiki.com
+
+function usage
 {
 	echo ""
-	echo "Usage: build"
+	echo "Usage: build.sh"
 	exit
 }
 
@@ -17,4 +20,4 @@ function displayUsage
 
 displayUsage $1
 
-mono ./lib/NAnt/NAnt.exe $1 /f:/home/ack/src/AutoTest.Net/build/default.build -D:build.config.settings=/home/ack/src/AutoTest.Net/Settings/UppercuT.config
+mono ./lib/NAnt/NAnt.exe $1 /f:$(cd $(dirname "$0"); pwd)/build/default.build -D:build.config.settings=$(cd $(dirname "$0"); pwd)/Settings/UppercuT.config
