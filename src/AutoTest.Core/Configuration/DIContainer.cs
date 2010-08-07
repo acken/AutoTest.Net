@@ -68,7 +68,8 @@ namespace AutoTest.Core.Configuration
             var configuration = _services.Locate<IConfiguration>();
             var fsService = _services.Locate<IFileSystemService>();
             var cache = _services.Locate<ICache>();
-            var cacheCrawler = new ProjectCrawler(cache, fsService);
+			var bus = _services.Locate<IMessageBus>();
+            var cacheCrawler = new ProjectCrawler(cache, fsService, bus);
             cacheCrawler.Crawl(configuration.DirectoryToWatch);
         }
 

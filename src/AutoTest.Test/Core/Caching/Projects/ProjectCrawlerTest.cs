@@ -9,6 +9,8 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
+using AutoTest.Core.Messaging;
+using Rhino.Mocks;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {
@@ -18,13 +20,15 @@ namespace AutoTest.Test.Core.Caching.Projects
         private ProjectCrawler _crawler;
         private FakeCache _cache;
         private FakeFileSystemService _fsService;
+		private IMessageBus _bus;
 
         [SetUp]
         public void setUp()
         {
+			_bus = MockRepository.GenerateMock<IMessageBus>();
             _fsService = new FakeFileSystemService();
             _cache = new FakeCache();
-            _crawler = new ProjectCrawler(_cache, _fsService);
+            _crawler = new ProjectCrawler(_cache, _fsService, _bus);
         }
 
         [Test]
@@ -50,5 +54,15 @@ namespace AutoTest.Test.Core.Caching.Projects
             _crawler.Crawl("");
             _cache.ShouldHaveBeenAdded(Path.GetFullPath("AProject.vbproj"));
         }
+		
+		[Test]
+		public void Should_log_information_message_if_add_project_fails()
+		{
+			_fsService.WhenCrawlingFor("*.csproj").Return("a_project.csproj");
+			_cache.ShouldThrowErrorOnAdd();
+			_crawler.Crawl("");
+			
+			_bus.AssertWasCalled(b => b.Publish<InformationMessage>(new InformationMessage("")), b => b.IgnoreArguments());
+		}
     }
 }

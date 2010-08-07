@@ -13,6 +13,12 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
         private string _keyToGet = "";
         private Project _projectToGet = null;
         private List<string> _addedFields = new List<string>();
+		private bool _throwErrorOnAdd = false;
+		
+		public void ShouldThrowErrorOnAdd()
+		{
+			_throwErrorOnAdd = true;
+		}
 
         public void ShouldHaveBeenAdded(string key)
         {
@@ -44,6 +50,8 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
 
         public void Add<T>(string key) where T : IRecord
         {
+			if (_throwErrorOnAdd)
+				throw new Exception("Add casued an error");
             _addedFields.Add(key);
         }
 

@@ -6,6 +6,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.FileSystem;
 using System.IO;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
@@ -15,11 +16,13 @@ namespace AutoTest.Core.Caching.Crawlers
         private const string VB_PROJECT_EXTENTION = "vbproj";
         private ICache _cache;
         private IFileSystemService _fsService;
+		private IMessageBus _bus;
 
-        public ProjectCrawler(ICache cache, IFileSystemService fsService)
+        public ProjectCrawler(ICache cache, IFileSystemService fsService, IMessageBus bus)
         {
             _cache = cache;
             _fsService = fsService;
+			_bus = bus;
         }
 
         public void Crawl(string path)
@@ -49,7 +52,21 @@ namespace AutoTest.Core.Caching.Crawlers
         private void addProjects(string[] files)
         {
             foreach (var file in files)
-                _cache.Add<Project>(Path.GetFullPath(file));
+                tryAddProject(file);
         }
-    }
+        
+        private void tryAddProject(string project)
+		{
+			try
+			{
+				_cache.Add<Project>(Path.GetFullPath(project));
+			}
+			catch (Exception exception)
+			{
+				var messageString = string.Format("Failed parsing project {0}. Project will not be built. ({1})", project, exception.Message);
+				var message = new InformationMessage(messageString);
+				_bus.Publish<InformationMessage>(message);
+			}
+		}
+	}
 }
