@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using AutoTest.Core.Configuration;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
+using System.IO;
 
 namespace AutoTest.WinForms
 {
@@ -16,12 +17,45 @@ namespace AutoTest.WinForms
         [STAThread]
         static void Main()
         {
-            ConfigureApplication();
-            var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
-            Application.Run(overviewForm.Form);
-            BootStrapper.ShutDown();
+            tryStartApplication();
         }
 
+        private static void  tryStartApplication()
+		{
+			try
+			{
+			ConfigureApplication();
+        	var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
+        	Application.Run(overviewForm.Form);
+        	BootStrapper.ShutDown();
+			}
+			catch (Exception exception)
+			{
+				logException(exception);
+			}
+		}
+
+		private static void logException (Exception exception)
+		{
+			using (var writer = new StreamWriter("panic.dump"))
+			{
+				writeException(writer, exception);
+			}
+		}
+		
+		private static void writeException(StreamWriter writer, Exception exception)
+		{
+			writer.WriteLine(string.Format("Message: {0}", exception.Message));
+			writer.WriteLine("Stack trace:");
+			writer.WriteLine(exception.StackTrace);
+			if (exception.InnerException != null)
+			{
+				writer.WriteLine("Inner exception");
+				writer.WriteLine("");
+				writeException(writer, exception.InnerException);
+			}
+		}
+			                 
         private static void ConfigureApplication()
         {
             Application.EnableVisualStyles();
