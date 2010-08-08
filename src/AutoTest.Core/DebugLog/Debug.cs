@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.DebugLog
 {
@@ -18,8 +19,8 @@ namespace AutoTest.Core.DebugLog
         {
             lock (_padLock)
             {
-                var file = Path.GetFullPath(_logFile);
-                using (var writer = new StreamWriter(file, true))
+				var file = Path.Combine(PathParsing.GetRootDirectory(), _logFile);
+                using (var writer = getWriter(file))
                 {
                     writer.WriteLine(text);
                 }
@@ -30,6 +31,14 @@ namespace AutoTest.Core.DebugLog
                 }
             }
         }
+		
+		private static StreamWriter getWriter(string file)
+		{
+			if (File.Exists(file))
+				return new StreamWriter(file, true);
+			else
+				return new StreamWriter(file);
+		}
 
         public static void EnableLogging()
         {

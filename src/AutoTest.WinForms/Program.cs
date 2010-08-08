@@ -7,6 +7,7 @@ using System.Reflection;
 using Castle.MicroKernel.Registration;
 using System.IO;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.WinForms
 {
@@ -39,7 +40,8 @@ namespace AutoTest.WinForms
 
 		private static void logException (Exception exception)
 		{
-			using (var writer = new StreamWriter("panic.dump"))
+			var file = Path.Combine(PathParsing.GetRootDirectory(), "panic.dump");
+			using (var writer = new StreamWriter(file))
 			{
 				writeException(writer, exception);
 			}
