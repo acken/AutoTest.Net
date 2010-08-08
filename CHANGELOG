@@ -1,0 +1,2 @@
+0.3 alpha 2
+	* Made sure build run stops on first broken build
