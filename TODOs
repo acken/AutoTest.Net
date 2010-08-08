@@ -55,3 +55,4 @@ Use a panel to make the link label scrolleable
 Fix deployment.bat
 Cleanup files in repo
 Create vs addin to open file on right line
+Move from WinForm to Gtk#
