@@ -30,6 +30,7 @@ namespace AutoTest.WinForms
             _presenter.View = this;
             InitializeComponent();
             readFormSpacing();
+			InformationForm_Resize(this, new EventArgs());
         }
 
         private void readFormSpacing()
@@ -104,9 +105,19 @@ namespace AutoTest.WinForms
         private void InformationForm_Resize(object sender, EventArgs e)
         {
             linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
-            linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
-            informationList.Height = linkLabelInfo.Top - (informationList.Top + _listBottomSpacing);
-            informationList.Width = Width - (informationList.Left + _rightSpacing);
+			// This is truely horrendous but it does the job for now
+			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
+			{
+				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 100);
+				informationList.Height = linkLabelInfo.Top - (informationList.Top + _listBottomSpacing);
+            	informationList.Width = Width - (informationList.Left + _rightSpacing + 10);
+			}
+			else
+			{
+				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing);
+            	informationList.Height = linkLabelInfo.Top - (informationList.Top + _listBottomSpacing);
+            	informationList.Width = Width - (informationList.Left + _rightSpacing);
+			}
         }
 
         #region IInformationForm Members
