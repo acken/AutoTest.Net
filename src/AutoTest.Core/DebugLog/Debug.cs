@@ -186,7 +186,6 @@ namespace AutoTest.Core.DebugLog
 
         public static void FailedToConfigure(Exception ex)
         {
-            if (_isDisabled) return;
             write("Failed to configure application");
             write(string.Format("{1}{0}{2}", Environment.NewLine, ex.Message, ex.StackTrace));
         }
