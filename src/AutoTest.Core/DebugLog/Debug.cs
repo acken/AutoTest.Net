@@ -183,5 +183,12 @@ namespace AutoTest.Core.DebugLog
 			if (_isDisabled) return;
 			write(string.Format("Launching {0} with {1}", executable, arguments));
 		}
-}
+
+        public static void FailedToConfigure(Exception ex)
+        {
+            if (_isDisabled) return;
+            write("Failed to configure application");
+            write(string.Format("{1}{0}{2}", Environment.NewLine, ex.Message, ex.StackTrace));
+        }
+    }
 }

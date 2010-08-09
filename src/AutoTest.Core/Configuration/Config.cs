@@ -22,14 +22,27 @@ namespace AutoTest.Core.Configuration
         public Config(IMessageBus bus)
         {
             _bus = bus;
-            var core = (CoreSection) ConfigurationManager.GetSection("AutoTestCore");
-            _directoryToWatch = core.DirectoryToWatch;
-            _buildExecutables = core.BuildExecutables;
-            _nunitTestRunners = core.NUnitTestRunner;
-            _msTestRunner = core.MSTestRunner;
-            _xunitTestRunner = core.XUnitTestRunner;
-            _codeEditor = core.CodeEditor;
-            _debuggingEnabled = core.DebuggingEnabled;
+            tryToConfigure();
+        }
+
+        private void tryToConfigure()
+        {
+            try
+            {
+                var core = (CoreSection) ConfigurationManager.GetSection("AutoTestCore");
+                _directoryToWatch = core.DirectoryToWatch;
+                _buildExecutables = core.BuildExecutables;
+                _nunitTestRunners = core.NUnitTestRunner;
+                _msTestRunner = core.MSTestRunner;
+                _xunitTestRunner = core.XUnitTestRunner;
+                _codeEditor = core.CodeEditor;
+                _debuggingEnabled = core.DebuggingEnabled;
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.FailedToConfigure(ex);
+                throw;
+            }
         }
 
         public void ValidateSettings()
