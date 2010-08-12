@@ -18,7 +18,7 @@ namespace AutoTest.Core.Configuration
         }
     }
 
-    class CoreSection : ConfigurationSection
+    class CoreSection
     {
         private XmlDocument _xml = new XmlDocument();
 
@@ -30,14 +30,14 @@ namespace AutoTest.Core.Configuration
         public CodeEditor CodeEditor { get; private set; }
         public bool DebuggingEnabled { get; private set; }
 
-        protected override void DeserializeElement(System.Xml.XmlReader reader, bool serializeCollectionKey)
+        public void Read(string configFile)
         {
-            _xml.LoadXml(reader.ReadOuterXml());
-            DirectoryToWatch = getValue("AutoTestCore/DirectoryToWatch", "");
-            BuildExecutables = getVersionedSetting("AutoTestCore/BuildExecutable");
-            NUnitTestRunner = getVersionedSetting("AutoTestCore/NUnitTestRunner");
-            MSTestRunner = getVersionedSetting("AutoTestCore/MSTestRunner");
-            XUnitTestRunner = getVersionedSetting("AutoTestCore/XUnitTestRunner");
+            _xml.Load(configFile);
+            DirectoryToWatch = getValue("configuration/DirectoryToWatch", "");
+            BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
+            NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
+            MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
+            XUnitTestRunner = getVersionedSetting("configuration/XUnitTestRunner");
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getDebuggingEnabled();
         }
@@ -61,7 +61,7 @@ namespace AutoTest.Core.Configuration
         private bool getDebuggingEnabled()
         {
             bool state;
-            var value = getValue("AutoTestCore/Debugging", "false");
+            var value = getValue("configuration/Debugging", "false");
             if (bool.TryParse(value, out state))
                 return state;
             return false;
@@ -69,8 +69,8 @@ namespace AutoTest.Core.Configuration
 
         private CodeEditor getCodeEditor()
         {
-            var executable = getValue("AutoTestCore/CodeEditor/Executable", "");
-            var arguments = getValue("AutoTestCore/CodeEditor/Arguments", "");
+            var executable = getValue("configuration/CodeEditor/Executable", "");
+            var arguments = getValue("configuration/CodeEditor/Arguments", "");
             return new CodeEditor(executable, arguments);
         }
 

@@ -4,6 +4,8 @@ using System.IO;
 using AutoTest.Core.Messaging;
 using System.Collections.Generic;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.FileSystem;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Configuration
 {
@@ -22,7 +24,7 @@ namespace AutoTest.Core.Configuration
         public Config(IMessageBus bus)
         {
             _bus = bus;
-            var core = (CoreSection) ConfigurationManager.GetSection("AutoTestCore");
+			var core = getConfiguration();
             _directoryToWatch = core.DirectoryToWatch;
             _buildExecutables = core.BuildExecutables;
             _nunitTestRunners = core.NUnitTestRunner;
@@ -31,6 +33,19 @@ namespace AutoTest.Core.Configuration
             _codeEditor = core.CodeEditor;
             _debuggingEnabled = core.DebuggingEnabled;
         }
+		
+		private CoreSection getConfiguration()
+		{
+			var core = new CoreSection();
+			var configFile = Path.Combine(PathParsing.GetRootDirectory(), "AutoTest.config");
+			if (!File.Exists(configFile))
+			{
+				Debug.ConfigurationFileMissing();
+				return core;
+			}
+			core.Read(configFile);
+			return core;
+		}
 
         public void ValidateSettings()
         {
@@ -42,12 +57,15 @@ namespace AutoTest.Core.Configuration
                 _bus.Publish(new WarningMessage("NUnit test runner not specified. NUnit tests will not be run."));
             if (noneExists(_msTestRunner))
                 _bus.Publish(new WarningMessage("MSTest test runner not specified. MSTest tests will not be run."));
-            if (!File.Exists(_codeEditor.Executable))
+            if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
                 _bus.Publish(new WarningMessage("Code editor not specified"));
         }
 
         private bool noneExists(List<KeyValuePair<string, string>> files)
         {
+			if (files == null)
+				return true;
+			
             foreach (var file in files)
             {
                 if (File.Exists(file.Value))

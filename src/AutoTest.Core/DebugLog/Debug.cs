@@ -183,5 +183,10 @@ namespace AutoTest.Core.DebugLog
 			if (_isDisabled) return;
 			write(string.Format("Launching {0} with {1}", executable, arguments));
 		}
-}
+    	
+		public static void ConfigurationFileMissing()
+		{
+			write("The configuration file (AutoTest.config) is missing.");
+		}
+	}
 }

@@ -161,4 +161,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="AutoTest.config.template" />
+  </ItemGroup>
 </Project>
