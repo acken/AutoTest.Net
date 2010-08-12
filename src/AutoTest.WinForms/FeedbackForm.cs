@@ -22,11 +22,14 @@ namespace AutoTest.WinForms
 {
     public partial class FeedbackForm : Form, IOverviewForm, IRunFeedbackView
     {
+		private const int GDI_SIZE_LIMIT = 3950;
+		
         private SynchronizationContext _syncContext;
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
         private IInformationForm _informationForm;
         private IRunResultCache _runResultCache;
+		private IMessageBus _bus;
 
         private ToolTip _toolTipProvider = new ToolTip();
         private bool _isRefreshingFeedback = false;
@@ -35,12 +38,13 @@ namespace AutoTest.WinForms
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
 
-        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache)
+        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache, IMessageBus bus)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
             _toolTipProvider.AutoPopDelay = 30000;
             _watcher = watcher;
             _runResultCache = runResultCache;
+			_bus = bus;
             _runPresenter = runPresenter;
             _runPresenter.View = this;
             _informationForm = informationForm;
@@ -231,18 +235,31 @@ namespace AutoTest.WinForms
 
             setInfoText(runFeedbackList.Items[runFeedbackList.SelectedItems[0].Index].Tag.ToString());
         }
-
+		
         private void setInfoText(string text)
         {
-            int previousHeight = linkLabelInfo.Height;
-            var parser = new LinkParser(text);
-            var links = parser.Parse();
-            linkLabelInfo.Text = parser.ParsedText;
-            linkLabelInfo.LinkArea = new LinkArea(0, 0);
-            foreach (var link in links)
-                linkLabelInfo.Links.Add(link.Start, link.Length);
-            var difference = linkLabelInfo.Height - previousHeight;
-            Height = Height + difference;
+			try
+			{
+	            int previousHeight = linkLabelInfo.Height;
+	            var parser = new LinkParser(text);
+	            var links = parser.Parse();
+				if (parser.ParsedText.Length > GDI_SIZE_LIMIT)
+					linkLabelInfo.Text = parser.ParsedText.Substring(0, GDI_SIZE_LIMIT);
+				else
+	            	linkLabelInfo.Text = parser.ParsedText;
+	            linkLabelInfo.LinkArea = new LinkArea(0, 0);
+	            foreach (var link in links)
+				{
+					if (link.Start + link.Length <= GDI_SIZE_LIMIT)
+	                	linkLabelInfo.Links.Add(link.Start, link.Length);
+				}
+	            var difference = linkLabelInfo.Height - previousHeight;
+	            Height = Height + difference;
+			}
+			catch (Exception exception)
+			{
+				_bus.Publish(new ErrorMessage(exception));
+			}
         }
 
         private void FeedbackForm_Resize(object sender, EventArgs e)
