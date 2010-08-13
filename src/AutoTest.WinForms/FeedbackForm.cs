@@ -269,7 +269,7 @@ namespace AutoTest.WinForms
 			// This is truely horrendous but it does the job for now
 			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
 			{
-				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 100);
+				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 60);
 				runFeedbackList.Height = linkLabelInfo.Top - (runFeedbackList.Top + _listBottomSpacing);
             	runFeedbackList.Width = Width - (runFeedbackList.Left + _rightSpacing + 10);
 			}
