@@ -70,6 +70,8 @@ namespace AutoTest.Core.Configuration
                 _bus.Publish(new WarningMessage("NUnit test runner not specified. NUnit tests will not be run."));
             if (noneExists(_msTestRunner))
                 _bus.Publish(new WarningMessage("MSTest test runner not specified. MSTest tests will not be run."));
+			if (noneExists(_xunitTestRunner))
+                _bus.Publish(new WarningMessage("XUnit test runner not specified. XUnit tests will not be run."));
             if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
                 _bus.Publish(new WarningMessage("Code editor not specified"));
         }
