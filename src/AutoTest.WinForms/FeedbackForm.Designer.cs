@@ -46,7 +46,7 @@
             this.runFeedbackList.HideSelection = false;
             this.runFeedbackList.Location = new System.Drawing.Point(12, 25);
             this.runFeedbackList.Name = "runFeedbackList";
-            this.runFeedbackList.Size = new System.Drawing.Size(853, 334);
+            this.runFeedbackList.Size = new System.Drawing.Size(1036, 144);
             this.runFeedbackList.TabIndex = 0;
             this.runFeedbackList.UseCompatibleStateImageBehavior = false;
             this.runFeedbackList.View = System.Windows.Forms.View.Details;
@@ -60,7 +60,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "Message";
-            this.columnHeader2.Width = 720;
+            this.columnHeader2.Width = 900;
             // 
             // labelRunState
             // 
@@ -74,7 +74,7 @@
             // linkLabelInfo
             // 
             this.linkLabelInfo.AutoSize = true;
-            this.linkLabelInfo.Location = new System.Drawing.Point(12, 362);
+            this.linkLabelInfo.Location = new System.Drawing.Point(12, 177);
             this.linkLabelInfo.Name = "linkLabelInfo";
             this.linkLabelInfo.Size = new System.Drawing.Size(0, 13);
             this.linkLabelInfo.TabIndex = 2;
@@ -83,7 +83,7 @@
             // buttonInformation
             // 
             this.buttonInformation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonInformation.Location = new System.Drawing.Point(839, 4);
+            this.buttonInformation.Location = new System.Drawing.Point(1023, 4);
             this.buttonInformation.Name = "buttonInformation";
             this.buttonInformation.Size = new System.Drawing.Size(25, 17);
             this.buttonInformation.TabIndex = 3;
@@ -94,7 +94,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 384);
+            this.ClientSize = new System.Drawing.Size(1061, 197);
             this.Controls.Add(this.buttonInformation);
             this.Controls.Add(this.linkLabelInfo);
             this.Controls.Add(this.labelRunState);
