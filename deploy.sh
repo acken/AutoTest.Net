@@ -18,6 +18,7 @@ fi
 cp $BINARYDIR/AutoTest.Core.dll $DEPLOYDIR/AutoTest.Core.dll
 cp $BINARYDIR/AutoTest.Console.exe $DEPLOYDIR/AutoTest.Console.exe
 cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
+cp $BINARYDIR/AutoTest.Console.exe.config $DEPLOYDIR/AutoTest.Console.exe.config
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
 cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt

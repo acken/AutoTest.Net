@@ -22,7 +22,7 @@ namespace AutoTest.WinForms
 {
     public partial class FeedbackForm : Form, IOverviewForm, IRunFeedbackView
     {
-		private const int GDI_SIZE_LIMIT = 3950;
+		private const int GDI_SIZE_LIMIT = 3200;
 		
         private SynchronizationContext _syncContext;
         private IRunFeedbackPresenter _runPresenter;

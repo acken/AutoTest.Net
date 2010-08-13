@@ -188,5 +188,11 @@ namespace AutoTest.Core.DebugLog
 		{
 			write("The configuration file (AutoTest.config) is missing.");
 		}
-	}
+
+        public static void FailedToConfigure(Exception ex)
+        {
+            write("Failed to configure application");
+            write(string.Format("{1}{0}{2}", Environment.NewLine, ex.Message, ex.StackTrace));
+        }
+    }
 }

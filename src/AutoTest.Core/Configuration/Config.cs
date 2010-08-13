@@ -25,13 +25,26 @@ namespace AutoTest.Core.Configuration
         {
             _bus = bus;
 			var core = getConfiguration();
-            _directoryToWatch = core.DirectoryToWatch;
-            _buildExecutables = core.BuildExecutables;
-            _nunitTestRunners = core.NUnitTestRunner;
-            _msTestRunner = core.MSTestRunner;
-            _xunitTestRunner = core.XUnitTestRunner;
-            _codeEditor = core.CodeEditor;
-            _debuggingEnabled = core.DebuggingEnabled;
+            tryToConfigure(core);
+        }
+
+        private void tryToConfigure(CoreSection core)
+        {
+            try
+            {
+                _directoryToWatch = core.DirectoryToWatch;
+                _buildExecutables = core.BuildExecutables;
+                _nunitTestRunners = core.NUnitTestRunner;
+                _msTestRunner = core.MSTestRunner;
+                _xunitTestRunner = core.XUnitTestRunner;
+                _codeEditor = core.CodeEditor;
+                _debuggingEnabled = core.DebuggingEnabled;
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.FailedToConfigure(ex);
+                throw;
+            }
         }
 		
 		private CoreSection getConfiguration()
