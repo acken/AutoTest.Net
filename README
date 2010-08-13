@@ -16,10 +16,8 @@ Features
 		* XUnit
 
 Geting started
-To get started using this application edit the configuration for the
-runner you have decided to run (AutoTest.WinForms.exe.config /
-AutoTest.Console.exe.config). When done start the application.
-In the winforms application the little button in the right corner
-will display some nice to know messages now and then.
-When set up just edit a file and save it. AutoTest.Net will detect
-the changes and start builds and run tests.
+To get started using this application edit AutoTest.config to suite your system.
+When done start either the winforms app or the console app. In the winforms
+application the little button in the top right corner will display some nice to
+know messages now and then. When set up just edit a file within the watched folder
+and save it. AutoTest.Net will detect any changes and start builds and run tests.
