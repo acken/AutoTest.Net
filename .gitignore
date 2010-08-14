@@ -17,4 +17,6 @@ build_output
 ReleaseBinaries
 code_drop
 TestResult.xml
+openlocal.sh
+openlocal.bat
 ~$*
