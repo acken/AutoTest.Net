@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -73,6 +73,7 @@
       <DependentUpon>InformationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="IOverviewForm.cs" />
+    <Compile Include="IWatchDirectoryPicker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FeedbackForm.resx">
@@ -85,6 +86,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WatchDirectoryPickerForm.resx">
+      <DependentUpon>WatchDirectoryPickerForm.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -100,6 +104,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SummaryBuilder.cs" />
+    <Compile Include="WatchDirectoryPickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WatchDirectoryPickerForm.Designer.cs">
+      <DependentUpon>WatchDirectoryPickerForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">

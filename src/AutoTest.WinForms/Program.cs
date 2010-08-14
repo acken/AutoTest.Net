@@ -26,11 +26,12 @@ namespace AutoTest.WinForms
 		{
 			try
 			{
-			ConfigureApplication();
-        	var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
-			notifyOnLoggingSetup();
-        	Application.Run(overviewForm.Form);
-        	BootStrapper.ShutDown();
+			    if (!ConfigureApplication())
+                    return;
+        	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
+			    notifyOnLoggingSetup();
+        	    Application.Run(overviewForm.Form);
+        	    BootStrapper.ShutDown();
 			}
 			catch (Exception exception)
 			{
@@ -60,20 +61,33 @@ namespace AutoTest.WinForms
 			}
 		}
 			                 
-        private static void ConfigureApplication()
+        private static bool ConfigureApplication()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            BootstrapApplication();
+            bootstrapApplication();
+            var watchDirectory = getWatchDirectory();
+            if (watchDirectory ==  null)
+                return false;
             BootStrapper.InitializeCache();
+            return true;
         }
 
-        public static void BootstrapApplication()
+        private static string getWatchDirectory()
+        {
+            var directoryPicker = BootStrapper.Services.Locate<IWatchDirectoryPicker>();
+            if (directoryPicker.ShowDialog() == DialogResult.Cancel)
+                return null;
+            return directoryPicker.DirectoryToWatch;
+        }
+
+        public static void bootstrapApplication()
         {
             BootStrapper.Configure();
             BootStrapper.Container
                 .Register(Component.For<IOverviewForm>().ImplementedBy<FeedbackForm>())
-                .Register(Component.For<IInformationForm>().ImplementedBy<InformationForm>());
+                .Register(Component.For<IInformationForm>().ImplementedBy<InformationForm>())
+                .Register(Component.For<IWatchDirectoryPicker>().ImplementedBy<WatchDirectoryPickerForm>());
         }
 		
 		private static void notifyOnLoggingSetup()

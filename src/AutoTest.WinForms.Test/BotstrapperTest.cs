@@ -15,7 +15,7 @@ namespace AutoTest.WinForms.Test
         [SetUp]
         public void SetUp()
         {
-            Program.BootstrapApplication();
+            Program.bootstrapApplication();
             _locator = BootStrapper.Services;
         }
 
@@ -31,6 +31,13 @@ namespace AutoTest.WinForms.Test
         {
             var form = _locator.Locate<IInformationForm>();
             form.ShouldBeOfType<IInformationForm>();
+        }
+
+        [Test]
+        public void Should_register_directoy_picker_form()
+        {
+            var form = _locator.Locate<IWatchDirectoryPicker>();
+            form.ShouldBeOfType<IWatchDirectoryPicker>();
         }
     }
 }
