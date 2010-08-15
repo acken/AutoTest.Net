@@ -35,7 +35,8 @@ namespace AutoTest.Console
 
         public void Start()
         {
-            _watcher.Watch(_configuration.DirectoryToWatch);
+            throw new NotImplementedException("Need to implement new config style");
+            _watcher.Watch(_configuration.WatchDirectores[1]);
             System.Console.ReadLine();
             Stop();
         }

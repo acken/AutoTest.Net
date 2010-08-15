@@ -18,7 +18,7 @@ namespace AutoTest.WinForms.Test
         public void SetUp()
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _configuration.Stub(c => c.DirectoryToWatch).Return("First directory item");
+            _configuration.Stub(c => c.WatchDirectores).Return(new string[] {"First directory item", "Second directory item"});
             _form = new WatchDirectoryPickerFormExtendedForTests(_configuration);
         }
 
@@ -26,7 +26,8 @@ namespace AutoTest.WinForms.Test
         public void Should_list_directories_from_configuration()
         {
             var list = _form.GetListViewContent();
-            list[0].ShouldEqual("First directory item");;
+            list[0].ShouldEqual("First directory item");
+            list[1].ShouldEqual("Second directory item");
         }
     }
 }

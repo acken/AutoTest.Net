@@ -63,14 +63,14 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ApplicatonLauncher>());
         }
 
-        public void InitializeCache()
+        public void InitializeCache(string watchFolder)
         {
             var configuration = _services.Locate<IConfiguration>();
             var fsService = _services.Locate<IFileSystemService>();
             var cache = _services.Locate<ICache>();
 			var bus = _services.Locate<IMessageBus>();
             var cacheCrawler = new ProjectCrawler(cache, fsService, bus);
-            cacheCrawler.Crawl(configuration.DirectoryToWatch);
+            cacheCrawler.Crawl(watchFolder);
         }
 
         public void RegisterAssembly(Assembly assembly)

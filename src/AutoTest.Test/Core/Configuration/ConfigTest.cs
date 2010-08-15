@@ -26,7 +26,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_read_directory_to_watch()
         {
-            _config.DirectoryToWatch.ShouldEqual("TestResources");
+            _config.WatchDirectores[0].ShouldEqual("TestResources");
         }
 
         [Test]

@@ -34,9 +34,9 @@ namespace AutoTest.Core.Configuration
             Debug.InitialConfigurationFinished();
         }
 
-        public static void InitializeCache()
+        public static void InitializeCache(string watchFolder)
         {
-            _container.InitializeCache();
+            _container.InitializeCache(watchFolder);
             Debug.InitializedCache();
         }
 

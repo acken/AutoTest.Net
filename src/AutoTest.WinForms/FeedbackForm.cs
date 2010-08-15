@@ -23,7 +23,8 @@ namespace AutoTest.WinForms
     public partial class FeedbackForm : Form, IOverviewForm, IRunFeedbackView
     {
 		private const int GDI_SIZE_LIMIT = 3200;
-		
+
+        private string _directoryToWatch;
         private SynchronizationContext _syncContext;
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
@@ -51,7 +52,7 @@ namespace AutoTest.WinForms
             _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
             configuration.ValidateSettings();
-            _watcher.Watch(configuration.DirectoryToWatch);
+            _watcher.Watch(_directoryToWatch);
             readFormSpacing();
 			FeedbackForm_Resize(this, new EventArgs());
         }
@@ -73,6 +74,11 @@ namespace AutoTest.WinForms
         }
 
         #region IOverviewForm Members
+
+        public void SetWatchDirectory(string directory)
+        {
+            _directoryToWatch = directory;
+        }
 
         public Form Form
         {

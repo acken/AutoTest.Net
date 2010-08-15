@@ -20,7 +20,8 @@ namespace AutoTest.Console
             BootStrapper.Container
                 .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net));
             BootStrapper.RegisterAssembly(Assembly.GetExecutingAssembly());
-            BootStrapper.InitializeCache();
+            var configuration = BootStrapper.Services.Locate<IConfiguration>();
+            BootStrapper.InitializeCache(configuration.WatchDirectores[0]);
             var application = BootStrapper.Services.Locate<IConsoleApplication>();
             application.Start();
             BootStrapper.ShutDown();

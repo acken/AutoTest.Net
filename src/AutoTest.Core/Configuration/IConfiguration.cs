@@ -8,7 +8,7 @@ namespace AutoTest.Core.Configuration
 {
     public interface IConfiguration
     {
-        string DirectoryToWatch { get; }
+        string[] WatchDirectores { get; }
         string BuildExecutable(ProjectDocument project);
         string NunitTestRunner(string version);
         string MSTestRunner(string version);

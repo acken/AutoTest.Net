@@ -37,7 +37,10 @@ namespace AutoTest.Core.FileSystem
         public void Watch(string path)
         {
             if (!Directory.Exists(path))
+            {
+                _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
+            }
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;

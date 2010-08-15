@@ -16,7 +16,8 @@ namespace AutoTest.Test.Core.Configuration
         {
             var container = new DIContainer();
             container.Configure();
-            container.InitializeCache();
+            var configuration = container.Services.Locate<IConfiguration>();
+            container.InitializeCache(configuration.WatchDirectores[0]);
             var cache = container.Services.Locate<ICache>();
             cache.Count.ShouldEqual(4);
         }

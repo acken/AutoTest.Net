@@ -13,7 +13,7 @@ namespace AutoTest.Core.Configuration
     {
         private IMessageBus _bus;
 
-        private string _directoryToWatch;
+        private string[] _watchDirectories;
         private List<KeyValuePair<string, string>> _buildExecutables;
         private List<KeyValuePair<string, string>> _nunitTestRunners;
         private List<KeyValuePair<string, string>> _msTestRunner;
@@ -32,7 +32,7 @@ namespace AutoTest.Core.Configuration
         {
             try
             {
-                _directoryToWatch = core.DirectoryToWatch;
+                _watchDirectories = core.WatchDirectories.ToArray();
                 _buildExecutables = core.BuildExecutables;
                 _nunitTestRunners = core.NUnitTestRunner;
                 _msTestRunner = core.MSTestRunner;
@@ -62,8 +62,6 @@ namespace AutoTest.Core.Configuration
 
         public void ValidateSettings()
         {
-            if (!Directory.Exists(_directoryToWatch))
-                _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory {0}{1}Change the watch directory in the configuration file to a valid directory.", _directoryToWatch, Environment.NewLine)));
             if (noneExists(_buildExecutables))
                 _bus.Publish(new WarningMessage("Invalid build executable specified in the configuration file. Builds will not be run."));
             if (noneExists(_nunitTestRunners))
@@ -89,10 +87,10 @@ namespace AutoTest.Core.Configuration
             return true;
         }
 
-        public string DirectoryToWatch
+        public string[] WatchDirectores
         {
-            get { return _directoryToWatch; }
-            set { _directoryToWatch = value; }
+            get { return _watchDirectories; }
+            set { _watchDirectories = value; }
         }
 
         public string NunitTestRunner(string version)

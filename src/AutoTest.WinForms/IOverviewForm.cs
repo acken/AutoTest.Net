@@ -8,6 +8,7 @@ namespace AutoTest.WinForms
 {
     public interface IOverviewForm
     {
+        void SetWatchDirectory(string directory);
         Form Form { get; }
     }
 }

@@ -27,9 +27,8 @@ namespace AutoTest.WinForms
 
         private void addWatchDirectoriesFromConfiguration()
         {
-            if (_configuration.DirectoryToWatch == null)
-                return;
-            listViewDirectories.Items.Add(_configuration.DirectoryToWatch);
+            foreach (var directory in _configuration.WatchDirectores)
+                listViewDirectories.Items.Add(directory);
         }
 
         private void buttonBrowse_Click(object sender, EventArgs e)

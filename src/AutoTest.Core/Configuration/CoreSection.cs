@@ -21,8 +21,8 @@ namespace AutoTest.Core.Configuration
     class CoreSection
     {
         private XmlDocument _xml = new XmlDocument();
-
-        public string DirectoryToWatch { get; private set; }
+        
+        public List<string> WatchDirectories { get; private set; }
         public List<KeyValuePair<string, string>> BuildExecutables { get; private set; }
         public List<KeyValuePair<string, string>> NUnitTestRunner { get; private set; }
         public List<KeyValuePair<string, string>> MSTestRunner { get; private set; }
@@ -30,10 +30,15 @@ namespace AutoTest.Core.Configuration
         public CodeEditor CodeEditor { get; private set; }
         public bool DebuggingEnabled { get; private set; }
 
+        public CoreSection()
+        {
+            WatchDirectories = new List<string>();
+        }
+
         public void Read(string configFile)
         {
             _xml.Load(configFile);
-            DirectoryToWatch = getValue("configuration/DirectoryToWatch", "");
+            WatchDirectories.AddRange(getValues("configuration/DirectoryToWatch"));
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
             MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
@@ -80,6 +85,15 @@ namespace AutoTest.Core.Configuration
             if (node == null)
                 return defaultValue;
             return node.InnerText;
+        }
+
+        private string[] getValues(string nodeName)
+        {
+            var values = new List<string>();
+            var nodes = _xml.SelectNodes(nodeName);
+            foreach (XmlNode node in nodes)
+                values.Add(node.InnerText);
+            return values.ToArray();
         }
     }
 }

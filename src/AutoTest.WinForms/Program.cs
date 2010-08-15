@@ -17,18 +17,20 @@ namespace AutoTest.WinForms
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            tryStartApplication();
+            tryStartApplication(args);
         }
 
-        private static void  tryStartApplication()
+        private static void  tryStartApplication(string[] args)
 		{
 			try
 			{
-			    if (!ConfigureApplication())
+                string directoryToWatch = getPossibleCommandArgs(args);
+                if ((directoryToWatch = ConfigureApplication(directoryToWatch)) == null)
                     return;
         	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
+                overviewForm.SetWatchDirectory(directoryToWatch);
 			    notifyOnLoggingSetup();
         	    Application.Run(overviewForm.Form);
         	    BootStrapper.ShutDown();
@@ -38,6 +40,15 @@ namespace AutoTest.WinForms
 				logException(exception);
 			}
 		}
+
+        private static string getPossibleCommandArgs(string[] args)
+        {
+            if (args == null)
+                return null;
+            if (args.Length != 1)
+                return null;
+            return args[0];
+        }
 
 		private static void logException (Exception exception)
 		{
@@ -60,17 +71,20 @@ namespace AutoTest.WinForms
 				writeException(writer, exception.InnerException);
 			}
 		}
-			                 
-        private static bool ConfigureApplication()
+
+        private static string ConfigureApplication(string watchDirectory)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             bootstrapApplication();
-            var watchDirectory = getWatchDirectory();
-            if (watchDirectory ==  null)
-                return false;
-            BootStrapper.InitializeCache();
-            return true;
+            if (watchDirectory == null)
+            {
+                watchDirectory = getWatchDirectory();
+                if (watchDirectory == null)
+                    return null;
+            }
+            BootStrapper.InitializeCache(watchDirectory);
+            return watchDirectory;
         }
 
         private static string getWatchDirectory()
