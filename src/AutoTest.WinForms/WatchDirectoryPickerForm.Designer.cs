@@ -1,4 +1,4 @@
-﻿namespace AutoTest.WinForms
+namespace AutoTest.WinForms
 {
     partial class WatchDirectoryPickerForm
     {
@@ -46,6 +46,7 @@
             this.listViewDirectories.TabIndex = 0;
             this.listViewDirectories.UseCompatibleStateImageBehavior = false;
             this.listViewDirectories.View = System.Windows.Forms.View.Details;
+			this.listViewDirectories.FullRowSelect = true;
             this.listViewDirectories.SelectedIndexChanged += new System.EventHandler(this.listViewDirectories_SelectedIndexChanged);
             // 
             // columnDirectory
