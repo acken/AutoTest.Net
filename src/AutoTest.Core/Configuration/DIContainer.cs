@@ -65,7 +65,6 @@ namespace AutoTest.Core.Configuration
 
         public void InitializeCache(string watchFolder)
         {
-            var configuration = _services.Locate<IConfiguration>();
             var fsService = _services.Locate<IFileSystemService>();
             var cache = _services.Locate<ICache>();
 			var bus = _services.Locate<IMessageBus>();
