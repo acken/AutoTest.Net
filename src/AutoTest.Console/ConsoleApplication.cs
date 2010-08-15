@@ -33,10 +33,9 @@ namespace AutoTest.Console
             configuration.ValidateSettings();
         }
 
-        public void Start()
+        public void Start(string directory)
         {
-            throw new NotImplementedException("Need to implement new config style");
-            _watcher.Watch(_configuration.WatchDirectores[1]);
+            _watcher.Watch(directory);
             System.Console.ReadLine();
             Stop();
         }

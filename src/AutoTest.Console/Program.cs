@@ -21,10 +21,62 @@ namespace AutoTest.Console
                 .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net));
             BootStrapper.RegisterAssembly(Assembly.GetExecutingAssembly());
             var configuration = BootStrapper.Services.Locate<IConfiguration>();
-            BootStrapper.InitializeCache(configuration.WatchDirectores[0]);
+            var directory = getWatchDirectory(args);
+            BootStrapper.InitializeCache(directory);
             var application = BootStrapper.Services.Locate<IConsoleApplication>();
-            application.Start();
+            application.Start(directory);
             BootStrapper.ShutDown();
+        }
+
+        private static string getWatchDirectory(string[] args)
+        {
+            string directory;
+            if ((directory = getPossibleCommandArgs(args)) != null)
+                return directory;
+            if ((directory = pickFromConfiguration()) != null)
+                return directory;
+            return "";
+        }
+
+        private static string pickFromConfiguration()
+        {
+            var configuration = BootStrapper.Services.Locate<IConfiguration>();
+            if (configuration.WatchDirectores.Length == 0)
+                return null;
+            _logger.Info("Pick a directory to watch. Type the number of your choice");
+            for (int i = 0; i < configuration.WatchDirectores.Length; i++)
+                _logger.InfoFormat("1. {0}", configuration.WatchDirectores[i]);
+            return pickDirectory(configuration);
+        }
+
+        private static string pickDirectory(IConfiguration configuration)
+        {
+            var numberOfDirectories = configuration.WatchDirectores.Length;
+            var directory = "";
+            while (true)
+            {
+                int number;
+                var numberString = System.Console.ReadLine();
+                if (int.TryParse(numberString, out number))
+                {
+                    if (number > 0 && number <= numberOfDirectories)
+                    {
+                        directory = configuration.WatchDirectores[number-1];
+                        break;
+                    }
+                }
+                _logger.Info("Invalid number");
+            }
+            return directory;
+        }
+
+        private static string getPossibleCommandArgs(string[] args)
+        {
+            if (args == null)
+                return null;
+            if (args.Length != 1)
+                return null;
+            return args[0];
         }
     }
 }

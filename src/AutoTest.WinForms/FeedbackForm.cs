@@ -52,7 +52,6 @@ namespace AutoTest.WinForms
             _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
             configuration.ValidateSettings();
-            _watcher.Watch(_directoryToWatch);
             readFormSpacing();
 			FeedbackForm_Resize(this, new EventArgs());
         }
@@ -78,6 +77,7 @@ namespace AutoTest.WinForms
         public void SetWatchDirectory(string directory)
         {
             _directoryToWatch = directory;
+            _watcher.Watch(_directoryToWatch);
         }
 
         public Form Form

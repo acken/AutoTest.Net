@@ -2,6 +2,6 @@ namespace AutoTest.Console
 {
     public interface IConsoleApplication
     {
-        void Start();
+        void Start(string directory);
     }
 }
