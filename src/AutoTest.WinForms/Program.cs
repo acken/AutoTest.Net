@@ -26,6 +26,8 @@ namespace AutoTest.WinForms
 		{
 			try
 			{
+				if (userWantedCommandLineHelpPrinted(args))
+					return;
                 string directoryToWatch = getPossibleCommandArgs(args);
                 if ((directoryToWatch = ConfigureApplication(directoryToWatch)) == null)
                     return;
@@ -39,6 +41,24 @@ namespace AutoTest.WinForms
 			{
 				logException(exception);
 			}
+		}
+
+		private static bool userWantedCommandLineHelpPrinted(string[] args)
+		{
+			if (args.Length != 1)
+				return false;
+			if (args[0] != "--help" && args[0] != "-help" && args[0] != "/help")
+				return false;
+			writeConsoleUsage();
+			return true;
+		}
+		
+		private static void writeConsoleUsage()
+		{
+			Console.WriteLine("AutoTest.WinForms.exe command line arguments");
+			Console.WriteLine("");
+			Console.WriteLine("To specify watch directory on startup you can type:");
+			Console.WriteLine("\tAutoTest.WinForms.exe \"Path to the directory you want\"");
 		}
 
         private static string getPossibleCommandArgs(string[] args)

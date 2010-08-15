@@ -136,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

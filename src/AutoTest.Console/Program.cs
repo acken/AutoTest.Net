@@ -16,6 +16,8 @@ namespace AutoTest.Console
         private static void Main(string[] args)
         {
             _logger.Info("Starting up AutoTester");
+			if (userWantedCommandLineHelpPrinted(args))
+				return;
             BootStrapper.Configure();
             BootStrapper.Container
                 .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net));
@@ -26,6 +28,24 @@ namespace AutoTest.Console
             application.Start(directory);
             BootStrapper.ShutDown();
         }
+		
+		private static bool userWantedCommandLineHelpPrinted(string[] args)
+		{
+			if (args.Length != 1)
+				return false;
+			if (args[0] != "--help" && args[0] != "-help" && args[0] != "/help")
+				return false;
+			writeConsoleUsage();
+			return true;
+		}
+		
+		private static void writeConsoleUsage()
+		{
+			_logger.Info("AutoTest.WinForms.exe command line arguments");
+			_logger.Info("");
+			_logger.Info("To specify watch directory on startup you can type:");
+			_logger.Info("\tAutoTest.WinForms.exe \"Path to the directory you want\"");
+		}
 
         private static string getWatchDirectory(string[] args)
         {
