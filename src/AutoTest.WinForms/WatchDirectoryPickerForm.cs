@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -29,6 +29,8 @@ namespace AutoTest.WinForms
         {
             foreach (var directory in _configuration.WatchDirectores)
                 listViewDirectories.Items.Add(directory);
+			if (listViewDirectories.Items.Count > 0)
+				listViewDirectories.Items[0].Selected = true;
         }
 
         private void buttonBrowse_Click(object sender, EventArgs e)
