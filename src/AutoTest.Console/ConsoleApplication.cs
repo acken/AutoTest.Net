@@ -11,7 +11,6 @@ namespace AutoTest.Console
     public class ConsoleApplication : IConsoleApplication, IInformationFeedbackView, IRunFeedbackView
     {
         private readonly IDirectoryWatcher _watcher;
-        private readonly IConfiguration _configuration;
         private readonly IInformationFeedbackPresenter _informationFeedback;
         private readonly IRunFeedbackPresenter _runFeedback;
         private ILogger _logger;
@@ -25,7 +24,6 @@ namespace AutoTest.Console
         public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration)
         {
             _watcher = watcher;
-            _configuration = configuration;
             _informationFeedback = informationFeedback;
             _informationFeedback.View = this;
             _runFeedback = runFeedbackPresenter;
