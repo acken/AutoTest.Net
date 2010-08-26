@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using EnvDTE;
 using System.IO;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.VSAddin
 {
@@ -44,15 +45,29 @@ namespace AutoTest.VSAddin
 
         private void onSolutionOpened()
         {
-            if (!File.Exists(_applicationObject.Solution.FullName))
-                return;
-            WatchFolder = Path.GetDirectoryName(_applicationObject.Solution.FullName);
-            bootStrapAutoTest(WatchFolder);
+            try
+            {
+                if (!File.Exists(_applicationObject.Solution.FullName))
+                    return;
+                WatchFolder = Path.GetDirectoryName(_applicationObject.Solution.FullName);
+                bootStrapAutoTest(WatchFolder);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteException(ex);
+            }
         }
 
         private void onSolutionClosingFinished()
         {
-            terminateAutoTest();
+            try
+            {
+                terminateAutoTest();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteException(ex);
+            }
         }
     }
 }
