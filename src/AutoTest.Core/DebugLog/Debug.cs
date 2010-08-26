@@ -192,6 +192,17 @@ namespace AutoTest.Core.DebugLog
         public static void FailedToConfigure(Exception ex)
         {
             write("Failed to configure application");
+            writeException(ex);
+        }
+
+        public static void WriteException(Exception ex)
+        {
+            if (_isDisabled) return;
+            writeException(ex);
+        }
+
+        private static void writeException(Exception ex)
+        {
             write(string.Format("{1}{0}{2}", Environment.NewLine, ex.Message, ex.StackTrace));
         }
     }
