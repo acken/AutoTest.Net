@@ -195,6 +195,12 @@ namespace AutoTest.Core.DebugLog
             writeException(ex);
         }
 
+        public static void WriteMessage(string message)
+        {
+            if (_isDisabled) return;
+            write(message);
+        }
+
         public static void WriteException(Exception ex)
         {
             if (_isDisabled) return;
