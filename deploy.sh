@@ -4,6 +4,7 @@
 BINARYDIR="./build_output/AutoTest.NET"
 DEPLOYDIR="./ReleaseBinaries"
 CASTLEDIR="./lib/Castle.Windsor"
+VSADDINDIR="./addins/VisualStudio/FilesToDeploy"
 
 if [ ! -d $DEPLOYDIR ]; then
 {
@@ -34,3 +35,6 @@ cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 
 cp $BINARYDIR/log4net.dll $DEPLOYDIR/log4net.dll
 cp $CASTLEDIR/log4net.license.txt $DEPLOYDIR/log4net.license.txt
+
+cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
+cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
