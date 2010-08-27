@@ -9,18 +9,6 @@ using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.VSAddin
 {
-    public class StringArgs : EventArgs
-    {
-        public string File { get; private set; }
-        public int LineNumber { get; private set; }
-
-        public StringArgs(string file, int lineNumber)
-        {
-            File = file;
-            LineNumber = lineNumber;
-        }
-    }
-
     public partial class FeedbackItemWindow : Form
     {
         public event EventHandler<StringArgs> LinkClicked;
@@ -67,6 +55,18 @@ namespace AutoTest.VSAddin
                 return 0;
             start += ":line".Length;
             return int.Parse(link.Substring(start, link.Length - start));
+        }
+    }
+
+    public class StringArgs : EventArgs
+    {
+        public string File { get; private set; }
+        public int LineNumber { get; private set; }
+
+        public StringArgs(string file, int lineNumber)
+        {
+            File = file;
+            LineNumber = lineNumber;
         }
     }
 }

@@ -34,11 +34,11 @@
             // linkLabel
             // 
             this.linkLabel.AutoSize = true;
-            this.linkLabel.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.linkLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.linkLabel.Location = new System.Drawing.Point(5, 5);
+            this.linkLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.linkLabel.Location = new System.Drawing.Point(10, 10);
+            this.linkLabel.MaximumSize = new System.Drawing.Size(1000, 0);
             this.linkLabel.Name = "linkLabel";
-            this.linkLabel.Size = new System.Drawing.Size(51, 15);
+            this.linkLabel.Size = new System.Drawing.Size(49, 13);
             this.linkLabel.TabIndex = 0;
             this.linkLabel.TabStop = true;
             this.linkLabel.Text = "linkLabel";
@@ -48,7 +48,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(455, 310);
+            this.ClientSize = new System.Drawing.Size(744, 201);
             this.Controls.Add(this.linkLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FeedbackItemWindow";
