@@ -1,6 +1,12 @@
 Copy AutoTest.VSAddin.AddIn to you Visual Studio user directory. Something like C:\Users\You\Documents\Visual Studio 20XX\Addins
 Open the newly copied AutoTest.VSAddin.AddIn file and make the Assembly element point to where you unziped AutoTest.NET
 Open a visual studio command prompt and go to the folder containing the unzipped AutoTest.Net and write
-	regasm.exe AutoTest.VSAddin.dll
+	regasm.exe /CodeBase AutoTest.VSAddin.dll
 	regasm.exe /tbl AutoTest.Core.dll
 Start visual studio and make sure that the AutoTest.NET addin in enabled in Tools->Add-in Manager
+
+Now you should be ready to go. Open a solution, click Tools->AutoTest.NET and the feedback window should show up.
+
+Quick usage
+	Double click on a line in the feedback window will go to line in file
+	Rigth clicking on a line in the feedback window will open detailed info
