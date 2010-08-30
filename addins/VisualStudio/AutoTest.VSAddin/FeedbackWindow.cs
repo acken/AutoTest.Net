@@ -120,7 +120,7 @@ namespace AutoTest.VSAddin
                 return;
             if (listViewFeedback.SelectedItems.Count != 1)
                 return;
-            _viewHandler.ShowMessageInfo((IItem)listViewFeedback.SelectedItems[0].Tag);
+            _viewHandler.ShowMessageInfo((IItem)listViewFeedback.SelectedItems[0].Tag, Cursor.Position);
         }
     }
 }

@@ -11,11 +11,13 @@ namespace AutoTest.VSAddin
 {
     public partial class FeedbackItemWindow : Form
     {
+        public bool HasBeenInitialized { get; private set; }
         public event EventHandler<StringArgs> LinkClicked;
 
         public FeedbackItemWindow()
         {
             InitializeComponent();
+            HasBeenInitialized = false;
         }
 
         public void SetText(string text, string caption)
@@ -29,6 +31,16 @@ namespace AutoTest.VSAddin
                 linkLabel.Links.Add(link.Start, link.Length);
             Height = linkLabel.Height + (linkLabel.Top * 2) + 28;
             Width = linkLabel.Width + (linkLabel.Left * 2) + 8;
+        }
+
+        public void BringToFront(Point position)
+        {
+            Visible = true;
+            Show();
+            if (!HasBeenInitialized)
+                Location = position;
+            Activate();
+            HasBeenInitialized = true;
         }
 
         private void FeedbackItemWindow_FormClosing(object sender, FormClosingEventArgs e)
