@@ -38,3 +38,4 @@ cp $CASTLEDIR/log4net.license.txt $DEPLOYDIR/log4net.license.txt
 
 cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
 cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
+cp $VSADDINDIR/How_to_install_VS_addin.txt $DEPLOYDIR/How_to_install_VS_addin.txt

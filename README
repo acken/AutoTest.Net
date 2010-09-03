@@ -1,7 +1,9 @@
 AutoTest.Net
 
 This product provides automatic builds and testruns through detecting
-file changes. It contains a winforms and a console app.
+file changes. It contains a winforms app, a console app and a 
+Visual Studio plugin. To install the plugin take a look at the
+How_to_install_VS_addin.txt file
 
 Features
 	* Automatic build and testrun through file change detection
@@ -17,7 +19,8 @@ Features
 
 Geting started
 To get started using this application edit AutoTest.config to suite your system.
-When done start either the winforms app or the console app. In the winforms
-application the little button in the top right corner will display some nice to
-know messages now and then. When set up just edit a file within the watched folder
-and save it. AutoTest.Net will detect any changes and start builds and run tests.
+When done start either the winforms app, the console app or the plugin (after you
+have installed it). In the winforms application the little button in the top right
+corner will display some nice to know messages now and then. When set up just edit
+a file within the watched folderand save it. AutoTest.Net will detect any changes
+and start builds and run tests.
