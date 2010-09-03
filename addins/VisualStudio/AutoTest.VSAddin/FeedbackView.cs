@@ -9,6 +9,7 @@ using System.IO;
 using AutoTest.Core.Caching.RunResultCache;
 using EnvDTE80;
 using EnvDTE;
+using System.Drawing;
 
 namespace AutoTest.VSAddin
 {
@@ -95,25 +96,16 @@ namespace AutoTest.VSAddin
                 _infoWindow.Show();
         }
 
-        public void ShowMessageInfo(IItem item)
+        public void ShowMessageInfo(IItem item, Point mousePosition)
         {
-            showBuildMessage(item.ToString());
+            showBuildMessage(item.ToString(), mousePosition);
         }
 
-        private void showBuildMessage(string text)
+        private void showBuildMessage(string text, Point mousePosition)
         {
-            
             _itemInfoWindow.SetText(text, "Detailed run message information");
-            if (_itemInfoWindow.Visible == false)
-            {
-                _itemInfoWindow.Visible = true;
-                _itemInfoWindow.Activate();
-            }
-            else
-            {
-                _itemInfoWindow.Show();
-                _itemInfoWindow.Activate();
-            }
+            mousePosition.Y -= _itemInfoWindow.Height;
+            _itemInfoWindow.BringToFront(mousePosition);
         }
 
         void _itemInfoWindow_LinkClicked(object sender, StringArgs link)
