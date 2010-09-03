@@ -1,3 +1,4 @@
+(View in WordPad or similar on windows since the file uses Unix line endings)
 HOW TO INSTALL THE VISUAL STUDIO ADDIN
 
 Copy AutoTest.VSAddin.AddIn to you Visual Studio user directory. Something like C:\Users\You\Documents\Visual Studio 20XX\Addins
