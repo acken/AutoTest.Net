@@ -47,6 +47,7 @@ done - Choose watch path on startup or as parameter
 Implement support for VS2005 7.10.3077 and VS2003 project files
 Add MbUnit support
 Remove Product version from deployed xml (ProductVersion is flawed)
+Fix bug in console app (won't launch)
 ======== Beta ========
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
