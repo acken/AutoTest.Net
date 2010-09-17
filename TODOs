@@ -48,6 +48,8 @@ Implement support for VS2005 7.10.3077 and VS2003 project files
 Add MbUnit support
 Remove Product version from deployed xml (ProductVersion is flawed)
 Fix bug in console app (won't launch)
+Winforms dies on mono when getting tow sets compile errors and trying to select one of them
+When adding new folder on linux it doesn't detect changes in the files within it??
 ======== Beta ========
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
