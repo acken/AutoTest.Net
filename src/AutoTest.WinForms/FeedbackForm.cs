@@ -293,6 +293,10 @@ namespace AutoTest.WinForms
                 return;
             var item = (IItem) runFeedbackList.SelectedItems[0].Tag;
             item.HandleLink(linkLabelInfo.Text.Substring(e.Link.Start, e.Link.Length));
+			// If we do not set focus away from this linklabel on click
+			// mono will cause the app to die the next time we click the
+			// listview after a new run.
+			runFeedbackList.Focus();
         }
 
         private void buttonInformation_Click(object sender, EventArgs e)
