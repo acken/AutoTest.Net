@@ -15,12 +15,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestCore", "src\Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.WinForms.Test", "src\AutoTest.WinForms.Test\AutoTest.WinForms.Test.csproj", "{34B13716-6F2A-4894-B586-51956BB03F54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Console.Test", "src\AutoTest.Console.Test\AutoTest.Console.Test.csproj", "{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,9 +56,10 @@ Global
 		{C10F3D4F-EE5A-4F5F-96B4-E4D88DD719BF} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 		{D2BE27D7-36C9-4C0E-92A6-E2768666F430} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 		{34B13716-6F2A-4894-B586-51956BB03F54} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\AutoTest.WinForms\AutoTest.WinForms.csproj
+		StartupItem = src\AutoTest.Console\AutoTest.Console.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

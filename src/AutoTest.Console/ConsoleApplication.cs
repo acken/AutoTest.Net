@@ -15,14 +15,9 @@ namespace AutoTest.Console
         private readonly IRunFeedbackPresenter _runFeedback;
         private ILogger _logger;
 
-        public ILogger Logger
+        public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration, ILogger logger)
         {
-            get { if (_logger == null) _logger = NullLogger.Instance; return _logger; }
-            set { _logger = value; }
-        }
-
-        public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration)
-        {
+			_logger = logger;
             _watcher = watcher;
             _informationFeedback = informationFeedback;
             _informationFeedback.View = this;

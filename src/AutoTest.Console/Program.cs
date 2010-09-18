@@ -1,27 +1,20 @@
 using AutoTest.Core.Configuration;
 using System.Reflection;
 using Castle.Core.Logging;
-using log4net.Config;
-using log4net;
-using Castle.Facilities.Logging;
-
-[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace AutoTest.Console
 {
     internal class Program
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (Program));
+        private static ILogger _logger = null;
 
         private static void Main(string[] args)
         {
-            _logger.Info("Starting up AutoTester");
 			if (userWantedCommandLineHelpPrinted(args))
 				return;
-            BootStrapper.Configure();
-            BootStrapper.Container
-                .AddFacility("logging", new LoggingFacility(LoggerImplementation.Log4net));
-            BootStrapper.RegisterAssembly(Assembly.GetExecutingAssembly());
+			ConsoleConfiguration.Configure();
+			_logger = BootStrapper.Services.Locate<ILogger>();
+			_logger.Info("Starting up AutoTester");
             var directory = getWatchDirectory(args);
             BootStrapper.InitializeCache(directory);
             var application = BootStrapper.Services.Locate<IConsoleApplication>();
