@@ -57,7 +57,7 @@ namespace AutoTest.Console
                 return null;
             _logger.Info("Pick a directory to watch. Type the number of your choice");
             for (int i = 0; i < configuration.WatchDirectores.Length; i++)
-                _logger.InfoFormat("1. {0}", configuration.WatchDirectores[i]);
+                _logger.InfoFormat("{1}. {0}", configuration.WatchDirectores[i], i+1);
             return pickDirectory(configuration);
         }
 
