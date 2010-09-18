@@ -122,12 +122,12 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsPassed,
                         report.NumberOfTestsFailed,
                         report.NumberOfTestsIgnored);
-                    labelRunState.ForeColor =
-                        report.NumberOfBuildsFailed > 0 ||
-                        report.NumberOfTestsFailed > 0 ||
-                        report.NumberOfTestsIgnored > 0
-                            ? Color.Red
-                            : Color.Green;
+					if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
+						BackColor = Color.OrangeRed;
+					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored > 0)
+						BackColor = Color.Yellow;
+					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored == 0)
+						BackColor = Color.YellowGreen;
                     generateSummary(report);
                 },
                 message.Report);
