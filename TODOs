@@ -51,6 +51,8 @@ Add MbUnit support
 Build all first then run all tests in a single batch
 Remove Product version from deployed xml (ProductVersion is flawed)
 When adding new folder on linux it doesn't detect changes in the files within it??
+AutoTest.Config
+	State that watchdirectory is optional and that you can have multiple
 ======== Beta ========
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
