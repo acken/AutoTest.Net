@@ -53,6 +53,9 @@ Remove Product version from deployed xml (ProductVersion is flawed)
 When adding new folder on linux it doesn't detect changes in the files within it??
 AutoTest.Config
 	State that watchdirectory is optional and that you can have multiple
+Add custom ignore lists or even better what files is contained in what project
+"nunit-console myassembly.dll /exclude:bleh" (excludes the category bleh) put categories in config
+Maybe also include exception folder names and file names in the config
 ======== Beta ========
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
