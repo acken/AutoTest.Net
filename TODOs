@@ -62,7 +62,6 @@ Add test to ProjectChangeConsumer
 Add system tests doing real work
 Implement service locator properly (blog post)
 Use a panel to make the link label scrolleable
-Fix deployment.bat
 Cleanup files in repo
 Create vs addin to open file on right line
 Move from WinForm to Gtk#

@@ -59,7 +59,7 @@ Global
 		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\AutoTest.Console\AutoTest.Console.csproj
+		StartupItem = src\AutoTest.WinForms\AutoTest.WinForms.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

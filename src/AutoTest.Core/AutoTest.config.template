@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-	<!-- Directory to watch -->
+	<!-- Directory to watch (Optional) -->
+	<!-- You can have zero or multiple watch directories specified in the config file. -->
+	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
+	<!-- or you can choose to pass a directory when executing the application. -->
 	<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>
 	
 	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
