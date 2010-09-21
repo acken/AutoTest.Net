@@ -33,5 +33,4 @@ cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 
 cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
 cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
-cp $VSADDINDIR/How_to_manually_install_VS_addin.txt $DEPLOYDIR/How_to_manually_install_VS_addin.txt
 cp $VSADDINDIR/Install_Visual_Studio_Addin.bat $DEPLOYDIR/Install_Visual_Studio_Addin.bat
