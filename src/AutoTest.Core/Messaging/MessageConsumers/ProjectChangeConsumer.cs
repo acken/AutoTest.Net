@@ -52,11 +52,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             // Other test projects
             var runReport = new RunReport();
             var list = _listGenerator.Generate(getListOfChangedProjects(message));
-            foreach (var file in list)
-            {
-                if (!buildAndRunTests(_cache.Get<Project>(file), runReport))
-                    break;
-            }
+            if (!buildAll(list, runReport))
+				return runReport;
+			testAll(list, runReport);
             return runReport;
         }
 
@@ -67,8 +65,28 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 projects.Add(file.FullName);
             return projects.ToArray();
         }
+		
+		private bool buildAll(string[] projectList, RunReport runReport)
+		{
+			foreach (var file in projectList)
+            {
+                if (!build(_cache.Get<Project>(file), runReport))
+                    return false;
+            }
+			return true;
+		}
+		
+		private void testAll(string[] projectList, RunReport runReport)
+		{
+			foreach (var file in projectList)
+            {
+				var project = _cache.Get<Project>(file);
+				if (project.Value.ContainsTests)
+                	runTests(project, runReport);
+			}
+		}
 
-        private bool buildAndRunTests(Project project, RunReport runReport)
+        private bool build(Project project, RunReport runReport)
         {
             if (File.Exists(_configuration.BuildExecutable(project.Value)))
             {
@@ -80,9 +98,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (!buildProject(project, runReport))
                     return false;
             }
-
-            if (project.Value.ContainsTests)
-                runTests(project, runReport);
 
             return true;
         }
