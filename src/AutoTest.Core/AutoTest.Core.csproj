@@ -152,6 +152,7 @@
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
     <Compile Include="FileSystem\PathParsing.cs" />
+    <Compile Include="Messaging\MessageConsumers\TestRunInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
