@@ -4,7 +4,9 @@ using AutoTest.Core.Configuration;
 using Castle.Core.Logging;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Messaging;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace AutoTest.Console
 {
@@ -62,7 +64,7 @@ namespace AutoTest.Console
             {
                 if (buildReport.ErrorCount > 0)
                 {
-                    _logger.InfoFormat(
+                    string.Format(
                         "Building {0} finished with {1} errors and  {2} warningns",
                         Path.GetFileName(project),
                         buildReport.ErrorCount,
@@ -102,13 +104,15 @@ namespace AutoTest.Console
         public void RecievingRunStartedMessage(RunStartedMessage message)
         {
             _logger.Info("");
-            _logger.Info("Preparing build(s) and test run(s)");
+			var shitbird = "Preparing build(s) and test run(s)";
+            _logger.Info(shitbird);
+			RunNotification(shitbird, null);
         }
 
         public void RecievingRunFinishedMessage(RunFinishedMessage message)
         {
             var report = message.Report;
-            _logger.InfoFormat(
+            var shitbird = string.Format(
                 "Ran {0} build(s) ({1} succeeded, {2} failed) and {3} test(s) ({4} passed, {5} failed, {6} ignored)",
                 report.NumberOfProjectsBuilt,
                 report.NumberOfBuildsSucceeded,
@@ -117,7 +121,26 @@ namespace AutoTest.Console
                 report.NumberOfTestsPassed,
                 report.NumberOfTestsFailed,
                 report.NumberOfTestsIgnored);
+				_logger.Info(shitbird);
+				RunNotification(shitbird, report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0);
         }
+	 
+		private void RunNotification(string msg, bool? isFail) {
+			var bleh = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
+			string icon = bleh;
+			if(isFail.HasValue) {
+				if((bool)isFail) {
+					icon += "/Icons/circleFAIL.png";
+				} else {
+					icon += "/Icons/circleWIN.png";
+				}
+			}
+			string args = "--icon=\"" + icon + "\" \"" + msg + "\"";
+			_logger.Info(args);
+			var process = new Process();
+            process.StartInfo = new ProcessStartInfo("notify-send", args);
+            process.Start(); 
+		}
 
         public void RevievingErrorMessage(ErrorMessage message)
         {

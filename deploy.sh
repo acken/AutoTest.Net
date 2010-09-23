@@ -5,16 +5,20 @@ BINARYDIR="./build_output/AutoTest.NET"
 DEPLOYDIR="./ReleaseBinaries"
 CASTLEDIR="./lib/Castle.Windsor"
 VSADDINDIR="./addins/VisualStudio/FilesToDeploy"
+RESOURCES="./src/Resources"
 
 if [ ! -d $DEPLOYDIR ]; then
 {
 	mkdir $DEPLOYDIR
+	mkdir $DEPLOYDIR/Icons
 }
 else
 {
-	rm $DEPLOYDIR/*
+	rm -rf $DEPLOYDIR/*
+	mkdir $DEPLOYDIR/Icons
 }
 fi
+
 
 cp $BINARYDIR/AutoTest.Core.dll $DEPLOYDIR/AutoTest.Core.dll
 cp $BINARYDIR/AutoTest.Console.exe $DEPLOYDIR/AutoTest.Console.exe
@@ -34,3 +38,6 @@ cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
 cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
 cp $VSADDINDIR/Install_Visual_Studio_Addin.bat $DEPLOYDIR/Install_Visual_Studio_Addin.bat
+
+
+cp ./$RESOURCES/* $DEPLOYDIR/Icons
