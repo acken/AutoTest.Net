@@ -59,6 +59,7 @@ namespace AutoTest.Core.Notifiers
             process.StartInfo = new ProcessStartInfo(_growl_executable, args);
             process.StartInfo.CreateNoWindow = true;
             process.Start();
+			process.WaitForExit();
         }
     }
 }

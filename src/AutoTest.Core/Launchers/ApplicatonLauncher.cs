@@ -26,6 +26,7 @@ namespace AutoTest.Core.Launchers
             process.StartInfo = new ProcessStartInfo(executable, arguments);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
+			process.WaitForExit();
         }
     }
 }
