@@ -34,6 +34,8 @@ namespace AutoTest.Core.Notifiers
                 _growl_executable = @"C:\Program Files\Growl for Windows\growlnotify.exe";
             else if (File.Exists(@"C:\Program Files (x86)\Growl for Windows\growlnotify.exe"))
                 _growl_executable = @"C:\Program Files (x86)\Growl for Windows\growlnotify.exe";
+			else if (File.Exists("/usr/local/bin/growlnotify"))
+				_growl_executable = "/usr/local/bin/growlnotify";
         }
 
         private void runNotification(string msg, NotificationType type)
@@ -54,7 +56,11 @@ namespace AutoTest.Core.Notifiers
                     icon += "/Icons/circleFAIL.png";
                     break;
             }
-            string args = string.Format("/t:\"AutoTest.NET\" /i:\"{0}\" \"{1}\"", icon, msg);
+			string args;
+			if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+				args = string.Format("--image \"{0}\" --title \"AutoTest.NET\" --message \"{1}\"", icon, msg);
+			else
+            	args = string.Format("/t:\"AutoTest.NET\" /i:\"{0}\" \"{1}\"", icon, msg);
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(_growl_executable, args);
             process.StartInfo.CreateNoWindow = true;
