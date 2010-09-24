@@ -14,17 +14,24 @@ namespace AutoTest.Core.Notifiers
 		
 		public bool IsSupported()
 		{
-			var process = new Process();
-			process.StartInfo = new ProcessStartInfo("locate", "notify-send");
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.CreateNoWindow = true;
-			process.Start();
-			var output = process.StandardOutput.ReadToEnd();
-			var lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-			if (lines.Length == 0)
+			try
+			{
+				var process = new Process();
+				process.StartInfo = new ProcessStartInfo("locate", "notify-send");
+				process.StartInfo.RedirectStandardOutput = true;
+				process.StartInfo.UseShellExecute = false;
+				process.StartInfo.CreateNoWindow = true;
+				process.Start();
+				var output = process.StandardOutput.ReadToEnd();
+				var lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+				if (lines.Length == 0)
+					return false;
+				return File.Exists(lines[0]);
+			}
+			catch
+			{
 				return false;
-			return File.Exists(lines[0]);
+			}
 		}
 		#endregion
 		
@@ -42,7 +49,7 @@ namespace AutoTest.Core.Notifiers
 					icon += "/Icons/circleFAIL.png";
 					break;
 			}
-			string args = "--icon=\"" + icon + "\" \"" + msg + "\"";
+			string args = "\"AutoTest.NET\" \"" + msg + "\" --icon=\"" + icon + "\"";
 			var process = new Process();
             process.StartInfo = new ProcessStartInfo("notify-send", args);
 			process.StartInfo.CreateNoWindow = true;

@@ -206,11 +206,11 @@ namespace AutoTest.Test.Core.Configuration
 		public void Should_register_notify_send_notifier_if_available()
 		{
 			var isSupported = (new notify_sendNotifier()).IsSupported();
-			var notifier = _locator.Locate<ISendNotifications>("notify_send");
+			var notifier = _locator.Locate<ISendNotifications>();
 			if (isSupported)
-				notifier.ShouldNotBeNull();
+				notifier.ShouldBeOfType<notify_sendNotifier>();
 			else
-				notifier.ShouldBeNull();
+				notifier.ShouldNotBeOfType<notify_sendNotifier>();
 		}
 		
 		[Test]

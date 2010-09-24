@@ -64,7 +64,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			if ((new notify_sendNotifier()).IsSupported())
-				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>().Named("notify_send"));
+				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
 			else
 				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
         }

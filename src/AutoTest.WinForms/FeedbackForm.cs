@@ -110,7 +110,7 @@ namespace AutoTest.WinForms
             labelRunState.Text = text;
             labelRunState.ForeColor = Color.Black;
         }
-
+		 
         public void  RecievingRunFinishedMessage(RunFinishedMessage message)
         {
             _syncContext.Post(
@@ -128,11 +128,11 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsIgnored);
                     labelRunState.Text = msg;
 					if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
-						BackColor = Color.OrangeRed;
+						labelRunState.ForeColor = Color.Red;
 					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored > 0)
-						BackColor = Color.Yellow;
+						labelRunState.ForeColor = Color.YellowGreen;
 					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored == 0)
-						BackColor = Color.YellowGreen;
+						labelRunState.ForeColor = Color.Green;
                     generateSummary(report);
 					runNotification(msg, report);
                 },
