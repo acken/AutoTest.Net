@@ -13,6 +13,7 @@ using AutoTest.Core.DebugLog;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.Caching.RunResultCache;
+using AutoTest.Core.Notifiers;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -193,5 +194,12 @@ namespace AutoTest.Test.Core.Configuration
             var cache = _locator.Locate<IRunResultCache>();
             cache.ShouldBeOfType<IRunResultCache>();
         }
+		
+		[Test]
+		public void Should_register_notifiers()
+		{
+			var notifier = _locator.Locate<ISendNotifications>();
+			notifier.ShouldBeOfType<ISendNotifications>();
+		}
     }
 }

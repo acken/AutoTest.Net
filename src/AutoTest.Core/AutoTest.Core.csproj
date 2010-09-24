@@ -152,6 +152,8 @@
     <Compile Include="TestRunners\TestRunResults.cs" />
     <Compile Include="TestRunners\TestStatus.cs" />
     <Compile Include="FileSystem\PathParsing.cs" />
+    <Compile Include="Notifiers\ISendNotifications.cs" />
+    <Compile Include="Notifiers\notify_sendNotifier.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -165,5 +167,8 @@
     <None Include="AutoTest.config.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Notifiers\" />
   </ItemGroup>
 </Project>

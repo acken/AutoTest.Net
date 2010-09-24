@@ -10,7 +10,7 @@ namespace AutoTest.Core.Messaging
     {
         public RunReport Report { get; private set; }
 
-        public RunFinishedMessage(RunReport report)
+        public RunFinishedMessage(RunReport report) 
         {
             Report = report;
         }

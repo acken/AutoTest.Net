@@ -7,6 +7,8 @@ using AutoTest.Core.Messaging;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using AutoTest.Core.Notifiers;
+using AutoTest.Core.Messaging.MessageConsumers;
 
 namespace AutoTest.Console
 {
@@ -16,10 +18,12 @@ namespace AutoTest.Console
         private readonly IInformationFeedbackPresenter _informationFeedback;
         private readonly IRunFeedbackPresenter _runFeedback;
         private ILogger _logger;
+		private readonly ISendNotifications _notifier;
 
-        public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration, ILogger logger)
+        public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration, ILogger logger, ISendNotifications notifier)
         {
 			_logger = logger;
+			_notifier = notifier;
             _watcher = watcher;
             _informationFeedback = informationFeedback;
             _informationFeedback.View = this;
@@ -104,15 +108,15 @@ namespace AutoTest.Console
         public void RecievingRunStartedMessage(RunStartedMessage message)
         {
             _logger.Info("");
-			var shitbird = "Preparing build(s) and test run(s)";
-            _logger.Info(shitbird);
-			RunNotification(shitbird, null);
+			var msg = "Preparing build(s) and test run(s)";
+            _logger.Info(msg);
+			runNotification(msg, null);
         }
 
         public void RecievingRunFinishedMessage(RunFinishedMessage message)
         {
             var report = message.Report;
-            var shitbird = string.Format(
+            var msg = string.Format(
                 "Ran {0} build(s) ({1} succeeded, {2} failed) and {3} test(s) ({4} passed, {5} failed, {6} ignored)",
                 report.NumberOfProjectsBuilt,
                 report.NumberOfBuildsSucceeded,
@@ -121,25 +125,24 @@ namespace AutoTest.Console
                 report.NumberOfTestsPassed,
                 report.NumberOfTestsFailed,
                 report.NumberOfTestsIgnored);
-				_logger.Info(shitbird);
-				RunNotification(shitbird, report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0);
+				_logger.Info(msg);
+				runNotification(msg, report);
         }
 	 
-		private void RunNotification(string msg, bool? isFail) {
-			var bleh = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
-			string icon = bleh;
-			if(isFail.HasValue) {
-				if((bool)isFail) {
-					icon += "/Icons/circleFAIL.png";
-				} else {
-					icon += "/Icons/circleWIN.png";
-				}
-			}
-			string args = "--icon=\"" + icon + "\" \"" + msg + "\"";
-			_logger.Info(args);
-			var process = new Process();
-            process.StartInfo = new ProcessStartInfo("notify-send", args);
-            process.Start(); 
+		private void runNotification(string msg, RunReport report) {
+			var notifyType = getNotify(report);			
+			_notifier.Notify(msg, notifyType);			
+		}
+		
+		private NotificationType getNotify(RunReport report)
+		{
+			if (report == null)
+				return NotificationType.Information;
+			if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
+				return NotificationType.Red;
+			if (report.NumberOfTestsIgnored > 0)
+				return NotificationType.Yellow;
+			return NotificationType.Green;
 		}
 
         public void RevievingErrorMessage(ErrorMessage message)
