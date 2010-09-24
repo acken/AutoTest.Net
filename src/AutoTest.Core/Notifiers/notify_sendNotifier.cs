@@ -11,6 +11,21 @@ namespace AutoTest.Core.Notifiers
 		{
 			runNotification(msg, type);
 		}
+		
+		public bool IsSupported()
+		{
+			var process = new Process();
+			process.StartInfo = new ProcessStartInfo("locate", "notify-send");
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.CreateNoWindow = true;
+			process.Start();
+			var output = process.StandardOutput.ReadToEnd();
+			var lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+			if (lines.Length == 0)
+				return false;
+			return File.Exists(lines[0]);
+		}
 		#endregion
 		
 		private void runNotification(string msg, NotificationType type) {
@@ -30,6 +45,7 @@ namespace AutoTest.Core.Notifiers
 			string args = "--icon=\"" + icon + "\" \"" + msg + "\"";
 			var process = new Process();
             process.StartInfo = new ProcessStartInfo("notify-send", args);
+			process.StartInfo.CreateNoWindow = true;
             process.Start(); 
 		}
 	}

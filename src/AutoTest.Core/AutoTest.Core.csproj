@@ -154,6 +154,7 @@
     <Compile Include="FileSystem\PathParsing.cs" />
     <Compile Include="Notifiers\ISendNotifications.cs" />
     <Compile Include="Notifiers\notify_sendNotifier.cs" />
+    <Compile Include="Notifiers\NullNotifier.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

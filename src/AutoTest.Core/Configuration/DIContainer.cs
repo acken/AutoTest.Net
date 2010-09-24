@@ -61,8 +61,12 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ITestRunner>().ImplementedBy<XUnitTestRunner>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
                 .Register(Component.For<IMergeRunResults>().Forward<IRunResultCache>().ImplementedBy<RunResultCache>())
-				.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>())
                 .Register(Component.For<ApplicatonLauncher>());
+			
+			if ((new notify_sendNotifier()).IsSupported())
+				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>().Named("notify_send"));
+			else
+				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
         }
 
         public void InitializeCache(string watchFolder)

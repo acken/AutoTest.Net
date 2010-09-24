@@ -32,6 +32,12 @@ namespace AutoTest.Test
             "asdf".ShouldBeOfType<string>();
             new TestingExtensionMethodsTests().ShouldBeOfType<Object>();
         }
+		
+		[Test]
+		public void Should_not_be_of_the_right_type()
+		{
+			new TestingExtensionMethodsTests().ShouldNotBeOfType<IServiceProvider>();
+		}
 
         [Test]
         public void Should_be_null()

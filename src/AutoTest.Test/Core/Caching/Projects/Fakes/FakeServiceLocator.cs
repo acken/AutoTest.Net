@@ -29,6 +29,11 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
                 return (T)(ICreate<Project>)new ProjectFactory();
             return default(T);
         }
+		
+		public T Locate<T>(string name)
+		{
+			return default(T);
+		}
 
         public T[] LocateAll<T>()
         {

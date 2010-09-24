@@ -30,6 +30,11 @@ namespace AutoTest
             Assert.IsInstanceOfType(typeof(T), actual);
             return actual as T;
         }
+		
+		public static void ShouldNotBeOfType<T>(this object actual) where T : class
+		{
+			Assert.IsNotInstanceOfType(typeof(T), actual);
+		}
         
         public static T ShouldNotBeNull<T>(this T actual)
         {

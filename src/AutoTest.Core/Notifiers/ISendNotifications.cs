@@ -12,6 +12,7 @@ namespace AutoTest.Core.Notifiers
 	public interface ISendNotifications
 	{
 		void Notify(string msg, NotificationType type);
+		bool IsSupported();
 	}
 }
 

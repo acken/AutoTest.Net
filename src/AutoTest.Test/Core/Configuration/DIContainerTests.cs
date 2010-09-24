@@ -196,10 +196,32 @@ namespace AutoTest.Test.Core.Configuration
         }
 		
 		[Test]
-		public void Should_register_notifiers()
+		public void Should_only_register_one_notifiers()
 		{
+			var notifiers = _locator.LocateAll<ISendNotifications>();
+			notifiers.Length.ShouldEqual(1);
+		}
+		
+		[Test]
+		public void Should_register_notify_send_notifier_if_available()
+		{
+			var isSupported = (new notify_sendNotifier()).IsSupported();
+			var notifier = _locator.Locate<ISendNotifications>("notify_send");
+			if (isSupported)
+				notifier.ShouldNotBeNull();
+			else
+				notifier.ShouldBeNull();
+		}
+		
+		[Test]
+		public void Should_register_null_notifier_if_nothing_is_available()
+		{
+			var isSupported = (new notify_sendNotifier()).IsSupported();
 			var notifier = _locator.Locate<ISendNotifications>();
-			notifier.ShouldBeOfType<ISendNotifications>();
+			if (isSupported)
+				notifier.ShouldNotBeOfType<NullNotifier>();
+			else
+				notifier.ShouldBeOfType<NullNotifier>();
 		}
     }
 }

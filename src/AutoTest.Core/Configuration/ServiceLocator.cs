@@ -16,6 +16,11 @@ namespace AutoTest.Core.Configuration
         {
             return _container.Resolve<T>();
         }
+		
+		public T Locate<T>(string name)
+		{
+			return _container.Resolve<T>(name);
+		}
 
         public T[] LocateAll<T>()
         {
