@@ -216,12 +216,23 @@ namespace AutoTest.Test.Core.Configuration
 		[Test]
 		public void Should_register_null_notifier_if_nothing_is_available()
 		{
-			var isSupported = (new notify_sendNotifier()).IsSupported();
+            var isSupported = (new notify_sendNotifier()).IsSupported() || (new GrowlNotifier()).IsSupported();
 			var notifier = _locator.Locate<ISendNotifications>();
 			if (isSupported)
 				notifier.ShouldNotBeOfType<NullNotifier>();
 			else
 				notifier.ShouldBeOfType<NullNotifier>();
 		}
+
+        [Test]
+        public void Should_register_growl_notifier_if_available()
+        {
+            var isSupported = (new GrowlNotifier()).IsSupported();
+            var notifier = _locator.Locate<ISendNotifications>();
+            if (isSupported)
+                notifier.ShouldBeOfType<GrowlNotifier>();
+            else
+                notifier.ShouldNotBeOfType<GrowlNotifier>();
+        }
     }
 }
