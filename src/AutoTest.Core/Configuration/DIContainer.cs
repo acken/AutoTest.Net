@@ -65,7 +65,7 @@ namespace AutoTest.Core.Configuration
 			
 			if ((new notify_sendNotifier()).IsSupported())
 				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
-            else if ((new GrowlNotifier()).IsSupported())
+            else if ((new GrowlNotifier(null)).IsSupported())
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
 			else
 				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());

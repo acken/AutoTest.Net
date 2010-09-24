@@ -15,6 +15,9 @@ namespace AutoTest.Core.Configuration
         string XunitTestRunner(string version);
         CodeEditor CodeEditor { get; }
         bool DebuggingEnabled { get; }
+		bool NotifyOnRunStarted { get; }
+		bool NotifyOnRunCompleted { get; }
+		string GrowlNotify { get; }
 
         void ValidateSettings();
     }

@@ -5,13 +5,20 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.Notifiers
 {
     class GrowlNotifier : ISendNotifications
     {
+		private IConfiguration _configuration;
         private string _growl_executable = null;
 
+		public GrowlNotifier(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+		
         #region ISendNotifications Members
 
         public void Notify(string msg, NotificationType type)
@@ -30,9 +37,11 @@ namespace AutoTest.Core.Notifiers
 
         private void locateGrowlExecutable()
         {
-            if (File.Exists(@"C:\Program Files\Growl for Windows\growlnotify.exe"))
+			if (_configuration != null && _configuration.GrowlNotify != null && File.Exists(_configuration.GrowlNotify))
+				_growl_executable = _configuration.GrowlNotify;
+            else if (File.Exists(@"C:\Program Files\Growl for Windows\growlnotify.exe"))
                 _growl_executable = @"C:\Program Files\Growl for Windows\growlnotify.exe";
-            else if (File.Exists(@"C:\Program Files (x86)\Growl for Windows\growlnotify.exe"))
+            else if (File.Exists(@"C:\Program Files (x86)\Growl for Windows\growlnotify.exe")) 
                 _growl_executable = @"C:\Program Files (x86)\Growl for Windows\growlnotify.exe";
 			else if (File.Exists("/usr/local/bin/growlnotify"))
 				_growl_executable = "/usr/local/bin/growlnotify";

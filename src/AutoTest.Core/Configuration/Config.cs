@@ -20,7 +20,11 @@ namespace AutoTest.Core.Configuration
         private List<KeyValuePair<string, string>> _xunitTestRunner;
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
-
+		
+		public string GrowlNotify { get; private set; }
+		public bool NotifyOnRunStarted { get; private set; }
+		public bool NotifyOnRunCompleted { get; private set; }
+		
         public Config(IMessageBus bus)
         {
             _bus = bus;
@@ -39,6 +43,9 @@ namespace AutoTest.Core.Configuration
                 _xunitTestRunner = core.XUnitTestRunner;
                 _codeEditor = core.CodeEditor;
                 _debuggingEnabled = core.DebuggingEnabled;
+				GrowlNotify = core.GrowlNotify;
+				NotifyOnRunStarted = core.NotifyOnRunStarted;
+				NotifyOnRunCompleted = core.NotifyOnRunCompleted;
             }
             catch (Exception ex)
             {

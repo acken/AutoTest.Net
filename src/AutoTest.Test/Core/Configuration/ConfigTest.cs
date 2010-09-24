@@ -103,5 +103,23 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.XunitTestRunner("v3.5").ShouldEqual(@"C:\SomefolderOther\XUnit\xunit.console.exe");
         }
+		
+		[Test]
+		public void Should_read_growl_executable()
+		{
+			_config.GrowlNotify.ShouldEqual(@"C:\Meh\growlnotify.exe");
+		}
+		
+		[Test]
+		public void Should_read_notify_on_start()
+		{
+			_config.NotifyOnRunStarted.ShouldBeFalse();
+		}
+		
+		[Test]
+		public void Should_read_notify_on_completed()
+		{
+			_config.NotifyOnRunCompleted.ShouldBeFalse();
+		}
     }
 }

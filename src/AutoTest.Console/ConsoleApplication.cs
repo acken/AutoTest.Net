@@ -19,12 +19,14 @@ namespace AutoTest.Console
         private readonly IRunFeedbackPresenter _runFeedback;
         private ILogger _logger;
 		private readonly ISendNotifications _notifier;
+		private readonly IConfiguration _configuration;
 
         public ConsoleApplication(IInformationFeedbackPresenter informationFeedback, IRunFeedbackPresenter runFeedbackPresenter, IDirectoryWatcher watcher, IConfiguration configuration, ILogger logger, ISendNotifications notifier)
         {
 			_logger = logger;
 			_notifier = notifier;
             _watcher = watcher;
+			_configuration = configuration;
             _informationFeedback = informationFeedback;
             _informationFeedback.View = this;
             _runFeedback = runFeedbackPresenter;
@@ -110,7 +112,8 @@ namespace AutoTest.Console
             _logger.Info("");
 			var msg = "Preparing build(s) and test run(s)";
             _logger.Info(msg);
-			runNotification(msg, null);
+			if (_configuration.NotifyOnRunStarted)
+				runNotification(msg, null);
         }
 
         public void RecievingRunFinishedMessage(RunFinishedMessage message)
@@ -126,6 +129,7 @@ namespace AutoTest.Console
                 report.NumberOfTestsFailed,
                 report.NumberOfTestsIgnored);
 				_logger.Info(msg);
+			if (_configuration.NotifyOnRunCompleted)
 				runNotification(msg, report);
         }
 

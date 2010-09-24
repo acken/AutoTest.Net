@@ -29,6 +29,9 @@ namespace AutoTest.Core.Configuration
         public List<KeyValuePair<string, string>> XUnitTestRunner { get; private set; }
         public CodeEditor CodeEditor { get; private set; }
         public bool DebuggingEnabled { get; private set; }
+		public string GrowlNotify { get; private set; }
+		public bool NotifyOnRunStarted { get; private set; }
+		public bool NotifyOnRunCompleted { get; private set; }
 
         public CoreSection()
         {
@@ -45,6 +48,9 @@ namespace AutoTest.Core.Configuration
             XUnitTestRunner = getVersionedSetting("configuration/XUnitTestRunner");
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getDebuggingEnabled();
+			GrowlNotify = getValue("configuration/growlnotify", null);
+			NotifyOnRunStarted = getBool("configuration/notify_on_run_started", true);
+			NotifyOnRunCompleted = getBool("configuration/notify_on_run_completed", true);
         }
 
         private List<KeyValuePair<string, string>> getVersionedSetting(string xpath)
@@ -65,12 +71,17 @@ namespace AutoTest.Core.Configuration
 
         private bool getDebuggingEnabled()
         {
-            bool state;
-            var value = getValue("configuration/Debugging", "false");
+			return getBool("configuration/Debugging", false);
+        }
+		
+		private bool getBool(string nodeName, bool defaultValue)
+		{
+			bool state;
+            var value = getValue(nodeName, "");
             if (bool.TryParse(value, out state))
                 return state;
-            return false;
-        }
+            return defaultValue;
+		}
 
         private CodeEditor getCodeEditor()
         {

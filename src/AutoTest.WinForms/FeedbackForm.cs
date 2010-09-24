@@ -29,6 +29,7 @@ namespace AutoTest.WinForms
         private SynchronizationContext _syncContext;
         private IRunFeedbackPresenter _runPresenter;
         private IDirectoryWatcher _watcher;
+		private IConfiguration _configuration;
         private IInformationForm _informationForm;
         private IRunResultCache _runResultCache;
 		private IMessageBus _bus;
@@ -46,6 +47,7 @@ namespace AutoTest.WinForms
             _syncContext = AsyncOperationManager.SynchronizationContext;
             _toolTipProvider.AutoPopDelay = 30000;
             _watcher = watcher;
+			_configuration = configuration;
             _runResultCache = runResultCache;
 			_bus = bus;
 			_notifier = notifier;
@@ -54,7 +56,7 @@ namespace AutoTest.WinForms
             _informationForm = informationForm;
             _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
-            configuration.ValidateSettings();
+            _configuration.ValidateSettings();
             readFormSpacing();
 			FeedbackForm_Resize(this, new EventArgs());
         }
@@ -98,7 +100,8 @@ namespace AutoTest.WinForms
                                   {
                                       setRunInProgressFeedback("");
                                       generateSummary(null);
-									  runNotification("Detected changes, running..", null);
+									  if (_configuration.NotifyOnRunStarted)
+									  	runNotification("Detected changes, running..", null);
                                   }, null);
         }
 
@@ -134,7 +137,8 @@ namespace AutoTest.WinForms
 					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored == 0)
 						labelRunState.ForeColor = Color.Green;
                     generateSummary(report);
-					runNotification(msg, report);
+					if (_configuration.NotifyOnRunCompleted)
+						runNotification(msg, report);
                 },
                 message.Report);
         }

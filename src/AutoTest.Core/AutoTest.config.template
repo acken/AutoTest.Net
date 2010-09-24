@@ -35,6 +35,18 @@
 	  <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
 	</CodeEditor>
 	
+	<!-- Notification provider (Optional) -->
+	<!-- The supported providers right now are notify-send on linux and growl on -->
+	<!-- windows and Mac. notify-send will configure automatically while growl -->
+	<!-- might need some configuration. You can specify when to push notifications-->
+	<!-- below. -->
+	<!--<notify_on_run_started>true</notify_on_run_started>-->
+	<!--<notify_on_run_completed>true</notify_on_run_completed>-->
+	
+	<!-- If growl doesn't work out of the box use the setting below to set the path -->
+	<!-- to growlnotify(.exe) -->
+	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
+	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
 </configuration>
