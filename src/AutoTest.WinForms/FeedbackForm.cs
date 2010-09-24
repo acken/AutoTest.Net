@@ -17,6 +17,7 @@ using AutoTest.Core.TestRunners;
 using System.IO;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.RunResultCache;
+using AutoTest.Core.Notifiers;
 
 namespace AutoTest.WinForms
 {
@@ -31,6 +32,7 @@ namespace AutoTest.WinForms
         private IInformationForm _informationForm;
         private IRunResultCache _runResultCache;
 		private IMessageBus _bus;
+		private ISendNotifications _notifier;
 
         private ToolTip _toolTipProvider = new ToolTip();
         private bool _isRefreshingFeedback = false;
@@ -39,13 +41,14 @@ namespace AutoTest.WinForms
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
 
-        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache, IMessageBus bus)
+        public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache, IMessageBus bus, ISendNotifications notifier)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
             _toolTipProvider.AutoPopDelay = 30000;
             _watcher = watcher;
             _runResultCache = runResultCache;
 			_bus = bus;
+			_notifier = notifier;
             _runPresenter = runPresenter;
             _runPresenter.View = this;
             _informationForm = informationForm;
@@ -95,6 +98,7 @@ namespace AutoTest.WinForms
                                   {
                                       setRunInProgressFeedback("");
                                       generateSummary(null);
+									  runNotification("Detected changes, running..", null);
                                   }, null);
         }
 
@@ -113,7 +117,7 @@ namespace AutoTest.WinForms
                 x =>
                 {
                     var report = (RunReport) x;
-                    labelRunState.Text = string.Format(
+					var msg = string.Format(
                         "Ran {0} build(s) ({1} succeeded, {2} failed) and {3} test(s) ({4} passed, {5} failed, {6} ignored)",
                         report.NumberOfProjectsBuilt,
                         report.NumberOfBuildsSucceeded,
@@ -122,6 +126,7 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsPassed,
                         report.NumberOfTestsFailed,
                         report.NumberOfTestsIgnored);
+                    labelRunState.Text = msg;
 					if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
 						BackColor = Color.OrangeRed;
 					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored > 0)
@@ -129,6 +134,7 @@ namespace AutoTest.WinForms
 					if (report.NumberOfBuildsFailed == 0 && report.NumberOfTestsFailed == 0 && report.NumberOfTestsIgnored == 0)
 						BackColor = Color.YellowGreen;
                     generateSummary(report);
+					runNotification(msg, report);
                 },
                 message.Report);
         }
@@ -314,5 +320,21 @@ namespace AutoTest.WinForms
         {
             _informationForm.Form.Dispose();
         }
+		
+		private void runNotification(string msg, RunReport report) {
+			var notifyType = getNotify(report);			
+			_notifier.Notify(msg, notifyType);			
+		}
+		
+		private NotificationType getNotify(RunReport report)
+		{
+			if (report == null)
+				return NotificationType.Information;
+			if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
+				return NotificationType.Red;
+			if (report.NumberOfTestsIgnored > 0)
+				return NotificationType.Yellow;
+			return NotificationType.Green;
+		}
     }
 }

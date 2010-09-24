@@ -128,7 +128,19 @@ namespace AutoTest.Console
 				_logger.Info(msg);
 				runNotification(msg, report);
         }
-	 
+
+        public void RevievingErrorMessage(ErrorMessage message)
+        {
+            _logger.Info(message.Error);
+        }
+
+        public void RecievingRunInformationMessage(RunInformationMessage message)
+        {
+            
+        }
+
+        #endregion
+		
 		private void runNotification(string msg, RunReport report) {
 			var notifyType = getNotify(report);			
 			_notifier.Notify(msg, notifyType);			
@@ -144,17 +156,5 @@ namespace AutoTest.Console
 				return NotificationType.Yellow;
 			return NotificationType.Green;
 		}
-
-        public void RevievingErrorMessage(ErrorMessage message)
-        {
-            _logger.Info(message.Error);
-        }
-
-        public void RecievingRunInformationMessage(RunInformationMessage message)
-        {
-            
-        }
-
-        #endregion
     }
 }
