@@ -13,8 +13,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private string _project;
         private string _assembly;
         private List<TestResult> _result = new List<TestResult>();
+		private List<TestRunResults> _runResults = new List<TestRunResults>();
 
-        public TestRunResults Result { get { return new TestRunResults(_project, _assembly, _result.ToArray()); } }
+        public TestRunResults[] Result { get { return _runResults.ToArray(); } }
 
         public NUnitTestResponseParser(IMessageBus bus, string project, string assembly)
         {
@@ -47,6 +48,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     stackTrace = getStackTrace(testCase);
                 _result.Add(new TestResult(status, name, message, stackTrace));
             }
+			_runResults.Add(new TestRunResults(_project, _assembly, _result.ToArray()));
         }
 
         private string[] getTestCases(string content)

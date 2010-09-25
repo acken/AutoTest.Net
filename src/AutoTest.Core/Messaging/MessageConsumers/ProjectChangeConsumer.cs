@@ -78,11 +78,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(string[] projectList, RunReport runReport)
 		{
-			foreach (var file in projectList)
+            foreach (var runner in _testRunners)
             {
-				var project = _cache.Get<Project>(file);
-				if (project.Value.ContainsTests)
-                	runTests(project, runReport);
+				var runInfos = new List<TestRunInfo>();
+				foreach (var file in projectList)
+	            {
+					var project = _cache.Get<Project>(file);
+					string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
+	            	var assembly = Path.Combine(folder, project.Value.AssemblyName);
+					if (!project.Value.ContainsTests)
+	                	continue;
+					if (runner.CanHandleTestFor(project.Value))
+                    	runInfos.Add(new TestRunInfo(project, assembly));
+					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
+				}
+				if (runInfos.Count > 0)
+					runTests(runner, runInfos.ToArray(), runReport);
 			}
 		}
 
@@ -111,31 +122,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return succeeded;
         }
 
-        private void runTests(Project project, RunReport runReport)
-        {
-            string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
-            var file = Path.Combine(folder, project.Value.AssemblyName);
-            foreach (var runner in _testRunners)
-            {
-                if (runner.CanHandleTestFor(project.Value))
-                    runTests(runner, project, file, runReport);
-            }
-        }
-
         #endregion
 
-        private void runTests(ITestRunner testRunner, Project project, string assembly, RunReport runReport)
+        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, RunReport runReport)
         {
-            _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, testRunner.GetType()));
-            var results = testRunner.RunTests(project, assembly);
-            runReport.AddTestRun(
-                results.Project,
-                results.Assembly,
-                results.TimeSpent,
-                results.Passed.Length,
-                results.Ignored.Length,
-                results.Failed.Length);
-            _bus.Publish(new TestRunMessage(results));
+            var results = testRunner.RunTests(runInfos);
+			foreach (var result in results)
+			{
+	            runReport.AddTestRun(
+	                result.Project,
+	                result.Assembly,
+	                result.TimeSpent,
+	                result.Passed.Length,
+	                result.Ignored.Length,
+	                result.Failed.Length);
+	            _bus.Publish(new TestRunMessage(result));
+			}
         }
     }
 }

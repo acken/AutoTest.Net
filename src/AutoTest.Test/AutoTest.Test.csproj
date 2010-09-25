@@ -134,6 +134,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Messaging\MessageBusTests.cs" />
     <Compile Include="Core\FileSystem\PathParsingTest.cs" />
+    <Compile Include="Core\TestRunners\NUnitTestResponseParserMultipleAssembliesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
@@ -147,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AutoTest.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\NUnit\multipleAssemblies.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\NUnit\singleAssembly.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -168,5 +175,6 @@
   -->
   <ItemGroup>
     <Folder Include="Core\Caching\Crawlers\" />
+    <Folder Include="TestResources\NUnit\" />
   </ItemGroup>
 </Project>

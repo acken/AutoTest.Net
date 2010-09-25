@@ -33,6 +33,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void SetUp()
         {
             _project = new Project(Path.GetFullPath("someProject.csproj"), new ProjectDocument(ProjectType.CSharp));
+			_project.Value.SetOutputPath("");
+			_project.Value.SetAssemblyName("someAssembly.dll");
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _listGenerator = MockRepository.GenerateMock<IGenerateBuildList>();
             _cache = MockRepository.GenerateMock<ICache>();
@@ -104,13 +106,13 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
             _testRunner.Stub(t => t.CanHandleTestFor(_project.Value)).Return(true);
-            _testRunner.Stub(t => t.RunTests(_project, "")).IgnoreArguments()
-                .Return(new TestRunResults("", "", new TestResult[] {}));
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+                .Return(new TestRunResults[] { new TestRunResults("", "", new TestResult[] {}) });
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));
             _consumer.Consume(message);
-            _testRunner.AssertWasCalled(t => t.RunTests(null, ""), t => t.IgnoreArguments());
+            _testRunner.AssertWasCalled(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(null, "") }), t => t.IgnoreArguments());
         }
     }
 }
