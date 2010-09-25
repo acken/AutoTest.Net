@@ -17,7 +17,7 @@ namespace AutoTest.Core.Notifiers
 			try
 			{
 				var process = new Process();
-				process.StartInfo = new ProcessStartInfo("locate", "notify-send");
+				process.StartInfo = new ProcessStartInfo("notify-send", "-?");
 				process.StartInfo.RedirectStandardOutput = true;
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.CreateNoWindow = true;
@@ -27,7 +27,7 @@ namespace AutoTest.Core.Notifiers
 				var lines = output.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 				if (lines.Length == 0)
 					return false;
-				return File.Exists(lines[0]);
+				return lines[0].Substring(0, 6).Equals("Usage:");
 			}
 			catch
 			{
