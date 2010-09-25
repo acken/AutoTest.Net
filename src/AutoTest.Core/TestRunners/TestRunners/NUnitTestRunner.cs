@@ -35,7 +35,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var results = new List<TestRunResults>();
 			foreach (var runInfo in runInfos)
 			{
-	            var timer = Stopwatch.StartNew();
 	            var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
 	            if (!File.Exists(unitTestExe))
 				{
@@ -56,12 +55,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            var parser = new NUnitTestResponseParser(_bus);
 	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos);
 	            proc.WaitForExit();
-	            timer.Stop();
 				foreach (var result in parser.Result)
-				{
-		            result.SetTimeSpent(timer.Elapsed);
 		            results.Add(result);
-				}
 			}
 			return results.ToArray();
         }
