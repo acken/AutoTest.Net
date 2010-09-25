@@ -54,7 +54,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	
 	            proc.Start();
 	            var parser = new NUnitTestResponseParser(_bus, runInfo.Project.Key, runInfo.Assembly);
-	            parser.Parse(proc.StandardOutput.ReadToEnd());
+	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos);
 	            proc.WaitForExit();
 	            timer.Stop();
 				foreach (var result in parser.Result)

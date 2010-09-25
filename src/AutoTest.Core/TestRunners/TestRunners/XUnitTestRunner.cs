@@ -60,14 +60,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            var parser = new NUnitTestResponseParser(_bus, runInfo.Project.Key, runInfo.Assembly);
 	            using (TextReader reader = new StreamReader(resultFile))
 	            {
-	                parser.Parse(reader.ReadToEnd());
+	                parser.Parse(reader.ReadToEnd(), runInfos);
 	            }
 	            File.Delete(resultFile);
 				foreach (var result in parser.Result)
 				{
 		            result.SetTimeSpent(timer.Elapsed);
 		            results.Add(result);
-				}
+				}				
 			}
 			return results.ToArray();
         }
