@@ -17,7 +17,7 @@ namespace AutoTest.Test.Core.TestRunners
         public void SetUp()
         {
             var bus = MockRepository.GenerateMock<IMessageBus>();
-            _parser = new NUnitTestResponseParser(bus, "", "");
+            _parser = new NUnitTestResponseParser(bus);
 			var sources = new TestRunInfo[]
 				{ 
 					new TestRunInfo(new Project("project1", null), string.Format("{0}SomePath{0}AutoTest.WinForms.Test{0}bin{0}Debug{0}AutoTest.WinForms.Test.dll", Path.DirectorySeparatorChar)),

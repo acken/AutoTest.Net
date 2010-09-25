@@ -12,8 +12,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
     class NUnitTestResponseParser
     {
         private IMessageBus _bus;
-        private string _project;
-        private string _assembly;
         private List<TestResult> _result = new List<TestResult>();
 		private List<TestRunResults> _runResults = new List<TestRunResults>();
 		private string _content;
@@ -21,11 +19,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults[] Result { get { return _runResults.ToArray(); } }
 
-        public NUnitTestResponseParser(IMessageBus bus, string project, string assembly)
+        public NUnitTestResponseParser(IMessageBus bus)
         {
             _bus = bus;
-            _project = project;
-            _assembly = assembly;
         }
 
         public void Parse(string content, TestRunInfo[] runInfos)

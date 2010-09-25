@@ -53,7 +53,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            proc.StartInfo.CreateNoWindow = true;
 	
 	            proc.Start();
-	            var parser = new NUnitTestResponseParser(_bus, runInfo.Project.Key, runInfo.Assembly);
+	            var parser = new NUnitTestResponseParser(_bus);
 	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos);
 	            proc.WaitForExit();
 	            timer.Stop();
