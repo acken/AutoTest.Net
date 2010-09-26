@@ -23,6 +23,7 @@ namespace AutoTest.WinForms
 {
     public partial class FeedbackForm : Form, IOverviewForm, IRunFeedbackView
     {
+		private object _padLock = new object();
 		private const int GDI_SIZE_LIMIT = 3200;
 
         private string _directoryToWatch;
@@ -41,7 +42,8 @@ namespace AutoTest.WinForms
         private int _rightSpacing = 0;
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
-		private bool _running = false;
+		private bool _unlockedRunning = false;
+		private bool _running { get { lock(_padLock) { return _unlockedRunning; } } set { lock(_padLock) { _unlockedRunning = value; } } }
 
         public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache, IMessageBus bus, ISendNotifications notifier)
         {
