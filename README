@@ -1,10 +1,8 @@
 (View in WordPad or similar on windows since the file uses Unix line endings)
-AutoTest.Net
 
-This product provides automatic builds and testruns through detecting
-file changes. It contains a winforms app, a console app and a 
-Visual Studio plugin. To install the plugin take a look at the
-How_to_install_VS_addin.txt file
+AutoTest.Net
+This product provides continuous testing for the .Net platform.It contains a 
+winforms app, a console app and a Visual Studio plugin.
 
 Features
 	* Automatic build and testrun through file change detection
@@ -17,32 +15,42 @@ Features
 		* MSTest
 		* NUnit
 		* XUnit
+	* Visual Studio plugin for VS 2008 and 2010
+	* Supports notifications through
+		* notify-send (Linux)
+		* Growl (Mac, Windows)
 
 Geting started
 To get started using this application edit AutoTest.config to suite your system.
 When done start either the winforms app, the console app or the plugin (after you
 have installed it). In the winforms application the little button in the top right
 corner will display some nice to know messages now and then. When set up just edit
-a file within the watched folderand save it. AutoTest.Net will detect any changes
+a file within the watched folder and save it. AutoTest.Net will detect any changes
 and start builds and run tests.
+If you end up in a scenario where it goes in to an endless loop it's probably
+detecting changes in a file generated either by build or testrun. If so use the
+ignore posibility in the configuration file. To figure out what files are being
+generated turn on logging and check the debug.log file.
 
 Installing the VS Addin
-Run Install_Visual_Studio_Addin.bat
+	Run Install_Visual_Studio_Addin.bat
 
 Installing the VS Addin manually
-Copy AutoTest.VSAddin.AddIn to you Visual Studio user directory. Something like C:\Users\You\Documents\Visual Studio 20XX\Addins
-
-Open the newly copied AutoTest.VSAddin.AddIn file and make the Assembly element point to where you unziped AutoTest.NET. If you're using Visual Studio 2010 change the HostApplication/Version to 10.
-
-Open a visual studio command prompt and go to the folder containing the unzipped AutoTest.Net and write
-	regasm.exe /CodeBase AutoTest.VSAddin.dll
-
-When starting Visual Studio if you get the error message Unknown error 80131515 this means that windows has blocked your binaries. Rightclick and choose Unblock for each unpacked dll and exe file individually.
-
-After Visual Studio has started make sure that the AutoTest.NET addin is enabled in Tools->Add-in Manager
-
-You should be ready to go now. Open a solution, click Tools->AutoTest.NET and the feedback window should show up.
-
+	Copy AutoTest.VSAddin.AddIn to you Visual Studio user directory. Something like 
+		C:\Users\You\Documents\Visual Studio 20XX\Addins
+	Open the newly copied AutoTest.VSAddin.AddIn file and make the Assembly element
+		point to where you unziped AutoTest.NET. If you're using Visual Studio 2010
+		change the HostApplication/Version to 10.
+	Open a visual studio command prompt and go to the folder containing the unzipped
+		AutoTest.Net and write
+		regasm.exe /CodeBase AutoTest.VSAddin.dll
+	When starting Visual Studio if you get the error message Unknown error 80131515 
+		this means that windows has blocked your binaries. Rightclick and choose Unblock 
+		for each unpacked dll and exe file individually.
+	After Visual Studio has started make sure that the AutoTest.NET addin is enabled 
+		in Tools->Add-in Manager
+	You should be ready to go now. Open a solution, click Tools->AutoTest.NET and the 
+		feedback window should show up.
 
 Quick usage
 	Change a file in Visual Studio and press Ctrl+S or Ctrl+Shift+S

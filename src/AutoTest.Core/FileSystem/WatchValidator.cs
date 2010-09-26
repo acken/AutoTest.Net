@@ -38,6 +38,14 @@ namespace AutoTest.Core.FileSystem
             return true;
         }
 		
+		public string GetIgnorePatterns()
+		{
+			var list = "";
+			foreach (var pattern in _configuration.WatchIgnoreList)
+				list += (list.Length == 0 ? "" : "|") + pattern;
+			return list;
+		}
+		
 		private bool match(string stringToMatch, string[] patterns)
 		{
 			foreach (var patter in patterns)

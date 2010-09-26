@@ -130,6 +130,13 @@ namespace AutoTest.Test.Core.FileSystem
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
 			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
 		}
+		
+		[Test]
+		public void Should_return_list_of_ignore_items()
+		{
+			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*", "whatever.txt", "*.bat" });
+			_validator.GetIgnorePatterns().ShouldEqual("myFolder/*|whatever.txt|*.bat");
+		}
 
         private string getInfo(string path)
         {

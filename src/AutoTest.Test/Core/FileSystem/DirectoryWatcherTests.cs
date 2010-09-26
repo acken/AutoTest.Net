@@ -25,6 +25,7 @@ namespace AutoTest.Test.Core
             _messageBus = MockRepository.GenerateMock<IMessageBus>();
             _validator = MockRepository.GenerateMock<IWatchValidator>();
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
+			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration);
             _file = Path.GetFullPath("watcher_test.txt");
 			_watchDirectory = Path.GetDirectoryName(_file);

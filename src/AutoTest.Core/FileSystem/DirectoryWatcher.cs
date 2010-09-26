@@ -45,8 +45,8 @@ namespace AutoTest.Core.FileSystem
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
             }
-			_configuration.BuildIgnoreListFromPath(path);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
+			buildIgnoreList(path);
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
 				_watchPath = Path.GetDirectoryName(path);
 			else
@@ -54,6 +54,14 @@ namespace AutoTest.Core.FileSystem
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;
         }
+		
+		private void buildIgnoreList(string path)
+		{
+			_configuration.BuildIgnoreListFromPath(path);
+			var list = _validator.GetIgnorePatterns();
+			if (list.Length > 0)
+				_bus.Publish(new InformationMessage(string.Format("Ignoring \"{0}\"", list)));
+		}
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
         {
