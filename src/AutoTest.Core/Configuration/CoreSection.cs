@@ -32,6 +32,7 @@ namespace AutoTest.Core.Configuration
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
+		public string WatchIgnoreFile { get; private set; }
 
         public CoreSection()
         {
@@ -51,6 +52,7 @@ namespace AutoTest.Core.Configuration
 			GrowlNotify = getValue("configuration/growlnotify", null);
 			NotifyOnRunStarted = getBool("configuration/notify_on_run_started", true);
 			NotifyOnRunCompleted = getBool("configuration/notify_on_run_completed", true);
+			WatchIgnoreFile = getValue("configuration/IgnoreFile", "");
         }
 
         private List<KeyValuePair<string, string>> getVersionedSetting(string xpath)

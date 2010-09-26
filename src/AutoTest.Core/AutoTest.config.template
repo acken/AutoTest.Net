@@ -3,7 +3,8 @@
 	<!-- Directory to watch (Optional) -->
 	<!-- You can have zero or multiple watch directories specified in the config file. -->
 	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
-	<!-- or you can choose to pass a directory when executing the application. -->
+	<!-- or you can choose to pass a directory when executing the application. Usually -->
+	<!-- the solution root folder -->
 	<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>
 	
 	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
@@ -46,6 +47,13 @@
 	<!-- If growl doesn't work out of the box use the setting below to set the path -->
 	<!-- to growlnotify(.exe) -->
 	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
+	
+	<!-- To specify a set of files\directories that autotest should not track changes -->
+	<!-- for create a file containing those exceptions. It works the same way as the -->
+	<!-- .gitignore file in the git source control system. (bin\Debug, bin\Release, -->
+	<!-- bin\x86, obj\Debug, obj\Release and obj\x86 are ignored by default. The file -->
+	<!-- is expected at the root of the path to watch -->
+	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
 	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>

@@ -3,52 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Collections;
+using System.Text.RegularExpressions;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.FileSystem
 {
     class WatchValidator : IWatchValidator
     {
-        private const string BIN_DEBUG = "bin{0}debug";
-        private const string BIN_RELEASE = "bin{0}release";
-        private const string BIN_X86 = "bin{0}x86";
-        private const string OBJ_DEBUG = "obj{0}debug";
-        private const string OBJ_RELEASE = "obj{0}release";
-        private const string OBJ_X86 = "obj{0}x86";
-        private const string OBJ = "obj{0}";
-        private const string MONO_FILE_LIST_ABSOLUTE = ".FileListAbsolute.txt";
-        private const string MONO_FILES_WRITTEN_ABSOLUTE = ".FilesWrittenAbsolute.txt";
+		private IConfiguration _configuration;
+		private string[] _defaultIgnores = new string[8];
 
+		public WatchValidator(IConfiguration configuration)
+		{
+			_configuration = configuration;
+			_defaultIgnores[0] = string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[1] = string.Format("bin{0}Release{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[2] = string.Format("bin{0}x86{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[3] = string.Format("obj{0}Debug{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[4] = string.Format("obj{0}Release{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[5] = string.Format("obj{0}x86{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[6] = "*.FileListAbsolute.txt";
+			_defaultIgnores[7] = "*.FilesWrittenAbsolute.txt";
+		}
+		
         public bool ShouldPublish(string filePath)
         {
-            if (contains(filePath, BIN_DEBUG))
-                return false;
-            if (contains(filePath, BIN_RELEASE))
-                return false;
-            if (contains(filePath, BIN_X86))
-                return false;
-            if (contains(filePath, OBJ_DEBUG))
-                return false;
-            if (contains(filePath, OBJ_RELEASE))
-                return false;
-            if (contains(filePath, OBJ_X86))
-                return false;
-            if (Directory.Exists(filePath))
-                return false;
-            if (contains(filePath, OBJ) && filePath.EndsWith(MONO_FILE_LIST_ABSOLUTE))
-                return false;
-            if (contains(filePath, OBJ) && filePath.EndsWith(MONO_FILES_WRITTEN_ABSOLUTE))
-                return false;
+			if (Directory.Exists(filePath))
+				return false;
+			if (match(filePath, _defaultIgnores))
+				return false;
+			if (match(filePath, _configuration.WatchIgnoreList))
+				return false;
             return true;
         }
+		
+		private bool match(string stringToMatch, string[] patterns)
+		{
+			foreach (var patter in patterns)
+			{
+				if (patter.EndsWith(Path.DirectorySeparatorChar.ToString()))
+				{
+					if (stringToMatch.Contains(patter))
+						return true;
+				}
+				if (stringToMatch.EndsWith(patter))
+					return true;
+				if (stringToMatch.Contains(string.Format("{0}{1}{0}", Path.DirectorySeparatorChar, patter)))
+					return true;
+				if (matchStringToGlobUsingGlobishMatching(stringToMatch, patter))
+					return true;
+			}
+			return false;
+		}
 
         private bool contains(string path, string stringToSearchFor)
         {
-            return path.IndexOf(preparePath(stringToSearchFor), StringComparison.CurrentCultureIgnoreCase) >= 0;
+            return path.IndexOf(stringToSearchFor) >= 0;
         }
-
-        private string preparePath(string path)
-        {
-            return string.Format(path, Path.DirectorySeparatorChar);
-        }
+			
+	    private bool matchStringToGlobUsingGlobishMatching(string stringToMatch, string pattern)
+	    {
+	        string regExPattern = Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".");
+	        var regex = new Regex(regExPattern, RegexOptions.Singleline);
+			return regex.IsMatch(stringToMatch);
+		}
     }
 }

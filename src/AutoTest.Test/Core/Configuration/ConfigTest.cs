@@ -7,6 +7,7 @@ using AutoTest.Core.Configuration;
 using Rhino.Mocks;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
+using System.IO;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -120,6 +121,38 @@ namespace AutoTest.Test.Core.Configuration
 		public void Should_read_notify_on_completed()
 		{
 			_config.NotifyOnRunCompleted.ShouldBeFalse();
+		}
+		
+		[Test]
+		public void Should_get_watch_ignore_file()
+		{
+			var file = Path.Combine("TestResources", "myignorefile.txt");
+			using (var writer = new StreamWriter(file))
+			{
+				writer.WriteLine("MyFolder");
+				writer.WriteLine(@"OtherFolder\SomeFile.txt");
+				writer.WriteLine(@"OhYeah\*");
+				writer.WriteLine("*TestOutput.xml");
+				writer.WriteLine("!meh.txt");
+				writer.WriteLine("	#Comment");
+				writer.WriteLine("");
+			}
+			
+			_config.BuildIgnoreListFromPath("TestResources");
+			_config.WatchIgnoreList.Length.ShouldEqual(4);
+			_config.WatchIgnoreList[0].ShouldEqual("MyFolder");
+			_config.WatchIgnoreList[1].ShouldEqual(@"OtherFolder\SomeFile.txt");
+			_config.WatchIgnoreList[2].ShouldEqual(@"OhYeah\*");
+			_config.WatchIgnoreList[3].ShouldEqual("*TestOutput.xml");
+			if (File.Exists(file))
+				File.Delete(file);
+		}
+		
+		[Test]
+		public void Should_set_to_empty_array_if_file_doesnt_exist()
+		{
+			_config.BuildIgnoreListFromPath("SomeInvalidDirectory");
+			_config.WatchIgnoreList.Length.ShouldEqual(0);
 		}
     }
 }

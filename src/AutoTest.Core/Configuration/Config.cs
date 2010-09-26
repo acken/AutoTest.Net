@@ -12,7 +12,8 @@ namespace AutoTest.Core.Configuration
     public class Config : IConfiguration
     {
         private IMessageBus _bus;
-
+		private string _ignoreFile;
+		
         private string[] _watchDirectories;
         private List<KeyValuePair<string, string>> _buildExecutables;
         private List<KeyValuePair<string, string>> _nunitTestRunners;
@@ -24,6 +25,7 @@ namespace AutoTest.Core.Configuration
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
+		public string[] WatchIgnoreList { get; private set; }
 		
         public Config(IMessageBus bus)
         {
@@ -46,6 +48,7 @@ namespace AutoTest.Core.Configuration
 				GrowlNotify = core.GrowlNotify;
 				NotifyOnRunStarted = core.NotifyOnRunStarted;
 				NotifyOnRunCompleted = core.NotifyOnRunCompleted;
+				_ignoreFile = core.WatchIgnoreFile;
             }
             catch (Exception ex)
             {
@@ -80,7 +83,37 @@ namespace AutoTest.Core.Configuration
             if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
                 _bus.Publish(new WarningMessage("Code editor not specified"));
         }
+		
+		public void BuildIgnoreListFromPath(string watchPath)
+		{
+			var file = Path.Combine(watchPath, _ignoreFile);
+			if (File.Exists(file))
+				WatchIgnoreList = getLineArrayFromFile(file);
+			else
+				WatchIgnoreList = new string[] { };
+		}
 
+		private string[] getLineArrayFromFile(string file)
+		{
+			var lines = new List<string>();
+			using (var reader = new StreamReader(file))
+			{
+				string line;
+				while ((line = reader.ReadLine()) != null)
+				{
+					var trimmedLine = line.Trim();
+					if (trimmedLine.Length == 0)
+						continue;
+					if (trimmedLine.StartsWith("!"))
+						continue;
+					if (trimmedLine.StartsWith("#"))
+						continue;
+					lines.Add(trimmedLine);
+				}
+			}
+			return lines.ToArray();
+		}
+		
         private bool noneExists(List<KeyValuePair<string, string>> files)
         {
 			if (files == null)

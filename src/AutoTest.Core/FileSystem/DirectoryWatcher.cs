@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoTest.Core.Messaging;
 using System.IO;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -15,11 +16,14 @@ namespace AutoTest.Core.FileSystem
         private List<ChangedFile> _buffer = new List<ChangedFile>();
         private object _padLock = new object();
         private IWatchValidator _validator;
+		private IConfiguration _configuration;
+		private string _watchPath = "";
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration)
         {
             _bus = bus;
             _validator = validator;
+			_configuration = configuration;
             _batchTimer = new Timer(100);
             _batchTimer.Enabled = true;
             _batchTimer.Elapsed += _batchTimer_Elapsed;
@@ -41,7 +45,12 @@ namespace AutoTest.Core.FileSystem
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
             }
+			_configuration.BuildIgnoreListFromPath(path);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
+			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+				_watchPath = Path.GetDirectoryName(path);
+			else
+				_watchPath = path;
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;
         }
@@ -70,7 +79,7 @@ namespace AutoTest.Core.FileSystem
 
         private void addToBuffer(ChangedFile file)
         {
-            if (!_validator.ShouldPublish(file.FullName))
+            if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
 
             lock (_padLock)
@@ -82,6 +91,13 @@ namespace AutoTest.Core.FileSystem
                 }
             }
         }
+		
+		private string getRelativePath(string path)
+		{
+			if (path.StartsWith(_watchPath))
+				return path.Substring(_watchPath.Length, path.Length - _watchPath.Length);
+			return path;
+		}
 
         private void reStartTimer()
         {
