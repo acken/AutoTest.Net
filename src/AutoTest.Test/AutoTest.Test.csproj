@@ -136,6 +136,7 @@
     <Compile Include="Core\FileSystem\PathParsingTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserMultipleAssembliesTest.cs" />
     <Compile Include="Core\TestRunners\XUnitResponseParserTest.cs" />
+    <Compile Include="Core\TestRunners\NUnitTestResponseParserNewOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
@@ -158,6 +159,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestResources\NUnit\XUnitOutput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\NUnit\NewOutput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

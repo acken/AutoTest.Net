@@ -68,6 +68,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var assembly = getAssemblyName(testSuite);
 			foreach (var source in _testSources)
 			{
+				if (source.Assembly.Length < assembly.Length)
+					continue;
 				if (source.Assembly.Substring(source.Assembly.Length - assembly.Length, assembly.Length).Equals(assembly))
 					return source;
 			}
@@ -132,7 +134,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		
 		private bool singleAssemblyTestRun()
 		{
-			return _content.IndexOf("<test-suite name=\"UNNAMED\"") == -1;
+			return _content.IndexOf("<test-suite name=\"UNNAMED\"") == -1 &&
+				_content.IndexOf("<test-suite type=\"Test Project\" name=\"\"") == -1;
 		}
 		
 		private string[] getSubTestSuites(string mainTestSuite)

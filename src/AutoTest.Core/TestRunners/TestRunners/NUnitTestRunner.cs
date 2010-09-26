@@ -33,20 +33,17 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
 			var results = new List<TestRunResults>();
-			foreach (var runInfo in runInfos)
+			// Get a list of the various nunit executables specified pr. framework version
+			var nUnitExes = getNUnitExes(runInfos);
+			foreach (var nUnitExe in nUnitExes)
 			{
-	            var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
-	            if (!File.Exists(unitTestExe))
-				{
-	                results.Add(new TestRunResults(runInfo.Project.Key, runInfo.Assembly, new TestResult[] {}));
-					continue;
-				}
-				
-				var arguments = getExecutableArguments(runInfo.Assembly);
+				// Get the assemblies that should be run under this nunit executable
+				var assemblies = getAssembliesFromTestRunner(nUnitExe, runInfos);
+				var arguments = getExecutableArguments(assemblies);
 	            var proc = new Process();
-	            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);
+	            proc.StartInfo = new ProcessStartInfo(nUnitExe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;
-	            proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(runInfo.Assembly);
+	            //proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(runInfo.Assembly);
 	            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 	            proc.StartInfo.UseShellExecute = false;
 	            proc.StartInfo.CreateNoWindow = true;
@@ -60,6 +57,33 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			}
 			return results.ToArray();
         }
+		
+		private string[] getNUnitExes(TestRunInfo[] runInfos)
+		{
+			var testRunnerExes = new List<string>();
+			foreach (var runInfo in runInfos)
+			{
+				var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
+	            if (File.Exists(unitTestExe))
+				{
+					if (!testRunnerExes.Exists(x => x.Equals(unitTestExe)))
+	                	testRunnerExes.Add(unitTestExe);
+				}
+			}
+			return testRunnerExes.ToArray();
+		}
+		
+		private string getAssembliesFromTestRunner(string testRunnerExes, TestRunInfo[] runInfos)
+		{
+			var assemblies = "";
+			foreach (var runInfo in runInfos)
+			{
+				var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
+				if (unitTestExe.Equals(testRunnerExes))
+					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
+			}
+			return assemblies;
+		}
         
         string getExecutableArguments (string assemblyName)
 		{
@@ -70,11 +94,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.WinCE) ||
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Xbox))
 			{
-				arguments = "/noshadow /xmlconsole \"" + assemblyName + "\"";
+				arguments = "/noshadow /xmlconsole " + assemblyName;
 			}
 			else
 			{
-				arguments = "--noshadow --xmlconsole \"" + assemblyName + "\"";
+				arguments = "--noshadow --xmlconsole " + assemblyName;
 			}
 			return arguments;
 		}

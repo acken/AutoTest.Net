@@ -20,8 +20,8 @@ namespace AutoTest.Test.Core.TestRunners
             _parser = new NUnitTestResponseParser(bus);
 			var sources = new TestRunInfo[]
 				{ 
-					new TestRunInfo(new Project("project1", null), string.Format("{0}SomePath{0}AutoTest.WinForms.Test{0}bin{0}Debug{0}AutoTest.WinForms.Test.dll", Path.DirectorySeparatorChar)),
-					new TestRunInfo(new Project("project2", null), string.Format("{0}SomePath{0}AutoTest.Console.Test{0}bin{0}Debug{0}AutoTest.Console.Test.dll", Path.DirectorySeparatorChar))
+					new TestRunInfo(new Project("project1", null), "/SomePath/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll"),
+					new TestRunInfo(new Project("project2", null), "/SomePath/AutoTest.Console.Test/bin/Debug/AutoTest.Console.Test.dll")
 				};
 			_parser.Parse(File.ReadAllText("TestResources/NUnit/multipleAssemblies.txt"), sources);
         }
@@ -35,8 +35,8 @@ namespace AutoTest.Test.Core.TestRunners
 		[Test]
 		public void Should_extract_assemblies()
 		{
-			_parser.Result[0].Assembly.ShouldEqual(string.Format("{0}SomePath{0}AutoTest.WinForms.Test{0}bin{0}Debug{0}AutoTest.WinForms.Test.dll", Path.DirectorySeparatorChar));
-			_parser.Result[1].Assembly.ShouldEqual(string.Format("{0}SomePath{0}AutoTest.Console.Test{0}bin{0}Debug{0}AutoTest.Console.Test.dll", Path.DirectorySeparatorChar));
+			_parser.Result[0].Assembly.ShouldEqual("/SomePath/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll");
+			_parser.Result[1].Assembly.ShouldEqual("/SomePath/AutoTest.Console.Test/bin/Debug/AutoTest.Console.Test.dll");
 		}
 		
 		[Test]

@@ -41,6 +41,7 @@ namespace AutoTest.WinForms
         private int _rightSpacing = 0;
         private int _listBottomSpacing = 0;
         private int _infoBottomSpacing = 0;
+		private bool _running = false;
 
         public FeedbackForm(IDirectoryWatcher watcher, IConfiguration configuration, IRunFeedbackPresenter runPresenter, IInformationForm informationForm, IRunResultCache runResultCache, IMessageBus bus, ISendNotifications notifier)
         {
@@ -99,6 +100,7 @@ namespace AutoTest.WinForms
             _syncContext.Post(s =>
                                   {
                                       setRunInProgressFeedback("");
+									  _running = true;
                                       generateSummary(null);
 									  if (_configuration.NotifyOnRunStarted)
 									  	runNotification("Detected changes, running..", null);
@@ -107,6 +109,8 @@ namespace AutoTest.WinForms
 
         private void setRunInProgressFeedback(string additionalInfo)
         {
+			if (!_running)
+				return;
             var text = "Detected changes, running..";
             if (additionalInfo.Length > 0)
                 text += string.Format(" ({0})", additionalInfo);
@@ -129,6 +133,7 @@ namespace AutoTest.WinForms
                         report.NumberOfTestsPassed,
                         report.NumberOfTestsFailed,
                         report.NumberOfTestsIgnored);
+					_running = false;
                     labelRunState.Text = msg;
 					if (report.NumberOfBuildsFailed > 0 || report.NumberOfTestsFailed > 0)
 						labelRunState.ForeColor = Color.Red;
