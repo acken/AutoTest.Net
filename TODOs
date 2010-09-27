@@ -53,6 +53,7 @@ done - Add custom ignore lists or even better what files is contained in what pr
 done - Remove Product version from deployed xml (ProductVersion is flawed)
 When adding new folder on linux it doesn't detect changes in the files within it??
 "nunit-console myassembly.dll /exclude:bleh" (excludes the category bleh) put categories in config
+Need to match assemblies for the assemblychangeconsumer so that same assembly in different locations aren't tested twice
 ======== Beta ========
 Add MbUnit support
 Implement support for VS2005 7.10.3077 and VS2003 project files
