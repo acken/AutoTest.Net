@@ -41,15 +41,11 @@ namespace AutoTest.Core.Configuration
 		{
 			if (_buildExecutables != null)
 			{
-				Debug.WriteMessage("Number of build executables " + _buildExecutables.Count.ToString());
 				if (_buildExecutables.Count == 0)
 				{
 					FileChangeBatchDelay = 1500;
 					_bus.SetBuildProvider("NoBuild");
 				}
-				
-				foreach (var build in _buildExecutables)
-					Debug.WriteMessage("First item " + build.Key.ToString() + " " + build.Value.ToString());
 			}
 		}
 
