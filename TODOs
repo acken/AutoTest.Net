@@ -46,17 +46,16 @@ done - Fix window resize for status window
 done - Choose watch path on startup or as parameter
 done - Winforms dies on mono when getting tow sets compile errors and trying to select one of them
 done - Fix bug in console app (won't launch)
-Implement support for VS2005 7.10.3077 and VS2003 project files
-Add MbUnit support
-Build all first then run all tests in a single batch
-Remove Product version from deployed xml (ProductVersion is flawed)
+done - Build all first then run all tests in a single batch
+done - AutoTest.Config
+done - 	State that watchdirectory is optional and that you can have multiple
+done - Add custom ignore lists or even better what files is contained in what project
+done - Remove Product version from deployed xml (ProductVersion is flawed)
 When adding new folder on linux it doesn't detect changes in the files within it??
-AutoTest.Config
-	State that watchdirectory is optional and that you can have multiple
-Add custom ignore lists or even better what files is contained in what project
 "nunit-console myassembly.dll /exclude:bleh" (excludes the category bleh) put categories in config
-Maybe also include exception folder names and file names in the config
 ======== Beta ========
+Add MbUnit support
+Implement support for VS2005 7.10.3077 and VS2003 project files
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
 Add system tests doing real work

@@ -8,6 +8,7 @@ using AutoTest.Core.Caching.Projects;
 using Rhino.Mocks;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -17,13 +18,15 @@ namespace AutoTest.Test.Core.TestRunners
         private XUnitTestRunner _runner;
         private IMessageBus _bus;
         private IConfiguration _configuration;
+		private IResolveAssemblyReferences _referenceResolver;
 
         [SetUp]
         public void SetUp()
         {
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _runner = new XUnitTestRunner(_bus, _configuration);
+			_referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
+            _runner = new XUnitTestRunner(_bus, _configuration, _referenceResolver);
         }
 
         [Test]
@@ -40,5 +43,13 @@ namespace AutoTest.Test.Core.TestRunners
             var document = new ProjectDocument(ProjectType.CSharp);
             _runner.CanHandleTestFor(document).ShouldBeFalse();
         }
+		
+		[Test]
+		public void Should_check_for_xunit_test_framework_reference()
+		{
+			_referenceResolver.Stub(r => r.GetReferences("")).Return(new string[] { "xunit" });
+			var change = new ChangedFile("");
+            _runner.CanHandleTestFor(change).ShouldBeTrue();
+		}
     }
 }

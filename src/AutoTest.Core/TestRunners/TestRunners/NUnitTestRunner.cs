@@ -9,6 +9,7 @@ using Castle.Core.Logging;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -16,11 +17,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;
+		private IResolveAssemblyReferences _referenceResolver;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
         {
             _bus = bus;
             _configuration = configuration;
+			_referenceResolver = referenceResolver;
         }
 
         #region ITestRunner Members
@@ -29,6 +32,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             return document.ContainsNUnitTests;
         }
+		
+		public bool CanHandleTestFor(ChangedFile assembly)
+		{
+			var references = _referenceResolver.GetReferences(assembly.FullName);
+			return references.Contains("nunit.framework");
+		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
@@ -63,7 +72,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var testRunnerExes = new List<string>();
 			foreach (var runInfo in runInfos)
 			{
-				var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
+				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 	            if (File.Exists(unitTestExe))
 				{
 					if (!testRunnerExes.Exists(x => x.Equals(unitTestExe)))
@@ -73,12 +82,19 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return testRunnerExes.ToArray();
 		}
 		
+		private string getFramework(TestRunInfo runInfo)
+		{
+			if (runInfo.Project == null)
+				return "";
+			return runInfo.Project.Value.Framework;
+		}
+		
 		private string getAssembliesFromTestRunner(string testRunnerExes, TestRunInfo[] runInfos)
 		{
 			var assemblies = "";
 			foreach (var runInfo in runInfos)
 			{
-				var unitTestExe = _configuration.NunitTestRunner(runInfo.Project.Value.Framework);
+				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
 			}

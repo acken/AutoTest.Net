@@ -29,6 +29,8 @@ namespace AutoTest.Core.FileSystem
 		
         public bool ShouldPublish(string filePath)
         {
+			if (!_configuration.ShouldUseIgnoreLists)
+				return true;
 			if (Directory.Exists(filePath))
 				return false;
 			if (match(filePath, _defaultIgnores))

@@ -94,5 +94,7 @@ namespace AutoTest.Core.Messaging
         event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
         void Publish<T>(T message);
+		
+		void SetBuildProvider(string buildProvider);
     }
 }

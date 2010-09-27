@@ -10,6 +10,7 @@ using System.Threading;
 using AutoTest.Test.Core.Messaging.TestClasses;
 using AutoTest.Core.TestRunners;
 using BlockedMessage=AutoTest.Core.Messaging.BlockedMessage;
+using Rhino.Mocks;
 
 namespace AutoTest.Test.Core.Messaging
 {
@@ -19,6 +20,7 @@ namespace AutoTest.Test.Core.Messaging
         private DIContainer _container;
         private IMessageBus _bus;
         private string _threadException;
+		private IConfiguration _configuration;
         
         public MessageBusTests()
         {

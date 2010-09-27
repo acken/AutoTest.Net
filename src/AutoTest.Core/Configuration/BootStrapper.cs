@@ -29,9 +29,11 @@ namespace AutoTest.Core.Configuration
         public static void Configure()
         {
             _container.Configure();
-            if (_container.Services.Locate<IConfiguration>().DebuggingEnabled)
+			var configuration = _container.Services.Locate<IConfiguration>();
+            if (configuration.DebuggingEnabled)
                 Debug.EnableLogging();
-            Debug.InitialConfigurationFinished();
+			Debug.InitialConfigurationFinished();
+			configuration.SetBuildProvider();
         }
 
         public static void InitializeCache(string watchFolder)

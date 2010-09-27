@@ -57,11 +57,19 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var runInfo = matchToTestSource(testSuite);
 				if (runInfo ==  null)
 					continue;
-				var results = new TestRunResults(runInfo.Project.Key, runInfo.Assembly, _result.ToArray());
+				var results = getTestResults(runInfo);
 				results.SetTimeSpent(getTimeSpent(testSuite));
 				_runResults.Add(results);
 			}
         }
+		
+		private TestRunResults getTestResults(TestRunInfo runInfo)
+		{
+			string project = "";
+			if (runInfo.Project != null)
+				project = runInfo.Project.Key;
+			return new TestRunResults(project, runInfo.Assembly, _result.ToArray());
+		}
 		
 		private TestRunInfo matchToTestSource(string testSuite)
 		{

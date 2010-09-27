@@ -19,8 +19,11 @@ namespace AutoTest.Core.Configuration
 		bool NotifyOnRunCompleted { get; }
 		string GrowlNotify { get; }
 		string[] WatchIgnoreList { get; }
+		bool ShouldUseIgnoreLists { get; }
+		int FileChangeBatchDelay { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
+		void SetBuildProvider();
     }
 }

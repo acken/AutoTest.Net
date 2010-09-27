@@ -27,6 +27,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_return_true_if_normal_file()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] {});
             _validator
                 .ShouldPublish(Path.GetTempFileName())
@@ -36,6 +37,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_bin_debug()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}bin{0}Debug{0}"))
                 .ShouldBeFalse();
@@ -44,6 +46,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_bin_release()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}bin{0}Release{0}"))
                 .ShouldBeFalse();
@@ -52,6 +55,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_bin_x86()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}bin{0}x86{0}"))
                 .ShouldBeFalse();
@@ -60,6 +64,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_obj_debug()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}obj{0}Debug{0}"))
                 .ShouldBeFalse();
@@ -68,6 +73,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_obj_release()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}obj{0}Release{0}"))
                 .ShouldBeFalse();
@@ -76,6 +82,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_obj_x86()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}obj{0}x86{0}"))
                 .ShouldBeFalse();
@@ -84,6 +91,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_directories()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(Path.GetDirectoryName(Path.GetTempFileName()))
                 .ShouldBeFalse();
@@ -92,6 +100,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_monos_filelistabsolute_file()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator.ShouldPublish(getInfo("something{0}obj{0}SomeProject.csproj.FileListAbsolute.txt"))
                 .ShouldBeFalse();
         }
@@ -99,6 +108,7 @@ namespace AutoTest.Test.Core.FileSystem
         [Test]
         public void Should_invalidate_monos_fileswrittenabsolute_file()
         {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator.ShouldPublish(getInfo("something{0}obj{0}SomeProject.csproj.FilesWrittenAbsolute.txt"))
                 .ShouldBeFalse();
         }
@@ -106,6 +116,7 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_ignore_directory_with_pattern_name()
 		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "meh" });
 			_validator.ShouldPublish("/Somedirectory/meh/AndAnotherOne").ShouldBeFalse();
 		}
@@ -113,6 +124,7 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_match_pattern_to_path_end()
 		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "xmloutput.xml" });
 			_validator.ShouldPublish("/Somedirectory/hoi/AndAnotherOne/xmloutput.xml").ShouldBeFalse();
 		}
@@ -120,6 +132,7 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_match_sub_directories_through_glob()
 		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
 			_validator.ShouldPublish("/Somedirectory/hoi/myFolder/somexmlfile.xml").ShouldBeFalse();
 		}
@@ -127,6 +140,7 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_glob_case_sensitive()
 		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
 			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
 		}
@@ -134,8 +148,17 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_return_list_of_ignore_items()
 		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*", "whatever.txt", "*.bat" });
 			_validator.GetIgnorePatterns().ShouldEqual("myFolder/*|whatever.txt|*.bat");
+		}
+		
+		[Test]
+		public void Should_respect_configuration_setting()
+		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(false);
+			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
+			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
 		}
 
         private string getInfo(string path)

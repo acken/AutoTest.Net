@@ -26,13 +26,32 @@ namespace AutoTest.Core.Configuration
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
 		public string[] WatchIgnoreList { get; private set; }
+		public bool ShouldUseIgnoreLists { get { return _buildExecutables.Count > 0; } }
+		public int FileChangeBatchDelay { get; private set; }
 		
         public Config(IMessageBus bus)
         {
             _bus = bus;
+			FileChangeBatchDelay = 100;
 			var core = getConfiguration();
             tryToConfigure(core);
         }
+		
+		public void SetBuildProvider()
+		{
+			if (_buildExecutables != null)
+			{
+				Debug.WriteMessage("Number of build executables " + _buildExecutables.Count.ToString());
+				if (_buildExecutables.Count == 0)
+				{
+					FileChangeBatchDelay = 1500;
+					_bus.SetBuildProvider("NoBuild");
+				}
+				
+				foreach (var build in _buildExecutables)
+					Debug.WriteMessage("First item " + build.Key.ToString() + " " + build.Value.ToString());
+			}
+		}
 
         private void tryToConfigure(CoreSection core)
         {

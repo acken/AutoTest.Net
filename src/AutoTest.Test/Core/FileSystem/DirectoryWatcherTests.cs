@@ -26,6 +26,7 @@ namespace AutoTest.Test.Core
             _validator = MockRepository.GenerateMock<IWatchValidator>();
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
 			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
+			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration);
             _file = Path.GetFullPath("watcher_test.txt");
 			_watchDirectory = Path.GetDirectoryName(_file);
@@ -44,6 +45,7 @@ namespace AutoTest.Test.Core
         {
             var bus = MockRepository.GenerateMock<IMessageBus>();
 			var config = MockRepository.GenerateMock<IConfiguration>();
+			config.Stub(c => c.FileChangeBatchDelay).Return(50);
             var watcher = new DirectoryWatcher(bus, null, config);
             watcher.Watch("");
             bus.AssertWasNotCalled(m => m.Publish<InformationMessage>(null), m => m.IgnoreArguments());

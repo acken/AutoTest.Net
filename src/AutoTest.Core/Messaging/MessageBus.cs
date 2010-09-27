@@ -11,6 +11,7 @@ namespace AutoTest.Core.Messaging
         private readonly IServiceLocator _services;
         private object _padLock = new object();
         private List<BlockedMessage> _blockedMessages = new List<BlockedMessage>();
+		private string _buildProvider = "MSBuild";
 
         public event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
         public event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
@@ -43,6 +44,12 @@ namespace AutoTest.Core.Messaging
                 ThreadPool.QueueUserWorkItem(tryPublish<T>, message);
             }
         }
+		
+		public void SetBuildProvider(string buildProvider)
+		{
+			_buildProvider = buildProvider;
+			Debug.ChangedBuildProvider(_buildProvider);
+		}
 
         private bool isBlockingConsumers<T>()
         {
@@ -95,12 +102,19 @@ namespace AutoTest.Core.Messaging
                     consumer.Consume(message);
             }
 
-            var consumers = _services.LocateAll<IConsumerOf<T>>();
+            var consumers = locateConsumers<T>();
             foreach (var instance in consumers)
                 instance.Consume(message);
 
             publishWithheldMessages<T>();
         }
+		
+		private IConsumerOf<T>[] locateConsumers<T>()
+		{
+			if (typeof(T).Equals(typeof(FileChangeMessage)))
+				return new IConsumerOf<T>[] { _services.Locate<IConsumerOf<T>>(_buildProvider) };
+			return _services.LocateAll<IConsumerOf<T>>();
+		}
 
         private void publishWithheldMessages<T>()
         {

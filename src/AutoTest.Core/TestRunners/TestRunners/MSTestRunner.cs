@@ -8,16 +8,20 @@ using System.IO;
 using Castle.Core.Logging;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
+using System.Reflection;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class MSTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
+		private IResolveAssemblyReferences _referenceResolver;
 
-        public MSTestRunner(IConfiguration configuration)
+        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
         {
             _configuration = configuration;
+			_referenceResolver = referenceResolver;
         }
 
         #region ITestRunner Members
@@ -26,6 +30,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             return document.ContainsMSTests;
         }
+		
+		public bool CanHandleTestFor(ChangedFile assembly)
+		{
+			var references = _referenceResolver.GetReferences(assembly.FullName);
+			return references.Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
+		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
@@ -33,10 +43,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			foreach (var runInfo in runInfos)
 			{			
 	            var timer = Stopwatch.StartNew();
-	            var unitTestExe = _configuration.MSTestRunner(runInfo.Project.Value.Framework);
+	            var unitTestExe = _configuration.MSTestRunner(getFramework(runInfo));
 	            if (!File.Exists(unitTestExe))
 				{
-	                results.Add(new TestRunResults(runInfo.Project.Key, runInfo.Assembly, new TestResult[] { }));
+					var project = "";
+					if (runInfo.Project != null)
+						project = runInfo.Project.Key;
+	                results.Add(new TestRunResults(project, runInfo.Assembly, new TestResult[] { }));
 					continue;
 				}
 	
@@ -63,5 +76,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         }
 
         #endregion
+		
+		private string getFramework(TestRunInfo runInfo)
+		{
+			if (runInfo.Project == null)
+				return "";
+			return runInfo.Project.Value.Framework;
+		}
     }
 }

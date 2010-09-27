@@ -100,8 +100,15 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_bind_consumer_of_file_change_message()
         {
-            var filChangeHandler = _locator.Locate<IConsumerOf<FileChangeMessage>>();
-            filChangeHandler.ShouldBeOfType<IConsumerOf<FileChangeMessage>>();
+            var filChangeHandler = _locator.Locate<IConsumerOf<FileChangeMessage>>("MSBuild");
+            filChangeHandler.ShouldBeOfType<FileChangeConsumer>();
+        }
+		
+		[Test]
+        public void Should_bind_consumer_of_binary_file_change_message()
+        {
+            var filChangeHandler = _locator.Locate<IConsumerOf<FileChangeMessage>>("NoBuild");
+            filChangeHandler.ShouldBeOfType<BinaryFileChangeConsumer>();
         }
 
         [Test]
@@ -234,5 +241,19 @@ namespace AutoTest.Test.Core.Configuration
             else
                 notifier.ShouldNotBeOfType<GrowlNotifier>();
         }
+		
+		[Test]
+		public void Should_register_assembly_resolver()
+		{
+			var resolver = _locator.Locate<IResolveAssemblyReferences>();
+			resolver.ShouldBeOfType<IResolveAssemblyReferences>();
+		}
+		
+		[Test]
+		public void Should_register_assembly_change_consumer()
+		{
+			var consumer = _locator.Locate<IConsumerOf<AssemblyChangeMessage>>();
+			consumer.ShouldBeOfType<IConsumerOf<AssemblyChangeMessage>>();
+		}
     }
 }

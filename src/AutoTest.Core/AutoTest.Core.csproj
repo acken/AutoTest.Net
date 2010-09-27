@@ -157,6 +157,11 @@
     <Compile Include="Notifiers\notify_sendNotifier.cs" />
     <Compile Include="Notifiers\NullNotifier.cs" />
     <Compile Include="Messaging\MessageConsumers\TestRunInfo.cs" />
+    <Compile Include="Messaging\MessageConsumers\BinaryFileChangeConsumer.cs" />
+    <Compile Include="Messaging\AssemblyChangeMessage.cs" />
+    <Compile Include="Messaging\MessageConsumers\AssemblyChangeConsumer.cs" />
+    <Compile Include="FileSystem\IResolveAssemblyReferences.cs" />
+    <Compile Include="FileSystem\AssemblyParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

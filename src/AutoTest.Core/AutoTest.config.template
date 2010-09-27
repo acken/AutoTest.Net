@@ -11,7 +11,7 @@
 	<!-- You have the posibility to specify multiple build executables based on framework version or -->
 	<!-- product version from within the csproj/vbproj file using the framework attribute -->
 	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe</BuildExecutable>
-	<BuildExecutable framework="9.0.30729">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
+	<BuildExecutable framework="v4.0">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
 	
 	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version -->

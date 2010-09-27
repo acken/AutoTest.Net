@@ -41,9 +41,9 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IProjectParser>().ImplementedBy<ProjectParser>())
                 .Register(Component.For<ICreate<Project>>().ImplementedBy<ProjectFactory>())
                 .Register(Component.For<IPrepare<Project>>().ImplementedBy<ProjectPreparer>())
-                .Register(
-                Component.For<IBlockingConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
-                .Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<FileChangeConsumer>())
+                .Register(Component.For<IBlockingConsumerOf<ProjectChangeMessage>>().ImplementedBy<ProjectChangeConsumer>())
+                .Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<FileChangeConsumer>().Named("MSBuild"))
+				.Register(Component.For<IConsumerOf<FileChangeMessage>>().ImplementedBy<BinaryFileChangeConsumer>().Named("NoBuild"))
                 .Register(Component.For<ICache>().ImplementedBy<Cache>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
                 .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
@@ -61,6 +61,8 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ITestRunner>().ImplementedBy<XUnitTestRunner>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
                 .Register(Component.For<IMergeRunResults>().Forward<IRunResultCache>().ImplementedBy<RunResultCache>())
+				.Register(Component.For<IResolveAssemblyReferences>().ImplementedBy<AssemblyParser>())
+				.Register(Component.For<IConsumerOf<AssemblyChangeMessage>>().ImplementedBy<AssemblyChangeConsumer>())
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			if ((new notify_sendNotifier()).IsSupported())

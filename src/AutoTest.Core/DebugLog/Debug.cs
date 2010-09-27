@@ -206,6 +206,22 @@ namespace AutoTest.Core.DebugLog
             if (_isDisabled) return;
             writeException(ex);
         }
+		
+		public static void ConsumingAssemblyChangeMessage(AssemblyChangeMessage message)
+		{
+			if (_isDisabled) return;
+			var builder = new StringBuilder();
+            builder.AppendLine("Consuming assembly changes for:");
+            foreach (var file in message.Files)
+                builder.AppendLine(string.Format("    {0}", file.FullName));
+            write(builder.ToString());
+		}
+		
+		public static void ChangedBuildProvider(string buildProvider)
+		{
+			if (_isDisabled) return;
+			write(string.Format("Build provider changed to '{0}'", buildProvider));
+		}
 
         private static void writeException(Exception ex)
         {
