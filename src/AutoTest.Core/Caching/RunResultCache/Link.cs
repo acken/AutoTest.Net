@@ -7,16 +7,14 @@ namespace AutoTest.Core.Caching.RunResultCache
 {
     public class Link
     {
-        private int _start;
-        private int _length;
+		public int Start { get; private set; }
+		public int Length { get; private set; }
 
         public Link(int start, int length)
         {
-            _start = start;
-            _length = length;
+            Start = start;
+            Length = length;
         }
 
-        public int Start { get { return _start; } }
-        public int Length { get { return _length; } }
     }
 }
