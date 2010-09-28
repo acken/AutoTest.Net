@@ -20,7 +20,6 @@ namespace AutoTest.Test.Core.Messaging
         private DIContainer _container;
         private IMessageBus _bus;
         private string _threadException;
-		private IConfiguration _configuration;
         
         public MessageBusTests()
         {
