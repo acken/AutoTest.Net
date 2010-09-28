@@ -6,6 +6,8 @@ winforms app, a console app and a Visual Studio plugin.
 
 Features
 	* Automatic build and testrun through file change detection
+	* Automatic test runs for built assemblies (if BuildExecutable config is removed)
+		* You can then build through Visual Studio or a similar tool
 	* Cross platform support through Mono
 	* Supports C# and Visual Basic projects
 	* Supported build tools

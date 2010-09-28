@@ -9,7 +9,10 @@
 	
 	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version or -->
-	<!-- product version from within the csproj/vbproj file using the framework attribute -->
+	<!-- product version from within the csproj/vbproj file using the framework attribute. -->
+	<!-- If you remove all configured build executables AutoTest.Net will start tracking assembly changes -->
+	<!-- instead and you can use Visual Studio or equal to build and AutoTest.Net will -->
+	<!-- run all tests for any built assembly. -->
 	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe</BuildExecutable>
 	<BuildExecutable framework="v4.0">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
 	
