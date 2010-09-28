@@ -5,9 +5,10 @@ This product provides continuous testing for the .Net platform.It contains a
 winforms app, a console app and a Visual Studio plugin.
 
 Features
-	* Automatic build and testrun through file change detection
-	* Automatic test runs for built assemblies (if BuildExecutable config is removed)
-		* You can then build through Visual Studio or a similar tool
+	* File tracking: Automatic builds and testruns
+	* Assembly tracking: Automatic test runs for built assemblies (if 
+	  BuildExecutable is removed from config)
+		* You can then build through Visual Studio or something similar
 	* Cross platform support through Mono
 	* Supports C# and Visual Basic projects
 	* Supported build tools
@@ -21,6 +22,7 @@ Features
 	* Supports notifications through
 		* notify-send (Linux)
 		* Growl (Mac, Windows)
+	* Supports configurable ignore files using the .gitignore format
 
 Geting started
 To get started using this application edit AutoTest.config to suite your system.
