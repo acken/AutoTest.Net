@@ -26,7 +26,6 @@ cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
 cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt
-cp ./CHANGELOG $DEPLOYDIR/CHANGELOG
 
 cp $BINARYDIR/Castle.Core.dll $DEPLOYDIR/Castle.Core.dll
 cp $BINARYDIR/Castle.DynamicProxy2.dll $DEPLOYDIR/Castle.DynamicProxy2.dll
