@@ -43,7 +43,7 @@ namespace AutoTest.Core.Configuration
 			{
 				if (_buildExecutables.Count == 0)
 				{
-					FileChangeBatchDelay = 1500;
+					FileChangeBatchDelay = 2000;
 					_bus.SetBuildProvider("NoBuild");
 				}
 			}

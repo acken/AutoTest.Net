@@ -10,6 +10,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 	public class BinaryFileChangeConsumerTest
 	{
 		private IMessageBus _bus;
+		private IRetrieveAssemblyIdentifiers _assemblyIdProvider;
 		private BinaryFileChangeConsumer _consumer;
 		private FileChangeMessage _files;
 		
@@ -17,7 +18,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		public void SetUp()
 		{
 			_bus = MockRepository.GenerateMock<IMessageBus>();
-			_consumer = new BinaryFileChangeConsumer(_bus);
+			_assemblyIdProvider = MockRepository.GenerateMock<IRetrieveAssemblyIdentifiers>();
+			_consumer = new BinaryFileChangeConsumer(_bus, _assemblyIdProvider);
 			_files = new FileChangeMessage();
 		}
 		
@@ -43,6 +45,16 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_files.AddFile(new ChangedFile("mylibrary.dll"));
 			_consumer.Consume(_files);
 			_bus.AssertWasCalled(b => b.Publish<AssemblyChangeMessage>(null), b => b.IgnoreArguments());
+		}
+		
+		[Test]
+		public void Should_consume_duplicate_assemblies_once()
+		{
+			_assemblyIdProvider.Stub(a => a.GetAssemblyIdentifier("")).IgnoreArguments().Return(0);
+			_files.AddFile(new ChangedFile("mylibrary.dll"));
+			_files.AddFile(new ChangedFile("another_location/mylibrary.dll"));
+			_consumer.Consume(_files);
+			_bus.AssertWasCalled(b => b.Publish<AssemblyChangeMessage>(Arg<AssemblyChangeMessage>.Matches(x => x.Files.Length.Equals(1))));
 		}
 	}
 }

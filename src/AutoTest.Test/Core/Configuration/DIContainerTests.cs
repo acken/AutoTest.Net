@@ -255,5 +255,12 @@ namespace AutoTest.Test.Core.Configuration
 			var consumer = _locator.Locate<IConsumerOf<AssemblyChangeMessage>>();
 			consumer.ShouldBeOfType<IConsumerOf<AssemblyChangeMessage>>();
 		}
+		
+		[Test]
+		public void Should_register_assembly_identifier_retriever()
+		{
+			var retriever = _locator.Locate<IRetrieveAssemblyIdentifiers>();
+			retriever.ShouldBeOfType<IRetrieveAssemblyIdentifiers>();
+		}
     }
 }
