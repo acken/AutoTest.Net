@@ -56,7 +56,7 @@ namespace AutoTest.Core.Configuration
         public void Read(string configFile)
         {
             _xml.Load(configFile);
-			WatchDirectories = getValues("configuration/DirectoryToWatch");
+			WatchDirectories = getValues("configuration/DirectoryToWatch", false);
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
             MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
@@ -67,8 +67,8 @@ namespace AutoTest.Core.Configuration
 			NotifyOnRunStarted = getBoolItem("configuration/notify_on_run_started", true);
 			NotifyOnRunCompleted = getBoolItem("configuration/notify_on_run_completed", true);
 			WatchIgnoreFile = getValueItem("configuration/IgnoreFile", "");
-			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly");
-			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category");
+			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
+			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
         }
 
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
@@ -87,6 +87,10 @@ namespace AutoTest.Core.Configuration
                     version = attribute.InnerText;
                 executables.Add(new KeyValuePair<string, string>(version, executable));
             }
+			if (shouldMerge(xpath))
+				item.SetShouldMerge();
+			if (shouldRemoveExisting(xpath))
+				item.SetShouldRemoveExisting();
 			item.SetValue(executables.ToArray());
             return item;
         }
@@ -98,8 +102,31 @@ namespace AutoTest.Core.Configuration
 			if (val == null)
 				return item;
 			item.SetValue((bool) val);
+			if (shouldMerge(path))
+				item.SetShouldMerge();
+			if (shouldRemoveExisting(path))
+				item.SetShouldRemoveExisting();
 			return item;
         }
+		
+		private bool shouldRemoveExisting(string path)
+		{
+			return checkOverrideAttribute(path, "remove");
+		}
+		
+		private bool shouldMerge(string path)
+		{
+			return checkOverrideAttribute(path, "merge");
+		}
+		
+		private bool checkOverrideAttribute(string path, string content)
+		{
+			var node = _xml.SelectSingleNode(path);
+            var attrib = node.Attributes["override"];
+			if (attrib == null)
+				return false;
+            return attrib.InnerText.ToLower().Equals(content);
+		}
 		
 		private bool? getBool(string nodeName, bool defaultValue)
 		{
@@ -117,6 +144,10 @@ namespace AutoTest.Core.Configuration
 			if (executable == null)
 				return item;
             var arguments = getValue("configuration/CodeEditor/Arguments", "");
+			if (shouldMerge("configuration/CodeEditor"))
+				item.SetShouldMerge();
+			if (shouldRemoveExisting("configuration/CodeEditor"))
+				item.SetShouldRemoveExisting();
             return item.SetValue(new CodeEditor(executable, arguments));
         }
 
@@ -127,6 +158,10 @@ namespace AutoTest.Core.Configuration
 			if (str == null)
 				return item;
 			item.SetValue(str);
+			if (shouldMerge(nodeName))
+				item.SetShouldMerge();
+			if (shouldRemoveExisting(nodeName))
+				item.SetShouldRemoveExisting();
 			return item;
         }
 		
@@ -138,7 +173,12 @@ namespace AutoTest.Core.Configuration
             return node.InnerText;
         }
 
-        private ConfigItem<string[]> getValues(string nodeName)
+		private string getParentNode(string path)
+		{
+			return path.Substring(0, path.LastIndexOf('/'));
+		}
+		
+        private ConfigItem<string[]> getValues(string nodeName, bool hasParent)
         {
 			var item = new ConfigItem<string[]>(new string[] {});
             var values = new List<string>();
@@ -148,6 +188,13 @@ namespace AutoTest.Core.Configuration
             foreach (XmlNode node in nodes)
                 values.Add(node.InnerText);
 			item.SetValue(values.ToArray());
+			var mainNode = nodeName;
+			if (hasParent)
+				mainNode = getParentNode(nodeName);
+			if (shouldMerge(mainNode))
+				item.SetShouldMerge();
+			if (shouldRemoveExisting(mainNode))
+				item.SetShouldRemoveExisting();
             return item;
         }
     }
