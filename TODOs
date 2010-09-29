@@ -52,10 +52,12 @@ done - 	State that watchdirectory is optional and that you can have multiple
 done - Add custom ignore lists or even better what files is contained in what project
 done - Remove Product version from deployed xml (ProductVersion is flawed)
 done - Need to match assemblies for the assemblychangeconsumer so that same assembly in different locations aren't tested twice
+done - "nunit-console myassembly.dll /exclude:bleh" (excludes the category bleh) put categories in config
+Add support for inherited configs
 When adding new folder on linux it doesn't detect changes in the files within it??
-"nunit-console myassembly.dll /exclude:bleh" (excludes the category bleh) put categories in config
 ======== Beta ========
 Add MbUnit support
+Add support for versioned mstest runners (because of /category:"!Category1|!Category2" that's only supported for VS2010)
 Implement support for VS2005 7.10.3077 and VS2003 project files
 Run single test turned out pretty useless for MSTest.. figure out what's going on
 Add test to ProjectChangeConsumer
