@@ -103,22 +103,40 @@ namespace AutoTest.Core.TestRunners.TestRunners
         
         string getExecutableArguments (string assemblyName)
 		{
-			var arguments = "";
+			var separator = getArgumentSeparator();
+			var categoryList = getCategoryIgnoreList();
+			return string.Format("{0}noshadow {0}xmlconsole {1}", separator, categoryList) + assemblyName;
+		}
+
+        #endregion
+		
+		private string getCategoryIgnoreList()
+		{
+			var separator = getArgumentSeparator();
+			string categoryList = "";
+			foreach (var category in _configuration.TestCategoriesToIgnore)
+			{
+				categoryList += (categoryList.Length > 0 ? "," : "") + category;
+			}
+			if (categoryList.Length > 0)
+				categoryList = separator + "exclude=" + categoryList + " ";
+			return categoryList;
+		}
+		
+		private string getArgumentSeparator()
+		{
 			if (System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32NT) ||
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32S) ||
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32Windows) ||
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.WinCE) ||
 			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Xbox))
 			{
-				arguments = "/noshadow /xmlconsole " + assemblyName;
+				return "/";
 			}
 			else
 			{
-				arguments = "--noshadow --xmlconsole " + assemblyName;
+				return "--";
 			}
-			return arguments;
 		}
-
-        #endregion
     }
 }
