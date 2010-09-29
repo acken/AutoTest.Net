@@ -44,7 +44,7 @@
 	<!--	<Assembly>*whatever.dll</Assembly>-->
 	<!--</ShouldIgnoreTestAssembly>-->
 	
-	<!-- Test categories to ignore. Is not supported by XUnit. (Optional) -->
+	<!-- Test categories to ignore. Only supported by NUnit (Optional) -->
 	<!--<ShouldIgnoreTestCategories>-->
 	<!--	<Category>MyIgnoreCategory</Category>-->
 	<!--</ShouldIgnoreTestCategories>-->
