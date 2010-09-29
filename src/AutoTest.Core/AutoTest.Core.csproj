@@ -163,6 +163,8 @@
     <Compile Include="FileSystem\IResolveAssemblyReferences.cs" />
     <Compile Include="FileSystem\AssemblyParser.cs" />
     <Compile Include="FileSystem\IRetrieveAssemblyIdentifiers.cs" />
+    <Compile Include="TestRunners\TestRunValidator.cs" />
+    <Compile Include="TestRunners\IDetermineWetherToTestAssembly.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

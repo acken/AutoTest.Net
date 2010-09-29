@@ -23,8 +23,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner[] _testRunners;
+		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator)
         {
             _bus = bus;
             _listGenerator = listGenerator;
@@ -32,6 +33,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;
+			_testAssemblyValidator = testAssemblyValidator;
         }
 
         #region IConsumerOf<ProjectChangeMessage> Members
@@ -86,6 +88,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					var project = _cache.Get<Project>(file);
 					string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
 	            	var assembly = Path.Combine(folder, project.Value.AssemblyName);
+					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
+					    continue;
 					if (!project.Value.ContainsTests)
 	                	continue;
 					if (runner.CanHandleTestFor(project.Value))

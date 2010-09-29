@@ -28,6 +28,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner _testRunner;
+		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 
         [SetUp]
         public void SetUp()
@@ -41,7 +42,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _configuration = MockRepository.GenerateMock<IConfiguration>();
             _buildRunner = MockRepository.GenerateMock<IBuildRunner>();
             _testRunner = MockRepository.GenerateMock<ITestRunner>();
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _cache, _configuration, _buildRunner, new ITestRunner[] { _testRunner });
+			_testAssemblyValidator = MockRepository.GenerateMock<IDetermineIfAssemblyShouldBeTested>();
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _cache, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator);
 
             _cache.Stub(c => c.Get<Project>(null)).IgnoreArguments().Return(_project);
         }
@@ -114,5 +116,24 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _consumer.Consume(message);
             _testRunner.AssertWasCalled(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(null, "") }), t => t.IgnoreArguments());
         }
+		
+		[Test]
+		public void Should_invalidate_test_assemblys()
+		{
+			_project.Value.SetAsNUnitTestContainer();
+            _project.Value.SetOutputPath("");
+            _project.Value.SetAssemblyName("someProject.dll");
+            _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
+            _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
+            _testRunner.Stub(t => t.CanHandleTestFor(_project.Value)).Return(true);
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+                .Return(new TestRunResults[] { new TestRunResults("", "", new TestResult[] {}) });
+			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).IgnoreArguments().Return(true);
+
+            var message = new ProjectChangeMessage();
+            message.AddFile(new ChangedFile("some file.csproj"));
+            _consumer.Consume(message);
+            _testRunner.AssertWasNotCalled(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(null, "") }), t => t.IgnoreArguments());
+		}
     }
 }

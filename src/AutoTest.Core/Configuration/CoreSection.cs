@@ -33,6 +33,8 @@ namespace AutoTest.Core.Configuration
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
 		public string WatchIgnoreFile { get; private set; }
+		public string[] TestAssembliesToIgnore { get; private set; }
+		public string[] TestCategoriesToIgnore { get; private set; }
 
         public CoreSection()
         {
@@ -53,6 +55,8 @@ namespace AutoTest.Core.Configuration
 			NotifyOnRunStarted = getBool("configuration/notify_on_run_started", true);
 			NotifyOnRunCompleted = getBool("configuration/notify_on_run_completed", true);
 			WatchIgnoreFile = getValue("configuration/IgnoreFile", "");
+			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly");
+			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category");
         }
 
         private List<KeyValuePair<string, string>> getVersionedSetting(string xpath)

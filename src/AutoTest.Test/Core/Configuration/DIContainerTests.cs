@@ -262,5 +262,12 @@ namespace AutoTest.Test.Core.Configuration
 			var retriever = _locator.Locate<IRetrieveAssemblyIdentifiers>();
 			retriever.ShouldBeOfType<IRetrieveAssemblyIdentifiers>();
 		}
+		
+		[Test]
+		public void Should_register_test_assembly_validator()
+		{
+			var validator = _locator.Locate<IDetermineIfAssemblyShouldBeTested>();
+			validator.ShouldBeOfType<IDetermineIfAssemblyShouldBeTested>();
+		}
     }
 }

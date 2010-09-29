@@ -154,5 +154,19 @@ namespace AutoTest.Test.Core.Configuration
 			_config.BuildIgnoreListFromPath("SomeInvalidDirectory");
 			_config.WatchIgnoreList.Length.ShouldEqual(0);
 		}
+		
+		[Test]
+		public void Should_get_test_assemblies_to_ignore()
+		{
+			_config.TestAssembliesToIgnore[0].ShouldEqual("*System.dll");
+			_config.TestAssembliesToIgnore[1].ShouldEqual("meh.exe");
+		}
+		
+		[Test]
+		public void Should_get_test_categories_to_ignore()
+		{
+			_config.TestCategoriesToIgnore[0].ShouldEqual("Category1");
+			_config.TestCategoriesToIgnore[1].ShouldEqual("Category2");
+		}
     }
 }

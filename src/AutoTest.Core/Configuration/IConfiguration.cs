@@ -21,6 +21,8 @@ namespace AutoTest.Core.Configuration
 		string[] WatchIgnoreList { get; }
 		bool ShouldUseIgnoreLists { get; }
 		int FileChangeBatchDelay { get; }
+		string[] TestAssembliesToIgnore { get; }
+		string[] TestCategoriesToIgnore { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);

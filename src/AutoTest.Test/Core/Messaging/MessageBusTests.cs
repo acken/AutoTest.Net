@@ -106,7 +106,7 @@ namespace AutoTest.Test.Core.Messaging
             var message2 = new BlockingMessage2();
             _bus.Publish(message1);
             _bus.Publish(message2);
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             message1.Consumed.ShouldBeTrue();
             message2.Consumed.ShouldBeTrue();
         }

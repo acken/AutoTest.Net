@@ -5,7 +5,7 @@
 	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
 	<!-- or you can choose to pass a directory when executing the application. Usually -->
 	<!-- the solution root folder -->
-	<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>
+	<!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
 	
 	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version or -->
@@ -39,6 +39,16 @@
 	  <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
 	</CodeEditor>
 	
+	<!-- Wildcard expressions for excluding test assemblies (Optional)-->
+	<!--<ShouldIgnoreTestAssembly>-->
+	<!--	<Assembly>*whatever.dll</Assembly>-->
+	<!--</ShouldIgnoreTestAssembly>-->
+	
+	<!-- Test categories to ignore. Is not supported by XUnit. (Optional) -->
+	<!--<ShouldIgnoreTestCategories>-->
+	<!--	<Category>MyIgnoreCategory</Category>-->
+	<!--</ShouldIgnoreTestCategories>-->
+	
 	<!-- Notification provider (Optional) -->
 	<!-- The supported providers right now are notify-send on linux and growl on -->
 	<!-- windows and Mac. notify-send will configure automatically while growl -->
@@ -47,6 +57,7 @@
 	<!--<notify_on_run_started>true</notify_on_run_started>-->
 	<!--<notify_on_run_completed>true</notify_on_run_completed>-->
 	
+	<!-- Growl notify path (Optional) -->
 	<!-- If growl doesn't work out of the box use the setting below to set the path -->
 	<!-- to growlnotify(.exe) -->
 	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
@@ -56,6 +67,7 @@
 	<!-- .gitignore file in the git source control system. (bin\Debug, bin\Release, -->
 	<!-- bin\x86, obj\Debug, obj\Release and obj\x86 are ignored by default. The file -->
 	<!-- is expected at the root of the path to watch -->
+	<!-- This setting is not in use when using assembly tracking -->
 	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
 	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->

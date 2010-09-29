@@ -8,11 +8,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	{
 		private ITestRunner[] _testRunners;
 		private IMessageBus _bus;
+		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		
-		public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus)
+		public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator)
 		{
 			_testRunners = testRunners;
 			_bus = bus;
+			_testAssemblyValidator = testAssemblyValidator;
 		}
 		
 		#region IConsumerOf[AssemblyChangeMessage] implementation
@@ -26,9 +28,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				var runInfos = new List<TestRunInfo>();
 				foreach (var assembly in message.Files)
 				{
+					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly.FullName))
+						continue;
 					if (runner.CanHandleTestFor(assembly))
 						runInfos.Add(new TestRunInfo(null, assembly.FullName));
 				}
+				if (runInfos.Count == 0)
+					continue;
 				var results = runner.RunTests(runInfos.ToArray());
 				foreach (var result in results)
 				{

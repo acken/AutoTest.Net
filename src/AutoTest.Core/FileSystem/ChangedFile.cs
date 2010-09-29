@@ -15,6 +15,13 @@ namespace AutoTest.Core.FileSystem
         public string Extension { get { return _extension; } }
         public string FullName { get { return _fullName; } }
         public string Name { get { return _name; } }
+		
+		public ChangedFile()
+		{
+			_fullName = "";
+			_name = "";
+			_extension = "";
+		}
 
         public ChangedFile(string fullFilePath)
         {

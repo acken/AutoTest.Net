@@ -28,6 +28,8 @@ namespace AutoTest.Core.Configuration
 		public string[] WatchIgnoreList { get; private set; }
 		public bool ShouldUseIgnoreLists { get { return _buildExecutables.Count > 0; } }
 		public int FileChangeBatchDelay { get; private set; }
+		public string[] TestAssembliesToIgnore { get; private set; }
+		public string[] TestCategoriesToIgnore { get; private set; }
 		
         public Config(IMessageBus bus)
         {
@@ -63,6 +65,8 @@ namespace AutoTest.Core.Configuration
 				GrowlNotify = core.GrowlNotify;
 				NotifyOnRunStarted = core.NotifyOnRunStarted;
 				NotifyOnRunCompleted = core.NotifyOnRunCompleted;
+				TestAssembliesToIgnore = core.TestAssembliesToIgnore;
+				TestCategoriesToIgnore = core.TestCategoriesToIgnore;
 				_ignoreFile = core.WatchIgnoreFile;
             }
             catch (Exception ex)
