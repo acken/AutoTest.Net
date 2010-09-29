@@ -15,10 +15,10 @@ namespace AutoTest.Core.Configuration
 		private string _ignoreFile;
 		
         private string[] _watchDirectories;
-        private List<KeyValuePair<string, string>> _buildExecutables;
-        private List<KeyValuePair<string, string>> _nunitTestRunners;
-        private List<KeyValuePair<string, string>> _msTestRunner;
-        private List<KeyValuePair<string, string>> _xunitTestRunner;
+        private List<KeyValuePair<string, string>> _buildExecutables = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<string, string>> _nunitTestRunners = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<string, string>> _msTestRunner = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<string, string>> _xunitTestRunner = new List<KeyValuePair<string, string>>();
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
 		
@@ -55,19 +55,19 @@ namespace AutoTest.Core.Configuration
         {
             try
             {
-                _watchDirectories = core.WatchDirectories.ToArray();
-                _buildExecutables = core.BuildExecutables;
-                _nunitTestRunners = core.NUnitTestRunner;
-                _msTestRunner = core.MSTestRunner;
-                _xunitTestRunner = core.XUnitTestRunner;
-                _codeEditor = core.CodeEditor;
-                _debuggingEnabled = core.DebuggingEnabled;
-				GrowlNotify = core.GrowlNotify;
-				NotifyOnRunStarted = core.NotifyOnRunStarted;
-				NotifyOnRunCompleted = core.NotifyOnRunCompleted;
-				TestAssembliesToIgnore = core.TestAssembliesToIgnore;
-				TestCategoriesToIgnore = core.TestCategoriesToIgnore;
-				_ignoreFile = core.WatchIgnoreFile;
+                _watchDirectories = core.WatchDirectories.Value;
+                _buildExecutables.AddRange(core.BuildExecutables.Value);
+                _nunitTestRunners.AddRange(core.NUnitTestRunner.Value);
+                _msTestRunner.AddRange(core.MSTestRunner.Value);
+                _xunitTestRunner.AddRange(core.XUnitTestRunner.Value);
+                _codeEditor = core.CodeEditor.Value;
+                _debuggingEnabled = core.DebuggingEnabled.Value;
+				GrowlNotify = core.GrowlNotify.Value;
+				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
+				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
+				TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
+				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
+				_ignoreFile = core.WatchIgnoreFile.Value;
             }
             catch (Exception ex)
             {
