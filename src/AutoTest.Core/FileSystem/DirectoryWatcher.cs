@@ -46,6 +46,7 @@ namespace AutoTest.Core.FileSystem
                 return;
             }
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
+			mergeLocalConfig(path);
 			buildIgnoreList(path);
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
 				_watchPath = Path.GetDirectoryName(path);
@@ -54,6 +55,15 @@ namespace AutoTest.Core.FileSystem
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;
         }
+		
+		private void mergeLocalConfig(string path)
+		{
+			var file = Path.Combine(path, "AutoTest.config");
+			if (!File.Exists(file))
+				return;
+			_bus.Publish(new InformationMessage("Loading local config file"));
+			_configuration.Merge(file);
+		}
 		
 		private void buildIgnoreList(string path)
 		{

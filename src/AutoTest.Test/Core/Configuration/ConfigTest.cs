@@ -16,13 +16,22 @@ namespace AutoTest.Test.Core.Configuration
     {
         private Config _config;
         private IMessageBus _bus;
+		private string _overridConfig;
 
         [SetUp]
         public void SetUp()
         {
+			_overridConfig = Path.GetTempFileName();
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _config = new Config(_bus);
         }
+		
+		[TearDown]
+		public void TearDown()
+		{
+			if (File.Exists(_overridConfig))
+				File.Delete(_overridConfig);
+		}
 
         [Test]
         public void Should_read_directory_to_watch()
@@ -167,6 +176,42 @@ namespace AutoTest.Test.Core.Configuration
 		{
 			_config.TestCategoriesToIgnore[0].ShouldEqual("Category1");
 			_config.TestCategoriesToIgnore[1].ShouldEqual("Category2");
+		}
+		
+		[Test]
+		public void Should_merge_two_config_files()
+		{
+			createMergeFile();
+			var document = new ProjectDocument(ProjectType.CSharp);
+			var document35 = new ProjectDocument(ProjectType.CSharp);
+			document35.SetFramework("v3.5");
+			_config.Merge(_overridConfig);
+				
+            _config.BuildExecutable(document).ShouldEqual("");
+			_config.NunitTestRunner(document.Framework).ShouldEqual(@"C:\Somefolder\NUnit\nunit-console.exe");
+			_config.NunitTestRunner(document35.Framework).ShouldEqual("NewTestRunner");
+			_config.GrowlNotify.ShouldEqual("another_growl_notifier");
+			_config.TestAssembliesToIgnore[2].ShouldEqual("MergedRule.dll");
+		}
+		
+		private void createMergeFile()
+		{
+			if (File.Exists(_overridConfig))
+				File.Delete(_overridConfig);
+			using (var writer = new StreamWriter(_overridConfig))
+			{
+				writer.WriteLine("<configuration>");
+					writer.WriteLine("<BuildExecutable override=\"exclude\">some_text_just_to_make_sure_no_its_not_used</BuildExecutable>");
+					
+					writer.WriteLine("<NUnitTestRunner framework=\"v3.5\" override=\"merge\">NewTestRunner</NUnitTestRunner>");
+					
+					writer.WriteLine("<growlnotify>another_growl_notifier</growlnotify>");
+					
+					writer.WriteLine("<ShouldIgnoreTestAssembly override=\"merge\">");
+						writer.WriteLine("<Assembly>MergedRule.dll</Assembly>");
+					writer.WriteLine("</ShouldIgnoreTestAssembly>");
+				writer.WriteLine("</configuration>");
+			}
 		}
     }
 }

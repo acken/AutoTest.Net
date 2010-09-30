@@ -50,6 +50,85 @@ namespace AutoTest.Core.Configuration
 				}
 			}
 		}
+		
+		public void Merge(string configuratoinFile)
+		{
+			var core = getConfiguration(configuratoinFile);
+			mergeVersionedItem(_buildExecutables, core.BuildExecutables);
+			mergeVersionedItem(_nunitTestRunners, core.NUnitTestRunner);
+			mergeVersionedItem(_msTestRunner, core.MSTestRunner);
+			mergeVersionedItem(_xunitTestRunner, core.XUnitTestRunner);
+            mergeCodeEditor(core.CodeEditor);
+			if (core.DebuggingEnabled.WasReadFromConfig)
+				_debuggingEnabled = core.DebuggingEnabled.Value;
+			if (core.GrowlNotify.WasReadFromConfig)
+				GrowlNotify = mergeValueItem(core.GrowlNotify, null);
+			if (core.NotifyOnRunStarted.WasReadFromConfig)
+				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
+			if (core.NotifyOnRunCompleted.WasReadFromConfig)
+				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
+			if (core.TestAssembliesToIgnore.WasReadFromConfig)
+				TestAssembliesToIgnore = mergeValues(TestAssembliesToIgnore, core.TestAssembliesToIgnore);
+			if (core.TestCategoriesToIgnore.WasReadFromConfig)
+				TestCategoriesToIgnore = mergeValues(TestCategoriesToIgnore, core.TestCategoriesToIgnore);
+			if (core.WatchIgnoreFile.WasReadFromConfig)
+				_ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
+		}
+		
+		private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
+		{
+			if (settingToMerge.ShouldExclude)
+				return new string[] {};
+			if (settingToMerge.ShouldMerge)
+			{
+				var list = new List<string>();
+				list.AddRange(setting);
+				list.AddRange(settingToMerge.Value);
+				return list.ToArray();
+			}
+			return settingToMerge.Value;
+		}
+		
+		private string mergeValueItem(ConfigItem<string> settingToMerge, string defaultValue)
+		{
+			if (settingToMerge.ShouldExclude)
+				return defaultValue;
+			return settingToMerge.Value;
+		}
+		
+		private void mergeCodeEditor(ConfigItem<CodeEditor> settingToMerge)
+		{
+			if (!settingToMerge.WasReadFromConfig)
+				return;
+			if (settingToMerge.ShouldExclude)
+			{
+				_codeEditor = new CodeEditor("", "");
+				return;
+			}
+			_codeEditor = settingToMerge.Value;
+		}
+		
+		private void mergeVersionedItem(List<KeyValuePair<string, string>> setting, ConfigItem<KeyValuePair<string, string>[]> settingToMerge)
+		{
+			if (!settingToMerge.WasReadFromConfig)
+				return;
+			if (settingToMerge.ShouldExclude)
+			{
+				setting.Clear();
+				return;
+			}
+			if (settingToMerge.ShouldMerge)
+			{
+				foreach (var mergedItem in settingToMerge.Value)
+				{
+					setting.RemoveAll(x => x.Key.Equals(mergedItem.Key));
+					setting.Add(mergedItem);
+				}
+				return;
+			}
+			setting.Clear();
+			setting.AddRange(settingToMerge.Value);
+		}
 
         private void tryToConfigure(CoreSection core)
         {
@@ -78,8 +157,12 @@ namespace AutoTest.Core.Configuration
 		
 		private CoreSection getConfiguration()
 		{
+			return getConfiguration(Path.Combine(PathParsing.GetRootDirectory(), "AutoTest.config"));
+		}
+		
+		private CoreSection getConfiguration(string configFile)
+		{
 			var core = new CoreSection();
-			var configFile = Path.Combine(PathParsing.GetRootDirectory(), "AutoTest.config");
 			if (!File.Exists(configFile))
 			{
 				Debug.ConfigurationFileMissing();

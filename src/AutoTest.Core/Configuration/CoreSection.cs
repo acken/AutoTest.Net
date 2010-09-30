@@ -70,8 +70,8 @@ namespace AutoTest.Core.Configuration
 			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
         }
-
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
+			
         {
 			var item = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string,string>[] {});
             List<KeyValuePair<string, string>> executables = new List<KeyValuePair<string, string>>();
@@ -87,31 +87,29 @@ namespace AutoTest.Core.Configuration
                     version = attribute.InnerText;
                 executables.Add(new KeyValuePair<string, string>(version, executable));
             }
+			item.SetValue(executables.ToArray());
 			if (shouldMerge(xpath))
 				item.SetShouldMerge();
-			if (shouldRemoveExisting(xpath))
-				item.SetShouldRemoveExisting();
-			item.SetValue(executables.ToArray());
+			if (shouldExcludeFromConfig(xpath))
+				item.Exclude();
             return item;
         }
 		
 		private ConfigItem<bool> getBoolItem(string path, bool defaultValue)
         {
 			var item = new ConfigItem<bool>(defaultValue);
-			var val = getBool(path, defaultValue);
+			var val = getBool(path, null);
 			if (val == null)
 				return item;
 			item.SetValue((bool) val);
-			if (shouldMerge(path))
-				item.SetShouldMerge();
-			if (shouldRemoveExisting(path))
-				item.SetShouldRemoveExisting();
+			if (shouldExcludeFromConfig(path))
+				item.Exclude();
 			return item;
         }
 		
-		private bool shouldRemoveExisting(string path)
+		private bool shouldExcludeFromConfig(string path)
 		{
-			return checkOverrideAttribute(path, "remove");
+			return checkOverrideAttribute(path, "exclude");
 		}
 		
 		private bool shouldMerge(string path)
@@ -128,7 +126,7 @@ namespace AutoTest.Core.Configuration
             return attrib.InnerText.ToLower().Equals(content);
 		}
 		
-		private bool? getBool(string nodeName, bool defaultValue)
+		private bool? getBool(string nodeName, bool? defaultValue)
 		{
 			bool state;
             var value = getValue(nodeName, "");
@@ -144,13 +142,11 @@ namespace AutoTest.Core.Configuration
 			if (executable == null)
 				return item;
             var arguments = getValue("configuration/CodeEditor/Arguments", "");
-			if (shouldMerge("configuration/CodeEditor"))
-				item.SetShouldMerge();
-			if (shouldRemoveExisting("configuration/CodeEditor"))
-				item.SetShouldRemoveExisting();
+			if (shouldExcludeFromConfig("configuration/CodeEditor"))
+				item.Exclude();
             return item.SetValue(new CodeEditor(executable, arguments));
         }
-
+		
 		private ConfigItem<string> getValueItem(string nodeName, string defaultValue)
         {
 			var item = new ConfigItem<string>(defaultValue);
@@ -158,10 +154,8 @@ namespace AutoTest.Core.Configuration
 			if (str == null)
 				return item;
 			item.SetValue(str);
-			if (shouldMerge(nodeName))
-				item.SetShouldMerge();
-			if (shouldRemoveExisting(nodeName))
-				item.SetShouldRemoveExisting();
+			if (shouldExcludeFromConfig(nodeName))
+				item.Exclude();
 			return item;
         }
 		
@@ -193,8 +187,8 @@ namespace AutoTest.Core.Configuration
 				mainNode = getParentNode(nodeName);
 			if (shouldMerge(mainNode))
 				item.SetShouldMerge();
-			if (shouldRemoveExisting(mainNode))
-				item.SetShouldRemoveExisting();
+			if (shouldExcludeFromConfig(mainNode))
+				item.Exclude();
             return item;
         }
     }

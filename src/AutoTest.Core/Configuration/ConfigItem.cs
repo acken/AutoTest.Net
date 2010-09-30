@@ -5,7 +5,7 @@ namespace AutoTest.Core.Configuration
 	{
 		public bool WasReadFromConfig { get; private set; }
 		public bool ShouldMerge { get; private set; }
-		public bool ShouldRemoveExisting { get; private set; }
+		public bool ShouldExclude { get; private set; }
 		public T Value { get; private set; }
 		
 		public ConfigItem(T defaultValue)
@@ -13,24 +13,27 @@ namespace AutoTest.Core.Configuration
 			Value = defaultValue;
 			WasReadFromConfig = false;
 			ShouldMerge = false;
-			ShouldRemoveExisting = false;
+			ShouldExclude = false;
 		}
 		
 		public ConfigItem<T> SetValue(T newValue)
 		{
 			Value = newValue;
 			WasReadFromConfig = true;
+			ShouldExclude = false;
 			return this;
 		}
 		
 		public void SetShouldMerge()
 		{
 			ShouldMerge = true;
+			ShouldExclude = false;
 		}
 		
-		public void SetShouldRemoveExisting()
+		public void Exclude()
 		{
-			ShouldRemoveExisting = true;
+			ShouldExclude = true;
+			ShouldMerge = false;
 		}
 	}
 }

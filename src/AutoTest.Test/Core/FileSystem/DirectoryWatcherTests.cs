@@ -13,6 +13,7 @@ namespace AutoTest.Test.Core
     public class DirectoryWatcherTests
     {
         private string _file;
+		private string _localConfig;
 		private string _watchDirectory;
         private IMessageBus _messageBus;
         private IWatchValidator _validator;
@@ -30,6 +31,8 @@ namespace AutoTest.Test.Core
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration);
             _file = Path.GetFullPath("watcher_test.txt");
 			_watchDirectory = Path.GetDirectoryName(_file);
+			_localConfig = Path.Combine(_watchDirectory, "AutoTest.config");
+			File.WriteAllText(_localConfig, "<configuration></configuration>");
             _watcher.Watch(_watchDirectory);
         }
 
@@ -38,6 +41,7 @@ namespace AutoTest.Test.Core
         {
             _watcher.Dispose();
             File.Delete(_file);
+			File.Delete(_localConfig);
         }
 
         [Test]
@@ -86,6 +90,12 @@ namespace AutoTest.Test.Core
 		public void Should_rebuild_ignore_list_from_watch_directory()
 		{
 			_configuration.AssertWasCalled(c => c.BuildIgnoreListFromPath(_watchDirectory));
+		}
+		
+		[Test]
+		public void Should_load_local_config_file()
+		{
+			_configuration.AssertWasCalled(c => c.Merge(_localConfig));
 		}
     }
 }
