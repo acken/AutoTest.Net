@@ -51,6 +51,14 @@ namespace AutoTest.Core.Configuration
 			}
 		}
 		
+		public void AnnounceTrackerType()
+		{
+			var trackerType = "file change tracking";;
+			if (_buildExecutables.Count == 0)
+				trackerType = "assembly tracking";
+			_bus.Publish(new InformationMessage(string.Format("Tracker type: {0}", trackerType)));
+		}
+		
 		public void Merge(string configuratoinFile)
 		{
 			var core = getConfiguration(configuratoinFile);

@@ -11,7 +11,7 @@ namespace AutoTest.Core.FileSystem
     {
         private readonly IMessageBus _bus;
         private readonly FileSystemWatcher _watcher;
-        private readonly System.Timers.Timer _batchTimer;
+        private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
         private List<ChangedFile> _buffer = new List<ChangedFile>();
         private object _padLock = new object();
@@ -24,9 +24,6 @@ namespace AutoTest.Core.FileSystem
             _bus = bus;
             _validator = validator;
 			_configuration = configuration;
-            _batchTimer = new Timer(_configuration.FileChangeBatchDelay);
-            _batchTimer.Enabled = true;
-            _batchTimer.Elapsed += _batchTimer_Elapsed;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite,
@@ -47,7 +44,10 @@ namespace AutoTest.Core.FileSystem
             }
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
 			mergeLocalConfig(path);
+			_configuration.SetBuildProvider();
+			_configuration.AnnounceTrackerType();
 			buildIgnoreList(path);
+			initializeTimer();
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
 				_watchPath = Path.GetDirectoryName(path);
 			else
@@ -55,6 +55,13 @@ namespace AutoTest.Core.FileSystem
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;
         }
+		
+		private void initializeTimer()
+		{
+			_batchTimer = new Timer(_configuration.FileChangeBatchDelay);
+            _batchTimer.Enabled = true;
+            _batchTimer.Elapsed += _batchTimer_Elapsed;
+		}
 		
 		private void mergeLocalConfig(string path)
 		{

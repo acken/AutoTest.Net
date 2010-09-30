@@ -27,6 +27,7 @@ namespace AutoTest.Core.Configuration
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
 		void SetBuildProvider();
+		void AnnounceTrackerType();
 		void Merge(string configuratoinFile);
     }
 }

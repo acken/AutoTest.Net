@@ -55,7 +55,8 @@ namespace AutoTest.Core.Configuration
 
         public void Read(string configFile)
         {
-            _xml.Load(configFile);
+            if (!tryLoadXml(configFile))
+				return;
 			WatchDirectories = getValues("configuration/DirectoryToWatch", false);
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
@@ -70,8 +71,21 @@ namespace AutoTest.Core.Configuration
 			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
         }
+		
+		private bool tryLoadXml(string configFile)
+		{
+			try
+			{
+				_xml.Load(configFile);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
-			
         {
 			var item = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string,string>[] {});
             List<KeyValuePair<string, string>> executables = new List<KeyValuePair<string, string>>();

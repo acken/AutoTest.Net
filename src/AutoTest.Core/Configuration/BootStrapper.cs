@@ -33,7 +33,6 @@ namespace AutoTest.Core.Configuration
             if (configuration.DebuggingEnabled)
                 Debug.EnableLogging();
 			Debug.InitialConfigurationFinished();
-			configuration.SetBuildProvider();
         }
 
         public static void InitializeCache(string watchFolder)

@@ -121,6 +121,16 @@ namespace AutoTest.Test.Core.Configuration
 			section.Read(_file);
 			section.GrowlNotify.ShouldMerge.ShouldBeFalse();
 		}
+		
+		[Test]
+		public void Should_ignore_invalid_configurations()
+		{
+			if (File.Exists(_file))
+				File.Delete(_file);
+			File.WriteAllText(_file, "");
+			var section = new CoreSection();
+			section.Read(_file);
+		}
 	}
 }
 
