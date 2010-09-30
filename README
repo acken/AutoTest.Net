@@ -23,6 +23,9 @@ Features
 		* notify-send (Linux)
 		* Growl (Mac, Windows)
 	* Supports configurable ignore files using the .gitignore format
+	* Local config files extending the main config
+		* The attribute override="merge" will merge with original
+		* The attribute override="exclude" will remove it all together
 
 Geting started
 To get started using this application edit AutoTest.config to suite your system.
