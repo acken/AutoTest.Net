@@ -88,10 +88,20 @@ namespace AutoTest.Core.Configuration
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
         {
 			var item = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string,string>[] {});
-            List<KeyValuePair<string, string>> executables = new List<KeyValuePair<string, string>>();
             var nodes = _xml.SelectNodes(xpath);
 			if (nodes.Count == 0)
 				return item;
+			item.SetValue(readVersionedNodes(nodes));
+			if (shouldMerge(xpath))
+				item.SetShouldMerge();
+			if (shouldExcludeFromConfig(xpath))
+				item.Exclude();
+            return item;
+        }
+		
+		private KeyValuePair<string, string>[] readVersionedNodes(XmlNodeList nodes)
+		{
+			var executables = new List<KeyValuePair<string, string>>();
             foreach (XmlNode node in nodes)
             {
                 var executable = node.InnerText;
@@ -101,13 +111,8 @@ namespace AutoTest.Core.Configuration
                     version = attribute.InnerText;
                 executables.Add(new KeyValuePair<string, string>(version, executable));
             }
-			item.SetValue(executables.ToArray());
-			if (shouldMerge(xpath))
-				item.SetShouldMerge();
-			if (shouldExcludeFromConfig(xpath))
-				item.Exclude();
-            return item;
-        }
+			return executables.ToArray();
+		}
 		
 		private ConfigItem<bool> getBoolItem(string path, bool defaultValue)
         {

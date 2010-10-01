@@ -13,8 +13,7 @@
 	<!-- If you remove all configured build executables AutoTest.Net will start tracking assembly changes -->
 	<!-- instead and you can use Visual Studio or equal to build and AutoTest.Net will -->
 	<!-- run all tests for any built assembly. -->
-	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe</BuildExecutable>
-	<BuildExecutable framework="v4.0">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
+	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
 	
 	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version -->
@@ -24,7 +23,7 @@
 	
 	<!-- MSTest test runner. (Optional) -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe</MSTestRunner>
+	<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>
 	
 	<!-- XUnit test runner. (Optional) -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->

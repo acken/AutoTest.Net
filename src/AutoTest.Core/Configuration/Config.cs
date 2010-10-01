@@ -41,13 +41,13 @@ namespace AutoTest.Core.Configuration
 		
 		public void SetBuildProvider()
 		{
-			if (_buildExecutables != null)
+			if (_buildExecutables == null)
+				return;
+			
+			if (_buildExecutables.Count == 0)
 			{
-				if (_buildExecutables.Count == 0)
-				{
-					FileChangeBatchDelay = 2000;
-					_bus.SetBuildProvider("NoBuild");
-				}
+				FileChangeBatchDelay = 2000;
+				_bus.SetBuildProvider("NoBuild");
 			}
 		}
 		

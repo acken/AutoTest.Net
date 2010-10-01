@@ -58,7 +58,7 @@ namespace AutoTest.Test.Core
         [Test]
         public void Should_send_message_when_file_changes_once()
         {
-            _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Twice();
+            _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             // Write twice
             File.WriteAllText(_file, "meh ");
             using (var writer = new StreamWriter(_file, true)) { writer.WriteLine("some text"); }
@@ -74,7 +74,6 @@ namespace AutoTest.Test.Core
                                   f.Files[0].FullName.Equals(_file) &&
                                   f.Files[0].Name.Equals(Path.GetFileName(_file)))),
                 m => m.Repeat.Once());
-			_validator.AssertWasCalled(v => v.ShouldPublish(string.Format("{0}watcher_test.txt", Path.DirectorySeparatorChar)), t => t.Repeat.Twice());
         }
         
         [Test]

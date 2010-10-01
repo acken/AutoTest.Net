@@ -20,37 +20,50 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		#region IConsumerOf[AssemblyChangeMessage] implementation
 		public void Consume (AssemblyChangeMessage message)
 		{
-			Debug.ConsumingAssemblyChangeMessage(message);
-            _bus.Publish(new RunStartedMessage(message.Files));
+			informParticipants(message);
 			var runReport = new RunReport();
 			foreach (var runner in _testRunners)
-			{
-				var runInfos = new List<TestRunInfo>();
-				foreach (var assembly in message.Files)
-				{
-					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly.FullName))
-						continue;
-					if (runner.CanHandleTestFor(assembly))
-						runInfos.Add(new TestRunInfo(null, assembly.FullName));
-				}
-				if (runInfos.Count == 0)
-					continue;
-				var results = runner.RunTests(runInfos.ToArray());
-				foreach (var result in results)
-				{
-		            runReport.AddTestRun(
-		                result.Project,
-		                result.Assembly,
-		                result.TimeSpent,
-		                result.Passed.Length,
-		                result.Ignored.Length,
-		                result.Failed.Length);
-		            _bus.Publish(new TestRunMessage(result));
-				}
-			}
+				runTest(runner, message, runReport);
 			_bus.Publish(new RunFinishedMessage(runReport));
 		}
 		#endregion
+		
+		private void informParticipants(AssemblyChangeMessage message)
+		{
+			Debug.ConsumingAssemblyChangeMessage(message);
+            _bus.Publish(new RunStartedMessage(message.Files));
+		}
+		
+		private void runTest(ITestRunner runner, AssemblyChangeMessage message, RunReport report)
+		{
+			var runInfos = new List<TestRunInfo>();
+			foreach (var assembly in message.Files)
+			{
+				if (_testAssemblyValidator.ShouldNotTestAssembly(assembly.FullName))
+					return;
+				if (runner.CanHandleTestFor(assembly))
+					runInfos.Add(new TestRunInfo(null, assembly.FullName));
+			}
+			if (runInfos.Count == 0)
+				return;
+			var results = runner.RunTests(runInfos.ToArray());
+			mergeReport(results, report);
+		}
+		
+		private void mergeReport(TestRunResults[] results, RunReport report)
+		{
+			foreach (var result in results)
+			{
+	            report.AddTestRun(
+	                result.Project,
+	                result.Assembly,
+	                result.TimeSpent,
+	                result.Passed.Length,
+	                result.Ignored.Length,
+	                result.Failed.Length);
+	            _bus.Publish(new TestRunMessage(result));
+			}
+		}
 	}
 }
 
