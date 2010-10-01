@@ -1,0 +1,1 @@
+regasm AutoTest.Core.dll /tlb

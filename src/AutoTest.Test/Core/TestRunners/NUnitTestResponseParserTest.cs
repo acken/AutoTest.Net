@@ -57,7 +57,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _parser.Result[0].All.Length.ShouldEqual(7);
             _parser.Result[0].Failed.Length.ShouldEqual(1);
-            _parser.Result[0].Failed[0].Message.ShouldEqual("  Expected: 10\n  But was:  2");
+            _parser.Result[0].Failed[0].Message.ShouldEqual(string.Format("  Expected: 10{0}  But was:  2", Environment.NewLine));
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(4);
         }
 		

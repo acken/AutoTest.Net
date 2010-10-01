@@ -60,7 +60,7 @@ namespace AutoTest.Test.Core
         {
             _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Twice();
             // Write twice
-            File.Create(_file).Dispose();
+            File.WriteAllText(_file, "meh ");
             using (var writer = new StreamWriter(_file, true)) { writer.WriteLine("some text"); }
 			// Set this to 1 sec since on linux in worst case scenario mono will poll every
 			// 750 millisecond
