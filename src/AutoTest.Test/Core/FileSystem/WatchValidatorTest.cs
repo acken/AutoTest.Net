@@ -160,6 +160,13 @@ namespace AutoTest.Test.Core.FileSystem
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
 			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
 		}
+		
+		[Test]
+		public void Should_not_consume_vs_suo_files()
+		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/myproject.suo").ShouldBeFalse();
+		}
 
         private string getInfo(string path)
         {
