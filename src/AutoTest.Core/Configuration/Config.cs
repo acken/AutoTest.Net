@@ -196,7 +196,10 @@ namespace AutoTest.Core.Configuration
 		
 		public void BuildIgnoreListFromPath(string watchPath)
 		{
-			var file = Path.Combine(watchPath, _ignoreFile);
+			var file = _ignoreFile;
+			if (!File.Exists(file))
+				file = Path.Combine(watchPath, _ignoreFile);
+			
 			if (File.Exists(file))
 				WatchIgnoreList = getLineArrayFromFile(file);
 			else

@@ -12,7 +12,7 @@ namespace AutoTest.Core.FileSystem
     class WatchValidator : IWatchValidator
     {
 		private IConfiguration _configuration;
-		private string[] _defaultIgnores = new string[8];
+		private string[] _defaultIgnores = new string[9];
 
 		public WatchValidator(IConfiguration configuration)
 		{
@@ -25,6 +25,7 @@ namespace AutoTest.Core.FileSystem
 			_defaultIgnores[5] = string.Format("obj{0}x86{0}", Path.DirectorySeparatorChar);
 			_defaultIgnores[6] = "*.FileListAbsolute.txt";
 			_defaultIgnores[7] = "*.FilesWrittenAbsolute.txt";
+			_defaultIgnores[8] = "*.suo";
 		}
 		
         public bool ShouldPublish(string filePath)
