@@ -48,7 +48,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _parser.Result[0].All.Length.ShouldEqual(3);
             _parser.Result[0].Failed.Length.ShouldEqual(1);
-            _parser.Result[0].Failed[0].Message.ShouldEqual("Assert.Equal() Failure\nExpected: 4\nActual:   3");
+            _parser.Result[0].Failed[0].Message.ShouldEqual(string.Format("Assert.Equal() Failure{0}Expected: 4{0}Actual:   3", Environment.NewLine));
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(3);
         }
 		
