@@ -141,6 +141,7 @@
     <Compile Include="Core\TestRunners\TestRunValidatorTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\AssemblyChangeConsumerTest.cs" />
     <Compile Include="Core\Configuration\CoreSectionTest.cs" />
+    <Compile Include="Core\Messaging\MessageConsumers\BuildOptimizerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
