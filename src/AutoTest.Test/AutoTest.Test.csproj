@@ -169,6 +169,9 @@
     <None Include="TestResources\NUnit\NewOutput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestResources\MSBuild\msbuildoutputerror.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestResources\VS2008\CSharpNUnitTestProject.csproj">
@@ -189,5 +192,6 @@
   <ItemGroup>
     <Folder Include="Core\Caching\Crawlers\" />
     <Folder Include="TestResources\NUnit\" />
+    <Folder Include="TestResources\MSBuild\" />
   </ItemGroup>
 </Project>

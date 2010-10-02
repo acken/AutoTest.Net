@@ -29,6 +29,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IBuildRunner _buildRunner;
         private ITestRunner _testRunner;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
+		private IOptimizeBuildConfiguration _optimizer;
 
         [SetUp]
         public void SetUp()
@@ -43,7 +44,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _buildRunner = MockRepository.GenerateMock<IBuildRunner>();
             _testRunner = MockRepository.GenerateMock<ITestRunner>();
 			_testAssemblyValidator = MockRepository.GenerateMock<IDetermineIfAssemblyShouldBeTested>();
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _cache, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator);
+			_optimizer = MockRepository.GenerateMock<IOptimizeBuildConfiguration>();
+			var runInfo = new RunInfo(_project);
+			runInfo.ShouldBuild();
+			_optimizer.Stub(o => o.AssembleBuildConfiguration(null)).IgnoreArguments().Return(new RunInfo[] { runInfo });
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _cache, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer);
 
             _cache.Stub(c => c.Get<Project>(null)).IgnoreArguments().Return(_project);
         }

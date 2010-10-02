@@ -269,5 +269,12 @@ namespace AutoTest.Test.Core.Configuration
 			var validator = _locator.Locate<IDetermineIfAssemblyShouldBeTested>();
 			validator.ShouldBeOfType<IDetermineIfAssemblyShouldBeTested>();
 		}
+		
+		[Test]
+		public void Should_register_build_optimizer()
+		{
+			var optimizer = _locator.Locate<IOptimizeBuildConfiguration>();
+			optimizer.ShouldBeOfType<IOptimizeBuildConfiguration>();
+		}
     }
 }
