@@ -34,7 +34,6 @@ namespace AutoTest.Core.Configuration
         public Config(IMessageBus bus)
         {
             _bus = bus;
-			FileChangeBatchDelay = 100;
 			var core = getConfiguration();
             tryToConfigure(core);
         }
@@ -81,6 +80,8 @@ namespace AutoTest.Core.Configuration
 				TestCategoriesToIgnore = mergeValues(TestCategoriesToIgnore, core.TestCategoriesToIgnore);
 			if (core.WatchIgnoreFile.WasReadFromConfig)
 				_ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
+			if (core.FileChangeBatchDelay.WasReadFromConfig)
+				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
 		}
 		
 		private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
@@ -155,6 +156,7 @@ namespace AutoTest.Core.Configuration
 				TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
 				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
 				_ignoreFile = core.WatchIgnoreFile.Value;
+				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
             }
             catch (Exception ex)
             {

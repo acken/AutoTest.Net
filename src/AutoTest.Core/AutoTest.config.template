@@ -69,6 +69,11 @@
 	<!-- This setting is not in use when using assembly tracking -->
 	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
 	
+	<!-- Change detection delay (Optional) -->
+	<!-- The time in milliseconds that AuotTest.NET will wait between finding changes -->
+	<!-- and running build and tests -->
+	<!--<changedetectiondelay>200</changedetectiondelay>-->
+	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
 </configuration>
