@@ -206,6 +206,12 @@ namespace AutoTest.Test.Core.Configuration
 		}
 		
 		[Test]
+		public void Should_get_delay()
+		{
+			_config.FileChangeBatchDelay.ShouldEqual(95);
+		}
+		
+		[Test]
 		public void Should_merge_two_config_files()
 		{
 			createMergeFile();
@@ -219,6 +225,7 @@ namespace AutoTest.Test.Core.Configuration
 			_config.NunitTestRunner(document35.Framework).ShouldEqual("NewTestRunner");
 			_config.GrowlNotify.ShouldEqual("another_growl_notifier");
 			_config.TestAssembliesToIgnore[2].ShouldEqual("MergedRule.dll");
+			_config.FileChangeBatchDelay.ShouldEqual(800);
 		}
 		
 		private void createMergeFile()
@@ -240,6 +247,7 @@ namespace AutoTest.Test.Core.Configuration
 						writer.WriteLine("<Assembly>MergedRule.dll</Assembly>");
 					writer.WriteLine("</ShouldIgnoreTestAssembly>");
 					writer.WriteLine(string.Format("<IgnoreFile>{0}</IgnoreFile>", file));
+					writer.WriteLine("<changedetectiondelay>800</changedetectiondelay>");
 				writer.WriteLine("</configuration>");
 			}
 		}

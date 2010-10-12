@@ -169,6 +169,7 @@
     <Compile Include="Messaging\MessageConsumers\BuildOptimizer.cs" />
     <Compile Include="Messaging\MessageConsumers\RunInfo.cs" />
     <Compile Include="Messaging\MessageConsumers\IOptimizeBuildConfiguration.cs" />
+    <Compile Include="Launchers\MonoDevelopLauncher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

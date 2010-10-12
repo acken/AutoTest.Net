@@ -68,7 +68,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             var file = getFilePath();
             var launcher = BootStrapper.Services.Locate<ApplicatonLauncher>();
-            launcher.LaunchEditor(file, Value.LineNumber);
+            launcher.LaunchEditor(file, Value.LineNumber, Value.LinePosition);
         }
 
         private string getFilePath()
