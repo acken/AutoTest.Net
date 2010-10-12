@@ -40,6 +40,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             {
                 if (File.Exists(line.File))
                 {
+					Console.WriteLine("File Exists: {0}", line.File);
                     stackTrace.AppendLine(string.Format("at {0} in {1}{2}:line {3}{4}",
                                                         line.Method,
                                                         LinkParser.TAG_START,
@@ -49,6 +50,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 }
                 else
                 {
+					Console.WriteLine("File does not Exists: {0}", line.File);
                     stackTrace.AppendLine(line.ToString());
                 }
 

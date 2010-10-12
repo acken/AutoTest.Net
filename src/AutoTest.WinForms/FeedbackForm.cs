@@ -274,7 +274,7 @@ namespace AutoTest.WinForms
 	            foreach (var link in links)
 				{
 					if (link.Start + link.Length <= GDI_SIZE_LIMIT)
-	                	linkLabelInfo.Links.Add(link.Start, link.Length);
+						linkLabelInfo.Links.Add(link.Start, link.Length);
 				}
 	            var difference = linkLabelInfo.Height - previousHeight;
 	            Height = Height + difference;
