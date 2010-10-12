@@ -71,6 +71,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private bool buildAll(RunInfo[] projectList, RunReport runReport)
 		{
+			var indirectlyBuild = new List<string>();
 			foreach (var file in projectList)
             {
 				if (file.ShouldBeBuilt)
@@ -80,8 +81,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	                    return false;
 				}
 				else
+				{
 					Debug.WriteMessage(string.Format("Not set to build project {0}", file.Project.Key));
+					indirectlyBuild.Add(file.Project.Key);
+				}
             }
+			foreach (var project in indirectlyBuild)
+				runReport.AddBuild(project, new TimeSpan(0), true);
 			return true;
 		}
 		
