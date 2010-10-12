@@ -24,7 +24,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private Project _project;
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
-        private ICache _cache;
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner _testRunner;
@@ -39,7 +38,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_project.Value.SetAssemblyName("someAssembly.dll");
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _listGenerator = MockRepository.GenerateMock<IGenerateBuildList>();
-            _cache = MockRepository.GenerateMock<ICache>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
             _buildRunner = MockRepository.GenerateMock<IBuildRunner>();
             _testRunner = MockRepository.GenerateMock<ITestRunner>();
@@ -48,9 +46,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			var runInfo = new RunInfo(_project);
 			runInfo.ShouldBuild();
 			_optimizer.Stub(o => o.AssembleBuildConfiguration(null)).IgnoreArguments().Return(new RunInfo[] { runInfo });
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _cache, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer);
-
-            _cache.Stub(c => c.Get<Project>(null)).IgnoreArguments().Return(_project);
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer);
         }
 
         [Test]

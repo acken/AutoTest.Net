@@ -19,18 +19,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
-        private ICache _cache;
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer)
         {
             _bus = bus;
             _listGenerator = listGenerator;
-            _cache = cache;
             _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;

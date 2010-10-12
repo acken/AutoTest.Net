@@ -28,7 +28,7 @@
   <property name="xbuild.outputpath" value=".${path.separator}${folder.code_build}${path.separator}${folder.app.drop}" overwrite="false" />
   <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${project.name}.sln" />
   <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${project.name}.vbp" if="${microsoft.framework =='vb6'}" />
-  <property name="nant.settings.currentframework" value="mono-1.0" if="${platform::is-unix()}" />
+  <property name="nant.settings.currentframework" value="mono-3.5" if="${platform::is-unix()}" />
   <property name="nant.settings.currentframework" value="net-3.5" if="${microsoft.framework !='vb6' and platform::is-windows()}" />
   <property name="framework.multitargeting" value="false" />
   <property name="framework.multitargeting.delimiter" value="," />

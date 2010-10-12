@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using Castle.Core.Logging;
 using AutoTest.Core.Messaging;
+using System.Collections.Generic;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -29,13 +30,13 @@ namespace AutoTest.Core.BuildRunners
             process.Start();
             string line;
             var buildResults = new BuildRunResults(projectName);
+			var lines = new List<string>();
             while ((line = process.StandardOutput.ReadLine()) != null)
-            {
-                var parser = new MSBuildOutputParser(buildResults, line);
-                parser.Parse();
-            }
+				lines.Add(line);
             process.WaitForExit();
             timer.Stop();
+			var parser = new MSBuildOutputParser(buildResults, lines.ToArray());
+            parser.Parse();
             buildResults.SetTimeSpent(timer.Elapsed);
             return buildResults;
         }

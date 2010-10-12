@@ -75,7 +75,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_cache.Stub(c => c.Get<Project>(projectList[6])).Return(new Project(projectList[6], document));
 			                                                                                                                                                                                                                                                                                                                        
 			_optimizer = new BuildOptimizer(_cache);
-			_optimizer = _optimizer;
 			_runInfos = _optimizer.AssembleBuildConfiguration(projectList);
 		}
 		

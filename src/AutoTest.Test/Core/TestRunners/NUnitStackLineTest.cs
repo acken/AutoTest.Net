@@ -73,5 +73,13 @@ namespace AutoTest.Test.Core.TestRunners
             var line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs:line");
             line.LineNumber.ShouldEqual(0);
         }
+		
+		[Test]
+		public void Should_parse_mono_type_stack_line()
+		{
+			var line = new NUnitStackLine("at AutoTest.Test.Core.Configuration.DIContainerFullTest.Should_perform_full_bootstrap () [0x00018] in /home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Configuration/DIContainerFullTest.cs:20");
+            line.File.ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Configuration/DIContainerFullTest.cs");
+			line.LineNumber.ShouldEqual(20);
+		}
     }
 }

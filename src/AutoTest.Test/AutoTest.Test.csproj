@@ -169,7 +169,13 @@
     <None Include="TestResources\NUnit\NewOutput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestResources\MSBuild\msbuildoutputerror.txt">
+    <None Include="TestResources\MSBuild\msbuild_warnings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\MSBuild\msbuild_succeeded.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\MSBuild\msbuild_errors.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

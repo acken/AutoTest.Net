@@ -22,13 +22,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public string[] Generate(string[] keys)
         {
             _list = new List<string>();
-            foreach (var key in keys)
+			foreach (var key in keys)
                 addProject(key);
             return _prioritizer.Prioritize(_list.ToArray());
         }
 
         private void addProject(string key)
         {
+			//return;
             var project = _cache.Get<Project>(key);
             addToList(key);
             foreach (var reference in project.Value.ReferencedBy)
