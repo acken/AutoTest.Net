@@ -2,24 +2,46 @@
 <NDepend AppName="__SOLUTION_NAME_WITHOUT_SLN_EXTENSION__" Platform="DotNet">
   <OutputDir KeepHistoric="True" KeepXmlFiles="True" ViewReport="True">.\build_output\build_artifacts\ndepend</OutputDir>
   <Assemblies>
-    <Name>AutoTest.Core</Name>
-    <Name>AutoTest.Console</Name>
+    <Name>PROJECTASSEMBLIESGOHERE</Name>
   </Assemblies>
   <FrameworkAssemblies>
-    <Name>Ninject.Core</Name>
-    <Name>Ninject.Integration.Log4net</Name>
-    <Name>xunit.runner.utility</Name>
+    <Name>Castle.Core</Name>
+    <Name>Castle.Components.Validator</Name>
+    <Name>Castle.DynamicProxy2</Name>
+    <Name>Castle.DynamicProxy</Name>
+    <Name>Castle.Facilities.NHibernateIntegration</Name>
+    <Name>Castle.MicroKernel</Name>
+    <Name>Castle.Windsor</Name>
+    <Name>FileHelpers</Name>
     <Name>Iesi.Collections</Name>
     <Name>log4net</Name>
-    <Name>Microsoft.Practices.ServiceLocation</Name>
+    <Name>MassTransit.ServiceBus</Name>
+    <Name>MassTransit.ServiceBus.MSMQ</Name>
+    <Name>MassTransit.SubscriptionStorage</Name>
+    <Name>MassTransit.WindsorIntegration</Name>
+    <Name>Microsoft.ReportViewer.Common</Name>
+    <Name>Microsoft.ReportViewer.ProcessingObjectModel</Name>
+    <Name>Microsoft.ReportViewer.WebForms</Name>
+    <Name>Microsoft.SqlServer.BatchParser</Name>
+    <Name>Microsoft.SqlServer.Replication</Name>
+    <Name>MbUnit.Framework</Name>
     <Name>mscorlib</Name>
+    <Name>NHibernate</Name>
+    <Name>Rhino.Mocks</Name>
     <Name>System</Name>
     <Name>System.configuration</Name>
+    <Name>System.configuration.Install</Name>
     <Name>System.Core</Name>
     <Name>System.Data</Name>
-    <Name>System.Data.DataSetExtensions</Name>
+    <Name>System.Deployment</Name>
+    <Name>System.Drawing</Name>
+    <Name>System.EnterpriseServices</Name>
+    <Name>System.ServiceModel</Name>
+    <Name>System.ServiceProcess</Name>
+    <Name>System.Web</Name>
+    <Name>System.Web.Mobile</Name>
+    <Name>System.Web.Services</Name>
     <Name>System.Xml</Name>
-    <Name>System.Xml.Linq</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727</Dir>
