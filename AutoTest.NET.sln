@@ -17,32 +17,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.WinForms.Test", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Console.Test", "src\AutoTest.Console.Test\AutoTest.Console.Test.csproj", "{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutoTest.Setup", "src\AutoTest.Setup\AutoTest.Setup.vdproj", "{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34B13716-6F2A-4894-B586-51956BB03F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34B13716-6F2A-4894-B586-51956BB03F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34B13716-6F2A-4894-B586-51956BB03F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34B13716-6F2A-4894-B586-51956BB03F54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5522C9C0-55A5-47AB-8D78-4A9C6BF27B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156E0A36-C747-49B2-A8D1-A85894145989}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C10F3D4F-EE5A-4F5F-96B4-E4D88DD719BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C10F3D4F-EE5A-4F5F-96B4-E4D88DD719BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C10F3D4F-EE5A-4F5F-96B4-E4D88DD719BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +45,19 @@ Global
 		{D2BE27D7-36C9-4C0E-92A6-E2768666F430}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2BE27D7-36C9-4C0E-92A6-E2768666F430}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2BE27D7-36C9-4C0E-92A6-E2768666F430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34B13716-6F2A-4894-B586-51956BB03F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34B13716-6F2A-4894-B586-51956BB03F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34B13716-6F2A-4894-B586-51956BB03F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34B13716-6F2A-4894-B586-51956BB03F54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}.Debug|Any CPU.ActiveCfg = Debug
+		{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C10F3D4F-EE5A-4F5F-96B4-E4D88DD719BF} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
@@ -60,8 +67,5 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\AutoTest.WinForms\AutoTest.WinForms.csproj
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

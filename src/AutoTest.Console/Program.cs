@@ -26,18 +26,20 @@ namespace AutoTest.Console
 		{
 			if (args.Length != 1)
 				return false;
-			if (args[0] != "--help" && args[0] != "-help" && args[0] != "/help")
+			if (args[0] != "--help" && args[0] != "-help" && args[0] != "/help" &&
+                args[0] != "--?" && args[0] != "-?" && args[0] != "/?")
 				return false;
+
 			writeConsoleUsage();
 			return true;
 		}
 		
 		private static void writeConsoleUsage()
 		{
-			_logger.Info("AutoTest.WinForms.exe command line arguments");
-			_logger.Info("");
-			_logger.Info("To specify watch directory on startup you can type:");
-			_logger.Info("\tAutoTest.WinForms.exe \"Path to the directory you want\"");
+			System.Console.WriteLine("AutoTest.Console.exe command line arguments");
+            System.Console.WriteLine("");
+            System.Console.WriteLine("To specify watch directory on startup you can type:");
+            System.Console.WriteLine("\tAutoTest.Console.exe \"Path to the directory you want\"");
 		}
 
         private static string getWatchDirectory(string[] args)
