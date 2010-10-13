@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.BuildRunners;
+using System.IO;
 
 namespace AutoTest.Test.Core.BuildRunners
 {
@@ -11,57 +12,54 @@ namespace AutoTest.Test.Core.BuildRunners
     public class MSBuildOutputParserTest
     {
         [Test]
-        public void Should_parse_error()
+        public void Should_parse_errors()
         {
+			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_errors.txt", Path.DirectorySeparatorChar);
             var result = new BuildRunResults("");
-            var line =
-                "Class1.cs(5,7): error CS0246: The type or namespace name 'Nunit' could not be found (are you missing a using directive or an assembly reference?)";
-            var parser = new MSBuildOutputParser(result, line);
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
             result.ErrorCount.ShouldEqual(1);
-            result.Errors[0].File.ShouldEqual("Class1.cs");
-            result.Errors[0].LineNumber.ShouldEqual(5);
-            result.Errors[0].LinePosition.ShouldEqual(7);
-            result.Errors[0].ErrorMessage.ShouldEqual("CS0246: The type or namespace name 'Nunit' could not be found (are you missing a using directive or an assembly reference?)");
+            result.Errors[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Core/Messaging/MessageConsumers/ProjectChangeConsumer.cs".Replace('/', Path.DirectorySeparatorChar));
+            result.Errors[0].LineNumber.ShouldEqual(62);
+            result.Errors[0].LinePosition.ShouldEqual(50);
+            result.Errors[0].ErrorMessage.ShouldEqual("CS1003: ; expected");
         }
 
         [Test]
         public void Should_parse_warning()
         {
+			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_warnings.txt", Path.DirectorySeparatorChar);
             var result = new BuildRunResults("");
-            var line =
-                "Session.cs(32,46): warning CS0109: The member `Desktopcouch.Session.GType' does not hide an inherited member. The new keyword is not required";
-            var parser = new MSBuildOutputParser(result, line);
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
-            result.WarningCount.ShouldEqual(1);
-            result.Warnings[0].File.ShouldEqual("Session.cs");
-            result.Warnings[0].LineNumber.ShouldEqual(32);
-            result.Warnings[0].LinePosition.ShouldEqual(46);
-            result.Warnings[0].ErrorMessage.ShouldEqual("CS0109: The member `Desktopcouch.Session.GType' does not hide an inherited member. The new keyword is not required");
+            result.WarningCount.ShouldEqual(2);
+			
+            result.Warnings[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Core/BuildRunners/MSBuildOutputParser.cs".Replace('/', Path.DirectorySeparatorChar));
+            result.Warnings[0].LineNumber.ShouldEqual(21);
+            result.Warnings[0].LinePosition.ShouldEqual(29);
+            result.Warnings[0].ErrorMessage.ShouldEqual("CS1717: Assignment made to same variable; did you mean to assign something else?");
+			
+			result.Warnings[1].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/BuildRunners/MSBuildOutputParserTest.cs".Replace('/', Path.DirectorySeparatorChar));
+            result.Warnings[1].LineNumber.ShouldEqual(27);
+            result.Warnings[1].LinePosition.ShouldEqual(29);
+            result.Warnings[1].ErrorMessage.ShouldEqual("CS1717: Assignment made to same variable; did you mean to assign something else?");
         }
-
-        [Test]
-        public void Should_not_add_duplicate_errors()
+		
+		[Test]
+        public void Should_parse_succeeded()
         {
+			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_succeeded.txt", Path.DirectorySeparatorChar);
             var result = new BuildRunResults("");
-            var line =
-                "Class1.cs(5,7): error CS0246: The type or namespace name 'Nunit' could not be found (are you missing a using directive or an assembly reference?)";
-            var parser = new MSBuildOutputParser(result, line);
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
-            parser.Parse();
-            result.ErrorCount.ShouldEqual(1);
-        }
-
-        [Test]
-        public void Should_not_add_duplicate_warnings()
-        {
-            var result = new BuildRunResults("");
-            var line =
-                "Session.cs(32,46): warning CS0109: The member `Desktopcouch.Session.GType' does not hide an inherited member. The new keyword is not required";
-            var parser = new MSBuildOutputParser(result, line);
-            parser.Parse();
-            parser.Parse();
-            result.WarningCount.ShouldEqual(1);
+            result.WarningCount.ShouldEqual(0);
+            result.ErrorCount.ShouldEqual(0);
         }
     }
 }

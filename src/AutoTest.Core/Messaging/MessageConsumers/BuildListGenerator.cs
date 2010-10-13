@@ -22,7 +22,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public string[] Generate(string[] keys)
         {
             _list = new List<string>();
-            foreach (var key in keys)
+			foreach (var key in keys)
                 addProject(key);
             return _prioritizer.Prioritize(_list.ToArray());
         }

@@ -27,12 +27,8 @@ namespace AutoTest.Test.Core.Caching
             var links = parser.Parse();
             
             links.Length.ShouldEqual(2);
-            // some more text
-            links[0].Start.ShouldEqual(10);
-            links[0].Length.ShouldEqual(14);
-            // some more
-            links[1].Start.ShouldEqual(33);
-            links[1].Length.ShouldEqual(9);
+			parser.ParsedText.Substring(links[0].Start, links[0].Length).ShouldEqual("some more text");
+			parser.ParsedText.Substring(links[1].Start, links[1].Length).ShouldEqual("some more");
         }
     }
 }

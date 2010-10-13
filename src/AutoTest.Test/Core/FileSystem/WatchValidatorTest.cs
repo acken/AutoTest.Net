@@ -42,6 +42,15 @@ namespace AutoTest.Test.Core.FileSystem
                 .ShouldPublish(getInfo("something{0}bin{0}Debug{0}"))
                 .ShouldBeFalse();
         }
+		
+		[Test]
+        public void Should_invalidate_bin_debug_dir()
+        {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _validator
+                .ShouldPublish(getInfo("something{0}bin{0}Debug"))
+                .ShouldBeFalse();
+        }
 
         [Test]
         public void Should_invalidate_bin_release()
@@ -67,6 +76,15 @@ namespace AutoTest.Test.Core.FileSystem
 			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator
                 .ShouldPublish(getInfo("something{0}obj{0}Debug{0}"))
+                .ShouldBeFalse();
+        }
+		
+		[Test]
+        public void Should_invalidate_obj_debug_dir()
+        {
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _validator
+                .ShouldPublish(getInfo("something{0}obj{0}Debug"))
                 .ShouldBeFalse();
         }
 

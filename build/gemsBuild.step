@@ -40,7 +40,7 @@
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.post.step" />
   <property name="file.custom.step.replace" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.replace.step" />
   <property name="is.replaced" value="false" />
-  <property name="fail.build.on.error" value="true" />
+  <property name="fail.build.on.error" value="false" />
 
   <target name="go" depends="run_tasks" if="${folder.gems.exists}" />
 

@@ -102,10 +102,12 @@
         <exclude name="*bdddoc.*" />
         <exclude name="*developwithpassion.bdd.*" />
         <exclude name="*nunit.*" />
-        <exclude name="*QuickGraph*.*" />
+        <exclude name="*xunit.*" />
         <exclude name="*MbUnit*.*" />
-        <exclude name="*Rhino.Mocks.*" />
         <exclude name="*Refly.*" />
+        <exclude name="*QuickGraph*.*" />
+        <exclude name="*Rhino.Mocks.*" />
+        <exclude name="*Moq.*" />
         <exclude name="**${path.separator}*.template" />
         <include name="**/*.*" />
       </fileset>

@@ -36,10 +36,10 @@ Runtime Environment -
                           <message><![CDATA[  Expected: 10
   But was:  2
 ]]></message>
-                          <stack-trace><![CDATA[at AutoTest.TestingExtensionMethods.ShouldEqual[Int32] (Int32 actual, Int32 expected) [0x00000] in <filename unknown>:0
-at AutoTest.WinForms.Test.LinkParserTest.Should_replace_link_tags () [0x00000] in <filename unknown>:0
-at (wrapper managed-to-native) System.Reflection.MonoMethod:InternalInvoke (object,object[],System.Exception&)
-at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00000] in <filename unknown>:0
+                          <stack-trace><![CDATA[at AutoTest.Core.Caching.RunResultCache.LinkParser.Parse () [0x0000d] in /home/ack/src/AutoTest.Net/src/AutoTest.Core/Caching/RunResultCache/LinkParser.cs:27
+at AutoTest.Test.Core.Caching.LinkParserTest.Should_replace_link_tags () [0x0000b] in /home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Caching/RunResultCache/LinkParserTest.cs:18
+at (wrapper managed-to-native) System.Reflection.MonoMethod:InternalInvoke (System.Reflection.MonoMethod*,object,object[],System.Exception&)
+at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x000d0] in /home/ack/src/mono2.8/mono-2.8/mcs/class/corlib/System.Reflection/MonoMethod.cs:223
 ]]></stack-trace>
                         </failure>
                       </test-case>

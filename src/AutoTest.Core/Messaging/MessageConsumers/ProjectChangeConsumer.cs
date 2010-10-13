@@ -19,21 +19,21 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
-        private ICache _cache;
         private IConfiguration _configuration;
         private IBuildRunner _buildRunner;
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
+		private IOptimizeBuildConfiguration _buildOptimizer;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, ICache cache, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer)
         {
             _bus = bus;
             _listGenerator = listGenerator;
-            _cache = cache;
             _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;
 			_testAssemblyValidator = testAssemblyValidator;
+			_buildOptimizer = buildOptimizer;
         }
 
         #region IConsumerOf<ProjectChangeMessage> Members
@@ -53,7 +53,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             // Projects that tests me
             // Other test projects
             var runReport = new RunReport();
-            var list = _listGenerator.Generate(getListOfChangedProjects(message));
+            var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
+			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
             if (!buildAll(list, runReport))
 				return runReport;
 			testAll(list, runReport);
@@ -68,24 +69,36 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return projects.ToArray();
         }
 		
-		private bool buildAll(string[] projectList, RunReport runReport)
+		private bool buildAll(RunInfo[] projectList, RunReport runReport)
 		{
+			var indirectlyBuild = new List<string>();
 			foreach (var file in projectList)
             {
-                if (!build(_cache.Get<Project>(file), runReport))
-                    return false;
+				if (file.ShouldBeBuilt)
+				{
+					Debug.WriteMessage(string.Format("Set to build project {0}", file.Project.Key));
+	                if (!build(file.Project, runReport))
+	                    return false;
+				}
+				else
+				{
+					Debug.WriteMessage(string.Format("Not set to build project {0}", file.Project.Key));
+					indirectlyBuild.Add(file.Project.Key);
+				}
             }
+			foreach (var project in indirectlyBuild)
+				runReport.AddBuild(project, new TimeSpan(0), true);
 			return true;
 		}
 		
-		private void testAll(string[] projectList, RunReport runReport)
+		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
             foreach (var runner in _testRunners)
             {
 				var runInfos = new List<TestRunInfo>();
 				foreach (var file in projectList)
 	            {
-					var project = _cache.Get<Project>(file);
+					var project = file.Project;
 					string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
 	            	var assembly = Path.Combine(folder, project.Value.AssemblyName);
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))

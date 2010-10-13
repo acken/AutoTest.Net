@@ -35,6 +35,7 @@ namespace AutoTest.Core.Configuration
 		public ConfigItem<string> WatchIgnoreFile { get; private set; }
 		public ConfigItem<string[]> TestAssembliesToIgnore { get; private set; }
 		public ConfigItem<string[]> TestCategoriesToIgnore { get; private set; }
+		public ConfigItem<int> FileChangeBatchDelay { get; private set; }
 
         public CoreSection()
         {
@@ -51,6 +52,7 @@ namespace AutoTest.Core.Configuration
 			WatchIgnoreFile = new ConfigItem<string>("");
 			TestAssembliesToIgnore = new ConfigItem<string[]>(new string[] {});
 			TestCategoriesToIgnore = new ConfigItem<string[]>(new string[] {});
+			FileChangeBatchDelay = new ConfigItem<int>(100);
         }
 
         public void Read(string configFile)
@@ -70,6 +72,7 @@ namespace AutoTest.Core.Configuration
 			WatchIgnoreFile = getValueItem("configuration/IgnoreFile", "");
 			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
+			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 100);
         }
 		
 		private bool tryLoadXml(string configFile)
@@ -88,10 +91,20 @@ namespace AutoTest.Core.Configuration
         private ConfigItem<KeyValuePair<string, string>[]> getVersionedSetting(string xpath)
         {
 			var item = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string,string>[] {});
-            List<KeyValuePair<string, string>> executables = new List<KeyValuePair<string, string>>();
             var nodes = _xml.SelectNodes(xpath);
 			if (nodes.Count == 0)
 				return item;
+			item.SetValue(readVersionedNodes(nodes));
+			if (shouldMerge(xpath))
+				item.SetShouldMerge();
+			if (shouldExcludeFromConfig(xpath))
+				item.Exclude();
+            return item;
+        }
+		
+		private KeyValuePair<string, string>[] readVersionedNodes(XmlNodeList nodes)
+		{
+			var executables = new List<KeyValuePair<string, string>>();
             foreach (XmlNode node in nodes)
             {
                 var executable = node.InnerText;
@@ -101,13 +114,8 @@ namespace AutoTest.Core.Configuration
                     version = attribute.InnerText;
                 executables.Add(new KeyValuePair<string, string>(version, executable));
             }
-			item.SetValue(executables.ToArray());
-			if (shouldMerge(xpath))
-				item.SetShouldMerge();
-			if (shouldExcludeFromConfig(xpath))
-				item.Exclude();
-            return item;
-        }
+			return executables.ToArray();
+		}
 		
 		private ConfigItem<bool> getBoolItem(string path, bool defaultValue)
         {
@@ -120,6 +128,18 @@ namespace AutoTest.Core.Configuration
 				item.Exclude();
 			return item;
         }
+		
+		private ConfigItem<int> getIntItem(string path, int defaultValue)
+		{
+			var item = new ConfigItem<int>(defaultValue);
+			var val = getInt(path, null);
+			if (val == null)
+				return item;
+			item.SetValue((int) val);
+			if (shouldExcludeFromConfig(path))
+				item.Exclude();
+			return item;
+		}
 		
 		private bool shouldExcludeFromConfig(string path)
 		{
@@ -145,6 +165,15 @@ namespace AutoTest.Core.Configuration
 			bool state;
             var value = getValue(nodeName, "");
             if (bool.TryParse(value, out state))
+                return state;
+            return defaultValue;
+		}
+		
+		private int? getInt(string nodeName, int? defaultValue)
+		{
+			int state;
+            var value = getValue(nodeName, "");
+            if (int.TryParse(value, out state))
                 return state;
             return defaultValue;
 		}

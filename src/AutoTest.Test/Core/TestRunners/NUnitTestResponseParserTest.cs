@@ -57,8 +57,20 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _parser.Result[0].All.Length.ShouldEqual(7);
             _parser.Result[0].Failed.Length.ShouldEqual(1);
-            _parser.Result[0].Failed[0].Message.ShouldEqual(string.Format("  Expected: 10{0}  But was:  2", Environment.NewLine));
+			// A little hack needed to make sure that line endings behave the same on all platforms
+			// The correctness of the test is not affected by this since the rest of the app
+			// supports platform variations of line endings.
+			var message = _parser.Result[0].Failed[0].Message;
+            message.Replace("\r\n", "\n").ShouldEqual("  Expected: 10\n  But was:  2");
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(4);
+			_parser.Result[0].Failed[0].StackTrace[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Core/Caching/RunResultCache/LinkParser.cs".Replace('/', Path.DirectorySeparatorChar));
+			_parser.Result[0].Failed[0].StackTrace[1].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Caching/RunResultCache/LinkParserTest.cs".Replace('/', Path.DirectorySeparatorChar));
+			_parser.Result[0].Failed[0].StackTrace[3].File
+                .ShouldEqual("/home/ack/src/mono2.8/mono-2.8/mcs/class/corlib/System.Reflection/MonoMethod.cs".Replace('/', Path.DirectorySeparatorChar));
         }
 		
 		[Test]

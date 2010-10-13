@@ -17,12 +17,12 @@ namespace AutoTest.Core.FileSystem
 		public WatchValidator(IConfiguration configuration)
 		{
 			_configuration = configuration;
-			_defaultIgnores[0] = string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar);
-			_defaultIgnores[1] = string.Format("bin{0}Release{0}", Path.DirectorySeparatorChar);
-			_defaultIgnores[2] = string.Format("bin{0}x86{0}", Path.DirectorySeparatorChar);
-			_defaultIgnores[3] = string.Format("obj{0}Debug{0}", Path.DirectorySeparatorChar);
-			_defaultIgnores[4] = string.Format("obj{0}Release{0}", Path.DirectorySeparatorChar);
-			_defaultIgnores[5] = string.Format("obj{0}x86{0}", Path.DirectorySeparatorChar);
+			_defaultIgnores[0] = string.Format("bin{0}Debug", Path.DirectorySeparatorChar);
+			_defaultIgnores[1] = string.Format("bin{0}Release", Path.DirectorySeparatorChar);
+			_defaultIgnores[2] = string.Format("bin{0}x86", Path.DirectorySeparatorChar);
+			_defaultIgnores[3] = string.Format("obj{0}Debug", Path.DirectorySeparatorChar);
+			_defaultIgnores[4] = string.Format("obj{0}Release", Path.DirectorySeparatorChar);
+			_defaultIgnores[5] = string.Format("obj{0}x86", Path.DirectorySeparatorChar);
 			_defaultIgnores[6] = "*.FileListAbsolute.txt";
 			_defaultIgnores[7] = "*.FilesWrittenAbsolute.txt";
 			_defaultIgnores[8] = "*.suo";
@@ -30,10 +30,10 @@ namespace AutoTest.Core.FileSystem
 		
         public bool ShouldPublish(string filePath)
         {
-			if (!_configuration.ShouldUseIgnoreLists)
-				return true;
 			if (Directory.Exists(filePath))
 				return false;
+			if (!_configuration.ShouldUseIgnoreLists)
+				return true;
 			if (match(filePath, _defaultIgnores))
 				return false;
 			if (match(filePath, _configuration.WatchIgnoreList))
