@@ -176,6 +176,13 @@ namespace AutoTest.Test.Core.FileSystem
 			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/myproject.suo").ShouldBeFalse();
 		}
 
+        [Test]
+        public void Should_not_consume_vs_unmanagedregistration_cache()
+        {
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _validator.ShouldPublish("/Somedirectory/hoi/myfolder/myproject.csproj.UnmanagedRegistration.cache").ShouldBeFalse();
+        }
+
         private string getInfo(string path)
         {
             return string.Format(path, Path.DirectorySeparatorChar);
