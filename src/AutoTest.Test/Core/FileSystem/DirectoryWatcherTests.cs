@@ -58,22 +58,32 @@ namespace AutoTest.Test.Core
         [Test]
         public void Should_send_message_when_file_changes_once()
         {
-            _validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+			var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+			var configuration = MockRepository.GenerateMock<IConfiguration>();
+			validator.Stub(v => v.GetIgnorePatterns()).Return("");
+			configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration);
+            var file = Path.GetFullPath("watcher_test_changes_once.txt");
+			var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+			
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             // Write twice
-            File.WriteAllText(_file, "meh ");
-            using (var writer = new StreamWriter(_file, true)) { writer.WriteLine("some text"); }
-			// Set this to 1 sec since on linux in worst case scenario mono will poll every
-			// 750 millisecond
-            Thread.Sleep(1000);
+            File.WriteAllText(file, "meh ");
+            using (var writer = new StreamWriter(file, true)) { writer.WriteLine("some text"); }
+            Thread.Sleep(350);
             
-            _messageBus.AssertWasCalled(
+            messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(
                          Arg<FileChangeMessage>.Matches(
                              f => f.Files.Length >  0 &&
-                                  f.Files[0].Extension.Equals(Path.GetExtension(_file)) &&
-                                  f.Files[0].FullName.Equals(_file) &&
-                                  f.Files[0].Name.Equals(Path.GetFileName(_file)))),
+                                  f.Files[0].Extension.Equals(Path.GetExtension(file)) &&
+                                  f.Files[0].FullName.Equals(file) &&
+                                  f.Files[0].Name.Equals(Path.GetFileName(file)))),
                 m => m.Repeat.Once());
+			
+			File.Delete(file);
         }
         
         [Test]

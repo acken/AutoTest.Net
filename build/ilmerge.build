@@ -29,8 +29,8 @@
   <property name="file.merge.name" value="__REPLACE__" overwrite="false" />
   <!-- exe winexe dll -->
   <property name="merge.target.type" value="__REPLACE__" overwrite="false" />
-  <property name="args.ilmerge" value="/internalize /target:${merge.target.type} /out:${dirs.merge.to}${path.separator}${file.merge.name} /log:${dirs.merge.log}${path.separator}${log.merge} /ndebug /allowDup ${file.merge.name} " />
-  <property name="args.ilmerge" value="/internalize:${path.file.internalize.ignore} /target:${merge.target.type} /out:${dirs.merge.to}${path.separator}${file.merge.name} /log:${dirs.merge.log}${path.separator}${log.merge} /ndebug /allowDup ${file.merge.name} " if="${file::exists(path.file.internalize.ignore)}"/>
+  <property name="args.ilmerge" value="/internalize /target:${merge.target.type} /out:${dirs.merge.to}${path.separator}${file.merge.name} /log:${dirs.merge.log}${path.separator}${log.merge} /xmldocs /ndebug /allowDup ${file.merge.name} " />
+  <property name="args.ilmerge" value="/internalize:${path.file.internalize.ignore} /target:${merge.target.type} /out:${dirs.merge.to}${path.separator}${file.merge.name} /log:${dirs.merge.log}${path.separator}${log.merge} /xmldocs /ndebug /allowDup ${file.merge.name} " if="${file::exists(path.file.internalize.ignore)}"/>
 
   <property name="allow.powershell.unrestricted" value="false" overwrite="false" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.pre.build" />

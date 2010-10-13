@@ -13,6 +13,7 @@
   <property name="dirs.build_scripts_custom" value="${dirs.current}${path.separator}${path.to.toplevel}${path.separator}${folder.build_scripts_custom}" />
   <property name="folder.code_build" value="build_output" overwrite="false" />
   <property name="dirs.build" value="${dirs.current}${path.separator}${path.to.toplevel}${path.separator}${folder.code_build}" />
+  <property name="dirs.build.windows.mono" value="${string::replace(dirs.build,'\','/')}" />
   <property name="folder.documentation" value="docs" overwrite="false" />
   <property name="dirs.docs" value="${dirs.current}${path.separator}${path.to.toplevel}${path.separator}${folder.documentation}" />
   <property name="folder.database" value="__DATABASE_FOLDER_NAME__" overwrite="false" />
@@ -25,11 +26,14 @@
   <property name="msbuild.platform" value="Any CPU" overwrite="false" />
   <property name="msbuild.override_output_path" value="true" overwrite="false" />
   <property name="msbuild.outputpath" value="${dirs.build}${path.separator}${folder.app.drop}" overwrite="false" />
-  <property name="xbuild.outputpath" value=".${path.separator}${folder.code_build}${path.separator}${folder.app.drop}" overwrite="false" />
-  <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${project.name}.sln" />
-  <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${project.name}.vbp" if="${microsoft.framework =='vb6'}" />
-  <property name="nant.settings.currentframework" value="mono-3.5" if="${platform::is-unix()}" />
+  <property name="msbuild.outputpath.windows.mono" value="${string::replace(msbuild.outputpath,'\','/')}" />
+  <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${path_to_solution}${path.separator}${project.name}.sln" />
+  <property name="solution.path.windows.mono" value="${string::replace(directory::get-parent-directory(dirs.current),'\','/')}/${string::replace(path_to_solution,'\','/')}/${project.name}.sln" />
+  <property name="solution.path" value="${directory::get-parent-directory(dirs.current)}${path.separator}${path_to_solution}${path.separator}${project.name}.vbp" if="${microsoft.framework =='vb6'}" />
+  <property name="nant.settings.currentframework" value="mono-2.0" if="${platform::is-unix()}" />
   <property name="nant.settings.currentframework" value="net-3.5" if="${microsoft.framework !='vb6' and platform::is-windows()}" />
+  <property name="app.xbuild" value="C:\Program Files (x86)\Mono-2.8\bin\xbuild.bat" overwrite="false" if="${platform::is-windows()}" />
+  <property name="app.xbuild" value="xbuild" overwrite="false" if="${platform::is-unix()}" />
   <property name="framework.multitargeting" value="false" />
   <property name="framework.multitargeting.delimiter" value="," />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.pre.step" />
@@ -107,7 +111,7 @@
     <if test="${framework.multitargeting}">
       <foreach item="String" in="${microsoft.framework}" delim="${framework.multitargeting.delimiter}" property="framework.specific">
         <property name="msbuild.outputpath" value="${dirs.build}${path.separator}${folder.app.drop}${path.separator}${framework.specific}" />
-        <property name="xbuild.outputpath" value=".${path.separator}${folder.code_build}${path.separator}${folder.app.drop}${path.separator}${framework.specific}" />
+        <property name="msbuild.outputpath.windows.mono" value="${string::replace(msbuild.outputpath,'\','/')}" />
         <property name="microsoft.framework.specific" value="${string::trim(framework.specific)}" />
         <call target="build_dotNet_code_framework" />
       </foreach>
@@ -125,12 +129,12 @@
     <if test="${platform::is-unix()}">
       <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
       <echo message="Cleaning build..." />
-      <exec program="xbuild"
+      <exec program="${app.xbuild}"
           basedir="/usr/bin"
           workingdir="${dirs.build}"
           commandline="${solution.path} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
-        <echo message="Building..." />
-      <exec program="xbuild"
+      <echo message="Building..." />
+      <exec program="${app.xbuild}"
           basedir="/usr/bin"
           workingdir="${dirs.build}"
           commandline="${solution.path} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger" />
@@ -139,38 +143,98 @@
       <!-- nant is retarded - I had to have four of these instead of throwing an if on the outputpath and targets -->
       <if test="${msbuild.override_output_path}">
         <if test="${framework.multitargeting}">
-          <msbuild project="${solution.path}" verbosity="minimal">
-            <property name="Configuration" value="${msbuild.configuration}" />
-            <property name="OutputPath" value="${msbuild.outputpath}" />
-            <property name="Platform" value="${msbuild.platform}" />
-            <property name="TargetFrameworkVersion" value="v${framework::get-version(microsoft.framework.specific)}" />
-            <property name="ToolsVersion" value="${framework::get-version(microsoft.framework.specific)}" />
-        </msbuild>
+          <if test="${framework::get-family(microsoft.framework.specific) == 'mono'}" >
+            <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
+            <echo message="Cleaning build..." />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline="${solution.path.windows.mono} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+            <echo message='Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+          </if>
+          <if test="${framework::get-family(microsoft.framework.specific) != 'mono'}" >
+            <msbuild project="${solution.path}" verbosity="minimal">
+              <property name="Configuration" value="${msbuild.configuration}" />
+              <property name="OutputPath" value="${msbuild.outputpath}" />
+              <property name="Platform" value="${msbuild.platform}" />
+              <property name="TargetFrameworkVersion" value="v${framework::get-version(microsoft.framework.specific)}" />
+              <property name="ToolsVersion" value="${framework::get-version(microsoft.framework.specific)}" />
+            </msbuild>
+          </if>
         </if>
         <if test="${not framework.multitargeting}">
-          <msbuild project="${solution.path}" verbosity="minimal">
-            <property name="Configuration" value="${msbuild.configuration}" />
-            <property name="OutputPath" value="${msbuild.outputpath}" />
-            <property name="Platform" value="${msbuild.platform}" />
-          </msbuild>
+          <if test="${framework::get-family(microsoft.framework.specific) == 'mono'}" >
+            <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
+            <echo message="Cleaning build..." />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline="${solution.path.windows.mono} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+            <echo message='Building without multitargeting by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+          </if>
+          <if test="${framework::get-family(microsoft.framework.specific) != 'mono'}" >
+            <msbuild project="${solution.path}" verbosity="minimal">
+              <property name="Configuration" value="${msbuild.configuration}" />
+              <property name="OutputPath" value="${msbuild.outputpath}" />
+              <property name="Platform" value="${msbuild.platform}" />
+            </msbuild>
+          </if>
         </if>
       </if>
       <if test="${not msbuild.override_output_path}">
         <if test="${framework.multitargeting}">
-          <msbuild project="${solution.path}" verbosity="minimal">
-            <property name="Configuration" value="${msbuild.configuration}" />
-            <property name="Platform" value="${msbuild.platform}" />
-            <property name="TargetFrameworkVersion" value="v${framework::get-version(microsoft.framework.specific)}" />
-            <property name="ToolsVersion" value="${framework::get-version(microsoft.framework.specific)}" />
-          </msbuild>
+          <if test="${framework::get-family(microsoft.framework.specific) == 'mono'}" >
+            <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
+            <echo message="Cleaning build..." />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build}"
+                workingdir="${dirs.build}"
+                commandline="${solution.path} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+            <echo message="Building..." />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build}"
+                workingdir="${dirs.build}"
+                commandline="${solution.path} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+          </if>
+          <if test="${framework::get-family(microsoft.framework.specific) != 'mono'}" >
+            <msbuild project="${solution.path}" verbosity="minimal">
+              <property name="Configuration" value="${msbuild.configuration}" />
+              <property name="Platform" value="${msbuild.platform}" />
+              <property name="TargetFrameworkVersion" value="v${framework::get-version(microsoft.framework.specific)}" />
+              <property name="ToolsVersion" value="${framework::get-version(microsoft.framework.specific)}" />
+            </msbuild>
+          </if>
         </if>
         <if test="${not framework.multitargeting}">
-      </if>
-          <msbuild project="${solution.path}" verbosity="minimal">
-            <property name="Configuration" value="${msbuild.configuration}" />
-            <property name="Platform" value="${msbuild.platform}" />
-          </msbuild>
+          <if test="${framework::get-family(microsoft.framework.specific) == 'mono'}" >
+            <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
+            <echo message="Cleaning build..." />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline="${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+            <echo message="Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+            <exec program="${app.xbuild}"
+                basedir="${dirs.build.windows.mono}"
+                workingdir="${dirs.build.windows.mono}"
+                commandline="${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+          </if>
+          <if test="${framework::get-family(microsoft.framework.specific) != 'mono'}" >
+            <msbuild project="${solution.path}" verbosity="minimal">
+              <property name="Configuration" value="${msbuild.configuration}" />
+              <property name="Platform" value="${msbuild.platform}" />
+            </msbuild>
+          </if>
         </if>
+      </if>
     </if>
   </target>
 
