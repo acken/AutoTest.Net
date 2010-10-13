@@ -39,6 +39,13 @@ detecting changes in a file generated either by build or testrun. If so use the
 ignore posibility in the configuration file. To figure out what files are being
 generated turn on logging and check the debug.log file.
 
+Build from source
+To build the whole thing from source just clone or fork the repository. When done
+go in and run build and deploy scripts (biuld.sh/build.bat and deploy.sh/deploy.bat
+depending on whether you are on Windows(bat) or something else(sh)). After running
+build and deploy scripts you will find the built binaries under the ReleaseBinaries
+folder.
+
 Installing the VS Addin
 	Run Install_Visual_Studio_Addin.bat
 
