@@ -72,7 +72,7 @@ namespace AutoTest.Test.Core
             // Write twice
             File.WriteAllText(file, "meh ");
             using (var writer = new StreamWriter(file, true)) { writer.WriteLine("some text"); }
-            Thread.Sleep(250);
+            Thread.Sleep(350);
             
             messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(
