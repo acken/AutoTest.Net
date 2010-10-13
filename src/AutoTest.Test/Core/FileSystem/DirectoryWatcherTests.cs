@@ -13,6 +13,7 @@ namespace AutoTest.Test.Core
     public class DirectoryWatcherTests
     {
         private string _file;
+        private string _directory;
 		private string _localConfig;
 		private string _watchDirectory;
         private IMessageBus _messageBus;
@@ -30,6 +31,7 @@ namespace AutoTest.Test.Core
 			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration);
             _file = Path.GetFullPath("watcher_test.txt");
+            _directory = Path.GetFullPath("mytestfolder");
 			_watchDirectory = Path.GetDirectoryName(_file);
 			_localConfig = Path.Combine(_watchDirectory, "AutoTest.config");
 			File.WriteAllText(_localConfig, "<configuration></configuration>");
@@ -42,6 +44,8 @@ namespace AutoTest.Test.Core
             _watcher.Dispose();
             File.Delete(_file);
 			File.Delete(_localConfig);
+            if (Directory.Exists(_directory))
+                Directory.Delete(_directory);
         }
 
         [Test]

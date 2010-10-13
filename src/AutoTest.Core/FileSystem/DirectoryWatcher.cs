@@ -104,6 +104,8 @@ namespace AutoTest.Core.FileSystem
 
         private void addToBuffer(ChangedFile file)
         {
+            if (Directory.Exists(file.FullName))
+                return;
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
 

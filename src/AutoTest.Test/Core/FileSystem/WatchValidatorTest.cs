@@ -106,15 +106,6 @@ namespace AutoTest.Test.Core.FileSystem
         }
 
         [Test]
-        public void Should_invalidate_directories()
-        {
-			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
-            _validator
-                .ShouldPublish(Path.GetDirectoryName(Path.GetTempFileName()))
-                .ShouldBeFalse();
-        }
-
-        [Test]
         public void Should_invalidate_monos_filelistabsolute_file()
         {
 			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
