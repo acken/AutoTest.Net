@@ -50,6 +50,7 @@ namespace AutoTest.VSAddin
                         label1.ForeColor = Color.Red;
                         label1.Font = new Font(label1.Font, FontStyle.Bold);
                     }
+                    this.Refresh();
                 }, message);
         }
 
@@ -77,6 +78,7 @@ namespace AutoTest.VSAddin
 
             foreach (var ignored in cache.Ignored)
                 addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected);
+            this.Refresh();
         }
 
         private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected)
