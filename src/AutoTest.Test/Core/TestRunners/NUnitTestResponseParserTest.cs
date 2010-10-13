@@ -59,9 +59,14 @@ namespace AutoTest.Test.Core.TestRunners
             _parser.Result[0].Failed.Length.ShouldEqual(1);
             _parser.Result[0].Failed[0].Message.ShouldEqual(string.Format("  Expected: 10{0}  But was:  2", Environment.NewLine));
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(4);
-			_parser.Result[0].Failed[0].StackTrace[0].File.ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Core/Caching/RunResultCache/LinkParser.cs");
-			_parser.Result[0].Failed[0].StackTrace[1].File.ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Caching/RunResultCache/LinkParserTest.cs");
-			_parser.Result[0].Failed[0].StackTrace[3].File.ShouldEqual("/home/ack/src/mono2.8/mono-2.8/mcs/class/corlib/System.Reflection/MonoMethod.cs");
+			_parser.Result[0].Failed[0].StackTrace[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Core/Caching/RunResultCache/LinkParser.cs".Replace('/', Path.DirectorySeparatorChar));
+			_parser.Result[0].Failed[0].StackTrace[1].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Caching/RunResultCache/LinkParserTest.cs".Replace('/', Path.DirectorySeparatorChar));
+			_parser.Result[0].Failed[0].StackTrace[3].File
+                .ShouldEqual("/home/ack/src/mono2.8/mono-2.8/mcs/class/corlib/System.Reflection/MonoMethod.cs".Replace('/', Path.DirectorySeparatorChar));
         }
 		
 		[Test]
