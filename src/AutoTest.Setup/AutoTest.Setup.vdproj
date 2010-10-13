@@ -22,13 +22,19 @@
         "Entry"
         {
         "MsmKey" = "8:_43E698555C56271F81F2BF41D1384787"
-        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_43E698555C56271F81F2BF41D1384787"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_43E698555C56271F81F2BF41D1384787"
+        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,12 +51,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_43E698555C56271F81F2BF41D1384787"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4C6C28EDC91F4CDC91A4E996CCBAAE0F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,13 +58,13 @@
         "Entry"
         {
         "MsmKey" = "8:_5EEFB8FBFBD8F7EE79EF160AFA65EE1F"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_5EEFB8FBFBD8F7EE79EF160AFA65EE1F"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,13 +76,19 @@
         "Entry"
         {
         "MsmKey" = "8:_7CA9A75D80C9C36FBDC6C8A77C125E58"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_7CA9A75D80C9C36FBDC6C8A77C125E58"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7CA9A75D80C9C36FBDC6C8A77C125E58"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,12 +106,6 @@
         "Entry"
         {
         "MsmKey" = "8:_7CA9A75D80C9C36FBDC6C8A77C125E58"
-        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7CA9A75D80C9C36FBDC6C8A77C125E58"
         "OwnerKey" = "8:_5EEFB8FBFBD8F7EE79EF160AFA65EE1F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -118,13 +118,13 @@
         "Entry"
         {
         "MsmKey" = "8:_A7D4E0331392DC796741B86158F78EDB"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A7D4E0331392DC796741B86158F78EDB"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -136,13 +136,13 @@
         "Entry"
         {
         "MsmKey" = "8:_F59D93D9948116B2E1FAD64AE8B1F4B9"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F59D93D9948116B2E1FAD64AE8B1F4B9"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -160,13 +160,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -179,12 +185,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F59D93D9948116B2E1FAD64AE8B1F4B9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_92B30D6468A0AE6659717B650108BF03"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -217,6 +217,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
+                    {
+                    "Name" = "8:.NET Framework 3.5"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -233,6 +254,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -506,6 +535,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1DDFADBF628D4597B05A970A71CD3623"
+                    {
+                    "Name" = "8:AutoTest.Net"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_7A2623E91E7F4DD3AD64CE7F1FF04F9B"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -525,7 +565,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AutoTest.Net"
         "ProductCode" = "8:{209B9A51-3FE9-4DBA-B7B8-CE8108F31079}"
-        "PackageCode" = "8:{A903165D-A29E-4851-A7D2-18E4DC7926FB}"
+        "PackageCode" = "8:{E3BA4BD5-E164-4236-97F1-D18BAC22DA82}"
         "UpgradeCode" = "8:{63CCC7FF-8458-4A47-BE55-1B1449BB7AE7}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -644,6 +684,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0F184AD250C14A94A6BF96D76CE86889"
+            {
+            "Name" = "8:AutoTest Console"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_F2C1173AC441419797ABFD224DEB0BEA"
+            "Folder" = "8:_1DDFADBF628D4597B05A970A71CD3623"
+            "WorkingFolder" = "8:_C286EAB398BD41139EA83500975F89E5"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FBD5828879F04BCD951A92E727A3703D"
+            {
+            "Name" = "8:AutoTest WinForms"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_2AD960EB2F684A7CB68E05664F6E3802"
+            "Folder" = "8:_1DDFADBF628D4597B05A970A71CD3623"
+            "WorkingFolder" = "8:_C286EAB398BD41139EA83500975F89E5"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {

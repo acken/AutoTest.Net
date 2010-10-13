@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.WinForms.Test", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Console.Test", "src\AutoTest.Console.Test\AutoTest.Console.Test.csproj", "{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutoTest.Setup", "src\AutoTest.Setup\AutoTest.Setup.vdproj", "{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,8 +51,6 @@ Global
 		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}.Debug|Any CPU.ActiveCfg = Debug
-		{FABA238A-3D4A-4AB8-BCB6-2D082723BE37}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
