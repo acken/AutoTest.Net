@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -151,7 +151,7 @@
     <Compile Include="TestRunners\TestRunners\NUnitStackLine.cs" />
     <Compile Include="TestRunners\TestRunners\XUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunResults.cs" />
-    <Compile Include="TestRunners\TestStatus.cs" />
+    <Compile Include="TestRunners\TestRunStatus.cs" />
     <Compile Include="FileSystem\PathParsing.cs" />
     <Compile Include="Notifiers\ISendNotifications.cs" />
     <Compile Include="Notifiers\notify_sendNotifier.cs" />

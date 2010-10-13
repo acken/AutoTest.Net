@@ -15,9 +15,9 @@ namespace AutoTest.Core.TestRunners
         public string Assembly { get { return _assembly; } }
         public TimeSpan TimeSpent { get { return _timeSpent; } }
         public TestResult[] All { get { return _testResults; } }
-        public TestResult[] Passed { get { return queryByStatus(TestStatus.Passed); } }
-        public TestResult[] Failed { get { return queryByStatus(TestStatus.Failed); } }
-        public TestResult[] Ignored { get { return queryByStatus(TestStatus.Ignored); } }
+        public TestResult[] Passed { get { return queryByStatus(TestRunStatus.Passed); } }
+        public TestResult[] Failed { get { return queryByStatus(TestRunStatus.Failed); } }
+        public TestResult[] Ignored { get { return queryByStatus(TestRunStatus.Ignored); } }
 
         public TestRunResults(string project, string assembly, TestResult[] testResults)
         {
@@ -31,7 +31,7 @@ namespace AutoTest.Core.TestRunners
             _timeSpent = timeSpent;
         }
 
-        private TestResult[] queryByStatus(TestStatus status)
+        private TestResult[] queryByStatus(TestRunStatus status)
         {
             var query = from t in _testResults
                         where t.Status.Equals(status)

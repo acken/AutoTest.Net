@@ -24,19 +24,19 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             if (line.StartsWith("Passed"))
             {
-                addResult(line, TestStatus.Passed, "Passed");
+                addResult(line, TestRunStatus.Passed, "Passed");
             }
             else if (line.StartsWith("Failed"))
             {
-                addResult(line, TestStatus.Failed, "Failed");
+                addResult(line, TestRunStatus.Failed, "Failed");
             }
             else if (line.StartsWith("Ignored"))
             {
-                addResult(line, TestStatus.Ignored, "Ignored");
+                addResult(line, TestRunStatus.Ignored, "Ignored");
             }
             else if (line.StartsWith("Inconclusive"))
             {
-                addResult(line, TestStatus.Ignored, "Inconclusive");
+                addResult(line, TestRunStatus.Ignored, "Inconclusive");
             }
             else if (line.StartsWith("[errormessage] =") && _result.Count > 0)
             {
@@ -59,7 +59,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             }
         }
 
-        private void addResult(string line, TestStatus status, string lineStart)
+        private void addResult(string line, TestRunStatus status, string lineStart)
         {
             _result.Add(new TestResult(status, getChunk(line, lineStart)));
             _lastParsed = lineStart;

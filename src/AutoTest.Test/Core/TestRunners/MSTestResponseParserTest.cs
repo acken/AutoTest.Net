@@ -26,7 +26,7 @@ namespace AutoTest.Test.Core.TestRunners
              var result = _parser.Result;
 
              result.Passed.Length.ShouldEqual(1);
-             result.All[0].Status.ShouldEqual(TestStatus.Passed);
+             result.All[0].Status.ShouldEqual(TestRunStatus.Passed);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
@@ -37,7 +37,7 @@ namespace AutoTest.Test.Core.TestRunners
              var result = _parser.Result;
 
              result.Failed.Length.ShouldEqual(1);
-             result.All[0].Status.ShouldEqual(TestStatus.Failed);
+             result.All[0].Status.ShouldEqual(TestRunStatus.Failed);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
@@ -48,7 +48,7 @@ namespace AutoTest.Test.Core.TestRunners
              var result = _parser.Result;
 
              result.Ignored.Length.ShouldEqual(1);
-             result.All[0].Status.ShouldEqual(TestStatus.Ignored);
+             result.All[0].Status.ShouldEqual(TestRunStatus.Ignored);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
@@ -59,7 +59,7 @@ namespace AutoTest.Test.Core.TestRunners
              var result = _parser.Result;
 
              result.Ignored.Length.ShouldEqual(1);
-             result.All[0].Status.ShouldEqual(TestStatus.Ignored);
+             result.All[0].Status.ShouldEqual(TestRunStatus.Ignored);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
          }
 
@@ -74,7 +74,7 @@ namespace AutoTest.Test.Core.TestRunners
              var result = _parser.Result;
 
              result.Failed.Length.ShouldEqual(1);
-             result.All[0].Status.ShouldEqual(TestStatus.Failed);
+             result.All[0].Status.ShouldEqual(TestRunStatus.Failed);
              result.All[0].Name.ShouldEqual("The_name_of_the_test");
              result.All[0].Message.ShouldEqual(string.Format("Assert.AreEqual failed. Expected:<2>. Actual:<9>.{0}an error message can have multiple lines", Environment.NewLine));
              result.All[0].StackTrace.Length.ShouldEqual(2);

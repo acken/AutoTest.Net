@@ -146,6 +146,8 @@
   
     <if test="${dlls.test !=''}">
       <echo message="Running tests using NUnit and putting results in ${dirs.test_results}."/>
+	  <echo message="${app.nunit.console} ${args.test_runner}"/>
+	  <echo message="Working directory ${dirs.build.code}"/>
       <exec 
           program="${app.nunit.console}" 
           workingdir="${dirs.build.code}"

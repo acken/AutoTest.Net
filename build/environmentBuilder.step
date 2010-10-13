@@ -76,7 +76,6 @@
       settingsFilesDirectory="${dirs.environments.settings}"
       templatesDirectory="${dirs.build.code}"
       destinationDirectory="${dirs.build.environmentfiles}"
-      useEnvironmentSubdirectory="true"
       />
   </target>
 

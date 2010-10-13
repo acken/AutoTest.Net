@@ -37,20 +37,20 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            {
 	                string name = getname(testCase);
 	
-	                var status = TestStatus.Passed;
+	                var status = TestRunStatus.Passed;
 	                if (testCase.Contains("executed=\"False\""))
-	                    status = TestStatus.Ignored;
+	                    status = TestRunStatus.Ignored;
 	                else if (testCase.Contains("success=\"False\""))
-	                    status = TestStatus.Failed;
+	                    status = TestRunStatus.Failed;
 	
 	                string message = "";
-	                if (status.Equals(TestStatus.Ignored))
+	                if (status.Equals(TestRunStatus.Ignored))
 	                    message = getMessage(testCase);
-	                else if (status.Equals(TestStatus.Failed))
+	                else if (status.Equals(TestRunStatus.Failed))
 	                    message = getMessage(testCase);
 	
 	                IStackLine[] stackTrace = new IStackLine[] {};
-	                if (status.Equals(TestStatus.Failed))
+	                if (status.Equals(TestRunStatus.Failed))
 	                    stackTrace = getStackTrace(testCase);
 	                _result.Add(new TestResult(status, name, message, stackTrace));
 	            }
