@@ -20,3 +20,5 @@ TestResult.xml
 openlocal.sh
 openlocal.bat
 ~$*
+Debug/
+Release/
