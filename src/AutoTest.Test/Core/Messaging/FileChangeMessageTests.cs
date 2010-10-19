@@ -3,6 +3,7 @@ using AutoTest.Core.Messaging;
 using NUnit.Framework;
 using AutoTest.Core.FileSystem;
 using System.IO;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Messaging
 {

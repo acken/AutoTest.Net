@@ -10,6 +10,7 @@ using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {

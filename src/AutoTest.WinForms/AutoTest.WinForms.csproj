@@ -116,6 +116,10 @@
       <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
       <Name>AutoTest.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
+      <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
+      <Name>AutoTest.Messages</Name>
+    </ProjectReference>
   </ItemGroup>
   <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

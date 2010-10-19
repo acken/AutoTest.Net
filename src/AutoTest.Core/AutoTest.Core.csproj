@@ -58,7 +58,6 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildRunners\BuildMessage.cs" />
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
     <Compile Include="Caching\RunResultCache\BuildItem.cs" />
     <Compile Include="Caching\ICache.cs" />
@@ -84,17 +83,13 @@
     <Compile Include="DebugLog\Debug.cs" />
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BlockedMessage.cs" />
-    <Compile Include="Messaging\BuildRunMessage.cs" />
-    <Compile Include="Messaging\ErrorMessage.cs" />
     <Compile Include="Messaging\IBlockingConsumerOf.cs" />
-    <Compile Include="Messaging\InformationMessage.cs" />
     <Compile Include="Messaging\MessageConsumers\BuildListGenerator.cs" />
     <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
-    <Compile Include="FileSystem\ChangedFile.cs" />
     <Compile Include="FileSystem\FileSystemService.cs" />
     <Compile Include="FileSystem\IFileSystemService.cs" />
     <Compile Include="FileSystem\IWatchValidator.cs" />
@@ -104,20 +99,16 @@
     <Compile Include="FileSystem\WatchValidator.cs" />
     <Compile Include="Messaging\FileChangeMessage.cs" />
     <Compile Include="FileSystem\IDirectoryWatcher.cs" />
-    <Compile Include="BuildRunners\BuildRunResults.cs" />
     <Compile Include="BuildRunners\IBuildRunner.cs" />
     <Compile Include="BuildRunners\MSBuildRunner.cs" />
     <Compile Include="Configuration\BootStrapper.cs" />
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="FileSystem\ProjectFileCrawler.cs" />
     <Compile Include="Messaging\IConsumerOf.cs" />
-    <Compile Include="Messaging\IMessage.cs" />
     <Compile Include="Messaging\IMessageBus.cs" />
     <Compile Include="Messaging\IMessageConsumer.cs" />
     <Compile Include="Messaging\MessageBus.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectPrioritizer.cs" />
-    <Compile Include="Messaging\MessageConsumers\RunAction.cs" />
-    <Compile Include="Messaging\MessageConsumers\RunReport.cs" />
     <Compile Include="Messaging\ProjectChangeMessage.cs" />
     <Compile Include="Caching\Projects\IProjectParser.cs" />
     <Compile Include="Caching\IRecord.cs" />
@@ -127,11 +118,6 @@
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
-    <Compile Include="Messaging\RunFinishedMessage.cs" />
-    <Compile Include="Messaging\RunInformationMessage.cs" />
-    <Compile Include="Messaging\RunStartedMessage.cs" />
-    <Compile Include="Messaging\TestRunMessage.cs" />
-    <Compile Include="Messaging\WarningMessage.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackPresenter.cs" />
@@ -141,8 +127,6 @@
     <Compile Include="Presenters\RunFeedbackPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRunners\ITestRunner.cs" />
-    <Compile Include="TestRunners\TestResult.cs" />
-    <Compile Include="TestRunners\TestRunners\IStackLine.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestResponseParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestStackLine.cs" />
@@ -150,8 +134,6 @@
     <Compile Include="TestRunners\TestRunners\NUnitTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\NUnitStackLine.cs" />
     <Compile Include="TestRunners\TestRunners\XUnitTestRunner.cs" />
-    <Compile Include="TestRunners\TestRunResults.cs" />
-    <Compile Include="TestRunners\TestRunStatus.cs" />
     <Compile Include="FileSystem\PathParsing.cs" />
     <Compile Include="Notifiers\ISendNotifications.cs" />
     <Compile Include="Notifiers\notify_sendNotifier.cs" />

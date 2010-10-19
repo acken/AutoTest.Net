@@ -12,6 +12,7 @@ using AutoTest.Core.Presenters;
 using AutoTest.Test.Core.Presenters.Fakes;
 using System.Threading;
 using AutoTest.Core.Caching;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Presenters
 {

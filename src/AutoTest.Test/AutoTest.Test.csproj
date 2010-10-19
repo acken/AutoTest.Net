@@ -148,6 +148,10 @@
       <Project>{D2BE27D7-36C9-4C0E-92A6-E2768666F430}</Project>
       <Name>AutoTest.TestCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
+      <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
+      <Name>AutoTest.Messages</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="AutoTest.config">

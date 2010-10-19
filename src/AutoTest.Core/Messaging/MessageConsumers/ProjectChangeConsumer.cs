@@ -12,6 +12,7 @@ using System.IO;
 using AutoTest.Core.TestRunners.TestRunners;
 using Castle.Core.Logging;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {

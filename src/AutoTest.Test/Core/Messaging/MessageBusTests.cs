@@ -11,6 +11,7 @@ using AutoTest.Test.Core.Messaging.TestClasses;
 using AutoTest.Core.TestRunners;
 using BlockedMessage=AutoTest.Core.Messaging.BlockedMessage;
 using Rhino.Mocks;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Messaging
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Messaging.Fakes
 {

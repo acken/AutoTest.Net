@@ -18,6 +18,7 @@ using System.IO;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
+using AutoTest.Messages;
 
 namespace AutoTest.WinForms
 {

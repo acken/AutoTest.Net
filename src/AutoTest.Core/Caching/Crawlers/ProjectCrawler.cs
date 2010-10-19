@@ -7,6 +7,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.FileSystem;
 using System.IO;
 using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Caching.Crawlers
 {

@@ -6,6 +6,7 @@ using Castle.Core.Logging;
 using AutoTest.Core.Messaging;
 using System.Xml;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {

@@ -5,6 +5,7 @@ using AutoTest.Core.TestRunners;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using Rhino.Mocks;
+using AutoTest.Messages;
 namespace AutoTest.Test
 {
 	[TestFixture]

@@ -10,6 +10,7 @@ using AutoTest.Test.Core.Caching.Projects.Fakes;
 using Rhino.Mocks;
 using AutoTest.Core.Configuration;
 using System.Threading;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Presenters
 {

@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.BuildRunners;
 using System.IO;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.BuildRunners
 {

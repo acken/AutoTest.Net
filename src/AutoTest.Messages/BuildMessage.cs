@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.BuildRunners
+using System;
+namespace AutoTest.Messages
 {
-    public class BuildMessage
-    {
-        public string File { get; set; }
+	public class BuildMessage
+	{
+		public string File { get; set; }
         public int LineNumber { get; set; }
         public int LinePosition { get; set; }
         public string ErrorMessage { get; set; }
@@ -26,5 +22,6 @@ namespace AutoTest.Core.BuildRunners
                                  LinePosition,
                                  ErrorMessage).GetHashCode();
         }
-    }
+	}
 }
+

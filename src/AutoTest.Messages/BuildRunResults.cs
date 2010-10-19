@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System;
-namespace AutoTest.Core.BuildRunners
+using System.Collections.Generic;
+namespace AutoTest.Messages
 {
-    public class BuildRunResults
-    {
-        private string _project;
+	public class BuildRunResults
+	{
+		private string _project;
         private TimeSpan _timeSpent;
         private List<BuildMessage> _errors = new List<BuildMessage>();
         private List<BuildMessage> _warnings = new List<BuildMessage>();
@@ -35,5 +35,6 @@ namespace AutoTest.Core.BuildRunners
         {
             _timeSpent = timeSpent;
         }
-    }
+	}
 }
+

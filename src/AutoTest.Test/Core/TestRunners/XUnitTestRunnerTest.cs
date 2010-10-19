@@ -9,6 +9,7 @@ using Rhino.Mocks;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.TestRunners
 {

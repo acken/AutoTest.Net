@@ -1,6 +1,7 @@
-namespace AutoTest.Core.TestRunners
+using System;
+namespace AutoTest.Messages
 {
-    public interface IStackLine
+	public interface IStackLine
     {
         string Method { get; }
         string File { get; }
@@ -8,3 +9,4 @@ namespace AutoTest.Core.TestRunners
         string ToString();
     }
 }
+

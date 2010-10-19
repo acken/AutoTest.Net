@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Configuration
 {

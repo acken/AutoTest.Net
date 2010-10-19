@@ -75,6 +75,10 @@
       <Project>{156E0A36-C747-49B2-A8D1-A85894145989}</Project>
       <Name>AutoTest.WinForms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
+      <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
+      <Name>AutoTest.Messages</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

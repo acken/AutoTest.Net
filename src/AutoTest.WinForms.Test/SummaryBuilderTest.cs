@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.Messaging.MessageConsumers;
 using System.IO;
+using AutoTest.Messages;	
 
 namespace AutoTest.WinForms.Test
 {

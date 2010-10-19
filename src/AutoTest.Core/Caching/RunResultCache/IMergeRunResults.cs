@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {

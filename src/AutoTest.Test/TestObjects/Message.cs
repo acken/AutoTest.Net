@@ -1,4 +1,5 @@
 using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.TestObjects
 {

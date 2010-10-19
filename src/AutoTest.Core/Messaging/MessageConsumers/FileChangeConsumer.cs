@@ -9,6 +9,7 @@ using Castle.Core.Logging;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {

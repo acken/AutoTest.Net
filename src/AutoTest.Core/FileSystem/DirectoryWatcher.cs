@@ -4,6 +4,7 @@ using AutoTest.Core.Messaging;
 using System.IO;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Configuration;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.FileSystem
 {

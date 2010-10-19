@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.IO;
-
-namespace AutoTest.Core.FileSystem
+namespace AutoTest.Messages
 {
-    public class ChangedFile
-    {
-        private readonly string _fullName;
+	public class ChangedFile
+	{
+		private readonly string _fullName;
         private readonly string _name;
         private readonly string _extension;
 
@@ -31,5 +27,6 @@ namespace AutoTest.Core.FileSystem
             _name = Path.GetFileName(_fullName);
             _extension = Path.GetExtension(_name);
         }
-    }
+	}
 }
+

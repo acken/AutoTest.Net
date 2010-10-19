@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.Messaging.MessageConsumers
+using System;
+namespace AutoTest.Messages
 {
-    public class RunAction
-    {
-        private InformationType _type;
+	public class RunAction
+	{
+		private InformationType _type;
         private string _project;
         private string _assembly;
         private TimeSpan _timeSpent;
@@ -37,5 +33,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _timeSpent = timeSpent;
             _succeeded = succeeded;
         }
-    }
+	}
 }
+

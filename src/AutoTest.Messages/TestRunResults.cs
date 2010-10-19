@@ -1,12 +1,12 @@
-using System.Linq;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace AutoTest.Core.TestRunners
+namespace AutoTest.Messages
 {
-    public class TestRunResults
-    {
-        private string _project;
+	public class TestRunResults
+	{
+		private string _project;
         private string _assembly;
         private TimeSpan _timeSpent;
         private readonly TestResult[] _testResults;
@@ -38,5 +38,6 @@ namespace AutoTest.Core.TestRunners
                         select t;
             return query.ToArray();
         }
-    }
+	}
 }
+

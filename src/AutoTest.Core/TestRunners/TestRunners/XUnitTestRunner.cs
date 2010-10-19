@@ -9,6 +9,7 @@ using System.Diagnostics;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {

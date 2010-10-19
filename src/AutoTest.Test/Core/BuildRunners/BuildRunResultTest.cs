@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.BuildRunners;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.BuildRunners
 {

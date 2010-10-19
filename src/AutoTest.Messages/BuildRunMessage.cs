@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoTest.Core.BuildRunners;
-
-namespace AutoTest.Core.Messaging
+using System;
+namespace AutoTest.Messages
 {
-    public class BuildRunMessage : IMessage
+	public class BuildRunMessage : IMessage
     {
         private BuildRunResults _results;
 
@@ -18,3 +13,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

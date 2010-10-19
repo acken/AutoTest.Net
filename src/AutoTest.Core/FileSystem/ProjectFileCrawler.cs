@@ -4,6 +4,7 @@ namespace AutoTest.Core.FileSystem
     using System.IO;
     using System.Linq;
     using System.Collections.Generic;
+	using AutoTest.Messages;
 
     public interface ICrawlForProjectFiles
     {

@@ -3,6 +3,7 @@ using AutoTest.Core.Configuration;
 using System.Threading;
 using System.Collections.Generic;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Messaging
 {

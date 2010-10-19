@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.Messaging
+using System;
+namespace AutoTest.Messages
 {
-    public class InformationMessage : IMessage
+	public class InformationMessage : IMessage
     {
         private string _message;
 
@@ -17,3 +13,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

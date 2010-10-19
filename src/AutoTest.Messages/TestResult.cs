@@ -1,8 +1,9 @@
-namespace AutoTest.Core.TestRunners
+using System;
+namespace AutoTest.Messages
 {
-    public class TestResult
-    {
-        private readonly TestRunStatus _status;
+	public class TestResult
+	{
+		private readonly TestRunStatus _status;
         private readonly string _name;
         private string _message = "";
         private IStackLine[] _stackTrace;
@@ -83,5 +84,6 @@ namespace AutoTest.Core.TestRunners
         {
             return string.Format("{0}|{1}|{2}|{3}", _status, _name, _message, _stackTrace).GetHashCode();
         }
-    }
+	}
 }
+

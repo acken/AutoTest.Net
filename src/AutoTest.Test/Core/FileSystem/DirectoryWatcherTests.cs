@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using AutoTest.Core.Configuration;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core
 {

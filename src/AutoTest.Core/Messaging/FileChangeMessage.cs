@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Messaging
 {

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 
 namespace AutoTest.WinForms
 {

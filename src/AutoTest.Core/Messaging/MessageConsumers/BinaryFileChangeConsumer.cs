@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Caching;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 namespace AutoTest.Core.Messaging
 {
 	class BinaryFileChangeConsumer : IConsumerOf<FileChangeMessage>

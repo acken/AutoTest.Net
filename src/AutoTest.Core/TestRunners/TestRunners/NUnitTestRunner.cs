@@ -10,6 +10,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {

@@ -4,6 +4,7 @@ using AutoTest.Core;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using Rhino.Mocks;
+using AutoTest.Messages;
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
 	[TestFixture]

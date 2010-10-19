@@ -6,6 +6,7 @@ using AutoTest.Core.TestRunners;
 using System.IO;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.Configuration;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {

@@ -2,6 +2,7 @@ using System;
 using AutoTest.Core.TestRunners;
 using System.Collections.Generic;
 using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
 	public class AssemblyChangeConsumer : IConsumerOf<AssemblyChangeMessage>

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoTest.Core.TestRunners;
-
-namespace AutoTest.Core.Messaging
+using System;
+namespace AutoTest.Messages
 {
-    public class TestRunMessage : IMessage
+	public class TestRunMessage : IMessage
     {
         private TestRunResults _results;
 
@@ -18,3 +13,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

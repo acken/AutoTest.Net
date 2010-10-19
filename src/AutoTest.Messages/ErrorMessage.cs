@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Text;
-
-namespace AutoTest.Core.Messaging
+namespace AutoTest.Messages
 {
-    public class ErrorMessage : IMessage
+	public class ErrorMessage : IMessage
     {
         private string _error;
 
@@ -38,3 +35,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

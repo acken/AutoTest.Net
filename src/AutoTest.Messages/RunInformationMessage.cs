@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.Messaging
+using System;
+namespace AutoTest.Messages
 {
-    public enum InformationType
+	public enum InformationType
     {
         Build,
         TestRun
@@ -27,3 +23,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

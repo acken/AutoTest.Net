@@ -1,5 +1,6 @@
 using AutoTest.Core.Messaging;
 using System.Threading;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.TestObjects
 {

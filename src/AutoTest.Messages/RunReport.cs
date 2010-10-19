@@ -1,13 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.Messaging.MessageConsumers
+namespace AutoTest.Messages
 {
-    public class RunReport
-    {
-        private int _numberOfBuildsSucceeded = 0;
+	public class RunReport
+	{
+		private int _numberOfBuildsSucceeded = 0;
         private int _numberOfBuildsFailed = 0;
         private int _numberOfTestsPassed = 0;
         private int _numberOfTestsFailed = 0;
@@ -41,5 +38,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _numberOfTestsIgnored += ignored;
             _numberOfTestsFailed += failed;
         }
-    }
+	}
 }
+

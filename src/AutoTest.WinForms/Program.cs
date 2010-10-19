@@ -8,6 +8,7 @@ using Castle.MicroKernel.Registration;
 using System.IO;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.WinForms
 {

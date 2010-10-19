@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.FileSystem;
 using AutoTest.Test.Core.FileSystem.Fakes;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.FileSystem.ProjectLocators
 {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoTest.Core.FileSystem;
-
-namespace AutoTest.Core.Messaging
+using System;
+namespace AutoTest.Messages
 {
-    public class RunStartedMessage : IMessage
+	public class RunStartedMessage : IMessage
     {
         private ChangedFile[] _files;
 
@@ -18,3 +13,4 @@ namespace AutoTest.Core.Messaging
         }
     }
 }
+

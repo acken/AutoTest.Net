@@ -14,6 +14,7 @@ using System.Reflection;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
 using System.IO;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {

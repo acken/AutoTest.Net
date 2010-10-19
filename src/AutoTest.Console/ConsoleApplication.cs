@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using AutoTest.Core.Notifiers;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Messages;
 
 namespace AutoTest.Console
 {

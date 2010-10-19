@@ -11,6 +11,7 @@ using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using AutoTest.Core.Messaging;
 using Rhino.Mocks;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {

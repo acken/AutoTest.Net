@@ -5,6 +5,7 @@ using System.IO;
 using Castle.Core.Logging;
 using AutoTest.Core.Messaging;
 using System.Collections.Generic;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.BuildRunners
 {

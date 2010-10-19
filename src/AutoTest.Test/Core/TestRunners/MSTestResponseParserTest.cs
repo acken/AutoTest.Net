@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.TestRunners.TestRunners;
 using AutoTest.Core.TestRunners;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.TestRunners
 {
