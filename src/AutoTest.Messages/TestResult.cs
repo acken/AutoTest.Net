@@ -1,6 +1,7 @@
 using System;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class TestResult
 	{
 		private readonly TestRunStatus _status;

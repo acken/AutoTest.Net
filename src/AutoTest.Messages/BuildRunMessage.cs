@@ -1,6 +1,7 @@
 using System;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class BuildRunMessage : IMessage
     {
         private BuildRunResults _results;

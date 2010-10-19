@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class BuildRunResults
 	{
 		private string _project;

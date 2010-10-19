@@ -2,6 +2,7 @@ using System;
 using System.IO;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class ChangedFile
 	{
 		private readonly string _fullName;

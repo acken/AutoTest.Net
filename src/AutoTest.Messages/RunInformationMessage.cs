@@ -7,6 +7,7 @@ namespace AutoTest.Messages
         TestRun
     }
 
+	[Serializable]
     public class RunInformationMessage : IMessage
     {
         public InformationType Type { get; private set; }

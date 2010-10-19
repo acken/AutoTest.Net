@@ -1,6 +1,7 @@
 using System;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class RunStartedMessage : IMessage
     {
         private ChangedFile[] _files;

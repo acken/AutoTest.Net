@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class TestRunResults
 	{
 		private string _project;

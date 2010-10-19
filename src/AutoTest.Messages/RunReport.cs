@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class RunReport
 	{
 		private int _numberOfBuildsSucceeded = 0;

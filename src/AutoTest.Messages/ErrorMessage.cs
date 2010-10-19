@@ -2,6 +2,7 @@ using System;
 using System.Text;
 namespace AutoTest.Messages
 {
+	[Serializable]
 	public class ErrorMessage : IMessage
     {
         private string _error;
