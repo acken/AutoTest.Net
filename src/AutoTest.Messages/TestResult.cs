@@ -1,11 +1,12 @@
 using System;
+using System.IO;
+using System.Collections.Generic;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class TestResult
+	public class TestResult : ICustomBinarySerializable
 	{
-		private readonly TestRunStatus _status;
-        private readonly string _name;
+		private TestRunStatus _status;
+        private string _name;
         private string _message = "";
         private IStackLine[] _stackTrace;
         private static readonly TestResult _passResult;
@@ -85,6 +86,40 @@ namespace AutoTest.Messages
         {
             return string.Format("{0}|{1}|{2}|{3}", _status, _name, _message, _stackTrace).GetHashCode();
         }
-	}
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			writer.Write((int) _status);
+			writer.Write((string) _name);
+			writer.Write((string) _message);
+			writer.Write((int) _stackTrace.Length);
+			foreach (var line in _stackTrace)
+			{
+				writer.Write((string) line.Method);
+				writer.Write((string) line.File);
+				writer.Write((int) line.LineNumber);
+			}
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			var stackTrace = new List<IStackLine>();
+			_status = (TestRunStatus) reader.ReadInt32();
+			_name = reader.ReadString();
+			_message = reader.ReadString();
+			var count = reader.ReadInt32();
+			for (int i = 0; i < count; i++)
+			{
+				var method = reader.ReadString();
+				var file = reader.ReadString();
+				var lineNumber = reader.ReadInt32();
+				var line = new StackLineMessage(method, file, lineNumber);
+				stackTrace.Add(line);
+			}
+			_stackTrace = stackTrace.ToArray();
+		}
+		#endregion
+}
 }
 

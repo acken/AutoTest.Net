@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class WarningMessage : IMessage
+	public class WarningMessage : IMessage, ICustomBinarySerializable
     {
         public string Warning { get; private set; }
 
@@ -10,6 +10,18 @@ namespace AutoTest.Messages
         {
             Warning = warning;
         }
-    }
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo (BinaryWriter writer)
+		{
+			writer.Write((string) Warning);
+		}
+
+		public void SetDataFrom (BinaryReader reader)
+		{
+			Warning = reader.ReadString();
+		}
+		#endregion
+}
 }
 

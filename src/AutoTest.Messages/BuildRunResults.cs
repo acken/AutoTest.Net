@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class BuildRunResults
+	public class BuildRunResults : ICustomBinarySerializable
 	{
 		private string _project;
         private TimeSpan _timeSpent;
@@ -36,6 +36,40 @@ namespace AutoTest.Messages
         {
             _timeSpent = timeSpent;
         }
-	}
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			writer.Write((string) _project);
+			writer.Write((double) _timeSpent.Ticks);
+			writer.Write((int) _errors.Count);
+			foreach (var message in _errors)
+				message.WriteDataTo(writer);
+			writer.Write((int) _warnings.Count);
+			foreach (var message in _warnings)
+				message.WriteDataTo(writer);
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			_project = reader.ReadString();
+			_timeSpent = new TimeSpan((long) reader.ReadDouble());
+			var errors = reader.ReadInt32();
+			for (int i = 0; i < errors; i++)
+			{
+				var message = new BuildMessage();
+				message.SetDataFrom(reader);
+				_errors.Add(message);
+			}
+			var warnings = reader.ReadInt32();
+			for (int i = 0; i < warnings; i++)
+			{
+				var message = new BuildMessage();
+				message.SetDataFrom(reader);
+				_warnings.Add(message);
+			}
+		}
+		#endregion
+}
 }
 

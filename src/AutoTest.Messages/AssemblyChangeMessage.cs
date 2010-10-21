@@ -1,5 +1,5 @@
 using System;
-namespace AutoTest.Core.Messaging
+namespace AutoTest.Messages
 {
 	public class AssemblyChangeMessage : FileChangeMessage
 	{

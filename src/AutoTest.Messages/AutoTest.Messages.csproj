@@ -53,6 +53,15 @@
     <Compile Include="IStackLine.cs" />
     <Compile Include="TestRunStatus.cs" />
     <Compile Include="WarningMessage.cs" />
+    <Compile Include="ICustomBinarySerializable.cs" />
+    <Compile Include="Serializers\CustomBinaryFormatter.cs" />
+    <Compile Include="FileChangeMessage.cs" />
+    <Compile Include="AssemblyChangeMessage.cs" />
+    <Compile Include="ProjectChangeMessage.cs" />
+    <Compile Include="StackLineMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Serializers\" />
+  </ItemGroup>
 </Project>

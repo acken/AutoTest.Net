@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class TestRunMessage : IMessage
+	public class TestRunMessage : IMessage, ICustomBinarySerializable
     {
         private TestRunResults _results;
 
@@ -12,6 +12,19 @@ namespace AutoTest.Messages
         {
             _results = results;
         }
-    }
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			_results.WriteDataTo(writer);
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			_results = new TestRunResults("", "", new TestResult[] {});
+			_results.SetDataFrom(reader);
+		}
+		#endregion
+	}
 }
 

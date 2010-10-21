@@ -1,9 +1,9 @@
 using System;
 using System.Text;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class ErrorMessage : IMessage
+	public class ErrorMessage : IMessage, ICustomBinarySerializable
     {
         private string _error;
 
@@ -34,6 +34,18 @@ namespace AutoTest.Messages
             builder.AppendLine("");
             addException(builder, exception.InnerException);
         }
-    }
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			writer.Write((string) _error);
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			_error = reader.ReadString();
+		}
+		#endregion
+}
 }
 

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class RunReport
+	public class RunReport : ICustomBinarySerializable
 	{
 		private int _numberOfBuildsSucceeded = 0;
         private int _numberOfBuildsFailed = 0;
@@ -39,6 +39,36 @@ namespace AutoTest.Messages
             _numberOfTestsIgnored += ignored;
             _numberOfTestsFailed += failed;
         }
-	}
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			writer.Write((int) _numberOfBuildsSucceeded);
+			writer.Write((int) _numberOfBuildsFailed);
+			writer.Write((int) _numberOfTestsPassed);
+			writer.Write((int) _numberOfTestsIgnored);
+			writer.Write((int) _numberOfTestsFailed);
+			writer.Write((int) _runActions.Count);
+			foreach (var action in _runActions)
+				action.WriteDataTo(writer);
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			_numberOfBuildsSucceeded = reader.ReadInt32();
+			_numberOfBuildsFailed = reader.ReadInt32();
+			_numberOfTestsPassed = reader.ReadInt32();
+			_numberOfTestsIgnored = reader.ReadInt32();
+			_numberOfTestsFailed = reader.ReadInt32();
+			var count = reader.ReadInt32();
+			for (int i = 0; i < count; i++)
+			{
+				var action = new RunAction(InformationType.TestRun, "", new TimeSpan(0), false);
+				action.SetDataFrom(reader);
+				_runActions.Add(action);
+			}
+		}
+		#endregion
+}
 }
 

@@ -14,6 +14,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.Configuration
 {

@@ -1,6 +1,8 @@
 using AutoTest.Core.Messaging;
 using System.Threading;
 using AutoTest.Messages;
+using System.IO;
+using System;
 
 namespace AutoTest.Test.TestObjects
 {
@@ -18,12 +20,69 @@ namespace AutoTest.Test.TestObjects
                 _timesConsumed++;
             }
         }
+		
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			throw new NotImplementedException ();
+		}
+		#endregion
     }
 
-    class IntMessage : IMessage { public bool Consumed { get; set; } }
+    class IntMessage : IMessage
+	{
+		public bool Consumed { get; set; }
+		
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			throw new NotImplementedException ();
+		}
 
-    class BlockingMessage : IMessage { public bool Consumed { get; set; } }
-    class BlockingMessage2 : IMessage { public bool Consumed { get; set; } }
+		public void SetDataFrom(BinaryReader reader)
+		{
+			throw new NotImplementedException ();
+		}
+		#endregion
+	}
+
+    class BlockingMessage : IMessage
+	{ 
+		public bool Consumed { get; set; } 
+		
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			throw new NotImplementedException ();
+		}
+		#endregion
+	}
+    class BlockingMessage2 : IMessage
+	{ 
+		public bool Consumed { get; set; }
+		
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			throw new NotImplementedException ();
+		}
+		#endregion
+	}
 
     internal class Listener : IConsumerOf<StringMessage>
     {

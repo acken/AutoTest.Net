@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class RunAction
+	public class RunAction : ICustomBinarySerializable
 	{
 		private InformationType _type;
         private string _project;
@@ -34,6 +34,26 @@ namespace AutoTest.Messages
             _timeSpent = timeSpent;
             _succeeded = succeeded;
         }
-	}
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo (BinaryWriter writer)
+		{
+			writer.Write((int) _type);
+			writer.Write((string) _project);
+			writer.Write((string) _assembly);
+			writer.Write((double) _timeSpent.Ticks);
+			writer.Write((bool) _succeeded);
+		}
+
+		public void SetDataFrom (BinaryReader reader)
+		{
+			_type = (InformationType) reader.ReadInt32();
+			_project = reader.ReadString();
+			_assembly = reader.ReadString();
+			_timeSpent = new TimeSpan((long) reader.ReadDouble());
+			_succeeded = reader.ReadBoolean();
+		}
+		#endregion
+}
 }
 

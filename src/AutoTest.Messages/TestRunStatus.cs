@@ -4,8 +4,8 @@ namespace AutoTest.Messages
 	public enum TestRunStatus
     {
         Passed = 0,
-        Ignored,
-        Failed
+        Ignored = 1,
+        Failed = 2
     }
 }
 

@@ -97,7 +97,6 @@
     <Compile Include="FileSystem\ProjectLocators\ILocateProjects.cs" />
     <Compile Include="FileSystem\ProjectLocators\VisualBasicLocator.cs" />
     <Compile Include="FileSystem\WatchValidator.cs" />
-    <Compile Include="Messaging\FileChangeMessage.cs" />
     <Compile Include="FileSystem\IDirectoryWatcher.cs" />
     <Compile Include="BuildRunners\IBuildRunner.cs" />
     <Compile Include="BuildRunners\MSBuildRunner.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Messaging\IMessageConsumer.cs" />
     <Compile Include="Messaging\MessageBus.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectPrioritizer.cs" />
-    <Compile Include="Messaging\ProjectChangeMessage.cs" />
     <Compile Include="Caching\Projects\IProjectParser.cs" />
     <Compile Include="Caching\IRecord.cs" />
     <Compile Include="Caching\Projects\Project.cs" />
@@ -140,7 +138,6 @@
     <Compile Include="Notifiers\NullNotifier.cs" />
     <Compile Include="Messaging\MessageConsumers\TestRunInfo.cs" />
     <Compile Include="Messaging\MessageConsumers\BinaryFileChangeConsumer.cs" />
-    <Compile Include="Messaging\AssemblyChangeMessage.cs" />
     <Compile Include="Messaging\MessageConsumers\AssemblyChangeConsumer.cs" />
     <Compile Include="FileSystem\IResolveAssemblyReferences.cs" />
     <Compile Include="FileSystem\AssemblyParser.cs" />

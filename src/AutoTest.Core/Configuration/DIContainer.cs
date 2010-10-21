@@ -21,6 +21,7 @@ using AutoTest.Core.TestRunners.TestRunners;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Configuration
 {

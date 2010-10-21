@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.DebugLog
 {

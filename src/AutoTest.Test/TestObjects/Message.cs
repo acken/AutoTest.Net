@@ -1,5 +1,7 @@
 using AutoTest.Core.Messaging;
 using AutoTest.Messages;
+using System.IO;
+using System;
 
 namespace AutoTest.Test.TestObjects
 {
@@ -11,5 +13,17 @@ namespace AutoTest.Test.TestObjects
         }
 
         public string Body { get; private set; }
+		
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void SetDataFrom(BinaryReader reader)
+		{
+			throw new NotImplementedException ();
+		}
+		#endregion
     }
 }

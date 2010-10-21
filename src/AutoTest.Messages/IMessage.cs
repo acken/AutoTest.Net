@@ -1,7 +1,7 @@
 using System;
 namespace AutoTest.Messages
 {
-	public interface IMessage
+	public interface IMessage : ICustomBinarySerializable
 	{
 	}
 }

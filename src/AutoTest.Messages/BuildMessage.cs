@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 namespace AutoTest.Messages
 {
-	[Serializable]
-	public class BuildMessage
+	public class BuildMessage : ICustomBinarySerializable
 	{
 		public string File { get; set; }
         public int LineNumber { get; set; }
@@ -23,6 +23,25 @@ namespace AutoTest.Messages
                                  LinePosition,
                                  ErrorMessage).GetHashCode();
         }
-	}
+	
+
+		#region ICustomBinarySerializable implementation
+		public void WriteDataTo(BinaryWriter writer)
+		{
+			writer.Write((string) File);
+			writer.Write((int) LineNumber);
+			writer.Write((int) LinePosition);
+			writer.Write((string) ErrorMessage);
+		}
+
+		public void SetDataFrom (BinaryReader reader)
+		{
+			File = reader.ReadString();
+			LineNumber = reader.ReadInt32();
+			LinePosition = reader.ReadInt32();
+			ErrorMessage = reader.ReadString();
+		}
+		#endregion
+}
 }
 
