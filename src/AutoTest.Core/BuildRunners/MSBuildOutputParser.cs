@@ -13,6 +13,7 @@ namespace AutoTest.Core.BuildRunners
         private string[] _lines;
 		private string _line;
 		private string _currentProjectPath = null;
+		private bool _foundOutputMarker = false;
 
         public MSBuildOutputParser(BuildRunResults results, string[] lines)
         {
@@ -24,6 +25,8 @@ namespace AutoTest.Core.BuildRunners
         {
             foreach (var line in _lines) {
 				_line = line;
+				if (!foundOutputMarker())
+					continue;
 				if (!detectAndValidateBuildTarget())
 					break;
 				if (_currentProjectPath == null)
@@ -32,15 +35,24 @@ namespace AutoTest.Core.BuildRunners
 			}
         }
 		
+		private bool foundOutputMarker()
+		{
+			if (_line.StartsWith("Build FAILED."))
+				_foundOutputMarker = true;
+			if (_line.StartsWith("Build succeeded."))
+				_foundOutputMarker = true;
+			return _foundOutputMarker;
+		}
+		
 		private bool detectAndValidateBuildTarget()
 		{
-			if (!_line.EndsWith(" (default targets) ->"))
+			if (!_line.Contains(" (default target"))
 				return true;
 			
 			if (failedBuildAlreadyDetected())
 				return false;
 			
-		    _currentProjectPath = Path.GetDirectoryName(_line.Substring(0, _line.Length - " (default targets) ->".Length));
+		    _currentProjectPath = Path.GetDirectoryName(_line.Substring(0, _line.IndexOf(" (default target")).Replace("\"", ""));
 			return true;
 		}
 		

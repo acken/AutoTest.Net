@@ -15,6 +15,8 @@ namespace AutoTest.Test.Core.BuildRunners
         [Test]
         public void Should_parse_so_called_compatible_msbuild_output()
         {
+			if (!isWindows())
+				return;
             var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows.txt", Path.DirectorySeparatorChar);
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
@@ -22,11 +24,38 @@ namespace AutoTest.Test.Core.BuildRunners
             result.ErrorCount.ShouldEqual(3);
             result.Errors[0].File
                 .Replace('/', Path.DirectorySeparatorChar)
-                .ShouldEqual("C:\Users\ack\src\EventStore\EventStore\Program.cs");
+                .ShouldEqual(@"C:\Users\ack\src\EventStore\EventStore\Program.cs");
             result.Errors[0].LineNumber.ShouldEqual(20);
             result.Errors[0].LinePosition.ShouldEqual(20);
             result.Errors[0].ErrorMessage.ShouldEqual("CS1002: ; expected");
         }
+		
+		[Test]
+        public void Should_parse_so_called_compatible_msbuild_output_with_warnings()
+        {
+			if (!isWindows())
+				return;
+            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows_warnings.txt", Path.DirectorySeparatorChar);
+            var result = new BuildRunResults("");
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
+            parser.Parse();
+            result.Warnings.Length.ShouldEqual(1);
+            result.Warnings[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual(@"C:\Users\ack\src\EventStore\EventStore\Program.cs");
+            result.Warnings[0].LineNumber.ShouldEqual(21);
+            result.Warnings[0].LinePosition.ShouldEqual(8);
+            result.Warnings[0].ErrorMessage.ShouldEqual("CS0219: The variable 'a' is assigned but its value is never used");
+        }
+		
+		private bool isWindows()
+		{
+			return Environment.OSVersion.Platform == PlatformID.Win32NT ||
+					Environment.OSVersion.Platform == PlatformID.Win32S ||
+					Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+					Environment.OSVersion.Platform == PlatformID.WinCE ||
+					Environment.OSVersion.Platform == PlatformID.Xbox;
+		}
 
         [Test]
         public void Should_parse_errors()
