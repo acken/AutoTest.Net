@@ -13,6 +13,22 @@ namespace AutoTest.Test.Core.BuildRunners
     public class MSBuildOutputParserTest
     {
         [Test]
+        public void Should_parse_so_called_compatible_msbuild_output()
+        {
+            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows.txt", Path.DirectorySeparatorChar);
+            var result = new BuildRunResults("");
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
+            parser.Parse();
+            result.ErrorCount.ShouldEqual(3);
+            result.Errors[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual("C:\Users\ack\src\EventStore\EventStore\Program.cs");
+            result.Errors[0].LineNumber.ShouldEqual(20);
+            result.Errors[0].LinePosition.ShouldEqual(20);
+            result.Errors[0].ErrorMessage.ShouldEqual("CS1002: ; expected");
+        }
+
+        [Test]
         public void Should_parse_errors()
         {
 			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_errors.txt", Path.DirectorySeparatorChar);
