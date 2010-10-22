@@ -15,6 +15,7 @@ namespace AutoTest.Test.Core.BuildRunners
         [Test]
         public void Should_parse_so_called_compatible_msbuild_output()
         {
+			// Test will fail on other platforms than windows because of Path.GetDirectoryName
 			if (!isWindows())
 				return;
             var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows.txt", Path.DirectorySeparatorChar);
@@ -33,6 +34,7 @@ namespace AutoTest.Test.Core.BuildRunners
 		[Test]
         public void Should_parse_so_called_compatible_msbuild_output_with_warnings()
         {
+			// Test will fail on other platforms than windows because of Path.GetDirectoryName
 			if (!isWindows())
 				return;
             var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows_warnings.txt", Path.DirectorySeparatorChar);
