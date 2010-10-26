@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTest.Core.Caching.RunResultCache
+using System;
+namespace AutoTest.Messages
 {
-    public class Link
+	public class Link
     {
 		public int Start { get; private set; }
 		public int Length { get; private set; }
@@ -15,6 +11,6 @@ namespace AutoTest.Core.Caching.RunResultCache
             Start = start;
             Length = length;
         }
-
     }
 }
+

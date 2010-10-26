@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.Text.RegularExpressions;
-
-namespace AutoTest.Core.Caching.RunResultCache
+using System.Collections.Generic;
+namespace AutoTest.Messages
 {
-    public class LinkParser
+	public class LinkParser
     {
         public const string TAG_START = "<<Link>>";
         public const string TAG_END = "<</Link>>";
@@ -68,3 +65,4 @@ namespace AutoTest.Core.Caching.RunResultCache
         }
     }
 }
+

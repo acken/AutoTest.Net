@@ -67,8 +67,6 @@
     <Compile Include="Caching\IReload.cs" />
     <Compile Include="Caching\IPrepare.cs" />
     <Compile Include="Caching\RunResultCache\IRunResultCache.cs" />
-    <Compile Include="Caching\RunResultCache\Link.cs" />
-    <Compile Include="Caching\RunResultCache\LinkParser.cs" />
     <Compile Include="Caching\Projects\ProjectReloader.cs" />
     <Compile Include="Caching\Projects\ProjectFactory.cs" />
     <Compile Include="Caching\Projects\ProjectPreparer.cs" />

@@ -59,6 +59,8 @@
     <Compile Include="AssemblyChangeMessage.cs" />
     <Compile Include="ProjectChangeMessage.cs" />
     <Compile Include="StackLineMessage.cs" />
+    <Compile Include="LinkParser.cs" />
+    <Compile Include="Link.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
