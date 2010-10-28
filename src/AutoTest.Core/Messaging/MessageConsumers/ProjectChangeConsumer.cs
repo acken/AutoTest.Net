@@ -49,10 +49,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private RunReport execute(ProjectChangeMessage message)
         {
-            // Prioritized tests that test me
-            // Other prioritized tests
-            // Projects that tests me
-            // Other test projects
             var runReport = new RunReport();
             var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
 			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
@@ -100,8 +96,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				foreach (var file in projectList)
 	            {
 					var project = file.Project;
+					if (hasInvalidOutputPath(project))
+						continue;
 					string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
+					
+					if (hasInvalidAssemblyName(project))
+						continue;
 	            	var assembly = Path.Combine(folder, project.Value.AssemblyName);
+					
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
 					    continue;
 					if (!project.Value.ContainsTests)
@@ -113,6 +115,26 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				if (runInfos.Count > 0)
 					runTests(runner, runInfos.ToArray(), runReport);
 			}
+		}
+		
+		private bool hasInvalidOutputPath(Project project)
+		{
+			if (project.Value.OutputPath == null)
+			{
+				_bus.Publish(new ErrorMessage(string.Format("Output path was unexpectedly set to null for {0}. Skipping assembly", project.Key)));
+				return true;
+			}
+			return false;
+		}
+		
+		private bool hasInvalidAssemblyName(Project project)
+		{
+			if (project.Value.AssemblyName == null)
+			{
+				_bus.Publish(new ErrorMessage(string.Format("Assembly name was unexpectedly set to null for {0}. Skipping assembly", project.Key)));
+				return true;
+			}
+			return false;
 		}
 
         private bool build(Project project, RunReport runReport)
