@@ -66,6 +66,7 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<IConsumerOf<AssemblyChangeMessage>>().ImplementedBy<AssemblyChangeConsumer>())
 				.Register(Component.For<IDetermineIfAssemblyShouldBeTested>().ImplementedBy<TestRunValidator>())
 				.Register(Component.For<IOptimizeBuildConfiguration>().ImplementedBy<BuildOptimizer>())
+				.Register(Component.For<IPreProcessTestruns>().ImplementedBy<NullPreProcessor>())
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			if ((new notify_sendNotifier()).IsSupported())

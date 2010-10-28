@@ -27,7 +27,7 @@ namespace AutoTest.Test.Core.TestRunners
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
 			_referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
-            _runner = new NUnitTestRunner(_bus, _configuration, _referenceResolver);
+            _runner = new NUnitTestRunner(_bus, _configuration, _referenceResolver, null);
         }
 
         [Test]

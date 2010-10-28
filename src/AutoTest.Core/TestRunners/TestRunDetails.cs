@@ -1,21 +1,25 @@
 using System;
-using AutoTest.Core.Caching.Projects;
 using System.Collections.Generic;
-namespace AutoTest.Core.Messaging.MessageConsumers
+namespace AutoTest.Core.TestRunners
 {
-	public class TestRunInfo
+	public class TestRunDetails
 	{
 		private List<string> _testsToRun;
 		
-		public Project Project { get; private set; }
+		public TestRunnerType Type { get; private set; }
 		public string Assembly { get; private set; }
 		public string[] TestsToRun { get { return _testsToRun.ToArray(); } }
 		
-		public TestRunInfo(Project project, string assembly)
+		public TestRunDetails(TestRunnerType type, string assembly)
 		{
-			Project = project;
+			Type = type;
 			Assembly = assembly;
 			_testsToRun = new List<string>();
+		}
+		
+		public void AddTestToRun(string test)
+		{
+			_testsToRun.Add(test);
 		}
 		
 		public void AddTestsToRun(string[] tests)

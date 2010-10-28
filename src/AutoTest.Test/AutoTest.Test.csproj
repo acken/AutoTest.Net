@@ -139,6 +139,8 @@
     <Compile Include="Core\Configuration\CoreSectionTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\BuildOptimizerTest.cs" />
     <Compile Include="Messages\SerializerTests.cs" />
+    <Compile Include="Core\TestRunners\TestRunDetailsTest.cs" />
+    <Compile Include="Core\TestRunners\TestRunInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">

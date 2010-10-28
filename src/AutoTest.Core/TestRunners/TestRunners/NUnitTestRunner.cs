@@ -19,12 +19,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private IMessageBus _bus;
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
+		private IPreProcessTestruns[] _preProcessors;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IPreProcessTestruns[] preProcessors)
         {
             _bus = bus;
             _configuration = configuration;
 			_referenceResolver = referenceResolver;
+			_preProcessors = preProcessors;
         }
 
         #region ITestRunner Members
@@ -43,13 +45,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
 			var results = new List<TestRunResults>();
+			runInfos = preProcessTestRun(runInfos);
 			// Get a list of the various nunit executables specified pr. framework version
 			var nUnitExes = getNUnitExes(runInfos);
 			foreach (var nUnitExe in nUnitExes)
 			{
 				// Get the assemblies that should be run under this nunit executable
-				var assemblies = getAssembliesFromTestRunner(nUnitExe, runInfos);
-				var arguments = getExecutableArguments(assemblies);
+				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe, runInfos);
+				var arguments = getExecutableArguments(assemblies, runInfos);
+				_bus.Publish(new InformationMessage(string.Format("Running tests: {0} {1}", nUnitExe, arguments)));
+				Console.WriteLine("Running tests: {0} {1}", nUnitExe, arguments); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(nUnitExe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;
@@ -67,6 +72,32 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			}
 			return results.ToArray();
         }
+		
+		private TestRunInfo[] preProcessTestRun(TestRunInfo[] runInfos)
+		{
+			var runDetails = getRunDetails(runInfos);
+			foreach (var preProcessor in _preProcessors)
+				preProcessor.PreProcess(runDetails);
+			return applyRunDetails(runInfos, runDetails);
+		}
+		
+		private TestRunDetails[] getRunDetails(TestRunInfo[] runInfos)
+		{
+			var runDetailsList = new List<TestRunDetails>();
+			foreach (var runInfo in runInfos)
+				runDetailsList.Add(new TestRunDetails(TestRunnerType.NUnit, runInfo.Assembly));
+			return runDetailsList.ToArray();
+		}
+		
+		private TestRunInfo[] applyRunDetails(TestRunInfo[] runInfos, TestRunDetails[] runDetails)
+		{
+			foreach (var runDetail in runDetails)
+			{
+				var info = runInfos.Where<TestRunInfo>(i => i.Assembly.Equals(runDetail.Assembly)).First();
+				info.AddTestsToRun(runDetail.TestsToRun);
+			}
+			return runInfos;
+		}
 		
 		private string[] getNUnitExes(TestRunInfo[] runInfos)
 		{
@@ -90,19 +121,28 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return runInfo.Project.Value.Framework;
 		}
 		
-		private string getAssembliesFromTestRunner(string testRunnerExes, TestRunInfo[] runInfos)
+		private string getAssembliesAndTestsForTestRunner(string testRunnerExes, TestRunInfo[] runInfos)
 		{
+			var separator = getArgumentSeparator();
 			var assemblies = "";
+			var tests = "";
 			foreach (var runInfo in runInfos)
 			{
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
+				{
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
+					var assemblyTests = getTestsList(runInfo);
+					if (assemblyTests.Length > 0)
+						tests += (tests.Length > 0 ? "," : "") + assemblyTests;
+				}
 			}
-			return assemblies;
+			if (tests.Length > 0)
+				tests = string.Format("{0}run={1}", separator, tests);
+			return string.Format("{0} {1}", tests, assemblies);
 		}
         
-        string getExecutableArguments (string assemblyName)
+        string getExecutableArguments (string assemblyName, TestRunInfo[] runInfos)
 		{
 			var separator = getArgumentSeparator();
 			var categoryList = getCategoryIgnoreList();
@@ -110,6 +150,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		}
 
         #endregion
+		
+		private string getTestsList(TestRunInfo runInfo)
+		{
+			var tests = "";
+			foreach (var test in runInfo.TestsToRun)
+				tests += (tests.Length > 0 ? "," : "") + test;
+			return tests;
+		}
 		
 		private string getCategoryIgnoreList()
 		{

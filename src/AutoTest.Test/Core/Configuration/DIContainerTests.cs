@@ -277,5 +277,12 @@ namespace AutoTest.Test.Core.Configuration
 			var optimizer = _locator.Locate<IOptimizeBuildConfiguration>();
 			optimizer.ShouldBeOfType<IOptimizeBuildConfiguration>();
 		}
+		
+		[Test]
+		public void Should_register_null_pre_processor()
+		{
+			var preProcessor = _locator.Locate<IPreProcessTestruns>();
+			preProcessor.ShouldBeOfType<IPreProcessTestruns>();
+		}
     }
 }
