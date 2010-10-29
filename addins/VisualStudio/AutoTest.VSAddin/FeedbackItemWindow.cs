@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using AutoTest.Core.Caching.RunResultCache;
+using AutoTest.Messages;
 
 namespace AutoTest.VSAddin
 {

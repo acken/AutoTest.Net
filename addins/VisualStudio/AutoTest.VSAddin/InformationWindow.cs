@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 
 namespace AutoTest.VSAddin
 {

@@ -33,6 +33,14 @@
     <IncrementalBuild>false</IncrementalBuild>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoTest.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\src\AutoTest.Core\bin\Debug\AutoTest.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoTest.Messages, Version=1.0.3954.21382, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\src\AutoTest.Messages\bin\Debug\AutoTest.Messages.dll</HintPath>
+    </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -127,12 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AutoTest.VSAddin.AddIn" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\AutoTest.Core\AutoTest.Core.csproj">
-      <Project>{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}</Project>
-      <Name>AutoTest.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

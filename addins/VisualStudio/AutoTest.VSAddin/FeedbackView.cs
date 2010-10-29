@@ -10,6 +10,7 @@ using AutoTest.Core.Caching.RunResultCache;
 using EnvDTE80;
 using EnvDTE;
 using System.Drawing;
+using AutoTest.Messages;
 
 namespace AutoTest.VSAddin
 {

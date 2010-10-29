@@ -12,7 +12,7 @@ namespace AutoTest.VSAddin
             BootStrapper.Configure();
             BootStrapper.InitializeCache(watchDirectory);
         }
-
+        
         private void terminateAutoTest()
         {
             BootStrapper.ShutDown();
