@@ -186,8 +186,14 @@ namespace AutoTest.Core.Caching.Projects
         private string getNode(string startTag, string contentStartsHereTag, string contentEndsHereTag)
         {
             int start = _fileContent.IndexOf(startTag) + startTag.Length;
+            if (start == -1)
+                return "";
             start = _fileContent.IndexOf(contentStartsHereTag, start) + contentStartsHereTag.Length;
+            if (start - contentStartsHereTag.Length == -1)
+                return "";
             int end = _fileContent.IndexOf(contentEndsHereTag, start);
+            if (end == -1)
+                return "";
             return _fileContent.Substring(start, end - start);
         }
 
