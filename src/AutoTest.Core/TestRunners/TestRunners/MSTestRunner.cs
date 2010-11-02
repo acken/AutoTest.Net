@@ -18,13 +18,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
-		private IPreProcessTestruns[] _preProcessors;
 
-        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IPreProcessTestruns[] preProcessors)
+        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
         {
             _configuration = configuration;
 			_referenceResolver = referenceResolver;
-			_preProcessors = preProcessors;
         }
 
         #region ITestRunner Members
@@ -42,7 +40,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
-			runInfos = preProcessTestRun(runInfos);
 			var results = new List<TestRunResults>();
 			foreach (var runInfo in runInfos)
 			{			
@@ -82,32 +79,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
         }
 
         #endregion
-		
-		private TestRunInfo[] preProcessTestRun(TestRunInfo[] runInfos)
-		{
-			var runDetails = getRunDetails(runInfos);
-			foreach (var preProcessor in _preProcessors)
-				preProcessor.PreProcess(runDetails);
-			return applyRunDetails(runInfos, runDetails);
-		}
-		
-		private TestRunDetails[] getRunDetails(TestRunInfo[] runInfos)
-		{
-			var runDetailsList = new List<TestRunDetails>();
-			foreach (var runInfo in runInfos)
-				runDetailsList.Add(new TestRunDetails(TestRunnerType.MSTest, runInfo.Assembly));
-			return runDetailsList.ToArray();
-		}
-		
-		private TestRunInfo[] applyRunDetails(TestRunInfo[] runInfos, TestRunDetails[] runDetails)
-		{
-			foreach (var runDetail in runDetails)
-			{
-				var info = runInfos.Where<TestRunInfo>(i => i.Assembly.Equals(runDetail.Assembly)).First();
-				info.AddTestsToRun(runDetail.TestsToRun);
-			}
-			return runInfos;
-		}
 		
 		private string getTestsList(TestRunInfo runInfo)
 		{

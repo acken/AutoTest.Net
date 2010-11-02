@@ -25,8 +25,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
+        private IPreProcessTestruns[] _preProcessors;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors)
         {
             _bus = bus;
             _listGenerator = listGenerator;
@@ -35,6 +36,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _testRunners = testRunners;
 			_testAssemblyValidator = testAssemblyValidator;
 			_buildOptimizer = buildOptimizer;
+            _preProcessors = preProcessors;
         }
 
         #region IConsumerOf<ProjectChangeMessage> Members
@@ -90,6 +92,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
+            projectList = preProcessTestRun(projectList);
             foreach (var runner in _testRunners)
             {
 				var runInfos = new List<TestRunInfo>();
@@ -108,14 +111,25 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					    continue;
 					if (!project.Value.ContainsTests)
 	                	continue;
-					if (runner.CanHandleTestFor(project.Value))
-                    	runInfos.Add(new TestRunInfo(project, assembly));
+                    if (runner.CanHandleTestFor(project.Value))
+                    {
+                        var runInfo = new TestRunInfo(project, assembly);
+                        runInfo.AddTestsToRun(file.TestsToRun);
+                        runInfos.Add(runInfo);
+                    }
 					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
 				}
 				if (runInfos.Count > 0)
 					runTests(runner, runInfos.ToArray(), runReport);
 			}
 		}
+
+        private RunInfo[] preProcessTestRun(RunInfo[] runInfos)
+        {
+            foreach (var preProcessor in _preProcessors)
+                preProcessor.PreProcess(runInfos);
+            return runInfos;
+        }
 		
 		private bool hasInvalidOutputPath(Project project)
 		{

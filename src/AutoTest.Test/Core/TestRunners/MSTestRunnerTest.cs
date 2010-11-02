@@ -25,7 +25,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
 			_referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
-            _runner = new MSTestRunner(_configuration, _referenceResolver, null);
+            _runner = new MSTestRunner(_configuration, _referenceResolver);
         }
 
         [Test]

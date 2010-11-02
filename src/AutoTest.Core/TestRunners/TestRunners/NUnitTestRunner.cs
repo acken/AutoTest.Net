@@ -19,14 +19,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private IMessageBus _bus;
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
-		private IPreProcessTestruns[] _preProcessors;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IPreProcessTestruns[] preProcessors)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
         {
             _bus = bus;
             _configuration = configuration;
 			_referenceResolver = referenceResolver;
-			_preProcessors = preProcessors;
         }
 
         #region ITestRunner Members
@@ -45,7 +43,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
 			var results = new List<TestRunResults>();
-			runInfos = preProcessTestRun(runInfos);
 			// Get a list of the various nunit executables specified pr. framework version
 			var nUnitExes = getNUnitExes(runInfos);
 			foreach (var nUnitExe in nUnitExes)
@@ -72,32 +69,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			}
 			return results.ToArray();
         }
-		
-		private TestRunInfo[] preProcessTestRun(TestRunInfo[] runInfos)
-		{
-			var runDetails = getRunDetails(runInfos);
-			foreach (var preProcessor in _preProcessors)
-				preProcessor.PreProcess(runDetails);
-			return applyRunDetails(runInfos, runDetails);
-		}
-		
-		private TestRunDetails[] getRunDetails(TestRunInfo[] runInfos)
-		{
-			var runDetailsList = new List<TestRunDetails>();
-			foreach (var runInfo in runInfos)
-				runDetailsList.Add(new TestRunDetails(TestRunnerType.NUnit, runInfo.Assembly));
-			return runDetailsList.ToArray();
-		}
-		
-		private TestRunInfo[] applyRunDetails(TestRunInfo[] runInfos, TestRunDetails[] runDetails)
-		{
-			foreach (var runDetail in runDetails)
-			{
-				var info = runInfos.Where<TestRunInfo>(i => i.Assembly.Equals(runDetail.Assembly)).First();
-				info.AddTestsToRun(runDetail.TestsToRun);
-			}
-			return runInfos;
-		}
 		
 		private string[] getNUnitExes(TestRunInfo[] runInfos)
 		{
