@@ -34,6 +34,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             _testsToRun.AddRange(tests);
         }
+
+        public void AddTestsToRun(string test)
+        {
+            _testsToRun.Add(test);
+        }
 	}
 }
 
