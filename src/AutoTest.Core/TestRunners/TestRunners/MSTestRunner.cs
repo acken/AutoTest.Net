@@ -32,9 +32,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return document.ContainsMSTests;
         }
 		
-		public bool CanHandleTestFor(ChangedFile assembly)
+		public bool CanHandleTestFor(string assembly)
 		{
-			var references = _referenceResolver.GetReferences(assembly.FullName);
+			var references = _referenceResolver.GetReferences(assembly);
 			return references.Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
 		}
 

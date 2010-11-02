@@ -10,12 +10,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private ITestRunner[] _testRunners;
 		private IMessageBus _bus;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
-		
-		public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator)
+        private IPreProcessTestruns[] _preProcessors;
+
+        public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IPreProcessTestruns[] preProcessors)
 		{
 			_testRunners = testRunners;
 			_bus = bus;
 			_testAssemblyValidator = testAssemblyValidator;
+            _preProcessors = preProcessors;
 		}
 		
 		#region IConsumerOf[AssemblyChangeMessage] implementation
@@ -23,31 +25,55 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		{
 			informParticipants(message);
 			var runReport = new RunReport();
+            var runInfos = getRunInfos(message);
+            preProcess(runInfos);
 			foreach (var runner in _testRunners)
-				runTest(runner, message, runReport);
+                runTest(runner, runInfos, runReport);
 			_bus.Publish(new RunFinishedMessage(runReport));
 		}
 		#endregion
-		
+
+        private void preProcess(RunInfo[] runInfos)
+        {
+            foreach (var preProcessor in _preProcessors)
+                preProcessor.PreProcess(runInfos);
+        }
+
+        private RunInfo[] getRunInfos(AssemblyChangeMessage message)
+        {
+            var runInfos = new List<RunInfo>();
+            foreach (var file in message.Files)
+            {
+                var runInfo = new RunInfo(null);
+                runInfo.SetAssembly(file.FullName);
+                runInfos.Add(runInfo);
+            }
+            return runInfos.ToArray();
+        }
+
 		private void informParticipants(AssemblyChangeMessage message)
 		{
 			Debug.ConsumingAssemblyChangeMessage(message);
             _bus.Publish(new RunStartedMessage(message.Files));
 		}
-		
-		private void runTest(ITestRunner runner, AssemblyChangeMessage message, RunReport report)
+
+        private void runTest(ITestRunner runner, RunInfo[] runInfos, RunReport report)
 		{
-			var runInfos = new List<TestRunInfo>();
-			foreach (var assembly in message.Files)
+			var testRunInfos = new List<TestRunInfo>();
+			foreach (var runInfo in runInfos)
 			{
-				if (_testAssemblyValidator.ShouldNotTestAssembly(assembly.FullName))
+				if (_testAssemblyValidator.ShouldNotTestAssembly(runInfo.Assembly))
 					return;
-				if (runner.CanHandleTestFor(assembly))
-					runInfos.Add(new TestRunInfo(null, assembly.FullName));
+                if (runner.CanHandleTestFor(runInfo.Assembly))
+                {
+                    var testRunInfo = new TestRunInfo(null, runInfo.Assembly);
+                    testRunInfo.AddTestsToRun(runInfo.TestsToRun);
+                    testRunInfos.Add(testRunInfo);
+                }
 			}
-			if (runInfos.Count == 0)
+            if (testRunInfos.Count == 0)
 				return;
-			var results = runner.RunTests(runInfos.ToArray());
+			var results = runner.RunTests(testRunInfos.ToArray());
 			mergeReport(results, report);
 		}
 		

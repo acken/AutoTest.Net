@@ -8,7 +8,7 @@ namespace AutoTest.Core.TestRunners
     public interface ITestRunner
     {
         bool CanHandleTestFor(ProjectDocument document);
-		bool CanHandleTestFor(ChangedFile assembly);
+		bool CanHandleTestFor(string assembly);
         TestRunResults[] RunTests(TestRunInfo[] runInfos);
     }
 }

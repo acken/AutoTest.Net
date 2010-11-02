@@ -33,9 +33,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return document.ContainsXUnitTests;
         }
 		
-		public bool CanHandleTestFor(ChangedFile assembly)
+		public bool CanHandleTestFor(string assembly)
 		{
-			var references = _referenceResolver.GetReferences(assembly.FullName);
+			var references = _referenceResolver.GetReferences(assembly);
 			return references.Contains("xunit");
 		}
 

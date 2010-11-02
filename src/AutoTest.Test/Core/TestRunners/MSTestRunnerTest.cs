@@ -47,7 +47,7 @@ namespace AutoTest.Test.Core.TestRunners
 		public void Should_check_for_ms_test_framework_reference()
 		{
 			_referenceResolver.Stub(r => r.GetReferences("")).Return(new string[] { "Microsoft.VisualStudio.QualityTools.UnitTestFramework" });
-			var change = new ChangedFile("");
+			var change = "";
             _runner.CanHandleTestFor(change).ShouldBeTrue();
 		}
     }
