@@ -72,6 +72,11 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
             throw new NotImplementedException();
         }
 
+        public T[] GetAll<T>() where T : IRecord
+        {
+            throw new NotImplementedException();
+        }
+
         public void Reload<T>(string key) where T : IRecord
         {
             throw new NotImplementedException();

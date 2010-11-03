@@ -69,5 +69,18 @@ namespace AutoTest.Test.Core.Caching
             _cache.Add<Project>("project");
             _cache.Get<Project>("project").Value.ShouldNotBeNull();
         }
+
+        [Test]
+        public void Should_enumerate_cached_items()
+        {
+            _cache.Add<Project>("project1");
+            _cache.Add<Project>("project2");
+            var projects = _cache.GetAll<Project>();
+            projects.Length.ShouldEqual(2);
+            projects[0].Key.ShouldEqual("project1");
+            projects[0].Value.ShouldNotBeNull();
+            projects[1].Key.ShouldEqual("project2");
+            projects[1].Value.ShouldNotBeNull();
+        }
     }
 }

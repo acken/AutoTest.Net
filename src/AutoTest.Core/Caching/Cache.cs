@@ -45,6 +45,15 @@ namespace AutoTest.Core.Caching
             return (T)_records[index];
         }
 
+        public T[] GetAll<T>() where T : IRecord
+        {
+            var unpreparedRecords = _records.Where(x => x.GetType().Equals(typeof(T)));
+            var records = new List<T>();
+            foreach (var record in unpreparedRecords)
+                records.Add(Get<T>(record.Key));
+            return records.ToArray();
+        }
+
         public void Reload<T>(string key) where T : IRecord
         {
             var index = findIndex(key);

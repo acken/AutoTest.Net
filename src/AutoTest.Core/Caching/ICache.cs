@@ -7,6 +7,7 @@ namespace AutoTest.Core.Caching
         bool Exists(string key);
         T Get<T>(string key) where T : IRecord;
         T Get<T>(int index) where T : IRecord;
+        T[] GetAll<T>() where T : IRecord;
         void Reload<T>(string key) where T : IRecord;
     }
 }
