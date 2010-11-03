@@ -19,7 +19,7 @@ namespace AutoTest.Test.Core.Configuration
             var configuration = container.Services.Locate<IConfiguration>();
             container.InitializeCache(configuration.WatchDirectores[0]);
             var cache = container.Services.Locate<ICache>();
-            cache.Count.ShouldEqual(4);
+            cache.Count.ShouldEqual(2);
         }
     }
 }

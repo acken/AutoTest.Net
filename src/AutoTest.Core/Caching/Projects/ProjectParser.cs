@@ -141,7 +141,12 @@ namespace AutoTest.Core.Caching.Projects
             var regExp = new Regex(string.Format("{0}.*?{1}", PROJECT_REFERENCE_START, PROJECT_REFERENCE_END));
             var matches = regExp.Matches(_fileContent);
             for (int i = 0; i < matches.Count; i++)
-                document.AddReference(getReference(matches[i].Value));
+            {
+                var reference = getReference(matches[i].Value);
+                if (!_fsService.FileExists(reference))
+                    continue;
+                document.AddReference(reference);
+            }
         }
 
         private string[] getNodes(string start, string end)

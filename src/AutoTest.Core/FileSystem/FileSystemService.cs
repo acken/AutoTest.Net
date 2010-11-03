@@ -25,5 +25,10 @@ namespace AutoTest.Core.FileSystem
         {
             return Directory.Exists(path);
         }
+
+        public bool FileExists(string file)
+        {
+            return File.Exists(file);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace AutoTest.Core.Caching.Projects
 {
@@ -19,6 +20,12 @@ namespace AutoTest.Core.Caching.Projects
         public void Reload()
         {
             Value = new ProjectDocument(Value.Type);
+        }
+
+        public string GetAssembly()
+        {
+            string folder = Path.Combine(Path.GetDirectoryName(Key), Value.OutputPath);
+            return Path.Combine(folder, Value.AssemblyName);
         }
     }
 }

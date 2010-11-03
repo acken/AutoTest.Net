@@ -14,12 +14,12 @@ namespace AutoTest.Test.Core.Caching.Projects
     public class ProjectParserTest
     {
         private ProjectParser _parser;
-        private FileSystemService _fs;
+        private FakeFileSystemService _fs;
 
         [SetUp]
         public void SetUp()
         {
-            _fs = new FileSystemService();
+            _fs = new FakeFileSystemService();
             _parser = new ProjectParser(_fs);
         }
 

@@ -13,6 +13,7 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
         private string[] _projectFiles = null;
         private bool _getFilesCalled = false;
         private bool _directoryExists = true;
+        private bool _fileExists = true;
 
         public FakeFileSystemService WhenCrawlingFor(string searchPattern)
         {
@@ -23,6 +24,11 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
         public void WhenValidatingDirectoryReturn(bool returnValue)
         {
             _directoryExists = returnValue;
+        }
+
+        public void WhenValidatingFileReturn(bool returnValue)
+        {
+            _fileExists = returnValue;
         }
 
         public void Return(string projectFiles)
@@ -51,6 +57,11 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
         }
 
         #endregion
+
+        public bool FileExists(string reference)
+        {
+            return _fileExists;
+        }
 
         internal void GetFilesWasNotCalled()
         {
