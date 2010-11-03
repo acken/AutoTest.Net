@@ -7,6 +7,6 @@ namespace AutoTest.Core.Caching
 {
     interface IPrepare<T>
     {
-        T Prepare(T record, Action<T> addUnprepared);
+        T Prepare(T record);
     }
 }

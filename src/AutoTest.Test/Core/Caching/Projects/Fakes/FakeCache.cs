@@ -45,7 +45,7 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
 
         public int Count
         {
-            get { throw new NotImplementedException(); }
+            get { return _addedFields.Count; }
         }
 
         public void Add<T>(string key) where T : IRecord

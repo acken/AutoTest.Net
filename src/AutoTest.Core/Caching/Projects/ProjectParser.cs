@@ -60,6 +60,8 @@ namespace AutoTest.Core.Caching.Projects
         private void setAssembly(ProjectDocument newDocument)
         {
             var assemblyName = getNode(ASSEMBLYNAME_NODE);
+            if (assemblyName.Length == 0)
+                throw new Exception("Could not read assembly name. Invalid project file.");
             var fileType = getNode(OUTPUT_TYPE).ToLower();
             if (!fileType.Equals("exe"))
                 fileType = "dll";

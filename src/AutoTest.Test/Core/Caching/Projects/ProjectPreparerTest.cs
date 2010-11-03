@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
+using System.IO;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {
@@ -13,6 +14,7 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectPreparer _preparer;
         private FakeCache _cache;
+        private string _testProject;
 
         [SetUp]
         public void SetUp()
@@ -22,6 +24,7 @@ namespace AutoTest.Test.Core.Caching.Projects
             var parser = new FakeProjectParser(new ProjectDocument[] {document});
             _cache = new FakeCache();
             _preparer = new ProjectPreparer(parser, _cache);
+            _testProject = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar));
         }
 
         [Test]
@@ -30,8 +33,8 @@ namespace AutoTest.Test.Core.Caching.Projects
             var document = new ProjectDocument(ProjectType.CSharp);
             document.HasBeenReadFromFile();
             var record = new Project("someproject", document);
-            var project = _preparer.Prepare(record, null);
-            project.ShouldBeNull();
+            var project = _preparer.Prepare(record);
+            project.ShouldBeTheSameAs(record);
         }
 
         [Test]
@@ -40,23 +43,19 @@ namespace AutoTest.Test.Core.Caching.Projects
             var record = new Project("someproject", null);
             _cache.WhenGeting("ReferencedProject")
                 .Return(new Project("", new ProjectDocument(ProjectType.CSharp)));
-            var project = _preparer.Prepare(record, null);
+            var project = _preparer.Prepare(record);
             project.Value.ShouldNotBeNull();
         }
 
         [Test]
         public void Should_Add_ReferencedProjects()
         {
-            var referenceWasAdded = false;
-            var record = new Project("someproject", null);
-            var action = new Action<Project>(x =>
-                                                 {
-                                                     x.Key.ShouldEqual("ReferencedProject");
-                                                     referenceWasAdded = true;
-                                                 });
-            var project = _preparer.Prepare(record, action);
+            _cache.WhenGeting("ReferencedProject")
+                .Return(new Project("NonExisting", new ProjectDocument(ProjectType.CSharp)));
+            var record = new Project(_testProject, null);
+            var project = _preparer.Prepare(record);
             project.ShouldNotBeNull();
-            referenceWasAdded.ShouldBeTrue();
+            project.Value.References.Length.ShouldEqual(1);
         }
 
         [Test]
@@ -66,7 +65,7 @@ namespace AutoTest.Test.Core.Caching.Projects
             var referencedProject = new ProjectDocument(ProjectType.CSharp);
             _cache.WhenGeting("ReferencedProject")
                 .Return(new Project("", referencedProject));
-            var project = _preparer.Prepare(record, null);
+            var project = _preparer.Prepare(record);
             project.ShouldNotBeNull();
             referencedProject.ReferencedBy[0].ShouldEqual("someproject");
         }

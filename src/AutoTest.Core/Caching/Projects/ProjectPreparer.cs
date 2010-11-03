@@ -18,41 +18,40 @@ namespace AutoTest.Core.Caching.Projects
 
         #region IPrepare<Project> Members
 
-        public Project Prepare(Project record, Action<Project> addUnprepared)
+        public Project Prepare(Project record)
         {
             if (record.Value == null || !record.Value.IsReadFromFile)
-                return parseProject(record, addUnprepared);
-            return null;
+                return parseProject(record);
+            return record;
         }
 
         #endregion
 
-        private Project parseProject(Project record, Action<Project> addUnprepared)
+        private Project parseProject(Project record)
         {
             var document = _parser.Parse(record.Key, record.Value);
-            setupDependingProjects(record.Key, document, addUnprepared);
+            setupDependingProjects(record.Key, document);
             return new Project(record.Key, document);
         }
 
-        private void setupDependingProjects(string key, ProjectDocument document, Action<Project> addUnprepared)
+        private void setupDependingProjects(string key, ProjectDocument document)
         {
             foreach (var reference in document.References)
             {
                 var project = _cache.Get<Project>(reference);
                 
                 if (project == null)
-                    project = createProject(reference, addUnprepared);
+                    project = createProject(reference);
 
                 if (!project.Value.IsReferencedBy(key))
                     project.Value.AddReferencedBy(key);
             }
         }
 
-        private Project createProject(string reference, Action<Project> addUnprepared)
+        private Project createProject(string reference)
         {
-            Project project = new Project(reference, new ProjectDocument(ProjectType.None));
-            addUnprepared.Invoke(project);
-            return project;
+            _cache.Add<Project>(reference);
+            return _cache.Get<Project>(reference);
         }
     }
 }

@@ -24,7 +24,9 @@ namespace AutoTest.Core.Caching
             var index = findIndex(key);
             if (index < 0)
                 index = createRecord<T>(key);
-            prepareRecord<T>(index);
+            var record = _records[index];
+            if (!prepareRecord<T>(index))
+                _records.Remove(record);
         }
 
         public bool Exists(string key)
@@ -41,8 +43,7 @@ namespace AutoTest.Core.Caching
         {
             if (index < 0)
                 return default(T);
-            prepareRecord<T>(index);
-            return (T)_records[index];
+            return (T) _records[index];
         }
 
         public T[] GetAll<T>() where T : IRecord
@@ -50,7 +51,7 @@ namespace AutoTest.Core.Caching
             var unpreparedRecords = _records.Where(x => x.GetType().Equals(typeof(T)));
             var records = new List<T>();
             foreach (var record in unpreparedRecords)
-                records.Add(Get<T>(record.Key));
+                records.Add((T) record);
             return records.ToArray();
         }
 
@@ -62,6 +63,7 @@ namespace AutoTest.Core.Caching
             var dirtyMarker = _services.Locate<IReload<T>>();
             T record = (T) _records[index];
             dirtyMarker.MarkAsDirty(record);
+            prepareRecord<T>(index);
         }
 
         private int createRecord<T>(string key) where T : IRecord
@@ -72,13 +74,21 @@ namespace AutoTest.Core.Caching
             return index;
         }
 
-        private void prepareRecord<T>(int index) where T : IRecord
+        private bool prepareRecord<T>(int index) where T : IRecord
         {
             T record = (T)_records[index];
             var preparer = _services.Locate<IPrepare<T>>();
-            T preparedRecord = preparer.Prepare(record, new Action<T>(r => _records.Add(r)));
+            T preparedRecord = preparer.Prepare(record);
             if (preparedRecord !=  null)
                 _records[index] = preparedRecord;
+            return preparedRecord != null;
+        }
+
+        private void addInternal<T>(T r)
+        {
+            _records.Add((IRecord) r);
+            if (!prepareRecord<IRecord>(_records.Count - 1))
+                _records.Remove((IRecord) r);
         }
 
         private int findIndex(string key)
