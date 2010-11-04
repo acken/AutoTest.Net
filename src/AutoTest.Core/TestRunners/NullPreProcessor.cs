@@ -1,5 +1,6 @@
 using System;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Messages;
 namespace AutoTest.Core.TestRunners
 {
 	class NullPreProcessor : IPreProcessTestruns
@@ -8,6 +9,10 @@ namespace AutoTest.Core.TestRunners
 		public void PreProcess(RunInfo[] details)
 		{
 		}
+
+        public void RunFinished(RunReport report)
+        {
+        }
 		#endregion
 	}
 }

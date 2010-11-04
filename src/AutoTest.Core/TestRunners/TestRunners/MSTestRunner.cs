@@ -54,6 +54,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					continue;
 				}
 				
+                if (runInfo.OnlyRunSpcifiedTests && runInfo.TestsToRun.Length.Equals(0))
+                    continue;
 				var tests = getTestsList(runInfo);
 				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage";
 				Console.WriteLine("Running tests: {0} {1}", unitTestExe, arguments);

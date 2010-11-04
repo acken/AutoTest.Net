@@ -49,6 +49,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			{
 				// Get the assemblies that should be run under this nunit executable
 				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe, runInfos);
+                if (assemblies == null)
+                    continue;
 				var arguments = getExecutableArguments(assemblies, runInfos);
 				_bus.Publish(new InformationMessage(string.Format("Running tests: {0} {1}", nUnitExe, arguments)));
 				Console.WriteLine("Running tests: {0} {1}", nUnitExe, arguments); 
@@ -102,6 +104,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
 				{
+                    if (runInfo.OnlyRunSpcifiedTests && runInfo.TestsToRun.Length.Equals(0))
+                        continue;
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
 					var assemblyTests = getTestsList(runInfo);
 					if (assemblyTests.Length > 0)

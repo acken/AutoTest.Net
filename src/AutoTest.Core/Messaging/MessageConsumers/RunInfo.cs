@@ -11,6 +11,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		public bool ShouldBeBuilt { get; private set; }
 		public string Assembly { get; private set; }
         public string[] TestsToRun { get { return _testsToRun.ToArray(); } }
+        public bool OnlyRunSpcifiedTests { get; private set; }
 		
 		public RunInfo(Project project)
 		{
@@ -18,6 +19,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			ShouldBeBuilt = false;
 			Assembly = null;
             _testsToRun = new List<string>();
+            OnlyRunSpcifiedTests = false;
 		}
 		
 		public void ShouldBuild()
@@ -38,6 +40,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public void AddTestsToRun(string test)
         {
             _testsToRun.Add(test);
+        }
+
+        public void ShouldOnlyRunSpcifiedTests()
+        {
+            OnlyRunSpcifiedTests = true;
         }
 	}
 }
