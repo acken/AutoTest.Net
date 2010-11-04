@@ -63,7 +63,7 @@ namespace AutoTest.Core.Caching.Projects
             if (assemblyName.Length == 0)
                 throw new Exception("Could not read assembly name. Invalid project file.");
             var fileType = getNode(OUTPUT_TYPE).ToLower();
-            if (!fileType.Equals("exe"))
+            if (!fileType.Contains("exe"))
                 fileType = "dll";
             newDocument.SetAssemblyName(string.Format("{0}.{1}", assemblyName, fileType));
         }
