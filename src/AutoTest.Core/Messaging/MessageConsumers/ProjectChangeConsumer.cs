@@ -47,13 +47,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _bus.Publish(new RunStartedMessage(message.Files));
             var runReport = execute(message);
             _bus.Publish(new RunFinishedMessage(runReport));
-            informPreProcessor(runReport);
-        }
-
-        private void informPreProcessor(RunReport runReport)
-        {
-            foreach (var preProcess in _preProcessors)
-                preProcess.RunFinished(runReport);
         }
 
         private RunReport execute(ProjectChangeMessage message)
@@ -201,6 +194,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	                result.Failed.Length);
 	            _bus.Publish(new TestRunMessage(result));
 			}
+			informPreProcessor(results);
+        }
+		
+        private void informPreProcessor(TestRunResults[] results)
+        {
+            foreach (var preProcess in _preProcessors)
+                preProcess.RunFinished(results);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace AutoTest.Core.TestRunners
 	public interface IPreProcessTestruns
 	{
         void PreProcess(RunInfo[] details);
-        void RunFinished(RunReport report);
+        void RunFinished(TestRunResults[] results);
 	}
 }
 

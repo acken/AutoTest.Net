@@ -10,7 +10,7 @@ namespace AutoTest.Core.TestRunners
 		{
 		}
 
-        public void RunFinished(RunReport report)
+        public void RunFinished(TestRunResults[] results)
         {
         }
 		#endregion
