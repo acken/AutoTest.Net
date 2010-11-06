@@ -46,7 +46,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				var item = runList[i];
 				if (!item.ShouldBeBuilt)
 					continue;
-				item.SetAssembly(item.Project.GetAssembly());
+				item.SetAssembly(item.Project.GetAssembly(""));
 				setAssemblyDestinationsRecursive(runList, item.Project, Path.GetDirectoryName(item.Assembly));
 			}
 		}

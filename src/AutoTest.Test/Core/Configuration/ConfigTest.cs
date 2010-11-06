@@ -212,6 +212,12 @@ namespace AutoTest.Test.Core.Configuration
 		}
 		
 		[Test]
+		public void Should_get_custom_output_path()
+		{
+			_config.CustomOutputPath.ShouldEqual(@"bin\CustomOutput");
+		}
+		
+		[Test]
 		public void Should_merge_two_config_files()
 		{
 			createMergeFile();

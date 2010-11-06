@@ -36,6 +36,7 @@ namespace AutoTest.Core.Configuration
 		public ConfigItem<string[]> TestAssembliesToIgnore { get; private set; }
 		public ConfigItem<string[]> TestCategoriesToIgnore { get; private set; }
 		public ConfigItem<int> FileChangeBatchDelay { get; private set; }
+		public ConfigItem<string> CustomOutputPath { get; private set; }
 
         public CoreSection()
         {
@@ -53,6 +54,7 @@ namespace AutoTest.Core.Configuration
 			TestAssembliesToIgnore = new ConfigItem<string[]>(new string[] {});
 			TestCategoriesToIgnore = new ConfigItem<string[]>(new string[] {});
 			FileChangeBatchDelay = new ConfigItem<int>(100);
+			CustomOutputPath = new ConfigItem<string>("");
         }
 
         public void Read(string configFile)
@@ -73,6 +75,7 @@ namespace AutoTest.Core.Configuration
 			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
 			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 100);
+			CustomOutputPath = getValueItem("configuration/CustomOutput", "");
         }
 		
 		private bool tryLoadXml(string configFile)

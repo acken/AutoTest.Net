@@ -74,6 +74,10 @@
 	<!-- and running build and tests -->
 	<!--<changedetectiondelay>200</changedetectiondelay>-->
 	
+	<!-- Custom output folder -->
+	<!-- Custom folder to use as as build output folder -->
+	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->
+	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
 </configuration>

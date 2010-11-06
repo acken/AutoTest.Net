@@ -72,7 +72,7 @@ namespace AutoTest.Core.Caching.Projects
 
         private void setOutputPath(ProjectDocument newDocument)
         {
-			newDocument.SetOutputPath(Path.Combine("bin", "AutoTest.NET/"));
+			newDocument.SetOutputPath(Path.Combine("bin", "AutoTest.NET") + Path.DirectorySeparatorChar);
 //            var configuration = string.Format("{0}|{1}", newDocument.BuildConfiguration, newDocument.Platform);
 //            var configurations = getNodes(PROPERTYGROUP_START, PROPERTYGROUP_END);
 //            for (int i = 0; i < configurations.Length; i++)

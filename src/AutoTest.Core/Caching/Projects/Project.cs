@@ -22,10 +22,14 @@ namespace AutoTest.Core.Caching.Projects
             Value = new ProjectDocument(Value.Type);
         }
 
-        public string GetAssembly()
+        public string GetAssembly(string customOutputPath)
         {
-            string folder = Path.Combine(Path.GetDirectoryName(Key), Value.OutputPath);
-            return Path.Combine(folder, Value.AssemblyName);
+			var outputPath = Value.OutputPath;
+			if (customOutputPath != null && customOutputPath.Length > 0)
+				outputPath = customOutputPath;
+			if (!Directory.Exists(outputPath))
+            	outputPath = Path.Combine(Path.GetDirectoryName(Key), outputPath);
+            return Path.Combine(outputPath, Value.AssemblyName);
         }
     }
 }

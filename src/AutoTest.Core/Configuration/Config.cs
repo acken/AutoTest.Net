@@ -31,6 +31,7 @@ namespace AutoTest.Core.Configuration
 		public int FileChangeBatchDelay { get; private set; }
 		public string[] TestAssembliesToIgnore { get; private set; }
 		public string[] TestCategoriesToIgnore { get; private set; }
+		public string CustomOutputPath { get; private set; }
 		
         public Config(IMessageBus bus)
         {
@@ -83,6 +84,8 @@ namespace AutoTest.Core.Configuration
 				_ignoreFile = mergeValueItem(core.WatchIgnoreFile, "");
 			if (core.FileChangeBatchDelay.WasReadFromConfig)
 				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
+			if (core.CustomOutputPath.WasReadFromConfig)
+				CustomOutputPath = core.CustomOutputPath.Value;
 		}
 		
 		private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
@@ -158,6 +161,7 @@ namespace AutoTest.Core.Configuration
 				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
 				_ignoreFile = core.WatchIgnoreFile.Value;
 				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
+				CustomOutputPath = core.CustomOutputPath.Value;
             }
             catch (Exception ex)
             {
