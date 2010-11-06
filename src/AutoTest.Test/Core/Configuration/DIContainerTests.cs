@@ -279,10 +279,27 @@ namespace AutoTest.Test.Core.Configuration
 		}
 		
 		[Test]
-		public void Should_register_null_pre_processor()
+		public void Should_register_null_pre_processors()
 		{
-			var preProcessor = _locator.Locate<IPreProcessTestruns>();
-			preProcessor.ShouldBeOfType<IPreProcessTestruns>();
+			var preProcessors = _locator.LocateAll<IPreProcessTestruns>();
+			preProcessors.Length.ShouldEqual(1);
+		}
+		
+		[Test]
+		public void Should_register_run_failed_first_pre_processor()
+		{
+			var container = new DIContainer();
+            container.Configure();
+			container.AddRunFailedTestsFirstPreProcessor();
+			var preProcessors = container.Services.LocateAll<IPreProcessTestruns>();
+			preProcessors.Length.ShouldEqual(2);
+		}
+		
+		[Test]
+		public void Should_register_delayed_configurer()
+		{
+			var configurer = _locator.Locate<IHandleDelayedConfiguration>();
+			configurer.ShouldBeOfType<IHandleDelayedConfiguration>();
 		}
     }
 }

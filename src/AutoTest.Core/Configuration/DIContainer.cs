@@ -25,11 +25,12 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.Configuration
 {
-    class DIContainer : IDisposable
+    public class DIContainer : IDisposable
     {
         private ServiceLocator _services;
 
-        public ServiceLocator Services { get { return _services; } }
+        public IServiceLocator Services { get { return _services; } }
+		public IWindsorContainer Container { get { return _services.Container; } }
 
         public void Configure()
         {
@@ -67,15 +68,16 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<IDetermineIfAssemblyShouldBeTested>().ImplementedBy<TestRunValidator>())
 				.Register(Component.For<IOptimizeBuildConfiguration>().ImplementedBy<BuildOptimizer>())
 				.Register(Component.For<IPreProcessTestruns>().ImplementedBy<NullPreProcessor>())
+				.Register(Component.For<IHandleDelayedConfiguration>().ImplementedBy<DelayedConfigurer>())
                 .Register(Component.For<ApplicatonLauncher>());
 			
-			if ((new notify_sendNotifier()).IsSupported())
-				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
-            else if ((new GrowlNotifier(null)).IsSupported())
-                _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
-			else
-				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
+			initializeNotifiers();
         }
+		
+		public void AddRunFailedTestsFirstPreProcessor()
+		{
+			_services.Container.Register(Component.For<IPreProcessTestruns>().ImplementedBy<RunFailedTestsFirstPreProcessor>());
+		}
 
         public void InitializeCache(string watchFolder)
         {
@@ -104,5 +106,15 @@ namespace AutoTest.Core.Configuration
         }
 
         #endregion
+		
+		private void initializeNotifiers()
+		{
+			if ((new notify_sendNotifier()).IsSupported())
+				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
+            else if ((new GrowlNotifier(null)).IsSupported())
+                _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
+			else
+				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
+		}
     }
 }

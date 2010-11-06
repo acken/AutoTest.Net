@@ -12,6 +12,7 @@ namespace AutoTest.Core.FileSystem
     {
         private readonly IMessageBus _bus;
         private readonly FileSystemWatcher _watcher;
+		private IHandleDelayedConfiguration _delayedConfigurer;
         private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
         private List<ChangedFile> _buffer = new List<ChangedFile>();
@@ -20,11 +21,12 @@ namespace AutoTest.Core.FileSystem
 		private IConfiguration _configuration;
 		private string _watchPath = "";
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer)
         {
             _bus = bus;
             _validator = validator;
 			_configuration = configuration;
+			_delayedConfigurer = delayedConfigurer;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite,
@@ -49,13 +51,25 @@ namespace AutoTest.Core.FileSystem
 			_configuration.AnnounceTrackerType();
 			buildIgnoreList(path);
 			initializeTimer();
+			setupPreProcessors();
+			initializeWatchPath(path);
+            _watcher.Path = path;
+            _watcher.EnableRaisingEvents = true;
+        }
+		
+		private void setupPreProcessors()
+		{
+			if (_configuration.RerunFailedTestsFirst)
+				_delayedConfigurer.AddRunFailedTestsFirstPreProcessor();
+		}
+		
+		private void initializeWatchPath(string path)
+		{
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
 				_watchPath = Path.GetDirectoryName(path);
 			else
 				_watchPath = path;
-            _watcher.Path = path;
-            _watcher.EnableRaisingEvents = true;
-        }
+		}
 		
 		private void initializeTimer()
 		{

@@ -24,6 +24,7 @@ namespace AutoTest.Core.Configuration
 		string[] TestAssembliesToIgnore { get; }
 		string[] TestCategoriesToIgnore { get; }
 		string CustomOutputPath { get; }
+		bool RerunFailedTestsFirst { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);

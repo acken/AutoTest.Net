@@ -151,6 +151,9 @@
     <Compile Include="TestRunners\TestRunDetails.cs" />
     <Compile Include="TestRunners\NullPreProcessor.cs" />
     <Compile Include="TestRunners\TestRunnerType.cs" />
+    <Compile Include="TestRunners\RunFailedTestsFirstPreProcessor.cs" />
+    <Compile Include="Configuration\IHandleDelayedConfiguration.cs" />
+    <Compile Include="Configuration\DelayedConfigurer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

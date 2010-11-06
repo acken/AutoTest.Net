@@ -32,7 +32,7 @@ namespace AutoTest.Test.Core.Messaging
         {
             _container = new DIContainer();
             _container.Configure();
-            _container.Services.Container
+            _container.Container
                 .Register(Component.For<IConsumerOf<StringMessage>>().ImplementedBy<Listener>())
                 .Register(Component.For<IConsumerOf<StringMessage>>().Forward<IConsumerOf<IntMessage>>().ImplementedBy<BigListener>())
                 .Register(Component.For<IBlockingConsumerOf<BlockingMessage>>().ImplementedBy<BlockingConsumer>())

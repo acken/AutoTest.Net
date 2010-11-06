@@ -142,6 +142,7 @@
     <Compile Include="Core\TestRunners\TestRunDetailsTest.cs" />
     <Compile Include="Core\TestRunners\TestRunInfoTests.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\ProjectTest.cs" />
+    <Compile Include="Core\TestRunners\RunFailedTestsFirstPreProcessorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">

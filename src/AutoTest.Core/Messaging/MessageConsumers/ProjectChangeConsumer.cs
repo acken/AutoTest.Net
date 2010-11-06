@@ -93,7 +93,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
             projectList = preProcessTestRun(projectList);
-            foreach (var runner in _testRunners)
+            runPreProcessedTestRun(projectList, runReport);
+		}
+		
+		private void runPreProcessedTestRun(RunInfo[] projectList, RunReport runReport)
+		{
+			foreach (var runner in _testRunners)
             {
 				var runInfos = new List<TestRunInfo>();
 				foreach (var file in projectList)
@@ -114,12 +119,26 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                         runInfo.AddTestsToRun(file.TestsToRun);
                         if (file.OnlyRunSpcifiedTests)
                             runInfo.ShouldOnlyRunSpcifiedTests();
+						if (file.RerunAllWhenFinished)
+							runInfo.RerunAllTestWhenFinished();
                         runInfos.Add(runInfo);
                     }
 					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
 				}
 				if (runInfos.Count > 0)
+				{
 					runTests(runner, runInfos.ToArray(), runReport);
+					
+					var rerunInfos = new List<TestRunInfo>();
+					foreach (var info in runInfos)
+					{
+						if (info.RerunAllWhenFinished)
+							rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
+					}
+					if (rerunInfos.Count > 0)
+						runTests(runner, rerunInfos.ToArray(), runReport);
+				}
+				
 			}
 		}
 

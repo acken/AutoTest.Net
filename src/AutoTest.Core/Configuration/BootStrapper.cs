@@ -24,7 +24,8 @@ namespace AutoTest.Core.Configuration
         private static DIContainer _container = new DIContainer();
 
         public static IServiceLocator Services { get { return _container.Services; } }
-        public static IWindsorContainer Container { get { return _container.Services.Container; } }
+        public static IWindsorContainer Container { get { return _container.Container; } }
+		public static DIContainer DIContainer { get { return _container; } }
 
         public static void Configure()
         {

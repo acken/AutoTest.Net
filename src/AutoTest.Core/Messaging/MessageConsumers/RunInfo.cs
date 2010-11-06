@@ -12,6 +12,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		public string Assembly { get; private set; }
         public string[] TestsToRun { get { return _testsToRun.ToArray(); } }
         public bool OnlyRunSpcifiedTests { get; private set; }
+		public bool RerunAllWhenFinished { get; private set; }
 		
 		public RunInfo(Project project)
 		{
@@ -20,6 +21,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			Assembly = null;
             _testsToRun = new List<string>();
             OnlyRunSpcifiedTests = false;
+			RerunAllWhenFinished = false;
 		}
 		
 		public void ShouldBuild()
@@ -46,6 +48,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             OnlyRunSpcifiedTests = true;
         }
+		
+		public void RerunAllTestWhenFinished()
+		{
+			RerunAllWhenFinished = true;
+		}
 	}
 }
 
