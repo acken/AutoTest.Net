@@ -22,7 +22,7 @@ namespace AutoTest.Core.BuildRunners
             var timer = Stopwatch.StartNew();
             _buildExecutable = buildExecutable;
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName));
+            process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName) + " /property:OutDir=bin/AutoTest.NET/");
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.UseShellExecute = false;

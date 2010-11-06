@@ -12,21 +12,22 @@ namespace AutoTest.Core.FileSystem
     class WatchValidator : IWatchValidator
     {
 		private IConfiguration _configuration;
-		private string[] _defaultIgnores = new string[10];
+		private string[] _defaultIgnores = new string[11];
 
 		public WatchValidator(IConfiguration configuration)
 		{
 			_configuration = configuration;
 			_defaultIgnores[0] = string.Format("bin{0}Debug", Path.DirectorySeparatorChar);
 			_defaultIgnores[1] = string.Format("bin{0}Release", Path.DirectorySeparatorChar);
-			_defaultIgnores[2] = string.Format("bin{0}x86", Path.DirectorySeparatorChar);
-			_defaultIgnores[3] = string.Format("obj{0}Debug", Path.DirectorySeparatorChar);
-			_defaultIgnores[4] = string.Format("obj{0}Release", Path.DirectorySeparatorChar);
-			_defaultIgnores[5] = string.Format("obj{0}x86", Path.DirectorySeparatorChar);
-			_defaultIgnores[6] = "*.FileListAbsolute.txt";
-			_defaultIgnores[7] = "*.FilesWrittenAbsolute.txt";
-			_defaultIgnores[8] = "*.suo";
-            _defaultIgnores[9] = "*.UnmanagedRegistration.cache";
+			_defaultIgnores[2] = string.Format("bin{0}AutoTest.NET", Path.DirectorySeparatorChar);
+			_defaultIgnores[3] = string.Format("bin{0}x86", Path.DirectorySeparatorChar);
+			_defaultIgnores[4] = string.Format("obj{0}Debug", Path.DirectorySeparatorChar);
+			_defaultIgnores[5] = string.Format("obj{0}Release", Path.DirectorySeparatorChar);
+			_defaultIgnores[6] = string.Format("obj{0}x86", Path.DirectorySeparatorChar);
+			_defaultIgnores[7] = "*.FileListAbsolute.txt";
+			_defaultIgnores[8] = "*.FilesWrittenAbsolute.txt";
+			_defaultIgnores[9] = "*.suo";
+            _defaultIgnores[10] = "*.UnmanagedRegistration.cache";
 		}
 		
         public bool ShouldPublish(string filePath)

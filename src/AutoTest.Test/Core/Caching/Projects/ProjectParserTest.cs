@@ -131,13 +131,13 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
-        public void Should_set_output_path()
+        public void Should_force_output_path_to_out_own_custom()
         {
             var document = _parser.Parse(getCSharpProject(), null);
-            document.OutputPath.ShouldEqual(string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar));
+            document.OutputPath.ShouldEqual(string.Format("bin{0}AutoTest.NET{0}", Path.DirectorySeparatorChar));
 
             document = _parser.Parse(getVisualBasicProject(), null);
-            document.OutputPath.ShouldEqual(string.Format("bin{0}Debug{0}", Path.DirectorySeparatorChar));
+            document.OutputPath.ShouldEqual(string.Format("bin{0}AutoTest.NET{0}", Path.DirectorySeparatorChar));
         }
 
         [Test]

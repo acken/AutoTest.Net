@@ -76,7 +76,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				if (file.ShouldBeBuilt)
 				{
 					Debug.WriteMessage(string.Format("Set to build project {0}", file.Project.Key));
-	                if (!build(file.Project, runReport))
+	                if (!build(file, runReport))
 	                    return false;
 				}
 				else
@@ -99,13 +99,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				foreach (var file in projectList)
 	            {
 					var project = file.Project;
-					if (hasInvalidOutputPath(project))
-						continue;
-					string folder = Path.Combine(Path.GetDirectoryName(project.Key), project.Value.OutputPath);
 					
-					if (hasInvalidAssemblyName(project))
+					if (hasInvalidAssembly(file))
 						continue;
-	            	var assembly = Path.Combine(folder, project.Value.AssemblyName);
+	            	var assembly = file.Assembly;
 					
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
 					    continue;
@@ -133,36 +130,31 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return runInfos;
         }
 		
-		private bool hasInvalidOutputPath(Project project)
+		private bool hasInvalidOutputPath(RunInfo info)
 		{
-			if (project.Value.OutputPath == null)
-			{
-				_bus.Publish(new ErrorMessage(string.Format("Output path was unexpectedly set to null for {0}. Skipping assembly", project.Key)));
-				return true;
-			}
-			return false;
+			return info.Assembly == null;
 		}
 		
-		private bool hasInvalidAssemblyName(Project project)
+		private bool hasInvalidAssembly(RunInfo info)
 		{
-			if (project.Value.AssemblyName == null)
+			if (info.Assembly == null)
 			{
-				_bus.Publish(new ErrorMessage(string.Format("Assembly name was unexpectedly set to null for {0}. Skipping assembly", project.Key)));
+				_bus.Publish(new ErrorMessage(string.Format("Assembly was unexpectedly set to null for {0}. Skipping assembly", info.Project.Key)));
 				return true;
 			}
 			return false;
 		}
 
-        private bool build(Project project, RunReport runReport)
+        private bool build(RunInfo info, RunReport runReport)
         {
-            if (File.Exists(_configuration.BuildExecutable(project.Value)))
+            if (File.Exists(_configuration.BuildExecutable(info.Project.Value)))
             {
                 _bus.Publish(new RunInformationMessage(
                                  InformationType.Build,
-                                 project.Key,
-                                 project.Value.AssemblyName,
+                                 info.Project.Key,
+                                 info.Assembly,
                                  typeof(MSBuildRunner)));
-                if (!buildProject(project, runReport))
+                if (!buildProject(info.Project, runReport))
                     return false;
             }
 

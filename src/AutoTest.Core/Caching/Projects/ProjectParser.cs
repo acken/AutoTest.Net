@@ -72,19 +72,20 @@ namespace AutoTest.Core.Caching.Projects
 
         private void setOutputPath(ProjectDocument newDocument)
         {
-            var configuration = string.Format("{0}|{1}", newDocument.BuildConfiguration, newDocument.Platform);
-            var configurations = getNodes(PROPERTYGROUP_START, PROPERTYGROUP_END);
-            for (int i = 0; i < configurations.Length; i++)
-            {
-                var content = configurations[i];
-                if (content.Contains(configuration))
-                {
-                    newDocument.SetOutputPath(
-                        getNode(OUTPUTPATH_NODE, content)
-                        .Replace("\\", Path.DirectorySeparatorChar.ToString()));
-                    break;
-                }
-            }
+			newDocument.SetOutputPath(Path.Combine("bin", "AutoTest.NET/"));
+//            var configuration = string.Format("{0}|{1}", newDocument.BuildConfiguration, newDocument.Platform);
+//            var configurations = getNodes(PROPERTYGROUP_START, PROPERTYGROUP_END);
+//            for (int i = 0; i < configurations.Length; i++)
+//            {
+//                var content = configurations[i];
+//                if (content.Contains(configuration))
+//                {
+//                    newDocument.SetOutputPath(
+//                        getNode(OUTPUTPATH_NODE, content)
+//                        .Replace("\\", Path.DirectorySeparatorChar.ToString()));
+//                    break;
+//                }
+//            }
         }
 
         private void setFrameworkVersion(ProjectDocument newDocument)
