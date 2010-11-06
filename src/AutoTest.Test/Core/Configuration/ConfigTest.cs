@@ -218,6 +218,12 @@ namespace AutoTest.Test.Core.Configuration
 		}
 		
 		[Test]
+		public void Should_get_failed_first_pre_processor_setting()
+		{
+			_config.RerunFailedTestsFirst.ShouldBeTrue();
+		}
+		
+		[Test]
 		public void Should_merge_two_config_files()
 		{
 			createMergeFile();

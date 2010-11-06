@@ -32,6 +32,7 @@ namespace AutoTest.Core.Configuration
 		public string[] TestAssembliesToIgnore { get; private set; }
 		public string[] TestCategoriesToIgnore { get; private set; }
 		public string CustomOutputPath { get; private set; }
+		public bool RerunFailedTestsFirst { get; private set; }
 		
         public Config(IMessageBus bus)
         {
@@ -86,7 +87,37 @@ namespace AutoTest.Core.Configuration
 				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
 			if (core.CustomOutputPath.WasReadFromConfig)
 				CustomOutputPath = core.CustomOutputPath.Value;
+			if (core.RerunFailedTestsFirst.WasReadFromConfig)
+				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
 		}
+		
+		private void tryToConfigure(CoreSection core)
+        {
+            try
+            {
+                _watchDirectories = core.WatchDirectories.Value;
+                _buildExecutables.AddRange(core.BuildExecutables.Value);
+                _nunitTestRunners.AddRange(core.NUnitTestRunner.Value);
+                _msTestRunner.AddRange(core.MSTestRunner.Value);
+                _xunitTestRunner.AddRange(core.XUnitTestRunner.Value);
+                _codeEditor = core.CodeEditor.Value;
+                _debuggingEnabled = core.DebuggingEnabled.Value;
+				GrowlNotify = core.GrowlNotify.Value;
+				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
+				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
+				TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
+				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
+				_ignoreFile = core.WatchIgnoreFile.Value;
+				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
+				CustomOutputPath = core.CustomOutputPath.Value;
+				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.FailedToConfigure(ex);
+                throw;
+            }
+        }
 		
 		private string[] mergeValues(string[] setting, ConfigItem<string[]> settingToMerge)
 		{
@@ -142,33 +173,6 @@ namespace AutoTest.Core.Configuration
 			setting.Clear();
 			setting.AddRange(settingToMerge.Value);
 		}
-
-        private void tryToConfigure(CoreSection core)
-        {
-            try
-            {
-                _watchDirectories = core.WatchDirectories.Value;
-                _buildExecutables.AddRange(core.BuildExecutables.Value);
-                _nunitTestRunners.AddRange(core.NUnitTestRunner.Value);
-                _msTestRunner.AddRange(core.MSTestRunner.Value);
-                _xunitTestRunner.AddRange(core.XUnitTestRunner.Value);
-                _codeEditor = core.CodeEditor.Value;
-                _debuggingEnabled = core.DebuggingEnabled.Value;
-				GrowlNotify = core.GrowlNotify.Value;
-				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
-				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
-				TestAssembliesToIgnore = core.TestAssembliesToIgnore.Value;
-				TestCategoriesToIgnore = core.TestCategoriesToIgnore.Value;
-				_ignoreFile = core.WatchIgnoreFile.Value;
-				FileChangeBatchDelay = core.FileChangeBatchDelay.Value;
-				CustomOutputPath = core.CustomOutputPath.Value;
-            }
-            catch (Exception ex)
-            {
-                DebugLog.Debug.FailedToConfigure(ex);
-                throw;
-            }
-        }
 		
 		private CoreSection getConfiguration()
 		{

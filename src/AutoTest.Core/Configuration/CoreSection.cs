@@ -37,6 +37,7 @@ namespace AutoTest.Core.Configuration
 		public ConfigItem<string[]> TestCategoriesToIgnore { get; private set; }
 		public ConfigItem<int> FileChangeBatchDelay { get; private set; }
 		public ConfigItem<string> CustomOutputPath { get; private set; }
+		public ConfigItem<bool> RerunFailedTestsFirst { get; private set; }
 
         public CoreSection()
         {
@@ -55,6 +56,7 @@ namespace AutoTest.Core.Configuration
 			TestCategoriesToIgnore = new ConfigItem<string[]>(new string[] {});
 			FileChangeBatchDelay = new ConfigItem<int>(100);
 			CustomOutputPath = new ConfigItem<string>("");
+			RerunFailedTestsFirst = new ConfigItem<bool>(false);
         }
 
         public void Read(string configFile)
@@ -76,6 +78,7 @@ namespace AutoTest.Core.Configuration
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
 			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 100);
 			CustomOutputPath = getValueItem("configuration/CustomOutput", "");
+			RerunFailedTestsFirst = getBoolItem("configuration/RerunFailedTestsFirst", false);
         }
 		
 		private bool tryLoadXml(string configFile)

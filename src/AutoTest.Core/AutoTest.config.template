@@ -78,6 +78,9 @@
 	<!-- Custom folder to use as as build output folder -->
 	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->
 	
+	<!-- Rerun failed tests before doing a full testrun -->
+	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
+	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
 </configuration>
