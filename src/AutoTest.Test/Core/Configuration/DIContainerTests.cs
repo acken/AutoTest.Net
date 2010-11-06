@@ -301,5 +301,12 @@ namespace AutoTest.Test.Core.Configuration
 			var configurer = _locator.Locate<IHandleDelayedConfiguration>();
 			configurer.ShouldBeOfType<IHandleDelayedConfiguration>();
 		}
+		
+		[Test]
+		public void Should_register_default_config_locator()
+		{
+			var configurer = _locator.Locate<ILocateDefaultConfigurationFile>();
+			configurer.ShouldBeOfType<ILocateDefaultConfigurationFile>();
+		}
     }
 }

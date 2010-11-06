@@ -23,7 +23,7 @@ namespace AutoTest.Test.Core.Configuration
         {
 			_overridConfig = Path.GetTempFileName();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _config = new Config(_bus);
+            _config = new Config(_bus, new DefaultConfigurationLocator());
         }
 		
 		[TearDown]
