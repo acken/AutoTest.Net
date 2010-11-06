@@ -5,15 +5,18 @@ using System.Collections.Generic;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using System.IO;
+using AutoTest.Core.Configuration;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
 	class BuildOptimizer : IOptimizeBuildConfiguration
 	{
 		private ICache _cache;
+		private IConfiguration _configuration;
 		
-		public BuildOptimizer(ICache cache)
+		public BuildOptimizer(ICache cache, IConfiguration configuration)
 		{
 			_cache = cache;
+			_configuration = configuration;
 		}
 		
 		public RunInfo[] AssembleBuildConfiguration(string[] projectList)
@@ -46,7 +49,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				var item = runList[i];
 				if (!item.ShouldBeBuilt)
 					continue;
-				item.SetAssembly(item.Project.GetAssembly(""));
+				item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
 				setAssemblyDestinationsRecursive(runList, item.Project, Path.GetDirectoryName(item.Assembly));
 			}
 		}

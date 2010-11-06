@@ -46,6 +46,8 @@ namespace AutoTest.Core.FileSystem
 			var list = "";
 			foreach (var pattern in _configuration.WatchIgnoreList)
 				list += (list.Length == 0 ? "" : "|") + pattern;
+			if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
+				list += (list.Length == 0 ? "" : "|") + _configuration.CustomOutputPath;
 			return list;
 		}
 		

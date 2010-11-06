@@ -5,6 +5,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using NUnit.Framework;
 using System.IO;
+using AutoTest.Core.Configuration;
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
 	[TestFixture]
@@ -74,7 +75,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			document.SetAssemblyName("Project6.dll");
 			_cache.Stub(c => c.Get<Project>(projectList[6])).Return(new Project(projectList[6], document));
 			                                                                                                                                                                                                                                                                                                                        
-			_optimizer = new BuildOptimizer(_cache);
+			_optimizer = new BuildOptimizer(_cache, MockRepository.GenerateMock<IConfiguration>());
 			_runInfos = _optimizer.AssembleBuildConfiguration(projectList);
 		}
 		

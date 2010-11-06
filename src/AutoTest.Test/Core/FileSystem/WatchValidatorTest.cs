@@ -162,6 +162,15 @@ namespace AutoTest.Test.Core.FileSystem
 		}
 		
 		[Test]
+		public void Should_return_list_of_ignore_items_included_custom_output_directory()
+		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*", "whatever.txt", "*.bat" });
+			_configuration.Stub(c => c.CustomOutputPath).Return("bin/MyCustomOutDir/");
+			_validator.GetIgnorePatterns().ShouldEqual("myFolder/*|whatever.txt|*.bat|bin/MyCustomOutDir/");
+		}
+		
+		[Test]
 		public void Should_respect_configuration_setting()
 		{
 			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(false);

@@ -23,6 +23,7 @@ namespace AutoTest.Core.Configuration
 		int FileChangeBatchDelay { get; }
 		string[] TestAssembliesToIgnore { get; }
 		string[] TestCategoriesToIgnore { get; }
+		string CustomOutputPath { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
