@@ -27,9 +27,17 @@ namespace AutoTest.Core.Configuration
         public static IWindsorContainer Container { get { return _container.Container; } }
 		public static DIContainer DIContainer { get { return _container; } }
 
-        public static void Configure()
+		public static void Configure()
+		{
+			Configure(null);
+		}
+		
+        public static void Configure(ILocateDefaultConfigurationFile configurator)
         {
-            _container.Configure();
+			if (configurator == null)
+            	_container.Configure();
+			else
+				_container.Configure(configurator);
 			var configuration = _container.Services.Locate<IConfiguration>();
             if (configuration.DebuggingEnabled)
                 Debug.EnableLogging();
