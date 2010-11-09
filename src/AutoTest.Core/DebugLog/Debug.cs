@@ -13,36 +13,17 @@ namespace AutoTest.Core.DebugLog
     public static class Debug
     {
         private static bool _isDisabled = true;
-        private static object _padLock = new object();
-        private static string _logFile = "debug.log";
+		private static IWriteDebugInfo _debugWriter;
 
         private static void write(string text)
         {
-            lock (_padLock)
-            {
-				var file = Path.Combine(PathParsing.GetRootDirectory(), _logFile);
-                using (var writer = getWriter(file))
-                {
-                    writer.WriteLine(text);
-                }
-                if ((new FileInfo(file)).Length > 1024000)
-                {
-                    File.Delete(string.Format("{0}.old", file));
-                    File.Move(file, string.Format("{0}.old", file));
-                }
-            }
+			if (_isDisabled) return;
+            _debugWriter.Write(text);
         }
-		
-		private static StreamWriter getWriter(string file)
-		{
-			if (File.Exists(file))
-				return new StreamWriter(file, true);
-			else
-				return new StreamWriter(file);
-		}
 
-        public static void EnableLogging()
+        public static void EnableLogging(IWriteDebugInfo debugWriter)
         {
+			_debugWriter = debugWriter;
             _isDisabled = false;
         }
 

@@ -154,8 +154,10 @@
     <Compile Include="TestRunners\RunFailedTestsFirstPreProcessor.cs" />
     <Compile Include="Configuration\IHandleDelayedConfiguration.cs" />
     <Compile Include="Configuration\DelayedConfigurer.cs" />
-    <Compile Include="Configuration\ILocateDefaultConfigurationFile.cs" />
     <Compile Include="Configuration\DefaultConfigurationLocator.cs" />
+    <Compile Include="Configuration\ILocateWriteLocation.cs" />
+    <Compile Include="DebugLog\IWriteDebugInfo.cs" />
+    <Compile Include="DebugLog\DebugWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

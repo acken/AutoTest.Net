@@ -13,7 +13,7 @@ namespace AutoTest.Core.Configuration
     public class Config : IConfiguration
     {
         private IMessageBus _bus;
-		private ILocateDefaultConfigurationFile _defaultConfigLocator;
+		private ILocateWriteLocation _defaultConfigLocator;
 		private string _ignoreFile;
 		
         private string[] _watchDirectories;
@@ -35,7 +35,7 @@ namespace AutoTest.Core.Configuration
 		public string CustomOutputPath { get; private set; }
 		public bool RerunFailedTestsFirst { get; private set; }
 		
-        public Config(IMessageBus bus, ILocateDefaultConfigurationFile defaultConfigLocator)
+        public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)
         {
             _bus = bus;
 			_defaultConfigLocator = defaultConfigLocator;
@@ -178,7 +178,7 @@ namespace AutoTest.Core.Configuration
 		
 		private CoreSection getConfiguration()
 		{
-			return getConfiguration(_defaultConfigLocator.GetFilePath());
+			return getConfiguration(_defaultConfigLocator.GetConfigurationFile());
 		}
 		
 		private CoreSection getConfiguration(string configFile)

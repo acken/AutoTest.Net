@@ -305,8 +305,8 @@ namespace AutoTest.Test.Core.Configuration
 		[Test]
 		public void Should_register_default_config_locator()
 		{
-			var configurer = _locator.Locate<ILocateDefaultConfigurationFile>();
-			configurer.ShouldBeOfType<ILocateDefaultConfigurationFile>();
+			var configurer = _locator.Locate<ILocateWriteLocation>();
+			configurer.ShouldBeOfType<ILocateWriteLocation>();
 		}
     }
 }

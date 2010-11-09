@@ -37,7 +37,7 @@ namespace AutoTest.Core.Configuration
 			Configure(new DefaultConfigurationLocator());
 		}
 		
-        public void Configure(ILocateDefaultConfigurationFile defaultConfigurationLocator)
+        public void Configure(ILocateWriteLocation defaultConfigurationLocator)
         {
             _services = new ServiceLocator();
             _services.Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(_services.Container.Kernel));
@@ -74,7 +74,7 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<IOptimizeBuildConfiguration>().ImplementedBy<BuildOptimizer>())
 				.Register(Component.For<IPreProcessTestruns>().ImplementedBy<NullPreProcessor>())
 				.Register(Component.For<IHandleDelayedConfiguration>().ImplementedBy<DelayedConfigurer>())
-				.Register(Component.For<ILocateDefaultConfigurationFile>().Instance(defaultConfigurationLocator))
+				.Register(Component.For<ILocateWriteLocation>().Instance(defaultConfigurationLocator))
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			initializeNotifiers();

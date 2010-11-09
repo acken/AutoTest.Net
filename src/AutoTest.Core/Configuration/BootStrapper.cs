@@ -32,7 +32,7 @@ namespace AutoTest.Core.Configuration
 			Configure(null);
 		}
 		
-        public static void Configure(ILocateDefaultConfigurationFile configurator)
+        public static void Configure(ILocateWriteLocation configurator)
         {
 			if (configurator == null)
             	_container.Configure();
@@ -40,7 +40,7 @@ namespace AutoTest.Core.Configuration
 				_container.Configure(configurator);
 			var configuration = _container.Services.Locate<IConfiguration>();
             if (configuration.DebuggingEnabled)
-                Debug.EnableLogging();
+                enableLogging();
 			Debug.InitialConfigurationFinished();
         }
 
@@ -62,5 +62,11 @@ namespace AutoTest.Core.Configuration
             _container.Dispose();
             _container = new DIContainer();
         }
+		
+		private static void enableLogging()
+		{
+			var debugLogger = _container.Services.Locate<ILocateWriteLocation>();
+			Debug.EnableLogging(debugLogger.GetDebugLogger());
+		}
     }
 }
