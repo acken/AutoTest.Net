@@ -14,6 +14,12 @@ namespace AutoTest.Core.DebugLog
 			_path = path;
 		}
 		
+		public DebugWriter(string path, string filename)
+		{
+			_path = path;
+			_logFile = filename;
+		}
+		
 		public void Write(string text)
 		{
 			lock (_padLock)
