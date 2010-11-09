@@ -5,14 +5,20 @@ namespace AutoTest.Core.DebugLog
 {
 	public class DebugWriter : IWriteDebugInfo
 	{
-		private static object _padLock = new object();
-        private static string _logFile = "debug.log";
+		private object _padLock = new object();
+        private string _logFile = "debug.log";
+		private string _path;
+		
+		public DebugWriter(string path)
+		{
+			_path = path;
+		}
 		
 		public void Write(string text)
 		{
 			lock (_padLock)
             {
-				var file = Path.Combine(PathParsing.GetRootDirectory(), _logFile);
+				var file = Path.Combine(_path, _logFile);
                 using (var writer = getWriter(file))
                 {
                     writer.WriteLine(text);
@@ -25,7 +31,7 @@ namespace AutoTest.Core.DebugLog
             }
 		}
 		
-		private static StreamWriter getWriter(string file)
+		private StreamWriter getWriter(string file)
 		{
 			if (File.Exists(file))
 				return new StreamWriter(file, true);

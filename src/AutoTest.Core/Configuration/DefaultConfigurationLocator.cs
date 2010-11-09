@@ -10,17 +10,22 @@ namespace AutoTest.Core.Configuration
 		
 		public DefaultConfigurationLocator()
 		{
-			_debugWriter = new DebugWriter();
+			_debugWriter = new DebugWriter(getPath());
 		}
 		
 		public string GetConfigurationFile()
 		{
-			return Path.Combine(PathParsing.GetRootDirectory(), "AutoTest.config");
+			return Path.Combine(getPath(), "AutoTest.config");
 		}
 
 		public IWriteDebugInfo GetDebugLogger ()
 		{
 			return _debugWriter;
+		}
+		
+		private string getPath()
+		{
+			return PathParsing.GetRootDirectory();
 		}
 	}
 }
