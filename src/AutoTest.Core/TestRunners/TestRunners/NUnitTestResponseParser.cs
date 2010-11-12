@@ -7,6 +7,7 @@ using AutoTest.Core.Messaging;
 using System.Xml;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages;
+using System.IO;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -79,8 +80,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			{
 				if (source.Assembly.Length < assembly.Length)
 					continue;
-				if (source.Assembly.Substring(source.Assembly.Length - assembly.Length, assembly.Length).Equals(assembly))
+                var toCompare = source.Assembly.Substring(source.Assembly.Length - assembly.Length, assembly.Length);
+				if (toCompare.Equals(assembly))
 					return source;
+                // XUnit screws up the extension casing so we have to do this stupid thing
+                var extension = Path.GetExtension(toCompare);
+                toCompare = toCompare.Substring(0, toCompare.Length - extension.Length) + extension.ToUpper();
+                if (toCompare.Equals(assembly))
+                    return source;
 			}
 			return null;
 		}
