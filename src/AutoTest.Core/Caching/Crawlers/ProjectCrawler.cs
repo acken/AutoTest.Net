@@ -8,6 +8,7 @@ using AutoTest.Core.FileSystem;
 using System.IO;
 using AutoTest.Core.Messaging;
 using AutoTest.Messages;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
@@ -67,6 +68,7 @@ namespace AutoTest.Core.Caching.Crawlers
 				var messageString = string.Format("Failed parsing project {0}. Project will not be built. ({1})", project, exception.Message);
 				var message = new InformationMessage(messageString);
 				_bus.Publish<InformationMessage>(message);
+				Debug.WriteMessage(messageString);
 			}
 		}
 	}

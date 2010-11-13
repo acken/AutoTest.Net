@@ -52,8 +52,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 if (assemblies == null)
                     continue;
 				var arguments = getExecutableArguments(assemblies, runInfos);
-				_bus.Publish(new InformationMessage(string.Format("Running tests: {0} {1}", nUnitExe, arguments)));
-				Console.WriteLine("Running tests: {0} {1}", nUnitExe, arguments); 
+				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", nUnitExe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(nUnitExe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching
 {
@@ -68,6 +69,7 @@ namespace AutoTest.Core.Caching
 
         private int createRecord<T>(string key) where T : IRecord
         {
+			Debug.WriteMessage(string.Format("{0} initialize cache", key));
             var creator = _services.Locate<ICreate<T>>();
             _records.Add(creator.Create(key));
             int index = _records.Count - 1;
@@ -77,6 +79,7 @@ namespace AutoTest.Core.Caching
         private bool prepareRecord<T>(int index) where T : IRecord
         {
             T record = (T)_records[index];
+			Debug.WriteMessage(string.Format("{0} preparing cache", record.Key));
             var preparer = _services.Locate<IPrepare<T>>();
             T preparedRecord = preparer.Prepare(record);
             if (preparedRecord !=  null)

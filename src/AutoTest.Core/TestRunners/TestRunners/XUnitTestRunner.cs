@@ -56,6 +56,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	
 	            var resultFile = Path.GetTempFileName();
 	            var arguments = string.Format("\"{0}\" /noshadow /nunit \"{1}\"", runInfo.Assembly, resultFile);
+				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", unitTestExe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;

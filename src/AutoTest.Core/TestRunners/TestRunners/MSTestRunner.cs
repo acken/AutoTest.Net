@@ -58,7 +58,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     continue;
 				var tests = getTestsList(runInfo);
 				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage";
-				Console.WriteLine("Running tests: {0} {1}", unitTestExe, arguments);
+				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", unitTestExe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;

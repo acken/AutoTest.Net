@@ -67,6 +67,6 @@ namespace AutoTest.Messages
 			_testResults = results.ToArray();
 		}
 		#endregion
-}
+	}
 }
 

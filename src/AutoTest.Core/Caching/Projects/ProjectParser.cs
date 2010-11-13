@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using AutoTest.Core.FileSystem;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.Projects
 {
@@ -134,11 +135,20 @@ namespace AutoTest.Core.Caching.Projects
         private void setContainsTests(ProjectDocument document)
         {
             if (_fileContent.Contains(NUNIT_REFERENCE))
+			{
                 document.SetAsNUnitTestContainer();
+				Debug.WriteMessage(string.Format("{0} contains NUnit tests", _projectFile));
+			}
             if (_fileContent.Contains(MSTEST_REFERENCE))
+			{
                 document.SetAsMSTestContainer();
+				Debug.WriteMessage(string.Format("{0} contains MSTest tests", _projectFile));
+			}
             if (_fileContent.Contains(XUNIT_REFERENCE))
+			{
                 document.SetAsXUnitTestContainer();
+				Debug.WriteMessage(string.Format("{0} contains XUnit tests", _projectFile));
+			}
         }
 
         private void setReferences(ProjectDocument document)
