@@ -8,6 +8,7 @@ using System.Xml;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages;
 using System.IO;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -31,10 +32,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			_content = content;
 			_testSources = runInfos;
 			var testSuites = getTestSuites();
+			Debug.WriteMessage(string.Format("Found {0} test sections", testSuites.Length));
 			foreach (var testSuite in testSuites)
 			{
 				_result.Clear();
 	            string[] testCases = getTestCases(testSuite);
+				Debug.WriteMessage(string.Format("Found {0} test cases in section {1}", testCases.Length, testSuite));
 	            foreach (var testCase in testCases)
 	            {
 	                string name = getname(testCase);
@@ -58,7 +61,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            }
 				var runInfo = matchToTestSource(testSuite);
 				if (runInfo ==  null)
+				{
+					Debug.WriteMessage(string.Format("Could not match test suite {0} to any of the tested assemblies", testSuite));
 					continue;
+				}
 				var results = getTestResults(runInfo);
 				results.SetTimeSpent(getTimeSpent(testSuite));
 				_runResults.Add(results);
