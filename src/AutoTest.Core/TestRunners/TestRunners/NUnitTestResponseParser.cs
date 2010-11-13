@@ -37,7 +37,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			{
 				_result.Clear();
 	            string[] testCases = getTestCases(testSuite);
-				Debug.WriteMessage(string.Format("Found {0} test cases in section {1}", testCases.Length, testSuite));
+				Debug.WriteMessage(string.Format("Found {0} test cases in section {1}", testCases.Length, getAssemblyName(testSuite)));
 	            foreach (var testCase in testCases)
 	            {
 	                string name = getname(testCase);
@@ -62,7 +62,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var runInfo = matchToTestSource(testSuite);
 				if (runInfo ==  null)
 				{
-					Debug.WriteMessage(string.Format("Could not match test suite {0} to any of the tested assemblies", testSuite));
+					Debug.WriteMessage(string.Format("Could not match test suite {0} to any of the tested assemblies", getAssemblyName(testSuite)));
 					continue;
 				}
 				var results = getTestResults(runInfo);
