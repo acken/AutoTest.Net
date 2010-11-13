@@ -34,9 +34,4 @@ copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt
 copy %BINARYDIR%\Castle.MicroKernel.dll %DEPLOYDIR%\Castle.MicroKernel.dll
 copy %BINARYDIR%\Castle.Windsor.dll %DEPLOYDIR%\Castle.Windsor.dll
 
-copy %VSADDINDIR%\AutoTest.VSAddin.AddIn %DEPLOYDIR%\AutoTest.VSAddin.AddIn
-copy %VSADDINDIR%\AutoTest.VSAddin.dll %DEPLOYDIR%\AutoTest.VSAddin.dll
-copy %VSADDINDIR%\Install_Visual_Studio_Addin.bat %DEPLOYDIR%\Install_Visual_Studio_Addin.bat
-
-
 copy %RESOURCES%\* %DEPLOYDIR%\Icons

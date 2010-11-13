@@ -35,9 +35,9 @@ cp $CASTLEDIR/Castle.license.txt $DEPLOYDIR/Castle.license.txt
 cp $BINARYDIR/Castle.MicroKernel.dll $DEPLOYDIR/Castle.MicroKernel.dll
 cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 
-cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
-cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
-cp $VSADDINDIR/Install_Visual_Studio_Addin.bat $DEPLOYDIR/Install_Visual_Studio_Addin.bat
+#cp $VSADDINDIR/AutoTest.VSAddin.AddIn $DEPLOYDIR/AutoTest.VSAddin.AddIn
+#cp $VSADDINDIR/AutoTest.VSAddin.dll $DEPLOYDIR/AutoTest.VSAddin.dll
+#cp $VSADDINDIR/Install_Visual_Studio_Addin.bat $DEPLOYDIR/Install_Visual_Studio_Addin.bat
 
 
 cp ./$RESOURCES/* $DEPLOYDIR/Icons
