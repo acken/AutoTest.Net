@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using AutoTest.Core.Configuration;
+using System.IO;
 
 namespace AutoTest.Core.Launchers
 {
@@ -38,6 +39,8 @@ namespace AutoTest.Core.Launchers
 		
 		private void LaunchExecutable(string file, int lineNumber, int column)
 		{
+			if (invalidLauncher())
+			    return;
 			var executable = _configuration.CodeEditor.Executable;
             var arguments = _configuration.CodeEditor.Arguments;
             arguments = arguments.Replace("[[CodeFile]]", file);
@@ -47,6 +50,14 @@ namespace AutoTest.Core.Launchers
             process.StartInfo = new ProcessStartInfo(executable, arguments);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
+		}
+		
+		private bool invalidLauncher()
+		{
+			var invalid = !File.Exists(_configuration.CodeEditor.Executable);
+			if (invalid)
+				DebugLog.Debug.WriteMessage(string.Format("Invalid launcher: {0}", _configuration.CodeEditor.Executable));
+			return invalid;
 		}
     }
 }
