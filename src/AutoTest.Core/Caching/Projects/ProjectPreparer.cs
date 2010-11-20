@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.Projects
 {
@@ -29,9 +30,25 @@ namespace AutoTest.Core.Caching.Projects
 
         private Project parseProject(Project record)
         {
-            var document = _parser.Parse(record.Key, record.Value);
+            var document = parseDocument(record);
+            if (document == null)
+                return null;
             setupDependingProjects(record.Key, document);
             return new Project(record.Key, document);
+        }
+
+        private ProjectDocument parseDocument(Project record)
+        {
+            try
+            {
+                return _parser.Parse(record.Key, record.Value);
+            }
+            catch (Exception exception)
+            {
+                var messageString = string.Format("Failed parsing project {0}. Project will not be built. ({1})", record.Key, exception.Message);
+                Debug.WriteMessage(messageString);
+            }
+            return null;
         }
 
         private void setupDependingProjects(string key, ProjectDocument document)

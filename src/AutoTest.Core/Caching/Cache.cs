@@ -27,7 +27,7 @@ namespace AutoTest.Core.Caching
                 index = createRecord<T>(key);
             var record = _records[index];
             if (!prepareRecord<T>(index))
-                _records.Remove(record);
+                terminateInvalidProject(record);
         }
 
         public bool Exists(string key)
@@ -65,6 +65,12 @@ namespace AutoTest.Core.Caching
             T record = (T) _records[index];
             dirtyMarker.MarkAsDirty(record);
             prepareRecord<T>(index);
+        }
+
+        private void terminateInvalidProject(IRecord record)
+        {
+            _records.Remove(record);
+            throw new Exception("Invalid project");
         }
 
         private int createRecord<T>(string key) where T : IRecord

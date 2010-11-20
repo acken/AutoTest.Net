@@ -14,6 +14,7 @@ namespace AutoTest.Test.Core.Caching
     public class CacheTest
     {
         private Cache _cache;
+        private FakeProjectParser _parser;
         private ProjectDocument _firstDocument;
         private ProjectDocument _secondDocument;
         private string _testProject;
@@ -26,8 +27,8 @@ namespace AutoTest.Test.Core.Caching
             _firstDocument.HasBeenReadFromFile();
             _secondDocument = new ProjectDocument(ProjectType.CSharp);
             _secondDocument.HasBeenReadFromFile();
-            var parser = new FakeProjectParser(new ProjectDocument[] { _secondDocument, _firstDocument });
-            _cache = new Cache(new FakeServiceLocator(parser, delegate { return _cache; }));
+            _parser = new FakeProjectParser(new ProjectDocument[] { _secondDocument, _firstDocument });
+            _cache = new Cache(new FakeServiceLocator(_parser, delegate { return _cache; }));
             _testProject = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar));
             _testProjectVB = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar));
         }
@@ -86,6 +87,29 @@ namespace AutoTest.Test.Core.Caching
             projects[0].Value.ShouldNotBeNull();
             projects[1].Key.ShouldEqual(_testProjectVB);
             projects[1].Value.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void Should_remove_projects_that_cant_be_prepared()
+        {
+            _parser.ThrowExceptionOnParse();
+            try
+            {
+                _cache.Add<Project>(_testProject);
+            }
+            catch
+            {
+            }
+            var projects = _cache.GetAll<Project>();
+            projects.Length.ShouldEqual(0);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public void Should_throw_exception_on_failing_prepare()
+        {
+            _parser.ThrowExceptionOnParse();
+            _cache.Add<Project>(_testProject);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectPreparer _preparer;
         private FakeCache _cache;
+        private FakeProjectParser _parser;
         private string _testProject;
 
         [SetUp]
@@ -21,9 +22,9 @@ namespace AutoTest.Test.Core.Caching.Projects
         {
             var document = new ProjectDocument(ProjectType.CSharp);
             document.AddReference("ReferencedProject");
-            var parser = new FakeProjectParser(new ProjectDocument[] {document});
+            _parser = new FakeProjectParser(new ProjectDocument[] { document });
             _cache = new FakeCache();
-            _preparer = new ProjectPreparer(parser, _cache);
+            _preparer = new ProjectPreparer(_parser, _cache);
             _testProject = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar));
         }
 
@@ -68,6 +69,15 @@ namespace AutoTest.Test.Core.Caching.Projects
             var project = _preparer.Prepare(record);
             project.ShouldNotBeNull();
             referencedProject.ReferencedBy[0].ShouldEqual("someproject");
+        }
+
+        [Test]
+        public void Should_return_null_when_parse_fails()
+        {
+            var record = new Project("someproject", null);
+            _parser.ThrowExceptionOnParse();
+            var project = _preparer.Prepare(record);
+            project.ShouldBeNull();
         }
     }
 }

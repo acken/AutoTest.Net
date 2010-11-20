@@ -35,6 +35,25 @@ namespace AutoTest.WinForms
         	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
                 overviewForm.SetWatchDirectory(directoryToWatch);
 			    notifyOnLoggingSetup();
+
+
+
+                var assemblies = new List<string>();
+                var cache = BootStrapper.Services.Locate<AutoTest.Core.Caching.ICache>();
+                var configuration = BootStrapper.Services.Locate<IConfiguration>();
+                var projects = cache.GetAll<AutoTest.Core.Caching.Projects.Project>();
+                foreach (var project in projects)
+                {
+                    var assembly = project.GetAssembly(configuration.CustomOutputPath);
+                    if (!File.Exists(assembly))
+                        continue;
+                    assemblies.Add(assembly);
+                }
+
+
+
+
+
         	    Application.Run(overviewForm.Form);
         	    BootStrapper.ShutDown();
 			}
