@@ -25,8 +25,10 @@ namespace AutoTest.Core.BuildRunners
             var timer = Stopwatch.StartNew();
             _buildExecutable = buildExecutable;
 			var outputDir = getOutputDir();
+            var arguments = string.Format("\"{0}\"", projectName) + " /property:OutDir=" + outputDir;
+            DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", _buildExecutable, arguments));
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(_buildExecutable, string.Format("\"{0}\"", projectName) + " /property:OutDir=" + outputDir);
+            process.StartInfo = new ProcessStartInfo(_buildExecutable, arguments);
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.UseShellExecute = false;
