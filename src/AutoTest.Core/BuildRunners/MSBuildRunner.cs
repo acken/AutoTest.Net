@@ -52,9 +52,14 @@ namespace AutoTest.Core.BuildRunners
 		private string buildProperties(Project project)
 		{
 			var outputDir = getOutputDir();
-			string overriddenPlatform = ",Platform=" + project.Value.Platform;
-			if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
-				overriddenPlatform = ",Platform=AnyCPU";
+			string overriddenPlatform = "";
+			// Only override platform for winodws. It's flawed on other platforms
+			if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
+			{
+				overriddenPlatform = ",Platform=" + project.Value.Platform;
+				if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
+					overriddenPlatform = ",Platform=AnyCPU";
+			}
 			return " /property:OutDir=" + outputDir + overriddenPlatform;
 		}
         
