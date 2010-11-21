@@ -55,7 +55,7 @@ namespace AutoTest.Core.BuildRunners
 					outputPath += Path.DirectorySeparatorChar;
 				return outputPath;
 			}
-			return "bin/AutoTest.NET/";
+			return string.Format("bin{0}AutoTest.NET{0}", Path.DirectorySeparatorChar);
 		}
 	}
 }
