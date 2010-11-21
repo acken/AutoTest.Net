@@ -7,6 +7,7 @@ using AutoTest.Core.Messaging;
 using System.Collections.Generic;
 using AutoTest.Messages;
 using AutoTest.Core.Configuration;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -20,12 +21,12 @@ namespace AutoTest.Core.BuildRunners
 			_configuration = configuration;
         }
 
-        public BuildRunResults RunBuild(string projectName, string buildExecutable)
+        public BuildRunResults RunBuild(Project project, string buildExecutable)
         {
             var timer = Stopwatch.StartNew();
             _buildExecutable = buildExecutable;
-			var outputDir = getOutputDir();
-            var arguments = string.Format("\"{0}\"", projectName) + " /property:OutDir=" + outputDir;
+			var properties = buildProperties(project);
+            var arguments = string.Format("\"{0}\"", project.Key) + properties;
             DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", _buildExecutable, arguments));
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, arguments);
@@ -36,7 +37,7 @@ namespace AutoTest.Core.BuildRunners
 
             process.Start();
             string line;
-            var buildResults = new BuildRunResults(projectName);
+            var buildResults = new BuildRunResults(project.Key);
 			var lines = new List<string>();
             while ((line = process.StandardOutput.ReadLine()) != null)
 				lines.Add(line);
@@ -47,6 +48,15 @@ namespace AutoTest.Core.BuildRunners
             buildResults.SetTimeSpent(timer.Elapsed);
             return buildResults;
         }
+		
+		private string buildProperties(Project project)
+		{
+			var outputDir = getOutputDir();
+			string overriddenPlatform = ",Platform=" + project.Value.Platform;
+			if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
+				overriddenPlatform = ",Platform=AnyCPU";
+			return " /property:OutDir=" + outputDir + overriddenPlatform;
+		}
         
 		private string getOutputDir()
 		{

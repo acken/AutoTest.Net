@@ -182,7 +182,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(Project project, RunReport report)
         {
-            var buildReport = _buildRunner.RunBuild(project.Key, _configuration.BuildExecutable(project.Value));
+            var buildReport = _buildRunner.RunBuild(project, _configuration.BuildExecutable(project.Value));
             var succeeded = buildReport.ErrorCount == 0;
             report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);
             _bus.Publish(new BuildRunMessage(buildReport));
