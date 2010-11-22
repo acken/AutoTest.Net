@@ -48,13 +48,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			foreach (var nUnitExe in nUnitExes)
 			{
 				// Get the assemblies that should be run under this nunit executable
-				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe, runInfos);
+				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe.Exe, runInfos);
                 if (assemblies == null)
                     continue;
-				var arguments = getExecutableArguments(assemblies, runInfos);
-				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", nUnitExe, arguments)); 
+				var arguments = getExecutableArguments(nUnitExe, assemblies, runInfos);
+				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", nUnitExe.Exe, arguments)); 
 	            var proc = new Process();
-	            proc.StartInfo = new ProcessStartInfo(nUnitExe, arguments);
+	            proc.StartInfo = new ProcessStartInfo(nUnitExe.Exe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;
 	            //proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(runInfo.Assembly);
 	            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -71,16 +71,19 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return results.ToArray();
         }
 		
-		private string[] getNUnitExes(TestRunInfo[] runInfos)
+		private RunnerExe[] getNUnitExes(TestRunInfo[] runInfos)
 		{
-			var testRunnerExes = new List<string>();
+			var testRunnerExes = new List<RunnerExe>();
 			foreach (var runInfo in runInfos)
 			{
-				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
+				var framework = getFramework(runInfo);
+				var unitTestExe = _configuration.NunitTestRunner(framework);
+				if (_configuration.GetSpesificNunitTestRunner(framework) == null)
+					framework = "";
 	            if (File.Exists(unitTestExe))
 				{
-					if (!testRunnerExes.Exists(x => x.Equals(unitTestExe)))
-	                	testRunnerExes.Add(unitTestExe);
+					if (!testRunnerExes.Exists(x => x.Equals(new RunnerExe(unitTestExe, framework))))
+	                	testRunnerExes.Add(new RunnerExe(unitTestExe, framework));
 				}
 			}
 			return testRunnerExes.ToArray();
@@ -118,11 +121,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return string.Format("{0} {1}", tests, assemblies);
 		}
         
-        string getExecutableArguments (string assemblyName, TestRunInfo[] runInfos)
+        string getExecutableArguments (RunnerExe exe, string assemblyName, TestRunInfo[] runInfos)
 		{
 			var separator = getArgumentSeparator();
+			string framework = "";
+			// only use framework for windows as the default runner on linux has no framework parameter
+			if (!Environment.OSVersion.Platform.Equals(PlatformID.Unix) && !Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
+			{
+				if (exe.Version.Length > 0)
+					framework = string.Format(" {0}framework:{1}", separator, exe.Version);
+			}
 			var categoryList = getCategoryIgnoreList();
-			return string.Format("{0}noshadow {0}xmlconsole {1}", separator, categoryList) + assemblyName;
+			return string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName;
 		}
 
         #endregion

@@ -263,6 +263,16 @@ namespace AutoTest.Core.Configuration
         {
             return getVersionedSetting(version, _nunitTestRunners);
         }
+		
+		public string GetSpesificNunitTestRunner(string version)
+		{
+			if (_nunitTestRunners.Count == 0)
+                return null;
+            int index;
+            if ((index = _nunitTestRunners.FindIndex(0, b => b.Key.Equals(version))) >= 0)
+                return _nunitTestRunners[index].Value;
+			return null;
+		}
 
         public string MSTestRunner(string version)
         {

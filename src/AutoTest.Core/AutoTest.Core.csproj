@@ -158,6 +158,7 @@
     <Compile Include="Configuration\ILocateWriteLocation.cs" />
     <Compile Include="DebugLog\IWriteDebugInfo.cs" />
     <Compile Include="DebugLog\DebugWriter.cs" />
+    <Compile Include="TestRunners\TestRunners\RunnerExe.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

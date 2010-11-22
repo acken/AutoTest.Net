@@ -218,6 +218,18 @@ namespace AutoTest.Test.Core.Configuration
 		}
 		
 		[Test]
+		public void Should_get_specific_test_runner()
+		{
+			_config.GetSpesificNunitTestRunner("v3.5").ShouldEqual(@"C:\SomefolderOther\NUnit\nunit-console.exe");
+		}
+		
+		[Test]
+		public void Should_return_when_null_when_geting_specific_test_runner_for_nonexisting_version()
+		{
+			_config.GetSpesificNunitTestRunner("v1.0").ShouldBeNull();
+		}
+		
+		[Test]
 		public void Should_get_failed_first_pre_processor_setting()
 		{
 			_config.RerunFailedTestsFirst.ShouldBeTrue();
