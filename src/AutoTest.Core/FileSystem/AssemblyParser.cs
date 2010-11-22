@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using AutoTest.Core.DebugLog;
 namespace AutoTest.Core.FileSystem
 {
 	public class AssemblyParser : IResolveAssemblyReferences, IRetrieveAssemblyIdentifiers
@@ -9,12 +10,20 @@ namespace AutoTest.Core.FileSystem
 		#region IResolveAssemblyReferences implementation
 		public string[] GetReferences(string assembly)
 		{
-			var a = System.Reflection.Assembly.LoadFrom(assembly);
-			var references = a.GetReferencedAssemblies();
-			var names = new List<string>();
-			foreach (var reference in references)
-				names.Add(reference.Name);
-			return names.ToArray();
+			try
+			{
+				var a = System.Reflection.Assembly.LoadFrom(assembly);
+				var references = a.GetReferencedAssemblies();
+				var names = new List<string>();
+				foreach (var reference in references)
+					names.Add(reference.Name);
+				return names.ToArray();
+			}
+			catch
+			{
+				Debug.WriteMessage(string.Format("Could not load assemblies for {0}", assembly));
+			}
+			return new string[] { };
 		}
 		#endregion
 		
