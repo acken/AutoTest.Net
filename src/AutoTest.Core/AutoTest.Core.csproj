@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -111,6 +111,7 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
+    <Compile Include="Notifiers\SnarlNotifier.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackView.cs" />

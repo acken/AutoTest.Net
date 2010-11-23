@@ -115,12 +115,14 @@ namespace AutoTest.Core.Configuration
 		
 		private void initializeNotifiers()
 		{
-			if ((new notify_sendNotifier()).IsSupported())
-				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
+            if ((new notify_sendNotifier()).IsSupported())
+                _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
+            else if ((new SnarlNotifier()).IsSupported())
+                _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<SnarlNotifier>());
             else if ((new GrowlNotifier(null)).IsSupported())
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
-			else
-				_services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
+            else
+                _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
 		}
     }
 }

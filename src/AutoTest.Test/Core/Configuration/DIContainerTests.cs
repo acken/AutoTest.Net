@@ -224,7 +224,7 @@ namespace AutoTest.Test.Core.Configuration
 		[Test]
 		public void Should_register_null_notifier_if_nothing_is_available()
 		{
-            var isSupported = (new notify_sendNotifier()).IsSupported() || (new GrowlNotifier(null)).IsSupported();
+            var isSupported = (new notify_sendNotifier()).IsSupported() || (new GrowlNotifier(null)).IsSupported() || (new SnarlNotifier().IsSupported());
 			var notifier = _locator.Locate<ISendNotifications>();
 			if (isSupported)
 				notifier.ShouldNotBeOfType<NullNotifier>();
@@ -235,12 +235,23 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_growl_notifier_if_available()
         {
-            var isSupported = (new GrowlNotifier(null)).IsSupported();
+            var isSupported = (new GrowlNotifier(null)).IsSupported() && !(new SnarlNotifier().IsSupported());
             var notifier = _locator.Locate<ISendNotifications>();
             if (isSupported)
                 notifier.ShouldBeOfType<GrowlNotifier>();
             else
                 notifier.ShouldNotBeOfType<GrowlNotifier>();
+        }
+
+        [Test]
+        public void Should_register_snarl_notifier_if_available()
+        {
+            var isSupported = (new SnarlNotifier()).IsSupported();
+            var notifier = _locator.Locate<ISendNotifications>();
+            if (isSupported)
+                notifier.ShouldBeOfType<SnarlNotifier>();
+            else
+                notifier.ShouldNotBeOfType<SnarlNotifier>();
         }
 		
 		[Test]
