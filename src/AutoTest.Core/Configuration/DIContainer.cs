@@ -98,8 +98,8 @@ namespace AutoTest.Core.Configuration
         {
             _services.Container
                 .Register(AllTypes
-                              .Pick()
                               .FromAssembly(assembly)
+				              .Pick()
                               .WithService
                               .FirstInterface());
         }

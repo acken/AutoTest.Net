@@ -28,10 +28,8 @@ copy %DIR%README %DEPLOYDIR%\README
 copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
-copy %BINARYDIR%\Castle.Dynamicproxy2.dll %DEPLOYDIR%\Castle.Dynamicproxy2.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
 copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt
-copy %BINARYDIR%\Castle.MicroKernel.dll %DEPLOYDIR%\Castle.MicroKernel.dll
 copy %BINARYDIR%\Castle.Windsor.dll %DEPLOYDIR%\Castle.Windsor.dll
 
 copy %RESOURCES%\* %DEPLOYDIR%\Icons

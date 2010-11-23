@@ -22,6 +22,6 @@ namespace AutoTest.Messages
 			Warning = reader.ReadString();
 		}
 		#endregion
-}
+	}
 }
 
