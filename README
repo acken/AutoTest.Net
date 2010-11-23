@@ -20,6 +20,7 @@ Features
 		* XUnit
 	* Supports notifications through
 		* notify-send (Linux)
+		* Snarl through it's tcp interface (Windows)
 		* Growl (Mac, Windows)
 	* Supports configurable ignore files using the .gitignore format
 	* Local config files extending the main config
