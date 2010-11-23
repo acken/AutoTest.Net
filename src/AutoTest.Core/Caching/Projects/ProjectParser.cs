@@ -24,6 +24,8 @@ namespace AutoTest.Core.Caching.Projects
         private const string CONFIGURATION_START = "<Configuration Condition";
         private const string CONFIGURATION_START_CONTENT_STARTS_HERE = "\">";
         private const string CONFIGURATION_END = "</Configuration>";
+		private const string PLATFORM_NON_DEFAULT_START = "|$(Platform)' == 'Debug|";
+		private const string PLATFORM_NON_DEFAULT_END = "'";
         private const string PLATFORM_START = "<Platform Condition";
         private const string PLATFORM_START_CONTENT_STARTS_HERE = "\">";
         private const string PLATFORM_END = "</Platform>";
@@ -102,10 +104,10 @@ namespace AutoTest.Core.Caching.Projects
 
         private void setPlatform(ProjectDocument newDocument)
         {
-            newDocument.SetPlatform(
-                getNode(PLATFORM_START,
-                        PLATFORM_START_CONTENT_STARTS_HERE,
-                        PLATFORM_END));
+			var platform = getNode(PLATFORM_START, PLATFORM_START_CONTENT_STARTS_HERE, PLATFORM_END);
+			if (platform == null || platform.Length.Equals(0))
+				platform = getNode(PLATFORM_NON_DEFAULT_START, PLATFORM_NON_DEFAULT_END, 0);
+            newDocument.SetPlatform(platform);
         }
 
         private void setConfiguration(ProjectDocument newDocument)
@@ -209,10 +211,15 @@ namespace AutoTest.Core.Caching.Projects
             int start = _fileContent.IndexOf(startTag) + startTag.Length;
             if (start == -1)
                 return "";
-            start = _fileContent.IndexOf(contentStartsHereTag, start) + contentStartsHereTag.Length;
-            if (start - contentStartsHereTag.Length == -1)
+			return getNode(contentStartsHereTag, contentEndsHereTag, start);
+        }
+				
+		private string getNode(string startTag, string endTag, int startIndex)
+        {
+			var start = _fileContent.IndexOf(startTag, startIndex) + startTag.Length;
+            if (start - startTag.Length == -1)
                 return "";
-            int end = _fileContent.IndexOf(contentEndsHereTag, start);
+            int end = _fileContent.IndexOf(endTag, start);
             if (end == -1)
                 return "";
             return _fileContent.Substring(start, end - start);

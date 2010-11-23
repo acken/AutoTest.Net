@@ -159,6 +159,13 @@ namespace AutoTest.Test.Core.Caching.Projects
             document = _parser.Parse(getVisualBasicProject(), null);
             document.ProductVersion.Equals("9.0.30729");
         }
+		
+		[Test]
+        public void Should_set_build_platform_to_x86()
+        {
+            var document = _parser.Parse(getCSharpNoAnyCPUProject(), null);
+            document.Platform.ShouldEqual("x86");
+        }
 
         private string getCSharpProject()
         {
@@ -169,5 +176,10 @@ namespace AutoTest.Test.Core.Caching.Projects
         {
             return string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar);
         }
+		
+		private string getCSharpNoAnyCPUProject()
+		{
+			return string.Format("TestResources{0}VS2008{0}CSharpNoAnyCPU.csproj", Path.DirectorySeparatorChar);
+		}
     }
 }
