@@ -4,23 +4,22 @@
         <name>Castle.Facilities.Logging</name>
     </assembly>
     <members>
-        <member name="T:Castle.Facilities.Logging.LoggerResolver">
-            <summary>
-            Custom resolver used by the MicroKernel. It gives
-            us some contextual information that we use to set up a logging
-            before satisfying the dependency
-            </summary>
-        </member>
         <member name="T:Castle.Facilities.Logging.LoggerImplementation">
             <summary>
             The supported <see cref="T:Castle.Core.Logging.ILogger"/> implementations
+            </summary>
+        </member>
+        <member name="T:Castle.Facilities.Logging.LoggerResolver">
+            <summary>
+              Custom resolver used by Windsor. It gives
+              us some contextual information that we use to set up a logging
+              before satisfying the dependency
             </summary>
         </member>
         <member name="T:Castle.Facilities.Logging.LoggingFacility">
             <summary>
             A facility for logging support.
             </summary>
-            <remarks>TODO: Document its inner working and configuration scheme</remarks>
         </member>
         <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor">
             <summary>
@@ -70,6 +69,12 @@
             <param name="customLoggerFactory">
             The type name of the type of the custom logger factory. (only used when loggingApi is set to LoggerImplementation.Custom)
             </param>
+        </member>
+        <member name="M:Castle.Facilities.Logging.LoggingFacility.WithAppConfig">
+            <summary>
+            loads configuration from current AppDomain's config file (aka web.config/app.config)
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>
