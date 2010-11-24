@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -43,15 +43,15 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+    <Reference Include="System.Configuration" />
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
@@ -156,6 +156,7 @@
     <Compile Include="DebugLog\IWriteDebugInfo.cs" />
     <Compile Include="DebugLog\DebugWriter.cs" />
     <Compile Include="TestRunners\TestRunners\RunnerExe.cs" />
+    <Compile Include="Launchers\MaxCmdLengthCalculator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

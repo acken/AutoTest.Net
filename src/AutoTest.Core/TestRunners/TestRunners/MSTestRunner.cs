@@ -56,8 +56,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				
                 if (runInfo.OnlyRunSpcifiedTests && runInfo.TestsToRun.Length.Equals(0))
                     continue;
+				var calc = new MaxCmdLengthCalculator();
 				var tests = getTestsList(runInfo);
 				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage";
+				if ((arguments.Length + unitTestExe.Length) > calc.GetLength())
+					arguments = "/testcontainer:\"" + runInfo.Assembly + "\"" + " /detail:errorstacktrace /detail:errormessage";
 				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", unitTestExe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);

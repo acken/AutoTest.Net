@@ -48,10 +48,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			foreach (var nUnitExe in nUnitExes)
 			{
 				// Get the assemblies that should be run under this nunit executable
-				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe.Exe, runInfos);
+				string tests;
+				var assemblies = getAssembliesAndTestsForTestRunner(nUnitExe.Exe, runInfos, out tests);
                 if (assemblies == null)
                     continue;
-				var arguments = getExecutableArguments(nUnitExe, assemblies, runInfos);
+				var arguments = getExecutableArguments(nUnitExe, assemblies, tests, runInfos);
 				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", nUnitExe.Exe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(nUnitExe.Exe, arguments);
@@ -96,11 +97,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return runInfo.Project.Value.Framework;
 		}
 		
-		private string getAssembliesAndTestsForTestRunner(string testRunnerExes, TestRunInfo[] runInfos)
+		private string getAssembliesAndTestsForTestRunner(string testRunnerExes, TestRunInfo[] runInfos, out string tests)
 		{
 			var separator = getArgumentSeparator();
 			var assemblies = "";
-			var tests = "";
+			tests = "";
 			foreach (var runInfo in runInfos)
 			{
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
@@ -118,11 +119,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				tests = string.Format("{0}run={1}", separator, tests);
             if (assemblies.Length.Equals(0))
                 return null;
-			return string.Format("{0} {1}", tests, assemblies);
+			return assemblies;
 		}
         
-        string getExecutableArguments (RunnerExe exe, string assemblyName, TestRunInfo[] runInfos)
+        string getExecutableArguments (RunnerExe exe, string assemblyName, string tests, TestRunInfo[] runInfos)
 		{
+			var calc = new MaxCmdLengthCalculator();
 			var separator = getArgumentSeparator();
 			string framework = "";
 			// only use framework for windows as the default runner on linux has no framework parameter
@@ -132,7 +134,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					framework = string.Format(" {0}framework:{1}", separator, exe.Version);
 			}
 			var categoryList = getCategoryIgnoreList();
-			return string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName;
+			var arguments = string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName + " " + tests;
+			if ((arguments.Length + exe.Exe.Length) > calc.GetLength())
+				arguments = string.Format("{0}noshadow{2} {0}xmlconsole {1}", separator, categoryList, framework) + assemblyName;
+			return arguments;
 		}
 
         #endregion

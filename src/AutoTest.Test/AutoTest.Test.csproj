@@ -140,6 +140,7 @@
     <Compile Include="Core\Caching\Projects\Fakes\ProjectTest.cs" />
     <Compile Include="Core\TestRunners\RunFailedTestsFirstPreProcessorTest.cs" />
     <Compile Include="Core\Configuration\DefaultConfigurationLocatorTest.cs" />
+    <Compile Include="Core\Launchers\MaxCmdLengthCalculatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
@@ -200,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Caching\Crawlers\" />
+    <Folder Include="Core\Launchers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
