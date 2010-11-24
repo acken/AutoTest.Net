@@ -191,6 +191,14 @@ namespace AutoTest.Test.Core.FileSystem
             _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
             _validator.ShouldPublish("/Somedirectory/hoi/myfolder/myproject.csproj.UnmanagedRegistration.cache").ShouldBeFalse();
         }
+		
+		[Test]
+		public void Should_always_glob_with_slash()
+		{
+			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "src/*/obj" });
+			_validator.ShouldPublish(@"C:\Somedirectory\src\myfolder\another\obj\somexmlfile.xml").ShouldBeFalse();
+		}
 
         private string getInfo(string path)
         {

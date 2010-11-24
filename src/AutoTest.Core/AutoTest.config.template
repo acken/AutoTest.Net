@@ -62,10 +62,10 @@
 	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
 	
 	<!-- To specify a set of files\directories that autotest should not track changes -->
-	<!-- for create a file containing those exceptions. It works the same way as the -->
-	<!-- .gitignore file in the git source control system. (bin\Debug, bin\Release, -->
-	<!-- bin\x86, obj\Debug, obj\Release and obj\x86 are ignored by default. The file -->
-	<!-- is expected at the root of the path to watch -->
+	<!-- for create a file containing those exceptions. All patterns should use / -->
+	<!-- instead of \ It works the same way as the .gitignore file in the git source -->
+	<!-- control system. (bin/Debug, bin/Release, bin/x86, obj/Debug, obj/Release and -->
+	<!-- obj/x86 are ignored by default. The file is expected at the root of the path to watch -->
 	<!-- This setting is not in use when using assembly tracking -->
 	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
 	

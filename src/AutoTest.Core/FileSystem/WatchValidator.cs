@@ -17,13 +17,13 @@ namespace AutoTest.Core.FileSystem
 		public WatchValidator(IConfiguration configuration)
 		{
 			_configuration = configuration;
-			_defaultIgnores[0] = string.Format("bin{0}Debug", Path.DirectorySeparatorChar);
-			_defaultIgnores[1] = string.Format("bin{0}Release", Path.DirectorySeparatorChar);
-			_defaultIgnores[2] = string.Format("bin{0}AutoTest.NET", Path.DirectorySeparatorChar);
-			_defaultIgnores[3] = string.Format("bin{0}x86", Path.DirectorySeparatorChar);
-			_defaultIgnores[4] = string.Format("obj{0}Debug", Path.DirectorySeparatorChar);
-			_defaultIgnores[5] = string.Format("obj{0}Release", Path.DirectorySeparatorChar);
-			_defaultIgnores[6] = string.Format("obj{0}x86", Path.DirectorySeparatorChar);
+			_defaultIgnores[0] = "bin/Debug";
+			_defaultIgnores[1] = "bin/Release";
+			_defaultIgnores[2] = "bin/AutoTest.NET";
+			_defaultIgnores[3] = "bin/x86";
+			_defaultIgnores[4] = "obj/Debug";
+			_defaultIgnores[5] = "obj/Release";
+			_defaultIgnores[6] = "obj/x86";
 			_defaultIgnores[7] = "*.FileListAbsolute.txt";
 			_defaultIgnores[8] = "*.FilesWrittenAbsolute.txt";
 			_defaultIgnores[9] = "*.suo";
@@ -34,6 +34,7 @@ namespace AutoTest.Core.FileSystem
         {
 			if (!_configuration.ShouldUseIgnoreLists)
 				return true;
+			filePath = filePath.Replace("\\", "/");
 			if (match(filePath, _defaultIgnores))
 				return false;
 			if (match(filePath, _configuration.WatchIgnoreList))
