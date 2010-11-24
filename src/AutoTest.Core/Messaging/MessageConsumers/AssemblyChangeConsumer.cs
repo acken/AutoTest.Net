@@ -38,8 +38,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             foreach (var preProcessor in _preProcessors)
                 preProcessor.PreProcess(runInfos);
         }
+		private RunInfo[] getRunInfos(AssemblyChangeMessage message)
 
-        private RunInfo[] getRunInfos(AssemblyChangeMessage message)
         {
             var runInfos = new List<RunInfo>();
             foreach (var file in message.Files)

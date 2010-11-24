@@ -5,6 +5,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using Rhino.Mocks;
 using AutoTest.Messages;
+using System.IO;
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
 	[TestFixture]
@@ -56,6 +57,14 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_files.AddFile(new ChangedFile("another_location/mylibrary.dll"));
 			_consumer.Consume(_files);
 			_bus.AssertWasCalled(b => b.Publish<AssemblyChangeMessage>(Arg<AssemblyChangeMessage>.Matches(x => x.Files.Length.Equals(1))));
+		}
+		
+		[Test]
+		public void Should_ignore_assemblies_from_obj_folders()
+		{
+			_files.AddFile(new ChangedFile(string.Format("{0}obj{0}meh{0}myexefile.exe", Path.DirectorySeparatorChar)));
+			_consumer.Consume(_files);
+			_bus.AssertWasNotCalled(b => b.Publish<AssemblyChangeMessage>(null), b => b.IgnoreArguments());
 		}
 	}
 }

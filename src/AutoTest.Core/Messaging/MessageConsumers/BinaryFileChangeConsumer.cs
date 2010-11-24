@@ -5,6 +5,7 @@ using AutoTest.Core.FileSystem;
 using AutoTest.Core.Caching;
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
+using System.IO;
 namespace AutoTest.Core.Messaging
 {
 	class BinaryFileChangeConsumer : IConsumerOf<FileChangeMessage>
@@ -26,6 +27,8 @@ namespace AutoTest.Core.Messaging
 			var assemblyFiles = new List<ChangedFile>();
 			foreach (var file in message.Files)
 			{
+				if (file.FullName.ToLower().Contains(string.Format("{0}obj{0}", Path.DirectorySeparatorChar)))
+					continue;
 				if (file.Extension.ToLower().Equals(".exe"))
 					assemblyFiles.Add(file);
 				if (file.Extension.ToLower().Equals(".dll"))
