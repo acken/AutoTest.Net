@@ -64,8 +64,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	
 	            proc.Start();
 	            var parser = new NUnitTestResponseParser(_bus, TestRunner.NUnit);
-	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos, containsTests(arguments));
-	            proc.WaitForExit();
+                var nUnitResult = getNUnitOutput(proc.StandardOutput);
+			    parser.Parse(nUnitResult, runInfos, containsTests(arguments));
 				foreach (var result in parser.Result)
 		            results.Add(result);
 			}
@@ -183,5 +183,28 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				return "--";
 			}
 		}
+
+        private string getNUnitOutput(StreamReader streamReader)
+        {
+            var stringBuilder = new StringBuilder();
+
+            while (streamReader.EndOfStream == false)
+            {
+                var readLine = streamReader.ReadLine();
+                stringBuilder.Append(readLine);
+
+                // checking for the last expected line because the test 
+                // runner suspends after the last line is hit and leaves the agent hanging
+                if (nunitEndOfStream(readLine))
+                    return stringBuilder.ToString();
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private static bool nunitEndOfStream(string readLine)
+        {
+            return string.IsNullOrEmpty(readLine) == false && readLine.EndsWith("</test-results>");
+        }
     }
 }
