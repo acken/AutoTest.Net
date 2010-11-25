@@ -31,5 +31,6 @@ copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
 copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt
 copy %BINARYDIR%\Castle.Windsor.dll %DEPLOYDIR%\Castle.Windsor.dll
+copy %BINARYDIR%\Mono.Cecil.dll %DEPLOYDIR%\Mono.Cecil.dll
 
 copy %RESOURCES%\* %DEPLOYDIR%\Icons

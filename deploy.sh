@@ -32,5 +32,6 @@ cp $BINARYDIR/Castle.Core.dll $DEPLOYDIR/Castle.Core.dll
 cp $BINARYDIR/Castle.Facilities.Logging.dll $DEPLOYDIR/Castle.Facilities.Logging.dll
 cp $CASTLEDIR/Castle.license.txt $DEPLOYDIR/Castle.license.txt
 cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
+cp $BINARYDIR/Mono.Cecil.dll $DEPLOYDIR/Mono.Cecil.dll
 
 cp ./$RESOURCES/* $DEPLOYDIR/Icons

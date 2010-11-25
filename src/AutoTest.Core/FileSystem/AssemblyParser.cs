@@ -12,8 +12,8 @@ namespace AutoTest.Core.FileSystem
 		{
 			try
 			{
-				var a = System.Reflection.Assembly.LoadFrom(assembly);
-				var references = a.GetReferencedAssemblies();
+				var ad = Mono.Cecil.AssemblyDefinition.ReadAssembly(assembly);
+				var references = ad.MainModule.AssemblyReferences;
 				var names = new List<string>();
 				foreach (var reference in references)
 					names.Add(reference.Name);
