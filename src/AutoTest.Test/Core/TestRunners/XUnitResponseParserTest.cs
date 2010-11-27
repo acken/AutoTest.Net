@@ -27,7 +27,7 @@ namespace AutoTest.Test.Core.TestRunners
 				{ 
 					new TestRunInfo(new Project("project1", null), string.Format("/home/ack/backup/WorkWin7/src/DotNET/Temp/SomeProjectUsingXUnit/bin/Debug/SomeProjectUsingXUnit.dll", Path.DirectorySeparatorChar))
 				};
-			_parser.Parse(File.ReadAllText("TestResources/NUnit/XUnitOutput.txt"), sources);
+			_parser.Parse(File.ReadAllText("TestResources/NUnit/XUnitOutput.txt"), sources, false);
         }
 
         [Test]

@@ -64,12 +64,17 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	
 	            proc.Start();
 	            var parser = new NUnitTestResponseParser(_bus);
-	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos);
+	            parser.Parse(proc.StandardOutput.ReadToEnd(), runInfos, containsTests(arguments));
 	            proc.WaitForExit();
 				foreach (var result in parser.Result)
 		            results.Add(result);
 			}
 			return results.ToArray();
+        }
+
+        private bool containsTests(string arguments)
+        {
+            return arguments.Contains(getArgumentSeparator() + "run=");
         }
 		
 		private RunnerExe[] getNUnitExes(TestRunInfo[] runInfos)

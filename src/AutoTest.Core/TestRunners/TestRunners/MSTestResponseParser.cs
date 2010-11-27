@@ -11,14 +11,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private string _project;
         private string _assembly;
         private string _lastParsed = "";
+        private bool _isPartialTestRun = false;
         private List<TestResult> _result = new List<TestResult>();
 
-        public TestRunResults Result { get { return new TestRunResults(_project, _assembly, _result.ToArray()); } }
+        public TestRunResults Result { get { return new TestRunResults(_project, _assembly, _isPartialTestRun, _result.ToArray()); } }
 
-        public MSTestResponseParser(string project, string assembly)
+        public MSTestResponseParser(string project, string assembly, bool isPartialTestRun)
         {
             _project = project;
             _assembly = assembly;
+            _isPartialTestRun = isPartialTestRun;
         }
 
         public void ParseLine(string line)

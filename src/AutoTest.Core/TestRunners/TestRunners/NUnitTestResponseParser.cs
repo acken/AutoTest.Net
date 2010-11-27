@@ -19,6 +19,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		private List<TestRunResults> _runResults = new List<TestRunResults>();
 		private string _content;
 		private TestRunInfo[] _testSources;
+        private bool _isPartialTestRuns = false;
 
         public TestRunResults[] Result { get { return _runResults.ToArray(); } }
 
@@ -27,10 +28,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             _bus = bus;
         }
 
-        public void Parse(string content, TestRunInfo[] runInfos)
+        public void Parse(string content, TestRunInfo[] runInfos, bool isPartialTestRun)
         {
 			_content = content;
 			_testSources = runInfos;
+            _isPartialTestRuns = isPartialTestRun;
 			var testSuites = getTestSuites();
 			Debug.WriteMessage(string.Format("Found {0} test sections", testSuites.Length));
 			foreach (var testSuite in testSuites)
@@ -76,7 +78,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			string project = "";
 			if (runInfo.Project != null)
 				project = runInfo.Project.Key;
-			return new TestRunResults(project, runInfo.Assembly, _result.ToArray());
+			return new TestRunResults(project, runInfo.Assembly, _isPartialTestRuns, _result.ToArray());
 		}
 		
 		private TestRunInfo matchToTestSource(string testSuite)

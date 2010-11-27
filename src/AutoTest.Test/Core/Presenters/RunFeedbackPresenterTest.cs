@@ -48,7 +48,7 @@ namespace AutoTest.Test.Core.Presenters
         [Test]
         public void Should_subscribe_to_testrun_messages()
         {
-            var message = new TestRunMessage(new TestRunResults("", "", null));
+            var message = new TestRunMessage(new TestRunResults("", "", false, null));
             _bus.Publish(message);
             waitForAsyncCall();
             _resultMerger.HasMergedTestResults.ShouldBeTrue();

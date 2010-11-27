@@ -50,7 +50,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					var project = "";
 					if (runInfo.Project != null)
 						project = runInfo.Project.Key;
-	                results.Add(new TestRunResults(project, runInfo.Assembly, new TestResult[] { }));
+	                results.Add(new TestRunResults(project, runInfo.Assembly, false, new TestResult[] { }));
 					continue;
 				}
 	
@@ -71,7 +71,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            proc.WaitForExit();
 	            var parser = new NUnitTestResponseParser(_bus);
 	            using (TextReader reader = new StreamReader(resultFile))
-	                parser.Parse(reader.ReadToEnd(), runInfos);
+	                parser.Parse(reader.ReadToEnd(), runInfos, false);
 	            File.Delete(resultFile);
 				foreach (var result in parser.Result)
 		            results.Add(result);

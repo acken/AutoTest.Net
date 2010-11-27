@@ -17,7 +17,7 @@ namespace AutoTest.Test.Core.TestRunners
          [SetUp]
          public void SetUp()
          {
-             _parser = new MSTestResponseParser("", "");
+             _parser = new MSTestResponseParser("", "", false);
          }
 
          [Test]
@@ -82,6 +82,16 @@ namespace AutoTest.Test.Core.TestRunners
              result.All[0].StackTrace[0].Method.ShouldEqual("Order.Test.UnitTest1.MyFourthTest()");
              result.All[0].StackTrace[0].File.ShouldEqual("c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs");
              result.All[0].StackTrace[0].LineNumber.ShouldEqual(99);
+         }
+
+         [Test]
+         public void Should_set_result_as_partial_when_partial_is_passed()
+         {
+             var isPartial = true;
+             var parser = new MSTestResponseParser("project", "assembly", isPartial);
+             var result = parser.Result;
+
+             result.IsPartialTestRun.ShouldBeTrue();
          }
     }
 }

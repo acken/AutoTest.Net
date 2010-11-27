@@ -122,12 +122,13 @@ namespace AutoTest.Test
 		public void Should_serialize_test_run_message()
 		{
 			var testResults = new TestResult[] { new TestResult(TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }) };
-			var results = new TestRunResults("project 1", "assembly", testResults);
+			var results = new TestRunResults("project 1", "assembly", false, testResults);
 			results.SetTimeSpent(new TimeSpan(12345));
 			var message = new TestRunMessage(results);
 			var output = serializeDeserialize<TestRunMessage>(message);
 			output.Results.Project.ShouldEqual("project 1");
 			output.Results.Assembly.ShouldEqual("assembly");
+            output.Results.IsPartialTestRun.ShouldBeFalse();
 			output.Results.TimeSpent.ShouldEqual(new TimeSpan(12345));
 			output.Results.All.Length.ShouldEqual(1);
 			output.Results.All[0].Status.ShouldEqual(TestRunStatus.Passed);

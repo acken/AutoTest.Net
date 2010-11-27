@@ -24,7 +24,7 @@ namespace AutoTest.Test
 					new TestRunInfo(new Project("project2", null), "/home/ack/src/AutoTest.Net/src/AutoTest.Test/bin/Debug/AutoTest.Test.dll"),
 					new TestRunInfo(new Project("project3", null), "/home/ack/src/AutoTest.Net/src/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll")
 				};
-			_parser.Parse(File.ReadAllText("TestResources/NUnit/NewOutput.txt"), sources);
+			_parser.Parse(File.ReadAllText("TestResources/NUnit/NewOutput.txt"), sources, false);
         }
 
 		[Test]

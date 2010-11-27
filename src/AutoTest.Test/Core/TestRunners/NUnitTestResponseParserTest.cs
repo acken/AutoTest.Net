@@ -27,7 +27,7 @@ namespace AutoTest.Test.Core.TestRunners
 				{ 
 					new TestRunInfo(new Project("project1", null), "/SomePath/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll")
 				};
-			_parser.Parse(File.ReadAllText("TestResources/NUnit/singleAssembly.txt"), sources);
+			_parser.Parse(File.ReadAllText("TestResources/NUnit/singleAssembly.txt"), sources, true);
         }
 
         [Test]
@@ -79,5 +79,11 @@ namespace AutoTest.Test.Core.TestRunners
 		{
 			_parser.Result[0].TimeSpent.ShouldEqual(new TimeSpan(0, 0, 0, 2, 428));
 		}
+
+        [Test]
+        public void Should_set_result_as_partial_when_partial_is_passed()
+        {
+            _parser.Result[0].IsPartialTestRun.ShouldBeTrue();
+        }
     }
 }

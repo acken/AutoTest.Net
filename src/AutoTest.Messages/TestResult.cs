@@ -120,6 +120,6 @@ namespace AutoTest.Messages
 			_stackTrace = stackTrace.ToArray();
 		}
 		#endregion
-}
+    }
 }
 

@@ -23,7 +23,7 @@ namespace AutoTest.Test.Core.TestRunners
 					new TestRunInfo(new Project("project1", null), "/SomePath/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll"),
 					new TestRunInfo(new Project("project2", null), "/SomePath/AutoTest.Console.Test/bin/Debug/AutoTest.Console.Test.dll")
 				};
-			_parser.Parse(File.ReadAllText("TestResources/NUnit/multipleAssemblies.txt"), sources);
+			_parser.Parse(File.ReadAllText("TestResources/NUnit/multipleAssemblies.txt"), sources, false);
         }
 
 		[Test]
