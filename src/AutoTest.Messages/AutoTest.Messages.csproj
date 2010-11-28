@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5352CB10-E898-4089-BFF0-79D635FB44C9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="RunFinishedMessage.cs" />
     <Compile Include="RunStartedMessage.cs" />
     <Compile Include="TestRunMessage.cs" />
+    <Compile Include="TestRunner.cs" />
     <Compile Include="TestRunResults.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="IStackLine.cs" />
@@ -63,7 +66,4 @@
     <Compile Include="Link.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Serializers\" />
-  </ItemGroup>
 </Project>

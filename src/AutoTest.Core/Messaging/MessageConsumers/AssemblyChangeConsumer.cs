@@ -67,7 +67,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (runner.CanHandleTestFor(runInfo.Assembly))
                 {
                     var testRunInfo = new TestRunInfo(null, runInfo.Assembly);
-                    testRunInfo.AddTestsToRun(runInfo.TestsToRun);
+                    testRunInfo.AddTestsToRun(runInfo.GetTests());
                     testRunInfos.Add(testRunInfo);
                 }
 			}

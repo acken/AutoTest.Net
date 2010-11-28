@@ -112,7 +112,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
 				{
-                    if (runInfo.OnlyRunSpcifiedTests && runInfo.TestsToRun.Length.Equals(0))
+                    if (runInfo.OnlyRunSpcifiedTests && runInfo.GetTestsFor(TestRunner.NUnit).Length.Equals(0))
                         continue;
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
 					var assemblyTests = getTestsList(runInfo);
@@ -150,7 +150,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		private string getTestsList(TestRunInfo runInfo)
 		{
 			var tests = "";
-			foreach (var test in runInfo.TestsToRun)
+			foreach (var test in runInfo.GetTestsFor(TestRunner.NUnit))
 				tests += (tests.Length > 0 ? "," : "") + test;
 			return tests;
 		}

@@ -18,8 +18,8 @@ namespace AutoTest.Core.TestRunners
 		{
 			foreach (var info in details)
 			{
-				info.AddTestsToRun(getTestsFor(info, _resultCache.Failed));
-				info.AddTestsToRun(getTestsFor(info, _resultCache.Ignored));
+				info.AddTestsToRun(TestRunner.Unknown, getTestsFor(info, _resultCache.Failed));
+                info.AddTestsToRun(TestRunner.Unknown, getTestsFor(info, _resultCache.Ignored));
 				info.ShouldOnlyRunSpcifiedTests();
 				info.RerunAllTestWhenFinished();
 			}

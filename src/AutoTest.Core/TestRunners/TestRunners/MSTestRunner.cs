@@ -54,7 +54,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					continue;
 				}
 				
-                if (runInfo.OnlyRunSpcifiedTests && runInfo.TestsToRun.Length.Equals(0))
+                if (runInfo.OnlyRunSpcifiedTests && runInfo.GetTestsFor(TestRunner.MSTest).Length.Equals(0))
                     continue;
 				var calc = new MaxCmdLengthCalculator();
 				var tests = getTestsList(runInfo);
@@ -89,7 +89,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		private string getTestsList(TestRunInfo runInfo)
 		{
 			var tests = "";
-			foreach (var test in runInfo.TestsToRun)
+			foreach (var test in runInfo.GetTestsFor(TestRunner.MSTest))
 				tests += string.Format("/run:{0} ", test);
 			return tests;
 		}

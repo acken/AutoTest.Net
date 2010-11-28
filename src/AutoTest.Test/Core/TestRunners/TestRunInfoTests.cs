@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Messages;
 namespace AutoTest.Test
 {
 	[TestFixture]
@@ -18,10 +19,12 @@ namespace AutoTest.Test
 		[Test]
 		public void Should_add_multiple_tests()
 		{
-			_info.AddTestsToRun(new string[] { "MyAssembly.MyClass.MyTest", "MyAssembly2.Class.AnotherTest" });
-			_info.TestsToRun.Length.ShouldEqual(2);
-			_info.TestsToRun[0].ShouldEqual("MyAssembly.MyClass.MyTest");
-			_info.TestsToRun[1].ShouldEqual("MyAssembly2.Class.AnotherTest");
+			_info.AddTestsToRun(new TestToRun[] { new TestToRun(TestRunner.MSTest, "MyAssembly.MyClass.MyTest"), new TestToRun(TestRunner.NUnit, "MyAssembly2.Class.AnotherTest") });
+			_info.GetTests().Length.ShouldEqual(2);
+            _info.GetTests()[0].Runner.ShouldEqual(TestRunner.MSTest);
+            _info.GetTests()[0].Test.ShouldEqual("MyAssembly.MyClass.MyTest");
+            _info.GetTests()[1].Runner.ShouldEqual(TestRunner.NUnit);
+            _info.GetTests()[1].Test.ShouldEqual("MyAssembly2.Class.AnotherTest");
 		}
 	}
 }

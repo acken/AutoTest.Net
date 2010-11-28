@@ -30,9 +30,9 @@ namespace AutoTest.Test
 			details.SetAssembly("assembly");
 			
 			_preProcessor.PreProcess(new RunInfo[] { details });
-			details.TestsToRun.Length.ShouldEqual(2);
-			details.TestsToRun[0].ShouldEqual("sometests");
-			details.TestsToRun[1].ShouldEqual("someignoredtests");
+			details.GetTests().Length.ShouldEqual(2);
+            details.GetTests()[0].Test.ShouldEqual("sometests");
+            details.GetTests()[1].Test.ShouldEqual("someignoredtests");
 			details.OnlyRunSpcifiedTests.ShouldBeTrue();
 			details.RerunAllWhenFinished.ShouldBeTrue();
 		}

@@ -116,7 +116,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     if (runner.CanHandleTestFor(project.Value))
                     {
                         var runInfo = new TestRunInfo(project, assembly);
-                        runInfo.AddTestsToRun(file.TestsToRun);
+                        runInfo.AddTestsToRun(file.GetTests());
                         if (file.OnlyRunSpcifiedTests)
                             runInfo.ShouldOnlyRunSpcifiedTests();
 						if (file.RerunAllWhenFinished)
