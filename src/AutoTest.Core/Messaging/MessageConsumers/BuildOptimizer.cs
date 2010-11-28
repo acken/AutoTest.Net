@@ -34,37 +34,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				runList.Add(new RunInfo(_cache.Get<Project>(project)));
 			return runList;
 		}
-		
-		private void markProjectsForBuild(List<RunInfo> runList)
-		{
-			var shouldBuild = runList.Where<RunInfo>(r => r.Project.Value.ReferencedBy.Length.Equals(0)).ToArray();
-			foreach (var item in shouldBuild)
-				item.ShouldBuild();
-		}
-		
-		private void locateAssemblyDestinations(List<RunInfo> runList)
-		{
-			for (int i = runList.Count - 1; i >= 0; i--)
-			{
-				var item = runList[i];
-				if (!item.ShouldBeBuilt)
-					continue;
-				item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
-				setAssemblyDestinationsRecursive(runList, item.Project, Path.GetDirectoryName(item.Assembly));
-			}
-		}
-		
-		private void setAssemblyDestinationsRecursive(List<RunInfo> runList, Project item, string assemblyPath)
-		{
-			var builtBy = runList.Where<RunInfo>(r => r.Project.Value.ReferencedBy.Contains(item.Key));
-			foreach (var project in builtBy)
-			{
-				if (project.Assembly != null)
-					continue;
-				project.SetAssembly(Path.Combine(assemblyPath, project.Project.Value.AssemblyName));
-				setAssemblyDestinationsRecursive(runList, project.Project, assemblyPath);
-			}
-		}
+
+        private void markProjectsForBuild(List<RunInfo> runList)
+        {
+            var shouldBuild = runList.Where<RunInfo>(r => r.Project.Value.ReferencedBy.Length.Equals(0)).ToArray();
+            foreach (var item in shouldBuild)
+                item.ShouldBuild();
+        }
+
+        private void locateAssemblyDestinations(List<RunInfo> runList)
+        {
+            for (int i = runList.Count - 1; i >= 0; i--)
+            {
+                var item = runList[i];
+                item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
+            }
+        }
 	}
 }
 

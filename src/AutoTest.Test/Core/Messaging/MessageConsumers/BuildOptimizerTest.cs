@@ -44,10 +44,12 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			var document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReferencedBy(new string[] { projectList[2], projectList[6] });
 			document.SetAssemblyName("Project0.dll");
+            document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
 			_cache.Stub(c => c.Get<Project>(projectList[0])).Return(new Project(projectList[0], document));
 			document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReferencedBy(projectList[3]);
 			document.SetAssemblyName("Project1.dll");
+            document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
 			_cache.Stub(c => c.Get<Project>(projectList[1])).Return(new Project(projectList[1], document));
 			document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReference(projectList[0]);
@@ -58,6 +60,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			document.AddReference(projectList[1]);
 			document.AddReferencedBy(projectList[4]);
 			document.SetAssemblyName("Project3.dll");
+            document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
 			_cache.Stub(c => c.Get<Project>(projectList[3])).Return(new Project(projectList[3], document));
 			document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReference(new string[] { projectList[6], projectList[3] });
@@ -73,6 +76,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			document.AddReference(projectList[0]);
 			document.AddReferencedBy(new string[] { projectList[4], projectList[5] });
 			document.SetAssemblyName("Project6.dll");
+            document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
 			_cache.Stub(c => c.Get<Project>(projectList[6])).Return(new Project(projectList[6], document));
 			                                                                                                                                                                                                                                                                                                                        
 			_optimizer = new BuildOptimizer(_cache, MockRepository.GenerateMock<IConfiguration>());
@@ -92,15 +96,15 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		}
 		
 		[Test]
-		public void Should_set_assembly_path_to_build_source()
+		public void Should_set_assembly_path_to_assembly_path()
 		{
-			_runInfos[0].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
-			_runInfos[1].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
+			_runInfos[0].Assembly.ShouldEqual(string.Format("Proj0{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
+			_runInfos[1].Assembly.ShouldEqual(string.Format("Proj1{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
 			_runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
-			_runInfos[3].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
+			_runInfos[3].Assembly.ShouldEqual(string.Format("Proj3{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
 			_runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
 			_runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
-			_runInfos[6].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
+			_runInfos[6].Assembly.ShouldEqual(string.Format("Proj6{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
 		}
 	}
 }
