@@ -82,6 +82,7 @@ namespace AutoTest.Test.Core.TestRunners
              result.All[0].StackTrace[0].Method.ShouldEqual("Order.Test.UnitTest1.MyFourthTest()");
              result.All[0].StackTrace[0].File.ShouldEqual("c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs");
              result.All[0].StackTrace[0].LineNumber.ShouldEqual(99);
+             result.All[0].StackTrace[0].ToString().ShouldEqual("at Order.Test.UnitTest1.MyFourthTest() in c:\\Users\\sveina\\src\\DotNET\\Private\\TDDPeering_Internals - Copy (2)\\Order.Test\\UnitTest1.cs:line 99");
          }
 
          [Test]
