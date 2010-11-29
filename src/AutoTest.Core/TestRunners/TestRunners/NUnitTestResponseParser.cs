@@ -20,11 +20,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		private string _content;
 		private TestRunInfo[] _testSources;
         private bool _isPartialTestRuns = false;
+        private TestRunner _runner;
 
         public TestRunResults[] Result { get { return _runResults.ToArray(); } }
 
-        public NUnitTestResponseParser(IMessageBus bus)
+        public NUnitTestResponseParser(IMessageBus bus, TestRunner runner)
         {
+            _runner = runner;
             _bus = bus;
         }
 
@@ -59,7 +61,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	                IStackLine[] stackTrace = new IStackLine[] {};
 	                if (status.Equals(TestRunStatus.Failed))
 	                    stackTrace = getStackTrace(testCase);
-	                _result.Add(new TestResult(status, name, message, stackTrace));
+	                _result.Add(new TestResult(_runner, status, name, message, stackTrace));
 	            }
 				var runInfo = matchToTestSource(testSuite);
 				if (runInfo ==  null)

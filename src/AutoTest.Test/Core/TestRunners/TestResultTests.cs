@@ -14,19 +14,19 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_map_passed()
         {
-            new TestResult(TestRunStatus.Passed, String.Empty).Status.ShouldEqual(TestRunStatus.Passed);
+            new TestResult(TestRunner.NUnit, TestRunStatus.Passed, String.Empty).Status.ShouldEqual(TestRunStatus.Passed);
         }
 
         [Test]
         public void Should_map_failed()
         {
-            new TestResult(TestRunStatus.Failed, String.Empty).Status.ShouldEqual(TestRunStatus.Failed);
+            new TestResult(TestRunner.NUnit, TestRunStatus.Failed, String.Empty).Status.ShouldEqual(TestRunStatus.Failed);
         }
 
         [Test]
         public void Should_map_ignored()
         {
-            new TestResult(TestRunStatus.Ignored, String.Empty).Status.ShouldEqual(TestRunStatus.Ignored);
+            new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, String.Empty).Status.ShouldEqual(TestRunStatus.Ignored);
         }
 
         [Test]
@@ -48,22 +48,22 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_map_message()
         {
-            new TestResult(TestRunStatus.Failed, "asdf").Name.ShouldEqual("asdf");
+            new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "asdf").Name.ShouldEqual("asdf");
         }
 
         [Test]
         public void Should_be_equal()
         {
-            var result1 = new TestResult(TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
-            var result2 = new TestResult(TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
+            var result1 = new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
+            var result2 = new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
             result1.Equals(result2).ShouldBeTrue();
         }
 
         [Test]
         public void Should_not_be_equal()
         {
-            var result1 = new TestResult(TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
-            var result2 = new TestResult(TestRunStatus.Failed, "another test name", "test message", new IStackLine[] { });
+            var result1 = new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "test name", "test message", new IStackLine[] { });
+            var result2 = new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "another test name", "test message", new IStackLine[] { });
             result1.Equals(result2).ShouldBeFalse();
         }
     }

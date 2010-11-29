@@ -69,7 +69,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            // Make sure we empty buffer
 	            proc.StandardOutput.ReadToEnd();
 	            proc.WaitForExit();
-	            var parser = new NUnitTestResponseParser(_bus);
+	            var parser = new NUnitTestResponseParser(_bus, TestRunner.XUnit);
 	            using (TextReader reader = new StreamReader(resultFile))
 	                parser.Parse(reader.ReadToEnd(), runInfos, false);
 	            File.Delete(resultFile);

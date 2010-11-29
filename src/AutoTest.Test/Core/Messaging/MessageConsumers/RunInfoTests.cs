@@ -53,7 +53,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         [Test]
         public void Should_run_only_specified_tests_for_all_types()
         {
-            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.All);
+            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
             _info.OnlyRunSpcifiedTestsFor(TestRunner.NUnit).ShouldBeTrue();
         }
 
@@ -67,7 +67,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         [Test]
         public void Should_rerun_all_tests_for_all_types()
         {
-            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.All);
+            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
             _info.RerunAllTestWhenFinishedFor(TestRunner.NUnit).ShouldBeTrue();
         }
 
@@ -76,7 +76,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         {
             _info.AddTestsToRun(TestRunner.MSTest, "MyAssembly.MyClass.MyTest");
             _info.AddTestsToRun(TestRunner.NUnit, "MyAssembly2.Class.AnotherTest");
-            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.All);
+            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
             _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.MSTest);
             _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.XUnit);
             var testInfo = _info.CloneToTestRunInfo();
@@ -90,7 +90,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             testInfo.RerunAllTestWhenFinishedFor(TestRunner.MSTest).ShouldBeTrue();
             testInfo.RerunAllTestWhenFinishedFor(TestRunner.XUnit).ShouldBeTrue();
             testInfo.RerunAllTestWhenFinishedFor(TestRunner.NUnit).ShouldBeFalse();
-            testInfo.RerunAllTestWhenFinishedFor(TestRunner.All).ShouldBeFalse();
+            testInfo.RerunAllTestWhenFinishedFor(TestRunner.Any).ShouldBeFalse();
             testInfo.RerunAllTestWhenFinishedForAny().ShouldBeTrue();
         }
     }

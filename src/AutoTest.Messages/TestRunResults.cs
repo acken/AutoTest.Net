@@ -65,7 +65,7 @@ namespace AutoTest.Messages
 			var count = reader.ReadInt32();
 			for (int i = 0; i < count; i++)
 			{
-				var result = new TestResult(TestRunStatus.Ignored, "");
+				var result = new TestResult(TestRunner.Any, TestRunStatus.Ignored, "");
 				result.SetDataFrom(reader);
 				results.Add(result);
 			}

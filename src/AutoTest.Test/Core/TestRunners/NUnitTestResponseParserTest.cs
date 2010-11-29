@@ -10,6 +10,7 @@ using AutoTest.Core.Messaging;
 using System.IO;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Messages;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -22,7 +23,7 @@ namespace AutoTest.Test.Core.TestRunners
         public void SetUp()
         {
             var bus = MockRepository.GenerateMock<IMessageBus>();
-            _parser = new NUnitTestResponseParser(bus);
+            _parser = new NUnitTestResponseParser(bus, TestRunner.NUnit);
 			var sources = new TestRunInfo[]
 				{ 
 					new TestRunInfo(new Project("project1", null), "/SomePath/AutoTest.WinForms.Test/bin/Debug/AutoTest.WinForms.Test.dll")

@@ -6,6 +6,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching.Projects;
 using System.IO;
 using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 namespace AutoTest.Test
 {
 	[TestFixture]
@@ -17,7 +18,7 @@ namespace AutoTest.Test
         public void SetUp()
         {
             var bus = MockRepository.GenerateMock<IMessageBus>();
-            _parser = new NUnitTestResponseParser(bus);
+            _parser = new NUnitTestResponseParser(bus, TestRunner.NUnit);
 			var sources = new TestRunInfo[]
 				{ 
 					new TestRunInfo(new Project("project1", null), "/home/ack/src/AutoTest.Net/src/AutoTest.TestCore/bin/Debug/AutoTest.TestCore.dll"),

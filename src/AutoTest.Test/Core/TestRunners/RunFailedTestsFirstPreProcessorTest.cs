@@ -24,8 +24,8 @@ namespace AutoTest.Test
 		[Test]
 		public void Should_run_cached_failed_and_ignored_tests_and_mark_for_rerun()
 		{
-			_resultCache.Stub(r => r.Failed).Return(new TestItem[] { new TestItem("assembly", "project", new TestResult(TestRunStatus.Failed, "sometests")) });
-			_resultCache.Stub(r => r.Ignored).Return(new TestItem[] { new TestItem("assembly", "project", new TestResult(TestRunStatus.Ignored, "someignoredtests")) });
+			_resultCache.Stub(r => r.Failed).Return(new TestItem[] { new TestItem("assembly", "project", new TestResult(TestRunner.MSTest, TestRunStatus.Failed, "sometests")) });
+			_resultCache.Stub(r => r.Ignored).Return(new TestItem[] { new TestItem("assembly", "project", new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "someignoredtests")) });
 			var details = new RunInfo(new Project("project", new ProjectDocument(ProjectType.CSharp)));
 			details.SetAssembly("assembly");
 			
@@ -33,8 +33,8 @@ namespace AutoTest.Test
 			details.GetTests().Length.ShouldEqual(2);
             details.GetTests()[0].Test.ShouldEqual("sometests");
             details.GetTests()[1].Test.ShouldEqual("someignoredtests");
-			details.OnlyRunSpcifiedTestsFor(TestRunner.All).ShouldBeTrue();
-			details.RerunAllTestWhenFinishedFor(TestRunner.All).ShouldBeTrue();
+			details.OnlyRunSpcifiedTestsFor(TestRunner.Any).ShouldBeTrue();
+			details.RerunAllTestWhenFinishedFor(TestRunner.Any).ShouldBeTrue();
 		}
 	}
 }

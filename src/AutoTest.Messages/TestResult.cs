@@ -5,6 +5,7 @@ namespace AutoTest.Messages
 {
 	public class TestResult : ICustomBinarySerializable
 	{
+        private TestRunner _runner;
 		private TestRunStatus _status;
         private string _name;
         private string _message = "";
@@ -27,24 +28,27 @@ namespace AutoTest.Messages
         /// <returns>A failed result</returns>
         public static TestResult Fail(string message)
         {
-            return new TestResult(TestRunStatus.Failed, message);
+            return new TestResult(TestRunner.Any, TestRunStatus.Failed, message);
         }
 
-        public TestResult(TestRunStatus status, string name)
+        public TestResult(TestRunner runner, TestRunStatus status, string name)
         {
+            _runner = runner;
             _name = name;
             _status = status;
         }
 
-        public TestResult(TestRunStatus status, string name, string message)
+        public TestResult(TestRunner runner, TestRunStatus status, string name, string message)
         {
+            _runner = runner;
             _status = status;
             _name = name;
             _message = message;
         }
 
-        public TestResult(TestRunStatus status, string name, string message, IStackLine[] stackTrace)
+        public TestResult(TestRunner runner, TestRunStatus status, string name, string message, IStackLine[] stackTrace)
         {
+            _runner = runner;
             _status = status;
             _name = name;
             _message = message;
@@ -53,7 +57,12 @@ namespace AutoTest.Messages
 
         static TestResult()
         {
-            _passResult = new TestResult(TestRunStatus.Passed, string.Empty);
+            _passResult = new TestResult(TestRunner.Any, TestRunStatus.Passed, string.Empty);
+        }
+
+        public TestRunner Runner
+        {
+            get { return _runner; }
         }
 
         public TestRunStatus Status
@@ -84,12 +93,13 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}|{2}|{3}", _status, _name, _message, _stackTrace).GetHashCode();
+            return string.Format("{0}|{1}|{2}|{3}|{4}", _runner, _status, _name, _message, _stackTrace).GetHashCode();
         }
 
 		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
+            writer.Write((int)_runner);
 			writer.Write((int) _status);
 			writer.Write((string) _name);
 			writer.Write((string) _message);
@@ -105,6 +115,7 @@ namespace AutoTest.Messages
 		public void SetDataFrom(BinaryReader reader)
 		{
 			var stackTrace = new List<IStackLine>();
+            _runner = (TestRunner)reader.ReadInt32();
 			_status = (TestRunStatus) reader.ReadInt32();
 			_name = reader.ReadString();
 			_message = reader.ReadString();

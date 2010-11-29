@@ -60,7 +60,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
         {
-            if (_onlyRunTestsFor.Contains(TestRunner.All))
+            if (_onlyRunTestsFor.Contains(TestRunner.Any))
                 return true;
             return _onlyRunTestsFor.Contains(runner);
         }
@@ -73,7 +73,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public bool RerunAllTestWhenFinishedFor(TestRunner runner)
         {
-            if (_rerunAllWhenFinishedFor.Contains(TestRunner.All))
+            if (_rerunAllWhenFinishedFor.Contains(TestRunner.Any))
                 return true;
             return _rerunAllWhenFinishedFor.Contains(runner);
         }
@@ -92,7 +92,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public string[] GetTestsFor(TestRunner runner)
         {
             var query = from t in _testsToRun
-                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.All)
+                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Any)
                         select t.Test;
             return query.ToArray();
         }

@@ -64,7 +64,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void addResult(string line, TestRunStatus status, string lineStart)
         {
-            _result.Add(new TestResult(status, getChunk(line, lineStart)));
+            _result.Add(new TestResult(TestRunner.MSTest, status, getChunk(line, lineStart)));
             _lastParsed = lineStart;
         }
 

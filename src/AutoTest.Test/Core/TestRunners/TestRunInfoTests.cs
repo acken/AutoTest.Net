@@ -37,7 +37,7 @@ namespace AutoTest.Test
         [Test]
         public void Should_run_only_specified_tests_for_all_types()
         {
-            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.All);
+            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
             _info.OnlyRunSpcifiedTestsFor(TestRunner.NUnit).ShouldBeTrue();
         }
 
@@ -51,7 +51,7 @@ namespace AutoTest.Test
         [Test]
         public void Should_rerun_all_tests_for_all_types()
         {
-            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.All);
+            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
             _info.RerunAllTestWhenFinishedFor(TestRunner.NUnit).ShouldBeTrue();
         }
 
