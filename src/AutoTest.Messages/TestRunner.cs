@@ -7,7 +7,7 @@ namespace AutoTest.Messages
 {
     public enum TestRunner
     {
-        Unknown,
+        All,
         NUnit,
         MSTest,
         XUnit

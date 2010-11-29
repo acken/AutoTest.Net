@@ -33,8 +33,8 @@ namespace AutoTest.Test
 			details.GetTests().Length.ShouldEqual(2);
             details.GetTests()[0].Test.ShouldEqual("sometests");
             details.GetTests()[1].Test.ShouldEqual("someignoredtests");
-			details.OnlyRunSpcifiedTests.ShouldBeTrue();
-			details.RerunAllWhenFinished.ShouldBeTrue();
+			details.OnlyRunSpcifiedTestsFor(TestRunner.All).ShouldBeTrue();
+			details.RerunAllTestWhenFinishedFor(TestRunner.All).ShouldBeTrue();
 		}
 	}
 }

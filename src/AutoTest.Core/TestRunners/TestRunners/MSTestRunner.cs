@@ -54,7 +54,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					continue;
 				}
 				
-                if (runInfo.OnlyRunSpcifiedTests && runInfo.GetTestsFor(TestRunner.MSTest).Length.Equals(0))
+                if (runInfo.OnlyRunSpcifiedTestsFor(TestRunner.MSTest) && runInfo.GetTestsFor(TestRunner.MSTest).Length.Equals(0))
                     continue;
 				var calc = new MaxCmdLengthCalculator();
 				var tests = getTestsList(runInfo);

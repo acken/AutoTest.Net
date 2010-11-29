@@ -26,6 +26,41 @@ namespace AutoTest.Test
             _info.GetTests()[1].Runner.ShouldEqual(TestRunner.NUnit);
             _info.GetTests()[1].Test.ShouldEqual("MyAssembly2.Class.AnotherTest");
 		}
+
+        [Test]
+        public void Should_run_only_specified_tests_for_spesific_type()
+        {
+            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.NUnit);
+            _info.OnlyRunSpcifiedTestsFor(TestRunner.NUnit).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_run_only_specified_tests_for_all_types()
+        {
+            _info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.All);
+            _info.OnlyRunSpcifiedTestsFor(TestRunner.NUnit).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_rerun_all_tests_for_spesific_type()
+        {
+            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.NUnit);
+            _info.RerunAllTestWhenFinishedFor(TestRunner.NUnit).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_rerun_all_tests_for_all_types()
+        {
+            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.All);
+            _info.RerunAllTestWhenFinishedFor(TestRunner.NUnit).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_rerun_all_tests_for_any_types()
+        {
+            _info.ShouldRerunAllTestWhenFinishedFor(TestRunner.NUnit);
+            _info.RerunAllTestWhenFinishedForAny().ShouldBeTrue();
+        }
 	}
 }
 

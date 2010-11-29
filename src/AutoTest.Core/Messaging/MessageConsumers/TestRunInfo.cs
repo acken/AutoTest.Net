@@ -8,19 +8,19 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	public class TestRunInfo
 	{
 		private List<TestToRun> _testsToRun;
+        private List<TestRunner> _onlyRunTestsFor;
+        private List<TestRunner> _rerunAllWhenFinishedFor;
 		
 		public Project Project { get; private set; }
 		public string Assembly { get; private set; }
-        public bool OnlyRunSpcifiedTests { get; private set; }
-		public bool RerunAllWhenFinished { get; private set; }
 		
 		public TestRunInfo(Project project, string assembly)
 		{
 			Project = project;
 			Assembly = assembly;
             _testsToRun = new List<TestToRun>();
-            OnlyRunSpcifiedTests = false;
-			RerunAllWhenFinished = false;
+            _onlyRunTestsFor = new List<TestRunner>();
+            _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
 
         public void AddTestsToRun(TestToRun[] tests)
@@ -28,15 +28,31 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _testsToRun.AddRange(tests);
         }
 
-        public void ShouldOnlyRunSpcifiedTests()
+        public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
         {
-            OnlyRunSpcifiedTests = true;
+            if (_onlyRunTestsFor.Contains(TestRunner.All))
+                return true;
+            return _onlyRunTestsFor.Contains(runner);
         }
-		
-		public void RerunAllTestWhenFinished()
-		{
-			RerunAllWhenFinished = true;
-		}
+
+        public void ShouldOnlyRunSpcifiedTestsFor(TestRunner runner)
+        {
+            if (!_onlyRunTestsFor.Exists(r => r.Equals(runner)))
+                _onlyRunTestsFor.Add(runner);
+        }
+
+        public bool RerunAllTestWhenFinishedFor(TestRunner runner)
+        {
+            if (_rerunAllWhenFinishedFor.Contains(TestRunner.All))
+                return true;
+            return _rerunAllWhenFinishedFor.Contains(runner);
+        }
+
+        public void ShouldRerunAllTestWhenFinishedFor(TestRunner runner)
+        {
+            if (!_rerunAllWhenFinishedFor.Contains(runner))
+                _rerunAllWhenFinishedFor.Add(runner);
+        }
 
         public TestToRun[] GetTests()
         {
@@ -46,9 +62,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public string[] GetTestsFor(TestRunner runner)
         {
             var query = from t in _testsToRun
-                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Unknown)
+                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.All)
                         select t.Test;
             return query.ToArray();
+        }
+
+        public bool RerunAllTestWhenFinishedForAny()
+        {
+            return _rerunAllWhenFinishedFor.Count > 0;
         }
 	}
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -99,6 +99,7 @@
     <Compile Include="Core\Messaging\Fakes\FakeProjectLocator.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\ProjectChangeConsumerTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\ReferencePrioritizerTest.cs" />
+    <Compile Include="Core\Messaging\MessageConsumers\RunInfoTests.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\RunReportTest.cs" />
     <Compile Include="Core\Messaging\TestClasses\RunMessageConsumer.cs" />
     <Compile Include="Core\Messaging\TestClasses\InformationMessageConsumer.cs" />
@@ -202,7 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Caching\Crawlers\" />
-    <Folder Include="Core\Launchers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

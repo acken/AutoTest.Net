@@ -114,15 +114,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					if (!project.Value.ContainsTests)
 	                	continue;
                     if (runner.CanHandleTestFor(project.Value))
-                    {
-                        var runInfo = new TestRunInfo(project, assembly);
-                        runInfo.AddTestsToRun(file.GetTests());
-                        if (file.OnlyRunSpcifiedTests)
-                            runInfo.ShouldOnlyRunSpcifiedTests();
-						if (file.RerunAllWhenFinished)
-							runInfo.RerunAllTestWhenFinished();
-                        runInfos.Add(runInfo);
-                    }
+                        runInfos.Add(file.CloneToTestRunInfo());
 					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
 				}
 				if (runInfos.Count > 0)
@@ -132,7 +124,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					var rerunInfos = new List<TestRunInfo>();
 					foreach (var info in runInfos)
 					{
-						if (info.RerunAllWhenFinished)
+						if (info.RerunAllTestWhenFinishedForAny())
 							rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
 					}
 					if (rerunInfos.Count > 0)

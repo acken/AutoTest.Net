@@ -173,7 +173,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _testRunner.Stub(t => t.CanHandleTestFor(_project.Value)).Return(true);
             _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
                 .Return(new TestRunResults[] { new TestRunResults("", "", false, new TestResult[] {}) });
-			_runInfo.RerunAllTestWhenFinished();
+			_runInfo.ShouldRerunAllTestWhenFinishedFor(TestRunner.All);
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));
