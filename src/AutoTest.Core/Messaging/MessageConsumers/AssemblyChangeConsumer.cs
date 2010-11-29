@@ -36,7 +36,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void preProcess(RunInfo[] runInfos)
         {
             foreach (var preProcessor in _preProcessors)
-                preProcessor.PreProcess(runInfos);
+                runInfos = preProcessor.PreProcess(runInfos);
         }
 		private RunInfo[] getRunInfos(AssemblyChangeMessage message)
 

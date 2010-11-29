@@ -6,8 +6,9 @@ namespace AutoTest.Core.TestRunners
 	class NullPreProcessor : IPreProcessTestruns
 	{
 		#region IPreProcessTestruns implementation
-		public void PreProcess(RunInfo[] details)
+        public RunInfo[] PreProcess(RunInfo[] details)
 		{
+            return details;
 		}
 
         public void RunFinished(TestRunResults[] results)

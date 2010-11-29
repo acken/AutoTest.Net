@@ -137,7 +137,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private RunInfo[] preProcessTestRun(RunInfo[] runInfos)
         {
             foreach (var preProcessor in _preProcessors)
-                preProcessor.PreProcess(runInfos);
+                runInfos = preProcessor.PreProcess(runInfos);
             return runInfos;
         }
 		

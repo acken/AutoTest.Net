@@ -16,7 +16,7 @@ namespace AutoTest.WinForms
     public class MessageRecievedEventArgs : EventArgs
     {
         public MessageType Type { get; private set; }
-
+        
         public MessageRecievedEventArgs(MessageType type)
         {
             Type = type;

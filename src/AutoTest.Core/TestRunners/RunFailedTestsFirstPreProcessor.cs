@@ -13,8 +13,8 @@ namespace AutoTest.Core.TestRunners
 		{
 			_resultCache = resultCache;
 		}
-		
-		public void PreProcess (RunInfo[] details)
+
+        public RunInfo[] PreProcess(RunInfo[] details)
 		{
 			foreach (var info in details)
 			{
@@ -23,6 +23,7 @@ namespace AutoTest.Core.TestRunners
 				info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
                 info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
 			}
+            return details;
 		}
 
 		public void RunFinished (TestRunResults[] results)

@@ -51,6 +51,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_runInfo.SetAssembly(_project.Value.AssemblyName);
 			_optimizer.Stub(o => o.AssembleBuildConfiguration(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             _preProcessor = MockRepository.GenerateMock<IPreProcessTestruns>();
+            _preProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             var preProcessors = new IPreProcessTestruns[] { _preProcessor };
             _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors);
         }
