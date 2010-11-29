@@ -35,8 +35,8 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
-                mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed, results.IsPartialTestRun);
-                mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed, results.IsPartialTestRun);
+                mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
+                mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
             }
         }
 
@@ -47,30 +47,20 @@ namespace AutoTest.Core.Caching.RunResultCache
                 list.Insert(0, new BuildItem(key, message));
         }
 
-        private void mergeTestList(List<TestItem> list, string key, string project, TestResult[] results, TestResult[] passingTests, bool isPartial)
-        {
-            if (isPartial)
-                mergePartialRunTestList(list, key, project, results, passingTests);
-            else
-                mergeFullRunTestList(list, key, project, results);
-        }
-
-        private void mergePartialRunTestList(List<TestItem> list, string key, string project, TestResult[] results, TestResult[] passingTests)
+        private void mergeTestList(List<TestItem> list, string key, string project, TestResult[] results, TestResult[] passingTests)
         {
             foreach (var test in passingTests)
-                list.RemoveAll(e => e.Value.Name.Equals(test.Name));
+                list.RemoveAll(e => compareTests(test, e, key));
             foreach (var test in results)
             {
-                if (!list.Exists(e => e.Value.Name.Equals(test.Name)))
+                if (!list.Exists(e => compareTests(test, e, key)))
                     list.Insert(0, new TestItem(key, project, test));
             }
         }
 
-        private void mergeFullRunTestList(List<TestItem> list, string key, string project, TestResult[] results)
+        private bool compareTests(TestResult test, TestItem e, string assembly)
         {
-            list.RemoveAll(e => e.Key.Equals(key));
-            foreach (var message in results)
-                list.Insert(0, new TestItem(key, project, message));
+            return e.Key.Equals(assembly) && e.Value.Name.Equals(test.Name) && e.Value.Runner.Equals(test.Runner);
         }
     }
 }
