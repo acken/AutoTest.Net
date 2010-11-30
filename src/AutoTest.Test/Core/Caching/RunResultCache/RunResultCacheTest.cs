@@ -258,25 +258,29 @@ namespace AutoTest.Test.Core.Caching
         }
 
         [Test]
-        public void Should_merge_pr_test_if_testrun_is_partial()
+        public void Should_merge_tests_going_from_failed_to_ignored()
         {
-            var results = new TestResult[]
-                              {
-                                  new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] {}),
-                                  new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name2", "Message", new IStackLine[] {}),
-                                  new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Another test", "Message", new IStackLine[] {})
-                              };
-            var runResults = new TestRunResults("project", "assembly", false, results);
+            var runResults = new TestRunResults("project", "assembly", false, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { }) });
             _runResultCache.Merge(runResults);
 
-            runResults = new TestRunResults("project", "assembly", true, new TestResult[]
-                                {
-                                    new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name2", "Message", new IStackLine[] {}),
-                                    new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "A totally different test", "Message", new IStackLine[] { })
-                                });
+            runResults = new TestRunResults("project", "assembly", true, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] {}) });
             _runResultCache.Merge(runResults);
 
-            _runResultCache.Ignored.Length.ShouldEqual(2);
+            _runResultCache.Ignored.Length.ShouldEqual(1);
+            _runResultCache.Failed.Length.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_merge_tests_going_from_ignored_to_failed()
+        {
+            var runResults = new TestRunResults("project", "assembly", false, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] { }) });
+            _runResultCache.Merge(runResults);
+
+            runResults = new TestRunResults("project", "assembly", true, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { }) });
+            _runResultCache.Merge(runResults);
+
+            _runResultCache.Ignored.Length.ShouldEqual(0);
+            _runResultCache.Failed.Length.ShouldEqual(1);
         }
     }
 }

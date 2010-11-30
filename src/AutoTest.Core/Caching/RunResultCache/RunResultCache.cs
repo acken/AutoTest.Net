@@ -35,6 +35,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
+                removeChanged(results);
                 mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
                 mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
             }
@@ -47,10 +48,21 @@ namespace AutoTest.Core.Caching.RunResultCache
                 list.Insert(0, new BuildItem(key, message));
         }
 
+        private void removeChanged(TestRunResults results)
+        {
+            foreach (var test in results.Passed)
+            {
+                _ignored.RemoveAll(e => compareTests(test, e, results.Assembly));
+                _failed.RemoveAll(e => compareTests(test, e, results.Assembly));
+            }
+            foreach (var test in results.Failed)
+                _ignored.RemoveAll(e => compareTests(test, e, results.Assembly));
+            foreach (var test in results.Ignored)
+                _failed.RemoveAll(e => compareTests(test, e, results.Assembly));
+        }
+
         private void mergeTestList(List<TestItem> list, string key, string project, TestResult[] results, TestResult[] passingTests)
         {
-            foreach (var test in passingTests)
-                list.RemoveAll(e => compareTests(test, e, key));
             foreach (var test in results)
             {
                 if (!list.Exists(e => compareTests(test, e, key)))
