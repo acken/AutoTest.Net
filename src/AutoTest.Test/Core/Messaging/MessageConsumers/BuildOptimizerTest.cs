@@ -50,6 +50,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			document.AddReferencedBy(projectList[3]);
 			document.SetAssemblyName("Project1.dll");
             document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
+			document.RebuildOnNextRun();
 			_cache.Stub(c => c.Get<Project>(projectList[1])).Return(new Project(projectList[1], document));
 			document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReference(projectList[0]);
@@ -71,6 +72,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			document.AddReference(projectList[6]);
 			document.SetAssemblyName("Project5.dll");
 			document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));
+			document.RebuildOnNextRun();
 			_cache.Stub(c => c.Get<Project>(projectList[5])).Return(new Project(projectList[5], document));
 			document = new ProjectDocument(ProjectType.CSharp);
 			document.AddReference(projectList[0]);
@@ -105,6 +107,18 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
 			_runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
 			_runInfos[6].Assembly.ShouldEqual(string.Format("Proj6{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
+		}
+		
+		[Test]
+		public void Should_rebuild_project_()
+		{
+			_runInfos[0].Project.Value.RequiresRebuild.ShouldBeFalse();
+			_runInfos[1].Project.Value.RequiresRebuild.ShouldBeTrue();
+			_runInfos[2].Project.Value.RequiresRebuild.ShouldBeFalse();
+			_runInfos[3].Project.Value.RequiresRebuild.ShouldBeFalse();
+			_runInfos[4].Project.Value.RequiresRebuild.ShouldBeTrue();
+			_runInfos[5].Project.Value.RequiresRebuild.ShouldBeTrue();
+			_runInfos[6].Project.Value.RequiresRebuild.ShouldBeFalse();
 		}
 	}
 }

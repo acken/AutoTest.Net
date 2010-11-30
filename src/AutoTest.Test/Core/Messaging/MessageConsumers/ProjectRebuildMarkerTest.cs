@@ -1,0 +1,49 @@
+using System;
+using NUnit.Framework;
+using AutoTest.Messages;
+using Rhino.Mocks;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
+using System.IO;
+using AutoTest.Core;
+namespace AutoTest.Test
+{
+	[TestFixture]
+	public class ProjectRebuildMarkerTest
+	{
+		[Test]
+		public void Should_mark_changed_csproj_files_for_rebuild()
+		{
+			var project = new Project("", new ProjectDocument(ProjectType.CSharp));
+			var cache = MockRepository.GenerateMock<ICache>();
+			var reloader = MockRepository.GenerateMock<IReload<Project>>();
+			cache.Stub(c => c.Get<Project>("")).IgnoreArguments().Return(project);
+			
+			var message = new FileChangeMessage();
+			
+			message.AddFile(new ChangedFile(string.Format("TestResources{0}CSharpClassLibrary{0}CSharpClassLibrary.csproj", Path.DirectorySeparatorChar)));
+			var marker = new ProjectRebuildMarker(cache, reloader);
+			marker.HandleProjects(message);
+			
+			project.Value.RequiresRebuild.ShouldBeTrue();
+		}
+		
+		[Test]
+		public void Should_mark_changed_vbproj_files_for_rebuild()
+		{
+			var project = new Project("", new ProjectDocument(ProjectType.VisualBasic));
+			var cache = MockRepository.GenerateMock<ICache>();
+			var reloader = MockRepository.GenerateMock<IReload<Project>>();
+			cache.Stub(c => c.Get<Project>("")).IgnoreArguments().Return(project);
+			
+			var message = new FileChangeMessage();
+			
+			message.AddFile(new ChangedFile(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar)));
+			var marker = new ProjectRebuildMarker(cache, reloader);
+			marker.HandleProjects(message);
+			
+			project.Value.RequiresRebuild.ShouldBeTrue();
+		}
+	}
+}
+

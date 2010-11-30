@@ -11,6 +11,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Messages;
+using AutoTest.Core;
 
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
@@ -28,7 +29,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _services = MockRepository.GenerateMock<IServiceLocator>();
             _cache = MockRepository.GenerateMock<ICache>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _subject = new FileChangeConsumer(_services, _bus, _cache);
+			var marker = MockRepository.GenerateMock<IMarkProjectsForRebuild>();
+            _subject = new FileChangeConsumer(_services, _bus, _cache, marker);
         }
 
         [Test]

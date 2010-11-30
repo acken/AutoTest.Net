@@ -20,6 +20,7 @@ namespace AutoTest.Core.Caching.Projects
         private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
+		private bool _requiresRebuild = false;
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
         public ProjectType Type { get { return _type; } }
@@ -35,6 +36,7 @@ namespace AutoTest.Core.Caching.Projects
         public bool ContainsXUnitTests { get { return _containsTestsFor.Contains(typeof (XUnitTestRunner)); } }
         public string[] References { get { return _references.ToArray(); } }
         public string[] ReferencedBy { get { return _referencedBy.ToArray(); } }
+		public bool RequiresRebuild { get { return _requiresRebuild; } }
 
         public ProjectDocument(ProjectType type)
         {
@@ -130,5 +132,10 @@ namespace AutoTest.Core.Caching.Projects
         {
             _vsVersion = version;
         }
+		
+		public void RebuildOnNextRun()
+		{
+			_requiresRebuild = true;
+		}
     }
 }
