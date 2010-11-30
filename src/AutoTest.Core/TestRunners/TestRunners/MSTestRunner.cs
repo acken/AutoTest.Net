@@ -90,7 +90,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		{
 			var tests = "";
 			foreach (var test in runInfo.GetTestsFor(TestRunner.MSTest))
-				tests += string.Format("/run:{0} ", test);
+				tests += string.Format("/test:{0} ", test);
 			return tests;
 		}
 		
