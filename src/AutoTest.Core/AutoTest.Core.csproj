@@ -161,6 +161,8 @@
     <Compile Include="DebugLog\DebugWriter.cs" />
     <Compile Include="TestRunners\TestRunners\RunnerExe.cs" />
     <Compile Include="Launchers\MaxCmdLengthCalculator.cs" />
+    <Compile Include="Messaging\MessageConsumers\ProjectRebuildMarker.cs" />
+    <Compile Include="Messaging\MessageConsumers\IMarkProjectsForRebuild.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

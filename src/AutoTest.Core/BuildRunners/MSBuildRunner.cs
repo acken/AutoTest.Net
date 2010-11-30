@@ -27,6 +27,8 @@ namespace AutoTest.Core.BuildRunners
             _buildExecutable = buildExecutable;
 			var properties = buildProperties(project);
             var arguments = string.Format("\"{0}\"", project.Key) + properties;
+			if (project.Value.RequiresRebuild)
+				arguments += " /target:rebuild";
             DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", _buildExecutable, arguments));
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(_buildExecutable, arguments);

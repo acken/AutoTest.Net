@@ -15,6 +15,7 @@ using AutoTest.Core.BuildRunners;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
+using AutoTest.Core;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -318,6 +319,13 @@ namespace AutoTest.Test.Core.Configuration
 		{
 			var configurer = _locator.Locate<ILocateWriteLocation>();
 			configurer.ShouldBeOfType<ILocateWriteLocation>();
+		}
+		
+		[Test]
+		public void Should_register_rebuild_marker()
+		{
+			var marker = _locator.Locate<IMarkProjectsForRebuild>();
+			marker.ShouldBeOfType<IMarkProjectsForRebuild>();
 		}
     }
 }

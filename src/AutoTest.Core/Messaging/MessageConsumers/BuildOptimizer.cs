@@ -23,6 +23,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		{
 			var runList = getRunInfoList(projectList);
 			markProjectsForBuild(runList);
+			detectProjectRebuilds(runList);
 			locateAssemblyDestinations(runList);
 			return runList.ToArray();
 		}
@@ -50,6 +51,28 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
             }
         }
+		
+		private void detectProjectRebuilds(List<RunInfo> runList)
+		{
+			var rebuilds = runList.Where<RunInfo>(r => r.Project.Value.RequiresRebuild);
+			foreach (var info in rebuilds)
+				markReferencedShouldBuildProjectsForRebuild(info, runList);
+			
+		}
+		
+		private void markReferencedShouldBuildProjectsForRebuild(RunInfo info, List<RunInfo> runList)
+		{
+			foreach (var reference in info.Project.Value.ReferencedBy)
+			{
+				var item = runList.Single(x => x.Project.Key.Equals(reference));
+				if (item.ShouldBeBuilt)
+				{
+					item.Project.Value.RebuildOnNextRun();
+					continue;
+				}
+				markReferencedShouldBuildProjectsForRebuild(item, runList);
+			}
+		}
 	}
 }
 
