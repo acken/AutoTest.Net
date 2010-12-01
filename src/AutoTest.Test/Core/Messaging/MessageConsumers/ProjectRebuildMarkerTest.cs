@@ -44,6 +44,23 @@ namespace AutoTest.Test
 			
 			project.Value.RequiresRebuild.ShouldBeTrue();
 		}
+
+        [Test]
+        public void Should_add_projects_that_doesnt_exist()
+        {
+            var project = new Project("", new ProjectDocument(ProjectType.VisualBasic));
+            var cache = MockRepository.GenerateMock<ICache>();
+            var reloader = MockRepository.GenerateMock<IReload<Project>>();
+            var message = new FileChangeMessage();
+            message.AddFile(new ChangedFile(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar)));
+            cache.Stub(c => c.Get<Project>(message.Files[0].FullName)).Return(null).Repeat.Once();
+            cache.Stub(c => c.Get<Project>(message.Files[0].FullName)).Return(project).Repeat.Once();
+
+            var marker = new ProjectRebuildMarker(cache, reloader);
+            marker.HandleProjects(message);
+
+            cache.AssertWasCalled(c => c.Add<Project>(message.Files[0].FullName));
+        }
 	}
 }
 

@@ -137,5 +137,10 @@ namespace AutoTest.Core.Caching.Projects
 		{
 			_requiresRebuild = true;
 		}
+
+        internal void HasBeenBuilt()
+        {
+            _requiresRebuild = false;
+        }
     }
 }

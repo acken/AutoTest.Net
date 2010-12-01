@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching
 {
-    interface IPrepare<T>
+    public interface IPrepare<T>
     {
         T Prepare(T record);
     }

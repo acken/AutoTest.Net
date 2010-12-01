@@ -21,6 +21,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IServiceLocator _services;
         private IMessageBus _bus;
         private FileChangeConsumer _subject;
+        private IMarkProjectsForRebuild _marker;
         private ICache _cache;
 
         [SetUp]
@@ -29,8 +30,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _services = MockRepository.GenerateMock<IServiceLocator>();
             _cache = MockRepository.GenerateMock<ICache>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-			var marker = MockRepository.GenerateMock<IMarkProjectsForRebuild>();
-            _subject = new FileChangeConsumer(_services, _bus, _cache, marker);
+			_marker = MockRepository.GenerateMock<IMarkProjectsForRebuild>();
+            _subject = new FileChangeConsumer(_services, _bus, _cache, _marker);
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         }
         
         [Test]
-        public void When_changed_file_is_project_mark_project_as_dirty()
+        public void When_changed_file_is_project_handle_it()
         {
             var locator = new FakeProjectLocator(new ChangedFile[] { new ChangedFile("someproject.csproj") });
             locator.WhenAskedIfFileIsProjectReturn(true);
@@ -108,19 +109,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             fileChange.AddFile(new ChangedFile("someproject.csproj"));
             _cache.Stub(c => c.Exists("someproject.csproj")).Return(true);
             _subject.Consume(fileChange);
-            _cache.AssertWasCalled(c => c.Reload<Project>("someproject.csproj"));
-        }
-
-        [Test]
-        public void When_changed_file_is_non_existing_project_add_project()
-        {
-            var locator = new FakeProjectLocator(new ChangedFile[] { new ChangedFile("someproject.csproj") });
-            locator.WhenAskedIfFileIsProjectReturn(true);
-            _services.Stub(s => s.LocateAll<ILocateProjects>()).Return(new ILocateProjects[] { locator });
-            var fileChange = new FileChangeMessage();
-            fileChange.AddFile(new ChangedFile("someproject.csproj"));
-            _subject.Consume(fileChange);
-            _cache.AssertWasCalled(c => c.Add<Project>("someproject.csproj"));
+            _marker.AssertWasCalled(m => m.HandleProjects(fileChange));
         }
     }
 }

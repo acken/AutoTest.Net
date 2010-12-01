@@ -8,10 +8,12 @@ namespace AutoTest.Core.Caching.Projects
     class ProjectReloader : IReload<Project>
     {
         private ICache _cache;
+        private IPrepare<Project> _preparer;
 
-        public ProjectReloader(ICache cache)
+        public ProjectReloader(ICache cache, IPrepare<Project> preparer)
         {
             _cache = cache;
+            _preparer = preparer;
         }
 
         #region IReload<Project> Members
@@ -21,8 +23,8 @@ namespace AutoTest.Core.Caching.Projects
             removeRemoteReferences(record);
             var referencedBys = record.Value.ReferencedBy;
             record.Reload();
-            record.Value.AddReferencedBy(referencedBys);
             _cache.Get<Project>(record.Key);
+            record.Value.AddReferencedBy(referencedBys);
         }
 
         #endregion

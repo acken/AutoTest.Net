@@ -56,8 +56,15 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
             if (!buildAll(list, runReport))
 				return runReport;
+            markAllAsBuilt(list);
 			testAll(list, runReport);
             return runReport;
+        }
+
+        private void markAllAsBuilt(RunInfo[] list)
+        {
+            foreach (var info in list)
+                info.Project.Value.HasBeenBuilt();
         }
 
         private string[] getListOfChangedProjects(ProjectChangeMessage message)

@@ -29,10 +29,16 @@ namespace AutoTest.Core
 			if (file.Extension.ToLower().Equals(extension))
 			{
 				var project = _cache.Get<Project>(file.FullName);
-				if (project == null)
-					return false;
-				_reloader.MarkAsDirty(project);
-				project = _cache.Get<Project>(file.FullName);
+                if (project == null)
+                {
+                    _cache.Add<Project>(file.FullName);
+                    project = _cache.Get<Project>(file.FullName);
+                }
+                else
+                {
+                    _cache.Reload<Project>(file.FullName);
+                    project = _cache.Get<Project>(file.FullName);
+                }
 				project.Value.RebuildOnNextRun();
 				return true;
 			}

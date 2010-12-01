@@ -14,13 +14,15 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectReloader _reloader;
         private ICache _cache;
+        private IPrepare<Project> _preparer;
         private Project _project;
 
         [SetUp]
         public void SetUp()
         {
             _cache = MockRepository.GenerateMock<ICache>();
-            _reloader = new ProjectReloader(_cache);
+            _preparer = MockRepository.GenerateMock<IPrepare<Project>>();
+            _reloader = new ProjectReloader(_cache, _preparer);
             _project = new Project("project", new ProjectDocument(ProjectType.CSharp));
             _project.Value.AddReferencedBy("Referenced by");
             _project.Value.HasBeenReadFromFile();
@@ -55,13 +57,6 @@ namespace AutoTest.Test.Core.Caching.Projects
             _reloader.MarkAsDirty(_project);
             referencedProject1.Value.ReferencedBy.Length.ShouldEqual(0);
             referencedProject2.Value.ReferencedBy.Length.ShouldEqual(0);
-        }
-
-        [Test]
-        public void Should_reload_record()
-        {
-            _reloader.MarkAsDirty(_project);
-            _cache.AssertWasCalled(c => c.Get<Project>("project"));
         }
     }
 }
