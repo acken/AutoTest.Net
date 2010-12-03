@@ -47,6 +47,36 @@ namespace AutoTest.Test.Core.Caching
         }
 
         [Test]
+        public void Should_find_build_error_delta()
+        {
+            var results = new BuildRunResults("project");
+            results.AddError(new BuildMessage() { File = "some file", ErrorMessage = "some error message" });
+            _runResultCache.Merge(results);
+            
+            results = new BuildRunResults("project");
+            results.AddError(new BuildMessage() { File = "some other file", ErrorMessage = "some other error message" });
+            _runResultCache.Merge(results);
+
+            _runResultCache.AddedErrors.Length.ShouldEqual(1);
+            _runResultCache.RemovedErrors.Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_find_build_warning_delta()
+        {
+            var results = new BuildRunResults("project");
+            results.AddWarning(new BuildMessage() { File = "some file", ErrorMessage = "some warning message" });
+            _runResultCache.Merge(results);
+
+            results = new BuildRunResults("project");
+            results.AddWarning(new BuildMessage() { File = "some other file", ErrorMessage = "some other warning message" });
+            _runResultCache.Merge(results);
+
+            _runResultCache.AddedWarnings.Length.ShouldEqual(1);
+            _runResultCache.RemovedWarnings.Length.ShouldEqual(1);
+        }
+
+        [Test]
         public void Should_not_merge_same_build_errors_from_different_project()
         {
             var results = new BuildRunResults("project");

@@ -17,17 +17,31 @@ namespace AutoTest.Core.Caching.RunResultCache
         private List<TestItem> _failed = new List<TestItem>();
         private List<TestItem> _ignored = new List<TestItem>();
 
-        public BuildItem[] Errors { get { lock (_padLock) { return _errors.ToArray(); } } }
-        public BuildItem[] Warnings { get { lock (_padLock) { return _warnings.ToArray(); } } }
-        public TestItem[] Failed { get { lock (_padLock) { return _failed.ToArray(); } } }
-        public TestItem[] Ignored { get { lock (_padLock) { return _ignored.ToArray(); } } }
+        private List<BuildItem> _addedErrors = new List<BuildItem>();
+        private List<BuildItem> _removedErrors = new List<BuildItem>();
+        private List<BuildItem> _addedWarnings = new List<BuildItem>();
+        private List<BuildItem> _removedWarnings = new List<BuildItem>();
+
+        public BuildItem[] Errors { get { return _errors.ToArray(); } }
+        public BuildItem[] Warnings { get { return _warnings.ToArray(); } }
+        public TestItem[] Failed { get { return _failed.ToArray(); } }
+        public TestItem[] Ignored { get { return _ignored.ToArray(); } }
+
+        public BuildItem[] AddedErrors { get { return _addedErrors.ToArray(); } }
+        public BuildItem[] RemovedErrors { get { return _removedErrors.ToArray(); } }
+        public BuildItem[] AddedWarnings { get { return _addedWarnings.ToArray(); } }
+        public BuildItem[] RemovedWarnings { get { return _removedWarnings.ToArray(); } }
 
         public void Merge(BuildRunResults results)
         {
             lock (_padLock)
             {
-                mergeBuildList(_errors, results.Project, results.Errors);
-                mergeBuildList(_warnings, results.Project, results.Warnings);
+                _addedErrors.Clear();
+                _removedErrors.Clear();
+                _addedWarnings.Clear();
+                _removedWarnings.Clear();
+                mergeBuildList(_errors, results.Project, results.Errors, _addedErrors, _removedErrors);
+                mergeBuildList(_warnings, results.Project, results.Warnings, _addedWarnings, _removedWarnings);
             }
         }
 
@@ -41,7 +55,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             }
         }
 
-        private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results)
+        private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results, List<BuildItem> added, List<BuildItem> removed)
         {
             var itemsToRemove = new List<BuildItem>();
             foreach (var item in list)
@@ -56,16 +70,20 @@ namespace AutoTest.Core.Caching.RunResultCache
                         break;
                     }
                 }
-                if (!found)
+                if (!found && item.Key.Equals(key))
                     itemsToRemove.Add(item);
             }
+            removed.AddRange(itemsToRemove.ToArray());
             foreach (var item in itemsToRemove)
                 list.Remove(item);
             foreach (var message in results)
             {
                 var item = new BuildItem(key, message);
                 if (!list.Contains(item))
+                {
                     list.Insert(0, item);
+                    added.Insert(0, item);
+                }
             }
         }
 

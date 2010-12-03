@@ -9,5 +9,8 @@ namespace AutoTest.Core.Caching.RunResultCache
         BuildItem[] Warnings { get; }
         TestItem[] Failed { get; }
         TestItem[] Ignored { get; }
+
+        BuildItem[] AddedErrors { get; }
+        BuildItem[] RemovedErrors { get; }
     }
 }
