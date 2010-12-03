@@ -43,9 +43,30 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results)
         {
-            list.RemoveAll(e => e.Key.Equals(key));
+            var itemsToRemove = new List<BuildItem>();
+            foreach (var item in list)
+            {
+                var found = false;
+                foreach (var message in results)
+                {
+                    var resultItem = new BuildItem(key, message);
+                    if (resultItem.Equals(item))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    itemsToRemove.Add(item);
+            }
+            foreach (var item in itemsToRemove)
+                list.Remove(item);
             foreach (var message in results)
-                list.Insert(0, new BuildItem(key, message));
+            {
+                var item = new BuildItem(key, message);
+                if (!list.Contains(item))
+                    list.Insert(0, item);
+            }
         }
 
         private void removeChanged(TestRunResults results)
