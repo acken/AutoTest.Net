@@ -225,6 +225,7 @@ namespace AutoTest.Test.Core.Caching
             runResults = new TestRunResults("project", "assembly", false, results);
             _runResultCache.Merge(runResults);
 
+            Assert.AreEqual(0, _runResultCache.Failed.Length);
             _runResultCache.Failed.Length.ShouldEqual(0);
         }
 
@@ -311,6 +312,68 @@ namespace AutoTest.Test.Core.Caching
 
             _runResultCache.Ignored.Length.ShouldEqual(0);
             _runResultCache.Failed.Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_merge_changed_tests_from_the_same_category()
+        {
+            var runResults = new TestRunResults("project", "assembly", false, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { }) });
+            _runResultCache.Merge(runResults);
+
+            runResults = new TestRunResults("project", "assembly", true, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { new StackLineMessage("method", "file", 10) }) });
+            _runResultCache.Merge(runResults);
+
+            _runResultCache.Failed.Length.ShouldEqual(1);
+            _runResultCache.Failed[0].Value.StackTrace.Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_find_test_delta()
+        {
+            var runResults = new TestRunResults("project", "assembly", false, new TestResult[]
+                                {
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Passing test name", "Message", new IStackLine[] { }),
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Failing test that will pass", "Message", new IStackLine[] { }),
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] { })
+                                });
+            _runResultCache.Merge(runResults);
+
+            runResults = new TestRunResults("project", "assembly", true, new TestResult[]
+                                {
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Failing test that will pass", "Message", new IStackLine[] { }),
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { })
+                                });
+            _runResultCache.Merge(runResults);
+
+            _runResultCache.AddedTests.Length.ShouldEqual(1);
+            _runResultCache.AddedTests[0].Value.Name.ShouldEqual("Test name");
+            _runResultCache.AddedTests[0].Value.Status.ShouldEqual(TestRunStatus.Failed);
+            _runResultCache.RemovedTests.Length.ShouldEqual(2);
+            _runResultCache.RemovedTests[0].Value.Name.ShouldEqual("Failing test that will pass");
+            _runResultCache.RemovedTests[1].Value.Name.ShouldEqual("Test name");
+        }
+
+        [Test]
+        public void Should_find_test_deltas_in_same_status()
+        {
+            var runResults = new TestRunResults("project", "assembly", false, new TestResult[]
+                                {
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] { })
+                                });
+            _runResultCache.Merge(runResults);
+
+            runResults = new TestRunResults("project", "assembly", true, new TestResult[]
+                                {
+                                    new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message 2", new IStackLine[] { })
+                                });
+            _runResultCache.Merge(runResults);
+
+            _runResultCache.AddedTests.Length.ShouldEqual(1);
+            _runResultCache.AddedTests[0].Value.Name.ShouldEqual("Test name");
+            _runResultCache.AddedTests[0].Value.Status.ShouldEqual(TestRunStatus.Ignored);
+            _runResultCache.AddedTests[0].Value.Message.ShouldEqual("Message 2");
+            _runResultCache.RemovedTests.Length.ShouldEqual(1);
+            _runResultCache.RemovedTests[0].Value.Name.ShouldEqual("Test name");
         }
     }
 }

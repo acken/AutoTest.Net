@@ -66,6 +66,11 @@ namespace AutoTest.Core.Caching.RunResultCache
 			    Environment.NewLine);
         }
 
+        public bool IsTheSameTestAs(TestItem item)
+        {
+            return Key.Equals(item.Key) && Value.Runner.Equals(item.Value.Runner) && Value.Name.Equals(item.Value.Name);
+        }
+
         #region IItem Members
 
 

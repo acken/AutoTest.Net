@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 namespace AutoTest.Messages
 {
 	public class TestResult : ICustomBinarySerializable
@@ -93,7 +94,15 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}|{2}|{3}|{4}", _runner, _status, _name, _message, _stackTrace).GetHashCode();
+            return string.Format("{0}|{1}|{2}|{3}", _runner, _name, _message, getStackTraceHash()).GetHashCode();
+        }
+
+        private string getStackTraceHash()
+        {
+            var build = new StringBuilder();
+            foreach (var line in _stackTrace)
+                build.Append(string.Format("{0}|{1}|{2}|", line.File, line.Method, line.LineNumber));
+            return build.ToString();
         }
 
 		#region ICustomBinarySerializable implementation

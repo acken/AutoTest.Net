@@ -22,6 +22,9 @@ namespace AutoTest.Core.Caching.RunResultCache
         private List<BuildItem> _addedWarnings = new List<BuildItem>();
         private List<BuildItem> _removedWarnings = new List<BuildItem>();
 
+        private List<TestItem> _addedTests = new List<TestItem>();
+        private List<TestItem> _removedTests = new List<TestItem>();
+
         public BuildItem[] Errors { get { return _errors.ToArray(); } }
         public BuildItem[] Warnings { get { return _warnings.ToArray(); } }
         public TestItem[] Failed { get { return _failed.ToArray(); } }
@@ -31,6 +34,9 @@ namespace AutoTest.Core.Caching.RunResultCache
         public BuildItem[] RemovedErrors { get { return _removedErrors.ToArray(); } }
         public BuildItem[] AddedWarnings { get { return _addedWarnings.ToArray(); } }
         public BuildItem[] RemovedWarnings { get { return _removedWarnings.ToArray(); } }
+
+        public TestItem[] AddedTests { get { return _addedTests.ToArray(); } }
+        public TestItem[] RemovedTests { get { return _removedTests.ToArray(); } }
 
         public void Merge(BuildRunResults results)
         {
@@ -49,6 +55,8 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
+                _addedTests.Clear();
+                _removedTests.Clear();
                 removeChanged(results);
                 mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
                 mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
@@ -91,27 +99,52 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             foreach (var test in results.Passed)
             {
-                _ignored.RemoveAll(e => compareTests(test, e, results.Assembly));
-                _failed.RemoveAll(e => compareTests(test, e, results.Assembly));
+                var item = new TestItem(results.Assembly, results.Project, test);
+                removeIfExists(item, _ignored);
+                removeIfExists(item, _failed);
             }
-            foreach (var test in results.Failed)
-                _ignored.RemoveAll(e => compareTests(test, e, results.Assembly));
-            foreach (var test in results.Ignored)
-                _failed.RemoveAll(e => compareTests(test, e, results.Assembly));
+            moveTestsBetweenStates(results, results.Failed, _ignored);
+            moveTestsBetweenStates(results, results.Ignored, _failed);
+        }
+
+        private void removeIfExists(TestItem item, List<TestItem> list)
+        {
+            if (list.Contains(item))
+            {
+                list.Remove(item);
+                _removedTests.Add(item);
+            }
+        }
+
+        private void moveTestsBetweenStates(TestRunResults results, TestResult[] newSstate, List<TestItem> oldState)
+        {
+            foreach (var test in newSstate)
+            {
+                var item = new TestItem(results.Assembly, results.Project, test);
+                if (oldState.Contains(item))
+                {
+                    oldState.Remove(item);
+                    _removedTests.Add(item);
+                }
+            }
         }
 
         private void mergeTestList(List<TestItem> list, string key, string project, TestResult[] results, TestResult[] passingTests)
         {
             foreach (var test in results)
             {
-                if (!list.Exists(e => compareTests(test, e, key)))
-                    list.Insert(0, new TestItem(key, project, test));
+                var item = new TestItem(key, project, test);
+                if (!list.Contains(item))
+                {
+                    if (list.Exists(i => i.IsTheSameTestAs(item)))
+                    {
+                        list.RemoveAll(i => i.IsTheSameTestAs(item));
+                        _removedTests.Add(item);
+                    }
+                    list.Insert(0, item);
+                    _addedTests.Insert(0, item);
+                }
             }
-        }
-
-        private bool compareTests(TestResult test, TestItem e, string assembly)
-        {
-            return e.Key.Equals(assembly) && e.Value.Name.Equals(test.Name) && e.Value.Runner.Equals(test.Runner);
         }
     }
 }
