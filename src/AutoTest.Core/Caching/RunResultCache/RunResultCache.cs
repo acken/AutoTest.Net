@@ -109,9 +109,9 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void removeIfExists(TestItem item, List<TestItem> list)
         {
-            if (list.Contains(item))
+            if (list.Exists(i => i.IsTheSameTestAs(item)))
             {
-                list.Remove(item);
+                list.RemoveAll(i => i.IsTheSameTestAs(item));
                 _removedTests.Add(item);
             }
         }
@@ -121,9 +121,9 @@ namespace AutoTest.Core.Caching.RunResultCache
             foreach (var test in newSstate)
             {
                 var item = new TestItem(results.Assembly, results.Project, test);
-                if (oldState.Contains(item))
+                if (oldState.Exists(i => i.IsTheSameTestAs(item)))
                 {
-                    oldState.Remove(item);
+                    oldState.RemoveAll(i => i.IsTheSameTestAs(item));
                     _removedTests.Add(item);
                 }
             }
