@@ -12,6 +12,8 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         BuildItem[] AddedErrors { get; }
         BuildItem[] RemovedErrors { get; }
+        BuildItem[] AddedWarnings { get; }
+        BuildItem[] RemovedWarnings { get; }
 
         TestItem[] AddedTests { get; }
         TestItem[] RemovedTests { get; }
