@@ -70,6 +70,7 @@
     <Compile Include="Core\BuildRunners\BuildMessageTest.cs" />
     <Compile Include="Core\BuildRunners\BuildRunResultTest.cs" />
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
+    <Compile Include="Core\Caching\Crawlers\SolutionCrawlerTest.cs" />
     <Compile Include="Core\Caching\Fakes\FakeStackLine.cs" />
     <Compile Include="Core\Caching\RunResultCache\LinkParserTest.cs" />
     <Compile Include="Core\Caching\Projects\ProjectReloaderTest.cs" />
@@ -196,15 +197,15 @@
     <Content Include="TestResources\MSBuild\msbuild_windows.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestResources\VS2008\AutoTest.NET.sln">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestResources\VS2008\CSharpNUnitTestProject.csproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestResources\VS2008\NUnitTestProjectVisualBasic.vbproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Caching\Crawlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

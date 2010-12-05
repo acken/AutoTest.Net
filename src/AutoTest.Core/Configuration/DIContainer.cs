@@ -22,6 +22,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
+using System.IO;
 
 namespace AutoTest.Core.Configuration
 {
@@ -89,11 +90,33 @@ namespace AutoTest.Core.Configuration
 
         public void InitializeCache(string watchFolder)
         {
+            if (isFolder(watchFolder))
+                crawlFolder(watchFolder);
+            else
+                crawlFile(watchFolder);
+        }
+
+        private void crawlFile(string solutionFile)
+        {
             var fsService = _services.Locate<IFileSystemService>();
             var cache = _services.Locate<ICache>();
-			var bus = _services.Locate<IMessageBus>();
+            var bus = _services.Locate<IMessageBus>();
+            var crawler = new SolutionCrawler(fsService, bus, cache);
+            crawler.Crawl(solutionFile);
+        }
+
+        private void crawlFolder(string watchFolder)
+        {
+            var fsService = _services.Locate<IFileSystemService>();
+            var cache = _services.Locate<ICache>();
+            var bus = _services.Locate<IMessageBus>();
             var cacheCrawler = new ProjectCrawler(cache, fsService, bus);
             cacheCrawler.Crawl(watchFolder);
+        }
+
+        private bool isFolder(string watchFolder)
+        {
+            return Directory.Exists(watchFolder);
         }
 
         public void RegisterAssembly(Assembly assembly)
