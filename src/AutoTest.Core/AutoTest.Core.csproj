@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -71,6 +71,7 @@
     <Compile Include="Caching\Projects\ProjectFactory.cs" />
     <Compile Include="Caching\Projects\ProjectPreparer.cs" />
     <Compile Include="Caching\RunResultCache\RunResultCache.cs" />
+    <Compile Include="Caching\RunResultCache\RunResultCacheDeltas.cs" />
     <Compile Include="Caching\RunResultCache\TestItem.cs" />
     <Compile Include="Configuration\CodeEditor.cs" />
     <Compile Include="Configuration\CoreSection.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Messaging\MessageConsumers\BuildListGenerator.cs" />
     <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
+    <Compile Include="Messaging\MessageConsumers\ILocateRemovedTests.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
+    <Compile Include="Messaging\MessageConsumers\RemovedTestsLocator.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
     <Compile Include="Notifiers\SnarlNotifier.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />

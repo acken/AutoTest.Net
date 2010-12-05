@@ -75,7 +75,8 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<IPreProcessTestruns>().ImplementedBy<NullPreProcessor>())
 				.Register(Component.For<IHandleDelayedConfiguration>().ImplementedBy<DelayedConfigurer>())
 				.Register(Component.For<ILocateWriteLocation>().Instance(defaultConfigurationLocator))
-				.Register(Component.For<IMarkProjectsForRebuild>().ImplementedBy<ProjectRebuildMarker>())	
+				.Register(Component.For<IMarkProjectsForRebuild>().ImplementedBy<ProjectRebuildMarker>())
+                .Register(Component.For<ILocateRemovedTests>().ImplementedBy<RemovedTestsLocator>())
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			initializeNotifiers();

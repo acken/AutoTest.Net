@@ -33,6 +33,15 @@ namespace AutoTest.Test.Core.Presenters.Fakes
             HasMergedTestResults = true;
         }
 
+        public void EnabledDeltas()
+        {
+        }
+
+        public RunResultCacheDeltas PopDeltas()
+        {
+            return null;
+        }
+
         #endregion
     }
 }

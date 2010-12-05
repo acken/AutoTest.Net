@@ -11,43 +11,29 @@ namespace AutoTest.Core.Caching.RunResultCache
     class RunResultCache : IRunResultCache, IMergeRunResults
     {
         private object _padLock = new object();
+        private bool _deltasSupported = false;
 
         private List<BuildItem> _errors = new List<BuildItem>();
         private List<BuildItem> _warnings = new List<BuildItem>();
         private List<TestItem> _failed = new List<TestItem>();
         private List<TestItem> _ignored = new List<TestItem>();
 
-        private List<BuildItem> _addedErrors = new List<BuildItem>();
-        private List<BuildItem> _removedErrors = new List<BuildItem>();
-        private List<BuildItem> _addedWarnings = new List<BuildItem>();
-        private List<BuildItem> _removedWarnings = new List<BuildItem>();
-
-        private List<TestItem> _addedTests = new List<TestItem>();
-        private List<TestItem> _removedTests = new List<TestItem>();
+        private List<BuildItem> _lastErrors = new List<BuildItem>();
+        private List<BuildItem> _lastWarnings = new List<BuildItem>();
+        private List<TestItem> _lastFailed = new List<TestItem>();
+        private List<TestItem> _lastIgnored = new List<TestItem>();
 
         public BuildItem[] Errors { get { return _errors.ToArray(); } }
         public BuildItem[] Warnings { get { return _warnings.ToArray(); } }
         public TestItem[] Failed { get { return _failed.ToArray(); } }
         public TestItem[] Ignored { get { return _ignored.ToArray(); } }
 
-        public BuildItem[] AddedErrors { get { return _addedErrors.ToArray(); } }
-        public BuildItem[] RemovedErrors { get { return _removedErrors.ToArray(); } }
-        public BuildItem[] AddedWarnings { get { return _addedWarnings.ToArray(); } }
-        public BuildItem[] RemovedWarnings { get { return _removedWarnings.ToArray(); } }
-
-        public TestItem[] AddedTests { get { return _addedTests.ToArray(); } }
-        public TestItem[] RemovedTests { get { return _removedTests.ToArray(); } }
-
         public void Merge(BuildRunResults results)
         {
             lock (_padLock)
             {
-                _addedErrors.Clear();
-                _removedErrors.Clear();
-                _addedWarnings.Clear();
-                _removedWarnings.Clear();
-                mergeBuildList(_errors, results.Project, results.Errors, _addedErrors, _removedErrors);
-                mergeBuildList(_warnings, results.Project, results.Warnings, _addedWarnings, _removedWarnings);
+                mergeBuildList(_errors, results.Project, results.Errors);
+                mergeBuildList(_warnings, results.Project, results.Warnings);
             }
         }
 
@@ -55,15 +41,39 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
-                _addedTests.Clear();
-                _removedTests.Clear();
                 removeChanged(results);
                 mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
                 mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
             }
         }
 
-        private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results, List<BuildItem> added, List<BuildItem> removed)
+        public void EnabledDeltas()
+        {
+            _deltasSupported = true;
+        }
+
+        public RunResultCacheDeltas PopDeltas()
+        {
+            if (!_deltasSupported)
+                throw new Exception("Deltas are not supported in the run results cache. Run EnabledDeltas() to setup support");
+            lock (_padLock)
+            {
+                var deltas = new RunResultCacheDeltas();
+                deltas.Load(_lastErrors, _lastWarnings, _lastFailed, _lastIgnored, _errors, _warnings, _failed, _ignored);
+                _lastErrors.Clear();
+                _lastWarnings.Clear();
+                _lastFailed.Clear();
+                _lastIgnored.Clear();
+
+                _lastErrors.AddRange(_errors);
+                _lastWarnings.AddRange(_warnings);
+                _lastFailed.AddRange(_failed);
+                _lastIgnored.AddRange(_ignored);
+                return deltas;
+            }
+        }
+
+        private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results)
         {
             var itemsToRemove = new List<BuildItem>();
             foreach (var item in list)
@@ -81,7 +91,6 @@ namespace AutoTest.Core.Caching.RunResultCache
                 if (!found && item.Key.Equals(key))
                     itemsToRemove.Add(item);
             }
-            removed.AddRange(itemsToRemove.ToArray());
             foreach (var item in itemsToRemove)
                 list.Remove(item);
             foreach (var message in results)
@@ -90,7 +99,6 @@ namespace AutoTest.Core.Caching.RunResultCache
                 if (!list.Contains(item))
                 {
                     list.Insert(0, item);
-                    added.Insert(0, item);
                 }
             }
         }
@@ -110,10 +118,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         private void removeIfExists(TestItem item, List<TestItem> list)
         {
             if (list.Exists(i => i.IsTheSameTestAs(item)))
-            {
                 list.RemoveAll(i => i.IsTheSameTestAs(item));
-                _removedTests.Add(item);
-            }
         }
 
         private void moveTestsBetweenStates(TestRunResults results, TestResult[] newSstate, List<TestItem> oldState)
@@ -122,10 +127,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             {
                 var item = new TestItem(results.Assembly, results.Project, test);
                 if (oldState.Exists(i => i.IsTheSameTestAs(item)))
-                {
                     oldState.RemoveAll(i => i.IsTheSameTestAs(item));
-                    _removedTests.Add(item);
-                }
             }
         }
 
@@ -137,12 +139,8 @@ namespace AutoTest.Core.Caching.RunResultCache
                 if (!list.Contains(item))
                 {
                     if (list.Exists(i => i.IsTheSameTestAs(item)))
-                    {
                         list.RemoveAll(i => i.IsTheSameTestAs(item));
-                        _removedTests.Add(item);
-                    }
                     list.Insert(0, item);
-                    _addedTests.Insert(0, item);
                 }
             }
         }

@@ -15,6 +15,7 @@ using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
 using System.IO;
 using AutoTest.Messages;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Test.Core.Messaging.MessageConsumers
 {
@@ -32,6 +33,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		private IOptimizeBuildConfiguration _optimizer;
         private IPreProcessTestruns _preProcessor;
 		private RunInfo _runInfo;
+        private ILocateRemovedTests _removedTestLocator;
 
         [SetUp]
         public void SetUp()
@@ -53,7 +55,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _preProcessor = MockRepository.GenerateMock<IPreProcessTestruns>();
             _preProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             var preProcessors = new IPreProcessTestruns[] { _preProcessor };
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors);
+            _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator);
         }
 
         [Test]
@@ -116,8 +119,10 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
             _testRunner.Stub(t => t.CanHandleTestFor(_project.Value)).Return(true);
+            var result = new TestRunResults[] { new TestRunResults("", "", false, new TestResult[] { }) };
             _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
-                .Return(new TestRunResults[] { new TestRunResults("", "", false, new TestResult[] {}) });
+                .Return(result);
+            _removedTestLocator.Stub(r => r.SetRemovedTestsAsPassed(null, null)).IgnoreArguments().Return(result[0]);
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));
@@ -171,10 +176,12 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _project.Value.SetAssemblyName("someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
+            var result = new TestRunResults[] { new TestRunResults("", "", false, new TestResult[] {}) };
             _testRunner.Stub(t => t.CanHandleTestFor(_project.Value)).Return(true);
             _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
-                .Return(new TestRunResults[] { new TestRunResults("", "", false, new TestResult[] {}) });
+                .Return(result);
 			_runInfo.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
+            _removedTestLocator.Stub(r => r.SetRemovedTestsAsPassed(null, null)).IgnoreArguments().Return(result[0]);
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));

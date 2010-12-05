@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -113,6 +113,7 @@
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\NUnitStackLineTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestRunnerTest.cs" />
+    <Compile Include="Core\TestRunners\RemovedTestsLocatorTest.cs" />
     <Compile Include="Core\TestRunners\TestResultTests.cs" />
     <Compile Include="Core\Configuration\DIContainerTests.cs" />
     <Compile Include="Core\BuildRunners\IBuildEngine.cs" />

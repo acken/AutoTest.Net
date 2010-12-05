@@ -26,8 +26,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
         private IPreProcessTestruns[] _preProcessors;
+        private ILocateRemovedTests _removedTestLocator;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
         {
             _bus = bus;
             _listGenerator = listGenerator;
@@ -37,6 +38,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			_testAssemblyValidator = testAssemblyValidator;
 			_buildOptimizer = buildOptimizer;
             _preProcessors = preProcessors;
+            _removedTestLocator = removedTestLocator;
         }
 
         #region IConsumerOf<ProjectChangeMessage> Members
@@ -193,18 +195,21 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, RunReport runReport)
         {
             var results = testRunner.RunTests(runInfos);
+            var modifiedResults = new List<TestRunResults>();
 			foreach (var result in results)
 			{
+                var modified = _removedTestLocator.SetRemovedTestsAsPassed(result, runInfos);
 	            runReport.AddTestRun(
-	                result.Project,
-	                result.Assembly,
-	                result.TimeSpent,
-	                result.Passed.Length,
-	                result.Ignored.Length,
-	                result.Failed.Length);
-	            _bus.Publish(new TestRunMessage(result));
+                    modified.Project,
+                    modified.Assembly,
+                    modified.TimeSpent,
+                    modified.Passed.Length,
+                    modified.Ignored.Length,
+                    modified.Failed.Length);
+                _bus.Publish(new TestRunMessage(modified));
+                modifiedResults.Add(modified);
 			}
-			informPreProcessor(results);
+			informPreProcessor(modifiedResults.ToArray());
         }
 		
         private void informPreProcessor(TestRunResults[] results)

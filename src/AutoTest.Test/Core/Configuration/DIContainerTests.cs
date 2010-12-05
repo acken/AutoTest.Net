@@ -327,5 +327,12 @@ namespace AutoTest.Test.Core.Configuration
 			var marker = _locator.Locate<IMarkProjectsForRebuild>();
 			marker.ShouldBeOfType<IMarkProjectsForRebuild>();
 		}
+
+        [Test]
+		public void Should_register_removed_test_locator()
+		{
+            var marker = _locator.Locate<ILocateRemovedTests>();
+            marker.ShouldBeOfType<ILocateRemovedTests>();
+		}
     }
 }

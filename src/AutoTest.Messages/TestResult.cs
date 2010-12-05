@@ -37,6 +37,7 @@ namespace AutoTest.Messages
             _runner = runner;
             _name = name;
             _status = status;
+            _stackTrace = new IStackLine[] { };
         }
 
         public TestResult(TestRunner runner, TestRunStatus status, string name, string message)
@@ -45,6 +46,7 @@ namespace AutoTest.Messages
             _status = status;
             _name = name;
             _message = message;
+            _stackTrace = new IStackLine[] { };
         }
 
         public TestResult(TestRunner runner, TestRunStatus status, string name, string message, IStackLine[] stackTrace)

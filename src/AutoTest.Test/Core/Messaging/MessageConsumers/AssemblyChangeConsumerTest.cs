@@ -16,6 +16,7 @@ namespace AutoTest.Test
         private ITestRunner _testRunner;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
         private IPreProcessTestruns _preProcessor;
+        private ILocateRemovedTests _removedTestLocator;
 
         [SetUp]
         public void SetUp()
@@ -25,7 +26,9 @@ namespace AutoTest.Test
 			_testAssemblyValidator = MockRepository.GenerateMock<IDetermineIfAssemblyShouldBeTested>();
             _preProcessor = MockRepository.GenerateMock<IPreProcessTestruns>();
             var preProcessors = new IPreProcessTestruns[] { _preProcessor };
-            _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors);
+            _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
+
+            _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors, _removedTestLocator);
 			_testRunner.Stub(r => r.RunTests(null)).IgnoreArguments().Return(new TestRunResults[] {});
         }
 		

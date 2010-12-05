@@ -10,12 +10,6 @@ namespace AutoTest.Core.Caching.RunResultCache
         TestItem[] Failed { get; }
         TestItem[] Ignored { get; }
 
-        BuildItem[] AddedErrors { get; }
-        BuildItem[] RemovedErrors { get; }
-        BuildItem[] AddedWarnings { get; }
-        BuildItem[] RemovedWarnings { get; }
-
-        TestItem[] AddedTests { get; }
-        TestItem[] RemovedTests { get; }
+        RunResultCacheDeltas PopDeltas();
     }
 }
