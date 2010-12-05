@@ -78,6 +78,8 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<ILocateWriteLocation>().Instance(defaultConfigurationLocator))
 				.Register(Component.For<IMarkProjectsForRebuild>().ImplementedBy<ProjectRebuildMarker>())
                 .Register(Component.For<ILocateRemovedTests>().ImplementedBy<RemovedTestsLocator>())
+                .Register(Component.For<ISolutionChangeConsumer>().ImplementedBy<SolutionChangeConsumer>())
+                .Register(Component.For<ISolutionParser>().ImplementedBy<SolutionCrawler>())
                 .Register(Component.For<ApplicatonLauncher>());
 			
 			initializeNotifiers();

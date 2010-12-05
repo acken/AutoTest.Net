@@ -16,6 +16,7 @@ using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
 using AutoTest.Core;
+using AutoTest.Core.Caching.Crawlers;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -334,5 +335,19 @@ namespace AutoTest.Test.Core.Configuration
             var marker = _locator.Locate<ILocateRemovedTests>();
             marker.ShouldBeOfType<ILocateRemovedTests>();
 		}
+
+        [Test]
+		public void Should_register_solution_crawler()
+		{
+            var crawler = _locator.Locate<ISolutionParser>();
+            crawler.ShouldBeOfType<ISolutionParser>();
+		}
+
+        [Test]
+        public void Should_register_solution_change_consumer()
+        {
+            var crawler = _locator.Locate<ISolutionChangeConsumer>();
+            crawler.ShouldBeOfType<ISolutionChangeConsumer>();
+        }
     }
 }

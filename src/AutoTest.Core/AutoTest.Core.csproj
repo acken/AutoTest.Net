@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
+    <Compile Include="Caching\Crawlers\ISolutionParser.cs" />
     <Compile Include="Caching\Crawlers\SolutionCrawler.cs" />
     <Compile Include="Caching\RunResultCache\BuildItem.cs" />
     <Compile Include="Caching\ICache.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
     <Compile Include="Messaging\MessageConsumers\ILocateRemovedTests.cs" />
+    <Compile Include="Messaging\MessageConsumers\ISolutionChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Messaging\MessageConsumers\RemovedTestsLocator.cs" />
+    <Compile Include="Messaging\MessageConsumers\SolutionChangeConsumer.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
     <Compile Include="Notifiers\SnarlNotifier.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />

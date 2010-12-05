@@ -12,7 +12,7 @@ using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
-    class SolutionCrawler
+    class SolutionCrawler : ISolutionParser
     {
         private IFileSystemService _fsService;
         private IMessageBus _bus;
@@ -93,7 +93,8 @@ namespace AutoTest.Core.Caching.Crawlers
         {
             try
             {
-                _cache.Add<Project>(Path.GetFullPath(project));
+                if (!_cache.Exists(project))
+                    _cache.Add<Project>(Path.GetFullPath(project));
             }
             catch (Exception exception)
             {

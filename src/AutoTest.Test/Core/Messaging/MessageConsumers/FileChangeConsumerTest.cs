@@ -31,7 +31,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _cache = MockRepository.GenerateMock<ICache>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
 			_marker = MockRepository.GenerateMock<IMarkProjectsForRebuild>();
-            _subject = new FileChangeConsumer(_services, _bus, _cache, _marker);
+            var crawler = MockRepository.GenerateMock<ISolutionChangeConsumer>();
+            _subject = new FileChangeConsumer(_services, _bus, _cache, _marker, crawler);
         }
 
         [Test]
