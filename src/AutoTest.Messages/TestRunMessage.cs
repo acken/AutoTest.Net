@@ -21,7 +21,7 @@ namespace AutoTest.Messages
 
 		public void SetDataFrom(BinaryReader reader)
 		{
-			_results = new TestRunResults("", "", false, new TestResult[] {});
+			_results = new TestRunResults("", "", false, TestRunner.Any, new TestResult[] {});
 			_results.SetDataFrom(reader);
 		}
 		#endregion

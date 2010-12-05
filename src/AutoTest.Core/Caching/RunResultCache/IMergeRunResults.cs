@@ -12,7 +12,5 @@ namespace AutoTest.Core.Caching.RunResultCache
     {
         void Merge(BuildRunResults results);
         void Merge(TestRunResults results);
-
-        void EnabledDeltas();
     }
 }

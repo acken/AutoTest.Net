@@ -122,7 +122,7 @@ namespace AutoTest.Test
 		public void Should_serialize_test_run_message()
 		{
 			var testResults = new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }) };
-			var results = new TestRunResults("project 1", "assembly", false, testResults);
+            var results = new TestRunResults("project 1", "assembly", false, TestRunner.NUnit, testResults);
 			results.SetTimeSpent(new TimeSpan(12345));
 			var message = new TestRunMessage(results);
 			var output = serializeDeserialize<TestRunMessage>(message);

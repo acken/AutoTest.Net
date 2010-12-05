@@ -50,7 +50,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					var project = "";
 					if (runInfo.Project != null)
 						project = runInfo.Project.Key;
-	                results.Add(new TestRunResults(project, runInfo.Assembly, false, new TestResult[] { }));
+	                results.Add(new TestRunResults(project, runInfo.Assembly, false, TestRunner.MSTest, new TestResult[] { }));
 					continue;
 				}
 				

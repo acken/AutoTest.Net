@@ -80,7 +80,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			string project = "";
 			if (runInfo.Project != null)
 				project = runInfo.Project.Key;
-			return new TestRunResults(project, runInfo.Assembly, _isPartialTestRuns, _result.ToArray());
+			return new TestRunResults(project, runInfo.Assembly, _isPartialTestRuns, _runner, _result.ToArray());
 		}
 		
 		private TestRunInfo matchToTestSource(string testSuite)

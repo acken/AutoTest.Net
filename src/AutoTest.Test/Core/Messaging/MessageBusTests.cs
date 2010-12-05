@@ -150,7 +150,7 @@ namespace AutoTest.Test.Core.Messaging
         public void Should_be_able_to_consume_testrun_messages()
         {
             var consumer = new RunMessageConsumer(_bus);
-            var message = new TestRunMessage(new TestRunResults("", "", false, new TestResult[] {}));
+            var message = new TestRunMessage(new TestRunResults("", "", false, TestRunner.NUnit, new TestResult[] { }));
             _bus.Publish<TestRunMessage>(message);
             waitForAsyncCall();
             consumer.TestRunMessageEventWasCalled.ShouldBeTrue();

@@ -10,6 +10,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         TestItem[] Failed { get; }
         TestItem[] Ignored { get; }
 
+        void EnabledDeltas();
         RunResultCacheDeltas PopDeltas();
     }
 }

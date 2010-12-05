@@ -20,14 +20,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public TestRunResults SetRemovedTestsAsPassed(TestRunResults results, TestRunInfo[] infos)
         {
-            int i = 3;
             _results = results;
             _infos = infos;
             var tests = new List<TestResult>();
             tests.AddRange(results.All);
             tests.AddRange(getTests(_cache.Failed));
             tests.AddRange(getTests(_cache.Ignored));
-            var modified = new TestRunResults(_results.Project, _results.Assembly, _results.IsPartialTestRun, tests.ToArray());
+            var modified = new TestRunResults(_results.Project, _results.Assembly, _results.IsPartialTestRun, _results.Runner, tests.ToArray());
             modified.SetTimeSpent(_results.TimeSpent);
             return modified;
         }
@@ -37,6 +36,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var tests = new List<TestResult>();
             foreach (var test in cacheList)
             {
+                if (!test.Value.Runner.Equals(_results.Runner))
+                    continue;
                 if ((from t in _results.All where new TestItem(_results.Assembly, _results.Project, t).IsTheSameTestAs(test) select t).Count() == 0)
                 {
                     if (_results.IsPartialTestRun && !wasRun(test))
