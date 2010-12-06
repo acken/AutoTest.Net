@@ -59,8 +59,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var calc = new MaxCmdLengthCalculator();
 				var tests = getTestsList(runInfo);
 				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage";
-                var shouldContainTests = (arguments.Length + unitTestExe.Length) > calc.GetLength();
-				if (shouldContainTests)
+                var runAllTests = (arguments.Length + unitTestExe.Length) > calc.GetLength();
+				if (runAllTests)
 					arguments = "/testcontainer:\"" + runInfo.Assembly + "\"" + " /detail:errorstacktrace /detail:errormessage";
 				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", unitTestExe, arguments)); 
 	            var proc = new Process();
@@ -73,7 +73,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	
 	            proc.Start();
 	            string line;
-	            var parser = new MSTestResponseParser(runInfo.Project.Key, runInfo.Assembly, shouldContainTests);
+	            var parser = new MSTestResponseParser(runInfo.Project.Key, runInfo.Assembly, !runAllTests);
 	            while ((line = proc.StandardOutput.ReadLine()) != null)
 	                parser.ParseLine(line);
 	            proc.WaitForExit();
