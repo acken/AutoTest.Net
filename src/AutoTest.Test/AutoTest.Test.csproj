@@ -194,6 +194,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestResources\MSBuild\msbuild_rebuild.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestResources\MSBuild\msbuild_windows.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

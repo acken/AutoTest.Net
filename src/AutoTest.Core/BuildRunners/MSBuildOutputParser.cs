@@ -46,13 +46,16 @@ namespace AutoTest.Core.BuildRunners
 		
 		private bool detectAndValidateBuildTarget()
 		{
-			if (!_line.Contains(" (default target"))
+			if (!(_line.Contains(" (default target") || _line.Contains(" (rebuild target")))
 				return true;
 			
 			if (failedBuildAlreadyDetected())
 				return false;
 			
-		    _currentProjectPath = Path.GetDirectoryName(_line.Substring(0, _line.IndexOf(" (default target")).Replace("\"", ""));
+            if (_line.Contains(" (default target"))
+		        _currentProjectPath = Path.GetDirectoryName(_line.Substring(0, _line.IndexOf(" (default target")).Replace("\"", ""));
+            else
+                _currentProjectPath = Path.GetDirectoryName(_line.Substring(0, _line.IndexOf(" (rebuild target")).Replace("\"", ""));
 			return true;
 		}
 		

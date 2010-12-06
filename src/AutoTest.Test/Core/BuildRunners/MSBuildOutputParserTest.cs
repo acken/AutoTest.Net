@@ -109,5 +109,16 @@ namespace AutoTest.Test.Core.BuildRunners
             result.WarningCount.ShouldEqual(0);
             result.ErrorCount.ShouldEqual(0);
         }
+
+        [Test]
+        public void Should_parse_errors_from_rebuild()
+        {
+            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_rebuild.txt", Path.DirectorySeparatorChar);
+            var result = new BuildRunResults("");
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
+            parser.Parse();
+            result.WarningCount.ShouldEqual(0);
+            result.ErrorCount.ShouldEqual(2);
+        }
     }
 }
