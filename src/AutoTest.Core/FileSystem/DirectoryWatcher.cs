@@ -36,6 +36,9 @@ namespace AutoTest.Core.FileSystem
             
             _watcher.Changed += WatcherChangeHandler;
             _watcher.Created += WatcherChangeHandler;
+            _watcher.Deleted += WatcherChangeHandler;
+            _watcher.Renamed += WatcherChangeHandler;
+            _watcher.Error += WatcherErrorHandler;
         }
 
         public void Watch(string path)
@@ -97,8 +100,13 @@ namespace AutoTest.Core.FileSystem
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
         {
-            Debug.RawFileChangeDetected(e.FullPath);
+            Debug.RawFileChangeDetected(e.FullPath, e.ChangeType);
             addToBuffer(new ChangedFile(e.FullPath));
+        }
+
+        void WatcherErrorHandler(object sender, ErrorEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)
