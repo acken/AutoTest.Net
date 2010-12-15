@@ -106,7 +106,8 @@ namespace AutoTest.Core.FileSystem
 
         void WatcherErrorHandler(object sender, ErrorEventArgs e)
         {
-            throw new System.NotImplementedException();
+            Debug.WriteMessage("FileSystemWatcher failed to handle changes");
+            Debug.WriteException(e.GetException());
         }
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)

@@ -59,7 +59,7 @@ namespace AutoTest.Core.DebugLog
         public static void RawFileChangeDetected(string file, WatcherChangeTypes type)
         {
             if (_isDisabled) return;
-            write(string.Format("Directory watcher found a change ({1})) in file: {0}", file, type.ToString()));
+            write(string.Format("Directory watcher found a change ({1}) in file: {0}", file, type.ToString()));
         }
 
         public static void AboutToPublishFileChanges(int numberOfFiles)
