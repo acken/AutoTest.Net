@@ -29,7 +29,7 @@ namespace AutoTest.Core.FileSystem
 			_delayedConfigurer = delayedConfigurer;
             _watcher = new FileSystemWatcher
                            {
-                               NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
+                               NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
                                IncludeSubdirectories = true,
                                Filter = "*.*",
                            };
