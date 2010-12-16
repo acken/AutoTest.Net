@@ -12,7 +12,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private string _assembly;
         private string _lastParsed = "";
         private bool _isPartialTestRun = false;
-        private List<TestResult> _result = new List<TestResult>();
+        private bool _finalTestResultsFound = false;
+        private bool _isSingleLineErrorMessage = false;
+        private bool _readMessageUntilStackTrace = false;
+        private List<TestResult> _result = new List<TestResult>();        
 
         public TestRunResults Result { get { return new TestRunResults(_project, _assembly, _isPartialTestRun, TestRunner.MSTest, _result.ToArray()); } }
 
@@ -25,6 +28,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public void ParseLine(string line)
         {
+            if (_readMessageUntilStackTrace && line.StartsWith("   at "))
+            {
+                _readMessageUntilStackTrace = false;
+                _lastParsed = "[errorstacktrace] =";
+            }
+
+            if (line.StartsWith("Final Test Results:"))
+            {
+                _finalTestResultsFound = true;
+            }
             if (line.StartsWith("Passed"))
             {
                 addResult(line, TestRunStatus.Passed, "Passed");
@@ -32,6 +45,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             else if (line.StartsWith("Failed"))
             {
                 addResult(line, TestRunStatus.Failed, "Failed");
+            }
+            else if (line.StartsWith("Error") && _finalTestResultsFound)
+            {
+                addResult(line, TestRunStatus.Failed, "Error");
+                _isSingleLineErrorMessage = true;
             }
             else if (line.StartsWith("Ignored"))
             {
@@ -44,7 +62,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
             else if (line.StartsWith("[errormessage] =") && _result.Count > 0)
             {
                 _result[_result.Count - 1].Message = getChunk(line, "[errormessage] =");
-                _lastParsed = "[errormessage] =";
+                if (!_isSingleLineErrorMessage)
+                    _lastParsed = "[errormessage] =";
+
+            }
+            else if (line.StartsWith("Run has the following issue(s):") && _result.Count > 0)
+            {
+                _readMessageUntilStackTrace = true;
 
             }
             else if (line.StartsWith("[errorstacktrace] =") && _result.Count > 0)
@@ -52,7 +76,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 _result[_result.Count - 1].StackTrace = getStackTrace(line, "[errorstacktrace] =");
                 _lastParsed = "[errorstacktrace] =";
             }
-            else if (_lastParsed.Equals("[errormessage] ="))
+            else if (_lastParsed.Equals("[errormessage] =") || _readMessageUntilStackTrace)
             {
                 _result[_result.Count - 1].Message += string.Format("{0}{1}", Environment.NewLine, line);
             }

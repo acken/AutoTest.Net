@@ -200,6 +200,9 @@
     <Content Include="TestResources\MSBuild\msbuild_windows.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestResources\MSTest\mstestrun_run_error.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestResources\VS2008\AutoTest.NET.sln">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

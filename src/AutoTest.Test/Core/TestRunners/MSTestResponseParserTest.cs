@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.TestRunners.TestRunners;
 using AutoTest.Core.TestRunners;
 using AutoTest.Messages;
+using System.IO;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -93,6 +94,19 @@ namespace AutoTest.Test.Core.TestRunners
              var result = parser.Result;
 
              result.IsPartialTestRun.ShouldBeTrue();
+         }
+
+         [Test]
+         public void Should_parse_fatal_error_test_run()
+         {
+             var content = File.ReadAllLines(string.Format("TestResources{0}MSTest{0}mstestrun_run_error.txt", Path.DirectorySeparatorChar));
+             foreach (var line in content)
+                 _parser.ParseLine(line);
+             _parser.Result.All.Length.ShouldEqual(1);
+             _parser.Result.All[0].Status.ShouldEqual(TestRunStatus.Failed);
+             _parser.Result.Failed[0].Name.ShouldEqual("Nrk.OnDemand.Backend.Distribution.Engine.UnitTests.Upload.SftpClientTests.SC_ShouldUploadAndRemoveFile");
+             _parser.Result.Failed[0].Message.ShouldEqual(string.Format("The agent process was stopped while the test was running.{0}One of the background threads threw exception: {0}System.InvalidCastException: Unable to cast object of type 'clohccZ' to type 'Nrk.OnDemand.Backend.Distribution.Engine.TaskManager.ITask'.", Environment.NewLine));
+             _parser.Result.Failed[0].StackTrace.Length.ShouldEqual(10);
          }
     }
 }
