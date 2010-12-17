@@ -5,6 +5,7 @@ using System.Text;
 using AutoTest.Core.BuildRunners;
 using AutoTest.Core.TestRunners;
 using AutoTest.Messages;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {
@@ -32,6 +33,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
+                Debug.WriteMessage("Merging build run results");
                 mergeBuildList(_errors, results.Project, results.Errors);
                 mergeBuildList(_warnings, results.Project, results.Warnings);
             }
@@ -41,6 +43,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
+                Debug.WriteMessage("Merging test run results");
                 removeChanged(results);
                 mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
                 mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
@@ -89,7 +92,10 @@ namespace AutoTest.Core.Caching.RunResultCache
                     }
                 }
                 if (!found && item.Key.Equals(key))
+                {
+                    Debug.WriteMessage(string.Format("Removing old build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
                     itemsToRemove.Add(item);
+                }
             }
             foreach (var item in itemsToRemove)
                 list.Remove(item);
@@ -98,6 +104,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 var item = new BuildItem(key, message);
                 if (!list.Contains(item))
                 {
+                    Debug.WriteMessage(string.Format("Adding new build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
                     list.Insert(0, item);
                 }
             }
@@ -118,7 +125,10 @@ namespace AutoTest.Core.Caching.RunResultCache
         private void removeIfExists(TestItem item, List<TestItem> list)
         {
             if (list.Exists(i => i.IsTheSameTestAs(item)))
+            {
+                logTest("Removing passing test ", item);
                 list.RemoveAll(i => i.IsTheSameTestAs(item));
+            }
         }
 
         private void moveTestsBetweenStates(TestRunResults results, TestResult[] newSstate, List<TestItem> oldState)
@@ -127,7 +137,10 @@ namespace AutoTest.Core.Caching.RunResultCache
             {
                 var item = new TestItem(results.Assembly, results.Project, test);
                 if (oldState.Exists(i => i.IsTheSameTestAs(item)))
+                {
+                    logTest("Removing test that changed state ", item);
                     oldState.RemoveAll(i => i.IsTheSameTestAs(item));
+                }
             }
         }
 
@@ -139,10 +152,27 @@ namespace AutoTest.Core.Caching.RunResultCache
                 if (!list.Contains(item))
                 {
                     if (list.Exists(i => i.IsTheSameTestAs(item)))
+                    {
+                        logTest("Removing existing test in case it changed ", item);
                         list.RemoveAll(i => i.IsTheSameTestAs(item));
+                    }
+                    logTest("Adding test ", item);
                     list.Insert(0, item);
                 }
             }
+        }
+
+        private void logTest(string prefix, TestItem item)
+        {
+            Debug.WriteMessage(string.Format(prefix, item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+        }
+
+        private string getStackTrace(IStackLine[] iStackLine)
+        {
+            var builder = new StringBuilder();
+            foreach (var line in iStackLine)
+                builder.Append(string.Format(" {0}, {1}:{2}", line.File, line.Method, line.LineNumber));
+            return builder.ToString();
         }
     }
 }
