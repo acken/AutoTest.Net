@@ -93,7 +93,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 }
                 if (!found && item.Key.Equals(key))
                 {
-                    Debug.WriteMessage(string.Format("Removing old build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+                    Debug.WriteMessage("\t" + string.Format("Removing old build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
                     itemsToRemove.Add(item);
                 }
             }
@@ -104,7 +104,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 var item = new BuildItem(key, message);
                 if (!list.Contains(item))
                 {
-                    Debug.WriteMessage(string.Format("Adding new build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+                    Debug.WriteMessage("\t" + string.Format("Adding new build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
                     list.Insert(0, item);
                 }
             }
@@ -164,7 +164,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void logTest(string prefix, TestItem item)
         {
-            Debug.WriteMessage(string.Format(prefix, item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+            Debug.WriteMessage("\t" + string.Format(prefix, item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
         }
 
         private string getStackTrace(IStackLine[] iStackLine)

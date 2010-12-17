@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.DebugLog;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {
@@ -36,6 +38,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             getBuildDeltas(lastWarnings, warnings, _addedWarnings, _removedWarnings);
             getTestDeltas(lastFailed, failed, _addedTests, _removedTests);
             getTestDeltas(lastIgnored, ignored, _addedTests, _removedTests);
+            logDeltas();
         }
 
         private void getBuildDeltas(List<BuildItem> lastBuildItems, List<BuildItem> buildItems, List<BuildItem> added, List<BuildItem> removed)
@@ -64,6 +67,46 @@ namespace AutoTest.Core.Caching.RunResultCache
                 if (!tests.Contains(test))
                     removed.Add(test);
             }
+        }
+
+        private void logDeltas()
+        {
+            if (Debug.IsDisabled)
+                return;
+
+            Debug.WriteMessage("Result deltas");
+            foreach (var error in _addedErrors)
+                logBuildItem("Added error", error);
+            foreach (var error in _removedErrors)
+                logBuildItem("Removed error", error);
+
+            foreach (var warning in _addedWarnings)
+                logBuildItem("Added warning", warning);
+            foreach (var warning in _removedWarnings)
+                logBuildItem("Removed warning", warning);
+
+            foreach (var test in _addedTests)
+                logTest("Added test", test);
+            foreach (var test in _removedTests)
+                logTest("Removed test", test);
+        }
+
+        private void logBuildItem(string prefix, BuildItem item)
+        {
+            Debug.WriteMessage("\t" + prefix + string.Format(" {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+        }
+
+        private void logTest(string prefix, TestItem item)
+        {
+            Debug.WriteMessage("\t" + string.Format(prefix, item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+        }
+
+        private string getStackTrace(IStackLine[] iStackLine)
+        {
+            var builder = new StringBuilder();
+            foreach (var line in iStackLine)
+                builder.Append(string.Format(" {0}, {1}:{2}", line.File, line.Method, line.LineNumber));
+            return builder.ToString();
         }
     }
 }

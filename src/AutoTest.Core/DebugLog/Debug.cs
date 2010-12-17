@@ -15,6 +15,8 @@ namespace AutoTest.Core.DebugLog
         private static bool _isDisabled = true;
 		private static IWriteDebugInfo _debugWriter;
 
+        public static bool IsDisabled { get { return _isDisabled; } }
+
         private static void write(string text)
         {
 			if (_isDisabled) return;
