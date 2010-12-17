@@ -96,18 +96,18 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_runInfos[5].ShouldBeBuilt.ShouldBeTrue();
 			_runInfos[6].ShouldBeBuilt.ShouldBeFalse();
 		}
-		
-		[Test]
-		public void Should_set_assembly_path_to_assembly_path()
-		{
-			_runInfos[0].Assembly.ShouldEqual(string.Format("Proj0{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
-			_runInfos[1].Assembly.ShouldEqual(string.Format("Proj1{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
-			_runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
-			_runInfos[3].Assembly.ShouldEqual(string.Format("Proj3{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
-			_runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
-			_runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
-			_runInfos[6].Assembly.ShouldEqual(string.Format("Proj6{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
-		}
+
+        [Test]
+        public void Should_set_assembly_path_to_build_source()
+        {
+            _runInfos[0].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
+            _runInfos[1].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
+            _runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
+            _runInfos[3].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
+            _runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
+            _runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
+            _runInfos[6].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
+        }
 		
 		[Test]
 		public void Should_rebuild_project_()
@@ -120,5 +120,18 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_runInfos[5].Project.Value.RequiresRebuild.ShouldBeTrue();
 			_runInfos[6].Project.Value.RequiresRebuild.ShouldBeFalse();
 		}
+
+        [Test]
+        public void Should_support_list_of_projects()
+        {
+            var cache = MockRepository.GenerateMock<ICache>();
+            var projectList = new Project[] { new Project("someProject", new ProjectDocument(ProjectType.CSharp)) };
+            projectList[0].Value.SetOutputPath("something");
+            projectList[0].Value.SetAssemblyName("Project5.dll");
+            var optimizer = new BuildOptimizer(_cache, MockRepository.GenerateMock<IConfiguration>());
+            var runInfos = optimizer.AssembleBuildConfiguration(projectList);
+            runInfos.Length.ShouldEqual(1);
+            runInfos[0].Project.Key.ShouldEqual("someProject");
+        }
 	}
 }
