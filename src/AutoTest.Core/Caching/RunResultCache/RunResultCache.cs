@@ -164,7 +164,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void logTest(string prefix, TestItem item)
         {
-            Debug.WriteMessage("\t" + string.Format(prefix, item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+            Debug.WriteMessage("\t" + prefix + string.Format(" ({2}.{1}) from {0} named {4} saying {3} in {5}", item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
         }
 
         private string getStackTrace(IStackLine[] iStackLine)
