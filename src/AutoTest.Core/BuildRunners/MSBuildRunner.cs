@@ -53,7 +53,7 @@ namespace AutoTest.Core.BuildRunners
 		
 		private string buildProperties(Project project)
 		{
-			var outputDir = getOutputDir();
+			var outputDir = getOutputDir(project);
 			string overriddenPlatform = "";
 			// Only override platform for winodws. It's flawed on other platforms
 			if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
@@ -63,17 +63,17 @@ namespace AutoTest.Core.BuildRunners
 			}
 			return " /property:OutDir=" + outputDir + overriddenPlatform;
 		}
-        
-		private string getOutputDir()
+
+        private string getOutputDir(Project project)
 		{
+            var outputPath = string.Format("bin{0}AutoTest.NET{0}", Path.DirectorySeparatorChar);
 			if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
-			{
-				var outputPath = _configuration.CustomOutputPath;
-				if (outputPath.Substring(outputPath.Length - 1, 1) != Path.DirectorySeparatorChar.ToString())
-					outputPath += Path.DirectorySeparatorChar;
-				return outputPath;
-			}
-			return string.Format("bin{0}AutoTest.NET{0}", Path.DirectorySeparatorChar);
+                outputPath = _configuration.CustomOutputPath;
+            if (!Path.IsPathRooted(outputPath))
+                outputPath = Path.Combine(Path.GetDirectoryName(project.Key), outputPath);
+            if (outputPath.Substring(outputPath.Length - 1, 1) != Path.DirectorySeparatorChar.ToString())
+                outputPath += Path.DirectorySeparatorChar;
+			return outputPath;
 		}
 	}
 }
