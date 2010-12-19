@@ -80,6 +80,10 @@
 	
 	<!-- Rerun failed tests before doing a full testrun -->
 	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
+  
+  <!-- If set it will always use msbuild to build solution file instead of only changed projects -->
+  <!-- when AutoTest.Net is set to watch a solution file -->
+  <!--<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>-->
 	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>

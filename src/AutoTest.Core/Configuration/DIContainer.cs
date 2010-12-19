@@ -92,10 +92,17 @@ namespace AutoTest.Core.Configuration
 
         public void InitializeCache(string watchFolder)
         {
+            setWatchFolder(watchFolder);
             if (isFolder(watchFolder))
                 crawlFolder(watchFolder);
             else
                 crawlFile(watchFolder);
+        }
+
+        private void setWatchFolder(string watchFolder)
+        {
+            var config = _services.Locate<IConfiguration>();
+            config.SetWatchPath(watchFolder);
         }
 
         private void crawlFile(string solutionFile)

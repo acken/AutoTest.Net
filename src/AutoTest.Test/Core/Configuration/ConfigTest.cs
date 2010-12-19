@@ -251,6 +251,12 @@ namespace AutoTest.Test.Core.Configuration
 			_config.TestAssembliesToIgnore[2].ShouldEqual("MergedRule.dll");
 			_config.FileChangeBatchDelay.ShouldEqual(800);
 		}
+
+        [Test]
+        public void Should_read_build_solution_when_watching_solution()
+        {
+            _config.WhenWatchingSolutionBuildSolution.ShouldBeTrue();
+        }
 		
 		private void createMergeFile()
 		{

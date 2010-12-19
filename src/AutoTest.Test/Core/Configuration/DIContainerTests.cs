@@ -349,5 +349,13 @@ namespace AutoTest.Test.Core.Configuration
             var crawler = _locator.Locate<ISolutionChangeConsumer>();
             crawler.ShouldBeOfType<ISolutionChangeConsumer>();
         }
+
+        [Test]
+        public void Configuration_should_be_singleton()
+        {
+            var config1 = _locator.Locate<IConfiguration>();
+            var config2 = _locator.Locate<IConfiguration>();
+            Assert.AreSame(config1, config2);
+        }
     }
 }

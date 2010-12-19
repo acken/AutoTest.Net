@@ -23,6 +23,8 @@ namespace AutoTest.Core.Configuration
         private List<KeyValuePair<string, string>> _xunitTestRunner = new List<KeyValuePair<string, string>>();
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
+
+        public string WatchPath { get; private set; }
 		
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
@@ -34,6 +36,7 @@ namespace AutoTest.Core.Configuration
 		public string[] TestCategoriesToIgnore { get; private set; }
 		public string CustomOutputPath { get; private set; }
 		public bool RerunFailedTestsFirst { get; private set; }
+        public bool WhenWatchingSolutionBuildSolution { get; private set; }
 		
         public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)
         {
@@ -308,6 +311,11 @@ namespace AutoTest.Core.Configuration
             if ((index = _buildExecutables.FindIndex(0, b => b.Key.Equals(""))) >= 0)
                 return _buildExecutables[index].Value;
             return _buildExecutables[0].Value;
+        }
+
+        public void SetWatchPath(string watchFolder)
+        {
+            WatchPath = watchFolder;
         }
 
         private string getVersionedSetting(string version, List<KeyValuePair<string, string>> setting)

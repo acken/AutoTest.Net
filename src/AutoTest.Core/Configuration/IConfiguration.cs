@@ -8,6 +8,8 @@ namespace AutoTest.Core.Configuration
 {
     public interface IConfiguration
     {
+        string WatchPath { get; }
+
         string[] WatchDirectores { get; }
         string BuildExecutable(ProjectDocument project);
         string NunitTestRunner(string version);
@@ -26,11 +28,14 @@ namespace AutoTest.Core.Configuration
 		string[] TestCategoriesToIgnore { get; }
 		string CustomOutputPath { get; }
 		bool RerunFailedTestsFirst { get; }
+        bool WhenWatchingSolutionBuildSolution { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
 		void SetBuildProvider();
 		void AnnounceTrackerType();
 		void Merge(string configuratoinFile);
+
+        void SetWatchPath(string watchFolder);
     }
 }
