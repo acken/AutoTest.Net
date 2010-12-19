@@ -130,6 +130,8 @@
     <Compile Include="Core\Presenters\Fakes\FakeRunResultMerger.cs" />
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
+    <Compile Include="Core\TestRunners\MSpecCommandLineBuilderTest.cs" />
+    <Compile Include="Core\TestRunners\MSpecTestRunnerTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\MSTestRunnerTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />

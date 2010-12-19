@@ -34,6 +34,7 @@ namespace AutoTest.Core.Caching.Projects
         public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
         public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
         public bool ContainsXUnitTests { get { return _containsTestsFor.Contains(typeof (XUnitTestRunner)); } }
+        public bool ContainsMSpecTests { get { return _containsTestsFor.Contains(typeof (MSpecTestRunner)); } }
         public string[] References { get { return _references.ToArray(); } }
         public string[] ReferencedBy { get { return _referencedBy.ToArray(); } }
 		public bool RequiresRebuild { get { return _requiresRebuild; } }
@@ -91,6 +92,11 @@ namespace AutoTest.Core.Caching.Projects
         public void SetAsXUnitTestContainer()
         {
             _containsTestsFor.Add(typeof(XUnitTestRunner));
+        }
+
+        public void SetAsMSpecTestContainer()
+        {
+            _containsTestsFor.Add(typeof(MSpecTestRunner));
         }
 
         public bool IsReferencedBy(string reference)
