@@ -13,7 +13,6 @@ namespace AutoTest.Core.BuildRunners
 {
     public class MSBuildRunner : IBuildRunner
     {
-        private string _buildExecutable;
 		private IConfiguration _configuration;
 
         public MSBuildRunner(IConfiguration configuration)
@@ -21,17 +20,30 @@ namespace AutoTest.Core.BuildRunners
 			_configuration = configuration;
         }
 
+        public BuildRunResults RunBuild(string solution, bool rebuild, string buildExecutable)
+        {
+            var arguments = string.Format("\"{0}\" /property:OutDir=bin{1}AutoTest.Net{1}", solution, Path.DirectorySeparatorChar);
+            if (rebuild)
+                arguments += " /target:rebuild";
+            return runBuild(buildExecutable, arguments, solution);
+        }
+
         public BuildRunResults RunBuild(Project project, string buildExecutable)
         {
-            var timer = Stopwatch.StartNew();
-            _buildExecutable = buildExecutable;
 			var properties = buildProperties(project);
             var arguments = string.Format("\"{0}\"", project.Key) + properties;
 			if (project.Value.RequiresRebuild)
 				arguments += " /target:rebuild";
-            DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", _buildExecutable, arguments));
+            var target = project.Key;
+            return runBuild(buildExecutable, arguments, target);
+        }
+
+        private static BuildRunResults runBuild(string buildExecutable, string arguments, string target)
+        {
+            var timer = Stopwatch.StartNew();
+            DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", buildExecutable, arguments));
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(_buildExecutable, arguments);
+            process.StartInfo = new ProcessStartInfo(buildExecutable, arguments);
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.UseShellExecute = false;
@@ -39,13 +51,13 @@ namespace AutoTest.Core.BuildRunners
 
             process.Start();
             string line;
-            var buildResults = new BuildRunResults(project.Key);
-			var lines = new List<string>();
+            var buildResults = new BuildRunResults(target);
+            var lines = new List<string>();
             while ((line = process.StandardOutput.ReadLine()) != null)
-				lines.Add(line);
+                lines.Add(line);
             process.WaitForExit();
             timer.Stop();
-			var parser = new MSBuildOutputParser(buildResults, lines.ToArray());
+            var parser = new MSBuildOutputParser(buildResults, lines.ToArray());
             parser.Parse();
             buildResults.SetTimeSpent(timer.Elapsed);
             return buildResults;

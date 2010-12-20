@@ -49,7 +49,7 @@ namespace AutoTest.WinForms
         private void buttonOk_Click(object sender, EventArgs e)
         {
             var directory = textBoxDirectory.Text.Trim();
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(directory) && !File.Exists(directory))
             {
                 showInvalidDirectoryError();
                 return;

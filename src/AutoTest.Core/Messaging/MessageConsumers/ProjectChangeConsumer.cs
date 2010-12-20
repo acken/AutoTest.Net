@@ -55,7 +55,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var runReport = new RunReport();
             var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
-			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
+			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies, !_configuration.ShouldBuildSolution);
             if (!buildAll(list, runReport))
 				return runReport;
             markAllAsBuilt(list);
@@ -79,7 +79,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private bool buildAll(RunInfo[] projectList, RunReport runReport)
 		{
-			var indirectlyBuild = new List<string>();
+            if (_configuration.ShouldBuildSolution)
+            {
+                var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None)); 
+                if (File.Exists(buildExecutable))
+                {
+                    _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchPath, "", typeof(MSBuildRunner)));
+
+                    var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.ShouldBeBuilt).Count() > 0, buildExecutable); 
+                    var succeeded = buildReport.ErrorCount == 0;
+                    runReport.AddBuild(_configuration.WatchPath, buildReport.TimeSpent, succeeded);
+                    _bus.Publish(new BuildRunMessage(buildReport));
+                    return succeeded;
+                }
+            }
+
+			var indirectlyBuilt = new List<string>();
 			foreach (var file in projectList)
             {
 				if (file.ShouldBeBuilt)
@@ -91,10 +106,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				else
 				{
 					Debug.WriteMessage(string.Format("Not set to build project {0}", file.Project.Key));
-					indirectlyBuild.Add(file.Project.Key);
+					indirectlyBuilt.Add(file.Project.Key);
 				}
             }
-			foreach (var project in indirectlyBuild)
+			foreach (var project in indirectlyBuilt)
 				runReport.AddBuild(project, new TimeSpan(0), true);
 			return true;
 		}

@@ -257,6 +257,12 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.WhenWatchingSolutionBuildSolution.ShouldBeTrue();
         }
+
+        [Test]
+        public void Should_build_solution()
+        {
+            _config.ShouldBuildSolution.ShouldBeFalse();
+        }
 		
 		private void createMergeFile()
 		{

@@ -43,6 +43,8 @@ namespace AutoTest.Core.FileSystem
 
         public void Watch(string path)
         {
+            if (File.Exists(path))
+                path = Path.GetDirectoryName(path);
             if (!Directory.Exists(path))
             {
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));

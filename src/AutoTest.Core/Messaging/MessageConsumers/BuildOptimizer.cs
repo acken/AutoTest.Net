@@ -18,24 +18,27 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			_cache = cache;
 			_configuration = configuration;
 		}
-		
-		public RunInfo[] AssembleBuildConfiguration(string[] projectList)
+
+        public RunInfo[] AssembleBuildConfiguration(string[] projectList, bool useBuiltProjectsOutputPath)
 		{
 			var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList);
+            return assemblefConfiguration(runList, useBuiltProjectsOutputPath);
 		}
 
-        public RunInfo[] AssembleBuildConfiguration(Project[] projectList)
+        public RunInfo[] AssembleBuildConfiguration(Project[] projectList, bool useBuiltProjectsOutputPath)
         {
             var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList);
+            return assemblefConfiguration(runList, useBuiltProjectsOutputPath);
         }
 
-        private RunInfo[] assemblefConfiguration(List<RunInfo> runList)
+        private RunInfo[] assemblefConfiguration(List<RunInfo> runList, bool useBuiltProjectsOutputPath)
         {
             markProjectsForBuild(runList);
             detectProjectRebuilds(runList);
-            locateAssemblyDestinations(runList);
+            if (useBuiltProjectsOutputPath)
+                locateAssemblyDestinationsRecursive(runList);
+            else
+                locateAssemblyDestinations(runList);
             return runList.ToArray();
         }
 
@@ -63,6 +66,15 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         }
 
         private void locateAssemblyDestinations(List<RunInfo> runList)
+        {
+            for (int i = runList.Count - 1; i >= 0; i--)
+            {
+                var item = runList[i];
+                item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
+            }
+        }
+
+        private void locateAssemblyDestinationsRecursive(List<RunInfo> runList)
         {
             for (int i = runList.Count - 1; i >= 0; i--)
             {

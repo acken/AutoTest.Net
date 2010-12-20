@@ -30,6 +30,8 @@ namespace AutoTest.Core.Configuration
 		bool RerunFailedTestsFirst { get; }
         bool WhenWatchingSolutionBuildSolution { get; }
 
+        bool ShouldBuildSolution { get; }
+
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
 		void SetBuildProvider();
