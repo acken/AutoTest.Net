@@ -16,13 +16,12 @@ namespace AutoTest.Test
 		{
 			var project = new Project("", new ProjectDocument(ProjectType.CSharp));
 			var cache = MockRepository.GenerateMock<ICache>();
-			var reloader = MockRepository.GenerateMock<IReload<Project>>();
 			cache.Stub(c => c.Get<Project>("")).IgnoreArguments().Return(project);
 			
 			var message = new FileChangeMessage();
 			
 			message.AddFile(new ChangedFile(string.Format("TestResources{0}CSharpClassLibrary{0}CSharpClassLibrary.csproj", Path.DirectorySeparatorChar)));
-			var marker = new ProjectRebuildMarker(cache, reloader);
+			var marker = new ProjectRebuildMarker(cache);
 			marker.HandleProjects(message);
 			
 			project.Value.RequiresRebuild.ShouldBeTrue();
@@ -33,13 +32,12 @@ namespace AutoTest.Test
 		{
 			var project = new Project("", new ProjectDocument(ProjectType.VisualBasic));
 			var cache = MockRepository.GenerateMock<ICache>();
-			var reloader = MockRepository.GenerateMock<IReload<Project>>();
 			cache.Stub(c => c.Get<Project>("")).IgnoreArguments().Return(project);
 			
 			var message = new FileChangeMessage();
 			
 			message.AddFile(new ChangedFile(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar)));
-			var marker = new ProjectRebuildMarker(cache, reloader);
+			var marker = new ProjectRebuildMarker(cache);
 			marker.HandleProjects(message);
 			
 			project.Value.RequiresRebuild.ShouldBeTrue();
@@ -50,13 +48,12 @@ namespace AutoTest.Test
         {
             var project = new Project("", new ProjectDocument(ProjectType.VisualBasic));
             var cache = MockRepository.GenerateMock<ICache>();
-            var reloader = MockRepository.GenerateMock<IReload<Project>>();
             var message = new FileChangeMessage();
             message.AddFile(new ChangedFile(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar)));
             cache.Stub(c => c.Get<Project>(message.Files[0].FullName)).Return(null).Repeat.Once();
             cache.Stub(c => c.Get<Project>(message.Files[0].FullName)).Return(project).Repeat.Once();
 
-            var marker = new ProjectRebuildMarker(cache, reloader);
+            var marker = new ProjectRebuildMarker(cache);
             marker.HandleProjects(message);
 
             cache.AssertWasCalled(c => c.Add<Project>(message.Files[0].FullName));

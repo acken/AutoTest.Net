@@ -19,7 +19,7 @@ namespace AutoTest.Core.FileSystem
 			_configuration = configuration;
 			_defaultIgnores[0] = "bin/Debug";
 			_defaultIgnores[1] = "bin/Release";
-			_defaultIgnores[2] = "bin/AutoTest.NET";
+			_defaultIgnores[2] = "bin/AutoTest.Net";
 			_defaultIgnores[3] = "bin/x86";
 			_defaultIgnores[4] = "obj/Debug";
 			_defaultIgnores[5] = "obj/Release";

@@ -36,7 +36,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 										string.Format("Proj0{0}Project0.csproj", Path.DirectorySeparatorChar), 
 										string.Format("Proj1{0}Project1.csproj", Path.DirectorySeparatorChar), 
 										string.Format("Proj2{0}Project2.csproj", Path.DirectorySeparatorChar), 
-										string.Format("Proj3{0}Project3.csproj", Path.DirectorySeparatorChar), 
+										string.Format("Proj3{0}Project3.csproj", Path.DirectorySeparatorChar),
 										string.Format("Proj4{0}Project4.csproj", Path.DirectorySeparatorChar), 
 										string.Format("Proj5{0}Project5.csproj", Path.DirectorySeparatorChar), 
 										string.Format("Proj6{0}Project6.csproj", Path.DirectorySeparatorChar)
@@ -140,7 +140,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         [Test]
         public void Should_support_list_of_projects()
         {
-            var cache = MockRepository.GenerateMock<ICache>();
             var projectList = new Project[] { new Project("someProject", new ProjectDocument(ProjectType.CSharp)) };
             projectList[0].Value.SetOutputPath("something");
             projectList[0].Value.SetAssemblyName("Project5.dll");

@@ -17,15 +17,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
-        private readonly ICache _cache;
 		private readonly IMarkProjectsForRebuild _rebuildMarker;
         private readonly ISolutionChangeConsumer _solutionHanlder;
 
-        public FileChangeConsumer(IServiceLocator services, IMessageBus bus, ICache cache, IMarkProjectsForRebuild rebuildMarker, ISolutionChangeConsumer solutionHanlder)
+        public FileChangeConsumer(IServiceLocator services, IMessageBus bus, IMarkProjectsForRebuild rebuildMarker, ISolutionChangeConsumer solutionHanlder)
         {
             _services = services;
             _bus = bus;
-            _cache = cache;
 			_rebuildMarker = rebuildMarker;
             _solutionHanlder = solutionHanlder;
         }

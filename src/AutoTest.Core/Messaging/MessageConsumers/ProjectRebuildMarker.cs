@@ -7,12 +7,10 @@ namespace AutoTest.Core
 	class ProjectRebuildMarker : IMarkProjectsForRebuild
 	{
 		private ICache _cache;
-		private IReload<Project> _reloader;
 		
-		public ProjectRebuildMarker(ICache cache, IReload<Project> reloader)
+		public ProjectRebuildMarker(ICache cache)
 		{
 			_cache = cache;
-			_reloader = reloader;
 		}
 		
 		public void HandleProjects(FileChangeMessage message)

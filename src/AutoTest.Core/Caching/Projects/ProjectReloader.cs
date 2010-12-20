@@ -8,12 +8,10 @@ namespace AutoTest.Core.Caching.Projects
     class ProjectReloader : IReload<Project>
     {
         private ICache _cache;
-        private IPrepare<Project> _preparer;
 
-        public ProjectReloader(ICache cache, IPrepare<Project> preparer)
+        public ProjectReloader(ICache cache)
         {
             _cache = cache;
-            _preparer = preparer;
         }
 
         #region IReload<Project> Members

@@ -67,9 +67,9 @@ namespace AutoTest.Core.Notifiers
             }
 			string args;
 			if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-				args = string.Format("--image \"{0}\" --title \"AutoTest.NET\" --message \"{1}\"", icon, msg);
+				args = string.Format("--image \"{0}\" --title \"AutoTest.Net\" --message \"{1}\"", icon, msg);
 			else
-            	args = string.Format("/t:\"AutoTest.NET\" /i:\"{0}\" \"{1}\"", icon, msg);
+            	args = string.Format("/t:\"AutoTest.Net\" /i:\"{0}\" \"{1}\"", icon, msg);
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(_growl_executable, args);
             process.StartInfo.CreateNoWindow = true;

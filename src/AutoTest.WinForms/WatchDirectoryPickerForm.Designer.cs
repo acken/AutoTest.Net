@@ -102,7 +102,7 @@ namespace AutoTest.WinForms
             this.Controls.Add(this.textBoxDirectory);
             this.Controls.Add(this.listViewDirectories);
             this.Name = "WatchDirectoryPickerForm";
-            this.Text = "Choose directory for AutoTest.NET to watch";
+            this.Text = "Choose directory for AutoTest.Net to watch";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -14,15 +14,13 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectReloader _reloader;
         private ICache _cache;
-        private IPrepare<Project> _preparer;
         private Project _project;
 
         [SetUp]
         public void SetUp()
         {
             _cache = MockRepository.GenerateMock<ICache>();
-            _preparer = MockRepository.GenerateMock<IPrepare<Project>>();
-            _reloader = new ProjectReloader(_cache, _preparer);
+            _reloader = new ProjectReloader(_cache);
             _project = new Project("project", new ProjectDocument(ProjectType.CSharp));
             _project.Value.AddReferencedBy("Referenced by");
             _project.Value.HasBeenReadFromFile();
