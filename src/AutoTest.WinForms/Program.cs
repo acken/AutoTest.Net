@@ -50,10 +50,6 @@ namespace AutoTest.WinForms
                     assemblies.Add(assembly);
                 }
 
-
-
-
-
         	    Application.Run(overviewForm.Form);
         	    BootStrapper.ShutDown();
 			}

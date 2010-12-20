@@ -80,39 +80,48 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private bool buildAll(RunInfo[] projectList, RunReport runReport)
 		{
             if (_configuration.ShouldBuildSolution)
-            {
-                var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None)); 
-                if (File.Exists(buildExecutable))
-                {
-                    _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchPath, "", typeof(MSBuildRunner)));
+                return buildSolution(projectList, runReport);
+            else
+                return buildProjects(projectList, runReport);
+		}
 
-                    var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.ShouldBeBuilt).Count() > 0, buildExecutable); 
-                    var succeeded = buildReport.ErrorCount == 0;
-                    runReport.AddBuild(_configuration.WatchPath, buildReport.TimeSpent, succeeded);
-                    _bus.Publish(new BuildRunMessage(buildReport));
-                    return succeeded;
+        private bool buildProjects(RunInfo[] projectList, RunReport runReport)
+        {
+            var indirectlyBuilt = new List<string>();
+            foreach (var file in projectList)
+            {
+                if (file.ShouldBeBuilt)
+                {
+                    Debug.WriteMessage(string.Format("Set to build project {0}", file.Project.Key));
+                    if (!build(file, runReport))
+                        return false;
+                }
+                else
+                {
+                    Debug.WriteMessage(string.Format("Not set to build project {0}", file.Project.Key));
+                    indirectlyBuilt.Add(file.Project.Key);
                 }
             }
+            foreach (var project in indirectlyBuilt)
+                runReport.AddBuild(project, new TimeSpan(0), true);
+            return true;
+        }
 
-			var indirectlyBuilt = new List<string>();
-			foreach (var file in projectList)
+        private bool buildSolution(RunInfo[] projectList, RunReport runReport)
+        {
+            var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None));
+            if (File.Exists(buildExecutable))
             {
-				if (file.ShouldBeBuilt)
-				{
-					Debug.WriteMessage(string.Format("Set to build project {0}", file.Project.Key));
-	                if (!build(file, runReport))
-	                    return false;
-				}
-				else
-				{
-					Debug.WriteMessage(string.Format("Not set to build project {0}", file.Project.Key));
-					indirectlyBuilt.Add(file.Project.Key);
-				}
+                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchPath, "", typeof(MSBuildRunner)));
+
+                var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable);
+                var succeeded = buildReport.ErrorCount == 0;
+                runReport.AddBuild(_configuration.WatchPath, buildReport.TimeSpent, succeeded);
+                _bus.Publish(new BuildRunMessage(buildReport));
+                return succeeded;
             }
-			foreach (var project in indirectlyBuilt)
-				runReport.AddBuild(project, new TimeSpan(0), true);
-			return true;
-		}
+            return false;
+        }
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{

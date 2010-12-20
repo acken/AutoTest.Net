@@ -5,7 +5,7 @@ namespace AutoTest.Messages
 	public interface ICustomBinarySerializable  
 	{  
 	    void WriteDataTo(BinaryWriter writer);  
-	    void SetDataFrom(BinaryReader reader);  
+	    void SetDataFrom(BinaryReader reader); 
 	}  
 }
 
