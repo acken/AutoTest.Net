@@ -28,12 +28,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             return new[]
                    {
+                       TimeInfo(run),
                        Filters(run),
                        XmlReport(run),
                        Assemblies(run)
                    }
                 .SelectMany(x => x)
                 .Aggregate((acc, curr) => acc + " " + curr);
+        }
+
+        IEnumerable<string> TimeInfo(MSpecTestRunner.Run run)
+        {
+            yield return String.Format("--timeinfo");
         }
 
         IEnumerable<string> Filters(MSpecTestRunner.Run run)

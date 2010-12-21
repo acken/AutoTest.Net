@@ -27,6 +27,22 @@ namespace AutoTest.Test.Core.TestRunners
         IFileSystemService _fileSystem;
 
         [Test]
+        public void Should_report_the_time_info()
+        {
+            var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("framework 1");
+            var info = new TestRunInfo(new Project("key 1", document), "assembly 1");
+
+            var infos = new[] { info };
+            var run = new MSpecTestRunner.Run { RunInfos = infos };
+
+            var args = _builder.Build(run);
+
+            Assert.That(args, Is.StringContaining("--timeinfo"));
+            Assert.That(run.Cleanups.Count(), Is.EqualTo(1));
+        }
+        
+        [Test]
         public void Should_create_an_xml_report()
         {
             var document = new ProjectDocument(ProjectType.CSharp);
