@@ -105,30 +105,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
                 _externalProcess.CreateAndWaitForExit(runnerExe, arguments);
 
-                //                var parser = new NUnitTestResponseParser(_bus, TestRunner.MSpec);
-                //                using (TextReader reader = new StreamReader(report))
-                //                {
-                //                    parser.Parse(reader.ReadToEnd(), runInfos, false);
-                //                }
-                //
-                //                foreach (var result in parser.Result)
-                //                {
-                //                    results.Add(result);
-                //                }
-                //
-                //                return results.ToArray();
+                return run.HarvestResults().ToList();
             }
             finally
             {
                 run.Cleanup();
             }
-
-            yield break;
         }
 
         public class Run
         {
             readonly List<Action> _cleanups = new List<Action>();
+            readonly List<Func<IEnumerable<TestRunResults>>> _harvesters = new List<Func<IEnumerable<TestRunResults>>>();
 
             public string RunnerExe
             {
@@ -147,9 +135,19 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 get { return _cleanups; }
             }
 
+            public IEnumerable<Func<IEnumerable<TestRunResults>>> Harvesters
+            {
+                get { return _harvesters; }
+            }
+
             public void RegisterCleanup(Action cleanup)
             {
                 _cleanups.Add(cleanup);
+            }
+            
+            public void RegisterResultHarvester(Func<IEnumerable<TestRunResults>> resultHarvester)
+            {
+                _harvesters.Add(resultHarvester);
             }
 
             public void Cleanup()
@@ -159,6 +157,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     .Reverse()
                     .ToList()
                     .ForEach(x => x());
+            }
+
+            public IEnumerable<TestRunResults> HarvestResults()
+            {
+                return _harvesters
+                    .Select(x => x())
+                    .SelectMany(x => x);
             }
         }
     }

@@ -39,7 +39,6 @@ namespace AutoTest.Test.Core.TestRunners
             var args = _builder.Build(run);
 
             Assert.That(args, Is.StringContaining("--timeinfo"));
-            Assert.That(run.Cleanups.Count(), Is.EqualTo(1));
         }
         
         [Test]
@@ -56,6 +55,7 @@ namespace AutoTest.Test.Core.TestRunners
 
             Assert.That(args, Is.StringContaining("--xml"));
             Assert.That(run.Cleanups.Count(), Is.EqualTo(1));
+            Assert.That(run.Harvesters.Count(), Is.EqualTo(1));
         } 
         
         [Test]

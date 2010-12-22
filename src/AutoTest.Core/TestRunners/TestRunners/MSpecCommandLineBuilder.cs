@@ -89,6 +89,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             var report = Path.GetTempFileName();
 
+            run.RegisterResultHarvester(()=>
+                {
+                    var parser = new MSpecReportParser(report, run);
+                    return parser.Parse();
+                });
+
             run.RegisterCleanup(() =>
                 {
                     if (_fileSystem.FileExists(report))

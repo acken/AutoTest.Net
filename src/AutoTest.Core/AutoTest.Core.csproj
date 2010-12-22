@@ -154,6 +154,7 @@
     <Compile Include="TestRunners\ITestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\HiddenExternalProcess.cs" />
     <Compile Include="TestRunners\TestRunners\MSpecCommandLineBuilder.cs" />
+    <Compile Include="TestRunners\TestRunners\MSpecReportParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSpecTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestResponseParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestRunner.cs" />
