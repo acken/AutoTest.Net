@@ -94,29 +94,50 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                 {
                                     FieldName = spec.GetAttribute("field-name", ""),
                                     Status = StatusFor(spec),
-                                    Message = ErrorMessageFor(spec),
+                                    Message = MessageFor(spec),
                                     StackTrace = StackTraceFor(spec),
                                 });
         }
 
         static TestRunStatus StatusFor(XPathNavigator spec)
         {
-            return MapStatus(spec.GetAttribute("status", ""));
-        }
+            var status = new[]
+                         {
+                             Result.Failed,
+                             Result.Passed,
+                             Result.NotImplemented,
+                             Result.Ignored
+                         }
+                .Where(x => x(spec).HasValue)
+                .Select(x => x(spec).Value)
+                .FirstOrDefault();
 
-        static string ErrorMessageFor(XPathNavigator spec)
-        {
-            if (StatusFor(spec) != TestRunStatus.Failed)
+            if (status == null)
             {
-                return null;
+                throw new NotSupportedException("Unknown test run status reported my mspec.exe: " + Result.String(spec));
             }
 
-            return spec.SelectSingleNode("error/message").Value;
+            return status;
+        }
+
+        static string MessageFor(XPathNavigator spec)
+        {
+            if (Result.NotImplemented(spec).HasValue)
+            {
+                return "not implemented";
+            }
+
+            if (Result.Failed(spec).HasValue)
+            {
+                return spec.SelectSingleNode("error/message").Value;
+            }
+
+            return null;
         }
 
         static IStackLine[] StackTraceFor(XPathNavigator spec)
         {
-            if (StatusFor(spec) != TestRunStatus.Failed)
+            if (!Result.Failed(spec).HasValue)
             {
                 return null;
             }
@@ -127,23 +148,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => new NUnitStackLine(line))
                 .ToArray();
-        }
-
-        static TestRunStatus MapStatus(string status)
-        {
-            switch (status)
-            {
-                case "failed":
-                case "exception":
-                    return TestRunStatus.Failed;
-                case "passed":
-                    return TestRunStatus.Passed;
-                case "not-implemented":
-                case "ignored":
-                    return TestRunStatus.Ignored;
-            }
-
-            throw new NotSupportedException("Unknown test run status reported my mspec.exe: " + status);
         }
 
         class Assembly
@@ -190,6 +194,33 @@ namespace AutoTest.Core.TestRunners.TestRunners
             public string Message;
             public IStackLine[] StackTrace;
             public TestRunStatus Status;
+        }
+
+        static class Result
+        {
+            public static readonly Func<XPathNavigator, string> String = x => x.GetAttribute("status", "");
+
+            public static readonly Func<XPathNavigator, TestRunStatus?> Failed =
+                x => Match(String(x), TestRunStatus.Failed, "failed", "exception");
+
+            public static readonly Func<XPathNavigator, TestRunStatus?> Ignored =
+                x => Match(String(x), TestRunStatus.Ignored, "ignored");
+
+            public static readonly Func<XPathNavigator, TestRunStatus?> NotImplemented =
+                x => Match(String(x), TestRunStatus.Ignored, "not-implemented");
+
+            public static readonly Func<XPathNavigator, TestRunStatus?> Passed =
+                x => Match(String(x), TestRunStatus.Passed, "passed");
+
+            static TestRunStatus? Match(string result, TestRunStatus status, params string[] resultStrings)
+            {
+                if (resultStrings.Any(x => x == result))
+                {
+                    return status;
+                }
+
+                return null;
+            }
         }
     }
 }

@@ -71,6 +71,12 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _results.First().Ignored.Length.ShouldEqual(8);
         }
+        
+        [Test]
+        public void Should_give_the_ignore_reason_for_unimplemented_specs()
+        {
+            _results.First().Ignored.Any(x => x.Message == "not implemented").ShouldBeTrue();
+        }
     }
 
     [TestFixture]
