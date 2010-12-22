@@ -110,6 +110,7 @@
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
+    <Compile Include="Core\TestRunners\TestRunners\MSTestRunConfigParserTest.cs" />
     <Compile Include="Core\TestRunners\MSTestRunnerTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\NUnitStackLineTest.cs" />

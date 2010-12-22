@@ -22,7 +22,12 @@ namespace AutoTest.Core.BuildRunners
 
         public BuildRunResults RunBuild(string solution, bool rebuild, string buildExecutable)
         {
-            var arguments = string.Format("\"{0}\" /property:OutDir=bin{1}AutoTest.Net{1}", solution, Path.DirectorySeparatorChar);
+            var outdir = string.Format("bin{0}AutoTest.Net{0}", Path.DirectorySeparatorChar);
+            if (_configuration.CustomOutputPath.Length > 0)
+                outdir = _configuration.CustomOutputPath;
+            if (outdir.Substring(outdir.Length - 1, 1) != Path.DirectorySeparatorChar.ToString())
+                outdir += Path.DirectorySeparatorChar;
+            var arguments = string.Format("\"{0}\" /property:OutDir={1}", solution, outdir);
             if (rebuild)
                 arguments += " /target:rebuild";
             return runBuild(buildExecutable, arguments, solution);

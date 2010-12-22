@@ -18,11 +18,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
+        private IFileSystemService _fsService;
 
-        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
+        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IFileSystemService fsService)
         {
             _configuration = configuration;
 			_referenceResolver = referenceResolver;
+            _fsService = fsService;
         }
 
         #region ITestRunner Members
@@ -58,10 +60,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     continue;
 				var calc = new MaxCmdLengthCalculator();
 				var tests = getTestsList(runInfo);
-				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage";
+                var testRunConfig = getTestrunConfigArguments();
+				var arguments = "/testcontainer:\"" + runInfo.Assembly + "\" " + tests + " /detail:errorstacktrace /detail:errormessage" + testRunConfig;
                 var runAllTests = (arguments.Length + unitTestExe.Length) > calc.GetLength();
 				if (runAllTests)
-					arguments = "/testcontainer:\"" + runInfo.Assembly + "\"" + " /detail:errorstacktrace /detail:errormessage";
+                    arguments = "/testcontainer:\"" + runInfo.Assembly + "\"" + " /detail:errorstacktrace /detail:errormessage" + testRunConfig;
 				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", unitTestExe, arguments)); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(unitTestExe, arguments);
@@ -82,6 +85,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
 	            results.Add(parser.Result);
 			}
 			return results.ToArray();
+        }
+
+        private string getTestrunConfigArguments()
+        {
+            var parser = new MSTestRunConfigParser(_configuration, _fsService);
+            var testRunConfig = parser.GetConfig();
+            if (testRunConfig == null)
+                return "";
+            return string.Format(" /runconfig:\"{0}\"", testRunConfig);
         }
 
         #endregion

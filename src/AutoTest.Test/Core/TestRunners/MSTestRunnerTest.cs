@@ -19,13 +19,15 @@ namespace AutoTest.Test.Core.TestRunners
         private MSTestRunner _runner;
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
+        private IFileSystemService _fsService;
 
         [SetUp]
         public void SetUp()
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
 			_referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
-            _runner = new MSTestRunner(_configuration, _referenceResolver);
+            _fsService = MockRepository.GenerateMock<IFileSystemService>();
+            _runner = new MSTestRunner(_configuration, _referenceResolver, _fsService);
         }
 
         [Test]
