@@ -72,7 +72,7 @@ namespace AutoTest.Core.Configuration
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
             MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
             XUnitTestRunner = getVersionedSetting("configuration/XUnitTestRunner");
-            MSpecTestRunner = getVersionedSetting("configuration/Machine.SpecificationsTestRunner");
+            MSpecTestRunner = getVersionedSetting("configuration/MachineSpecificationsTestRunner");
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getBoolItem("configuration/Debugging", false);
 			GrowlNotify = getValueItem("configuration/growlnotify", null);
