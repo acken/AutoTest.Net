@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <MSpec>
-  <assembly name="Machine.Specifications.Example.Random" location="C:\Some\Path\Machine.Specifications.Example.Random.dll">
+  <generated>
+    <date>Donnerstag, 23. Dezember 2010</date>
+    <time>15:37:01</time>
+  </generated>
+  <run time="154" />
+  <assembly name="Machine.Specifications.Example.Random" location="C:\Some\Path\Machine.Specifications.Example.Random.dll" time="92">
     <concern name="">
       <context name="context with multiple specifications and setup for each" type-name="Machine.Specifications.Specs.context_with_multiple_specifications_and_setup_for_each">
         <specification name="spec1" field-name="spec1" status="passed" />
@@ -84,6 +89,9 @@
       </context>
       <context name="context with behaviors" type-name="Machine.Specifications.Specs.context_with_behaviors">
         <specification name="should run" field-name="should_run" status="passed" />
+        <specification name="should run if behavior is not ignored" field-name="should_run_if_behavior_is_not_ignored" status="passed" />
+      </context>
+      <context name="second context with behaviors" type-name="Machine.Specifications.Specs.second_context_with_behaviors">
         <specification name="should run if behavior is not ignored" field-name="should_run_if_behavior_is_not_ignored" status="passed" />
       </context>
       <context name="context with behaviors where the behavior field is ignored" type-name="Machine.Specifications.Specs.context_with_behaviors_where_the_behavior_field_is_ignored">

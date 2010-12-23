@@ -14,7 +14,6 @@ namespace AutoTest.Test.Core.TestRunners
     [TestFixture]
     public class When_the_test_run_generates_report_XML
     {
-        #region Setup/Teardown
         [SetUp]
         public void SetUp()
         {
@@ -30,7 +29,6 @@ namespace AutoTest.Test.Core.TestRunners
             _parser = new MSpecReportParser("TestResources/MSpec/SingleAssembly.xml", run);
             _results = _parser.Parse();
         }
-        #endregion
 
         MSpecReportParser _parser;
         IEnumerable<TestRunResults> _results;
@@ -40,17 +38,23 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _results.Count().ShouldEqual(1);
         }
+
+        [Test]
+        public void Should_find_the_time_spent()
+        {
+            Assert.Greater(_results.First().TimeSpent, TimeSpan.Zero);
+        }
         
         [Test]
         public void Should_find_all_specs()
         {
-            _results.First().All.Length.ShouldEqual(28);
+            _results.First().All.Length.ShouldEqual(29);
         }
 
         [Test]
         public void Should_find_succeeded_specs()
         {
-            _results.First().Passed.Length.ShouldEqual(16);
+            _results.First().Passed.Length.ShouldEqual(17);
         }
 
         [Test]
@@ -82,7 +86,6 @@ namespace AutoTest.Test.Core.TestRunners
     [TestFixture]
     public class When_the_test_run_generates_report_XML_for_two_assemblies
     {
-        #region Setup/Teardown
         [SetUp]
         public void SetUp()
         {
@@ -100,7 +103,6 @@ namespace AutoTest.Test.Core.TestRunners
             _parser = new MSpecReportParser("TestResources/MSpec/TwoAssemblies.xml", run);
             _results = _parser.Parse();
         }
-        #endregion
 
         MSpecReportParser _parser;
         IEnumerable<TestRunResults> _results;
@@ -110,12 +112,17 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _results.Count().ShouldEqual(2);
         }
+        
+        [Test]
+        public void Should_find_the_time_spent_for_each_assembly()
+        {
+            _results.ToList().ForEach(x => Assert.Greater(x.TimeSpent, TimeSpan.Zero));
+        }
     }
 
     [TestFixture]
     public class When_the_test_run_generates_report_XML_for_an_unknown_assembly
     {
-        #region Setup/Teardown
         [SetUp]
         public void SetUp()
         {
@@ -131,7 +138,6 @@ namespace AutoTest.Test.Core.TestRunners
             _parser = new MSpecReportParser("TestResources/MSpec/SingleAssembly.xml", run);
             _results = _parser.Parse();
         }
-        #endregion
 
         MSpecReportParser _parser;
         IEnumerable<TestRunResults> _results;

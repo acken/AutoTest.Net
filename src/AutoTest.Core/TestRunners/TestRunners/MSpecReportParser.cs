@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.XPath;
 
@@ -31,6 +32,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 .Select(assembly => new Assembly
                                     {
                                         AssemblyLocation = assembly.GetAttribute("location", ""),
+                                        TimeSpent = ReadTimeSpan(assembly),
                                         ContextSpecifications = ContextSpecificationsFor(assembly)
                                     })
                 .Select(x =>
@@ -39,12 +41,30 @@ namespace AutoTest.Core.TestRunners.TestRunners
                         return x;
                     })
                 .Where(x => x.AssociatedRunInfo != null)
-                .Select(x => new TestRunResults(x.AssociatedRunInfo.Project.Key,
-                                                x.AssociatedRunInfo.Assembly,
-                                                _run.RunInfos.Any(),
-                                                TestRunner.MSpec,
-                                                TestResultsFor(x.ContextSpecifications)))
+                .Select(x =>
+                    {
+                        var results = new TestRunResults(x.AssociatedRunInfo.Project.Key,
+                                                         x.AssociatedRunInfo.Assembly,
+                                                         _run.RunInfos.Any(),
+                                                         TestRunner.MSpec,
+                                                         TestResultsFor(x.ContextSpecifications));
+                        results.SetTimeSpent(x.TimeSpent);
+                        return results;
+                    })
                 .ToList();
+        }
+
+        static TimeSpan ReadTimeSpan(XPathNavigator assembly)
+        {
+            var timeString = assembly.GetAttribute("time", "");
+
+            double time;
+            if (double.TryParse(timeString, NumberStyles.Number, CultureInfo.InvariantCulture, out time))
+            {
+                return TimeSpan.FromMilliseconds(time);
+            }
+
+            return TimeSpan.Zero;
         }
 
         static TestResult[] TestResultsFor(IEnumerable<ContextSpecification> contextSpecifications)
@@ -155,6 +175,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             public string AssemblyLocation;
             public TestRunInfo AssociatedRunInfo;
             public IEnumerable<ContextSpecification> ContextSpecifications;
+            public TimeSpan TimeSpent;
         }
 
         class ContextSpecification

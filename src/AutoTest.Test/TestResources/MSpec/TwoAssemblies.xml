@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <MSpec>
-  <assembly name="Machine.Specifications.Example.Random" location="C:\Some\Path\Machine.Specifications.Example.Random.dll">
+  <generated>
+    <date>Donnerstag, 23. Dezember 2010</date>
+    <time>15:41:28</time>
+  </generated>
+  <run time="167" />
+  <assembly name="Machine.Specifications.Example.Random" location="C:\Some\Path\Machine.Specifications.Example.Random.dll" time="70">
     <concern name="">
       <context name="context with multiple specifications and setup for each" type-name="Machine.Specifications.Specs.context_with_multiple_specifications_and_setup_for_each">
         <specification name="spec1" field-name="spec1" status="passed" />
@@ -100,7 +105,7 @@
       </context>
     </concern>
   </assembly>
-  <assembly name="Machine.Specifications.FailingExample" location="C:\Some\Path\Machine.Specifications.FailingExample.dll">
+  <assembly name="Machine.Specifications.FailingExample" location="C:\Some\Path\Machine.Specifications.FailingExample.dll" time="32">
     <concern name="Scott Bellware">
       <context name="at any given moment" type-name="Machine.Specifications.FailingExample.at_any_given_moment">
         <specification name="will fail" field-name="will_fail" status="failed">
