@@ -128,16 +128,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
                              Result.NotImplemented,
                              Result.Ignored
                          }
-                .Where(x => x(spec).HasValue)
-                .Select(x => x(spec).Value)
-                .FirstOrDefault();
+                .FirstOrDefault(x => x(spec).HasValue);
 
             if (status == null)
             {
                 throw new NotSupportedException("Unknown test run status reported my mspec.exe: " + Result.String(spec));
             }
 
-            return status;
+            return status(spec).Value;
         }
 
         static string MessageFor(XPathNavigator spec)
