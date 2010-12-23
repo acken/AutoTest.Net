@@ -88,7 +88,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void Should_only_build_projects_without_referencedbys()
 		{
-            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList, true);
+            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList);
 			_runInfos[0].ShouldBeBuilt.ShouldBeFalse();
 			_runInfos[1].ShouldBeBuilt.ShouldBeFalse();
 			_runInfos[2].ShouldBeBuilt.ShouldBeTrue();
@@ -98,23 +98,23 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_runInfos[6].ShouldBeBuilt.ShouldBeFalse();
 		}
 
-        [Test]
-        public void Should_set_assembly_path_to_build_source()
-        {
-            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList, true);
-            _runInfos[0].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
-            _runInfos[1].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
-            _runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
-            _runInfos[3].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
-            _runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
-            _runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
-            _runInfos[6].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
-        }
+        //[Test]
+        //public void Should_set_assembly_path_to_build_source()
+        //{
+        //    _runInfos = _optimizer.AssembleBuildConfiguration(_projectList);
+        //    _runInfos[0].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[1].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[3].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project3.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[4].Assembly.ShouldEqual(string.Format("Proj4{0}bin{0}Debug{0}Project4.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[5].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project5.dll", Path.DirectorySeparatorChar));
+        //    _runInfos[6].Assembly.ShouldEqual(string.Format("Proj5{0}bin{0}Debug{0}Project6.dll", Path.DirectorySeparatorChar));
+        //}
 
         [Test]
         public void Should_set_assembly_path_to_individual_dir()
         {
-            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList, false);
+            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList);
             _runInfos[0].Assembly.ShouldEqual(string.Format("Proj0{0}bin{0}Debug{0}Project0.dll", Path.DirectorySeparatorChar));
             _runInfos[1].Assembly.ShouldEqual(string.Format("Proj1{0}bin{0}Debug{0}Project1.dll", Path.DirectorySeparatorChar));
             _runInfos[2].Assembly.ShouldEqual(string.Format("Proj2{0}bin{0}Debug{0}Project2.dll", Path.DirectorySeparatorChar));
@@ -127,7 +127,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void Should_rebuild_project_()
 		{
-            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList, true);
+            _runInfos = _optimizer.AssembleBuildConfiguration(_projectList);
 			_runInfos[0].Project.Value.RequiresRebuild.ShouldBeFalse();
 			_runInfos[1].Project.Value.RequiresRebuild.ShouldBeTrue();
 			_runInfos[2].Project.Value.RequiresRebuild.ShouldBeFalse();
@@ -144,7 +144,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             projectList[0].Value.SetOutputPath("something");
             projectList[0].Value.SetAssemblyName("Project5.dll");
             var optimizer = new BuildOptimizer(_cache, MockRepository.GenerateMock<IConfiguration>());
-            var runInfos = optimizer.AssembleBuildConfiguration(projectList, true);
+            var runInfos = optimizer.AssembleBuildConfiguration(projectList);
             runInfos.Length.ShouldEqual(1);
             runInfos[0].Project.Key.ShouldEqual("someProject");
         }

@@ -55,7 +55,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var runReport = new RunReport();
             var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
-			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies, !_configuration.ShouldBuildSolution);
+			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
             if (!buildAll(list, runReport))
 				return runReport;
             markAllAsBuilt(list);

@@ -106,6 +106,15 @@ namespace AutoTest.Test.Core.FileSystem
         }
 
         [Test]
+        public void Should_invalidate_bin_autotest_net()
+        {
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _validator
+                .ShouldPublish(getInfo("asomething{0}bin{0}AutoTest.Net{0}somefile.mm.dll"))
+                .ShouldBeFalse();
+        }
+
+        [Test]
         public void Should_invalidate_monos_filelistabsolute_file()
         {
 			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
@@ -169,6 +178,24 @@ namespace AutoTest.Test.Core.FileSystem
 			_configuration.Stub(c => c.CustomOutputPath).Return("bin/MyCustomOutDir/");
 			_validator.GetIgnorePatterns().ShouldEqual("myFolder/*|whatever.txt|*.bat|bin/MyCustomOutDir/");
 		}
+
+        [Test]
+        public void Should_return_list_of_ignore_items_included_custom_output_directory_using_back_slash()
+        {
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*", "whatever.txt", "*.bat" });
+            _configuration.Stub(c => c.CustomOutputPath).Return("bin\\MyCustomOutDir\\");
+            _validator.GetIgnorePatterns().ShouldEqual("myFolder/*|whatever.txt|*.bat|bin/MyCustomOutDir/");
+        }
+
+        [Test]
+        public void Should_return_list_of_ignore_items_included_custom_output_directory_in_ignores()
+        {
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*", "whatever.txt", "*.bat" });
+            _configuration.Stub(c => c.CustomOutputPath).Return(@"bin\AutoTest.NET");
+            _validator.ShouldPublish(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Console.Test\bin\AutoTest.NET\AutoTest.Console.Test.mm.dll").ShouldBeFalse();
+        }
 		
 		[Test]
 		public void Should_respect_configuration_setting()

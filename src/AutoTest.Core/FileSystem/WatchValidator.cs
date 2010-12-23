@@ -37,6 +37,14 @@ namespace AutoTest.Core.FileSystem
 			filePath = filePath.Replace("\\", "/");
 			if (match(filePath, _defaultIgnores))
 				return false;
+            if (matchCustomOutputPath(filePath))
+                return false;
+            if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
+            {
+                var pattern = _configuration.CustomOutputPath.Replace('\\', '/');
+                if (match(filePath, new string[] { pattern }))
+                    return false;
+            }
 			if (match(filePath, _configuration.WatchIgnoreList))
 				return false;
             return true;
@@ -48,9 +56,21 @@ namespace AutoTest.Core.FileSystem
 			foreach (var pattern in _configuration.WatchIgnoreList)
 				list += (list.Length == 0 ? "" : "|") + pattern;
 			if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
-				list += (list.Length == 0 ? "" : "|") + _configuration.CustomOutputPath;
+				list += (list.Length == 0 ? "" : "|") + _configuration.CustomOutputPath.Replace('\\', '/');
 			return list;
 		}
+
+        private bool matchCustomOutputPath(string filePath)
+        {
+            if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
+            {
+                var pattern = _configuration.CustomOutputPath.Replace('\\', '/');
+                if (match(filePath, new string[] { pattern }))
+                    return true;
+            }
+            return false;
+        }
+
 		
 		private bool match(string stringToMatch, string[] patterns)
 		{

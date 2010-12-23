@@ -86,8 +86,6 @@ namespace AutoTest.Core.BuildRunners
             var outputPath = string.Format("bin{0}AutoTest.Net{0}", Path.DirectorySeparatorChar);
 			if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
                 outputPath = _configuration.CustomOutputPath;
-            if (!Path.IsPathRooted(outputPath))
-                outputPath = Path.Combine(Path.GetDirectoryName(project.Key), outputPath);
             if (outputPath.Substring(outputPath.Length - 1, 1) != Path.DirectorySeparatorChar.ToString())
                 outputPath += Path.DirectorySeparatorChar;
 			return outputPath;

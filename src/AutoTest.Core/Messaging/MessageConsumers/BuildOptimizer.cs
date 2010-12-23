@@ -19,16 +19,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			_configuration = configuration;
 		}
 
-        public RunInfo[] AssembleBuildConfiguration(string[] projectList, bool useBuiltProjectsOutputPath)
+        public RunInfo[] AssembleBuildConfiguration(string[] projectList)
 		{
 			var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList, useBuiltProjectsOutputPath);
+            return assemblefConfiguration(runList, false);
 		}
 
-        public RunInfo[] AssembleBuildConfiguration(Project[] projectList, bool useBuiltProjectsOutputPath)
+        public RunInfo[] AssembleBuildConfiguration(Project[] projectList)
         {
             var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList, useBuiltProjectsOutputPath);
+            return assemblefConfiguration(runList, false);
         }
 
         private RunInfo[] assemblefConfiguration(List<RunInfo> runList, bool useBuiltProjectsOutputPath)
