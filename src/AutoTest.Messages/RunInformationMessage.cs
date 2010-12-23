@@ -6,7 +6,8 @@ namespace AutoTest.Messages
 	public enum InformationType
     {
         Build = 1,
-        TestRun = 2
+        TestRun = 2,
+        PreProcessing = 3
     }
 
 	[Serializable]
