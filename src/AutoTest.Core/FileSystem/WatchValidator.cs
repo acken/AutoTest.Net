@@ -12,7 +12,7 @@ namespace AutoTest.Core.FileSystem
     class WatchValidator : IWatchValidator
     {
 		private IConfiguration _configuration;
-		private string[] _defaultIgnores = new string[11];
+		private string[] _defaultIgnores = new string[12];
 
 		public WatchValidator(IConfiguration configuration)
 		{
@@ -20,14 +20,15 @@ namespace AutoTest.Core.FileSystem
 			_defaultIgnores[0] = "bin/Debug";
 			_defaultIgnores[1] = "bin/Release";
 			_defaultIgnores[2] = "bin/AutoTest.Net";
-			_defaultIgnores[3] = "bin/x86";
-			_defaultIgnores[4] = "obj/Debug";
-			_defaultIgnores[5] = "obj/Release";
-			_defaultIgnores[6] = "obj/x86";
-			_defaultIgnores[7] = "*.FileListAbsolute.txt";
-			_defaultIgnores[8] = "*.FilesWrittenAbsolute.txt";
-			_defaultIgnores[9] = "*.suo";
-            _defaultIgnores[10] = "*.UnmanagedRegistration.cache";
+            _defaultIgnores[3] = "bin/AutoTest.NET";
+			_defaultIgnores[4] = "bin/x86";
+			_defaultIgnores[5] = "obj/Debug";
+			_defaultIgnores[6] = "obj/Release";
+			_defaultIgnores[7] = "obj/x86";
+			_defaultIgnores[8] = "*.FileListAbsolute.txt";
+			_defaultIgnores[9] = "*.FilesWrittenAbsolute.txt";
+			_defaultIgnores[10] = "*.suo";
+            _defaultIgnores[11] = "*.UnmanagedRegistration.cache";
 		}
 		
         public bool ShouldPublish(string filePath)
@@ -74,22 +75,31 @@ namespace AutoTest.Core.FileSystem
 		
 		private bool match(string stringToMatch, string[] patterns)
 		{
+            var match = getFromEnvironment(stringToMatch);
 			foreach (var patter in patterns)
 			{
-				if (patter.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                var environmentPattern = getFromEnvironment(patter);
+                if (environmentPattern.EndsWith(Path.DirectorySeparatorChar.ToString()))
 				{
-					if (stringToMatch.Contains(patter))
+                    if (match.Contains(environmentPattern))
 						return true;
 				}
-				if (stringToMatch.EndsWith(patter))
+                if (match.EndsWith(environmentPattern))
 					return true;
-				if (stringToMatch.Contains(string.Format("{0}{1}{0}", Path.DirectorySeparatorChar, patter)))
+                if (match.Contains(string.Format("{0}{1}{0}", Path.DirectorySeparatorChar, environmentPattern)))
 					return true;
-				if (matchStringToGlobUsingGlobishMatching(stringToMatch, patter))
+                if (matchStringToGlobUsingGlobishMatching(match, environmentPattern))
 					return true;
 			}
 			return false;
 		}
+
+        private string getFromEnvironment(string pattern)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                return pattern;
+            return pattern.ToLower();
+        }
 
         private bool contains(string path, string stringToSearchFor)
         {

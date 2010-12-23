@@ -155,12 +155,24 @@ namespace AutoTest.Test.Core.FileSystem
 		}
 		
 		[Test]
-		public void Should_glob_case_sensitive()
+		public void Should_glob_case_sensitive_on_unix()
 		{
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+                return;
 			_configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
 			_validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeTrue();
 		}
+
+        [Test]
+        public void Should_not_glob_case_sensitive_on_non_unix_platforms()
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                return;
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
+            _validator.ShouldPublish("/Somedirectory/hoi/myfolder/somexmlfile.xml").ShouldBeFalse();
+        }
 		
 		[Test]
 		public void Should_return_list_of_ignore_items()
