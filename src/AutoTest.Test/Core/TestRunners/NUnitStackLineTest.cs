@@ -1,58 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using AutoTest.Core.TestRunners;
+
 using NUnit.Framework;
-using AutoTest.Core.TestRunners;
 
 namespace AutoTest.Test.Core.TestRunners
 {
     [TestFixture]
-    public class NUnitStackLineTest
+    public class When_parsing_a_Windows_stack_line_with_method_and_file_and_line_number
     {
-        private NUnitStackLine _line;
+        NUnitStackLine _line;
 
         [SetUp]
         public void SetUp()
         {
-            _line = new NUnitStackLine("at CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:line 16");
-        }
-
-        [Test]
-        public void Should_parse_description_line()
-        {
-            var line = new NUnitStackLine("some description");
-            line.ToString().ShouldEqual("some description");
-            line.Method.ShouldEqual("");
-            line.File.ShouldEqual("");
-            line.LineNumber.ShouldEqual(0);
-        }
-
-        [Test]
-        public void Should_parse_line_with_method()
-        {
-            _line.Method.ShouldEqual("CSharpNUnitTestProject.Class1.Test1()");
-        }
-
-        [Test]
-        public void When_no_method_closing_should_return_empty_string()
-        {
-            var line = new NUnitStackLine("at SomeMethodWithoutParentheses in ...");
-            line.Method.ShouldEqual("");
-        }
-
-        [Test]
-        public void Should_parse_line_with_file()
-        {
-            _line.File.ShouldEqual("c:\\CSharpNUnitTestProject\\Class1.cs");
-        }
-
-        [Test]
-        public void When_no_line_number_should_not_return_file()
-        {
-            var line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs");
-            line.File.ShouldEqual("");
+            _line =
+                new NUnitStackLine(
+                    "at CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:line 16");
         }
 
         [Test]
@@ -62,27 +24,334 @@ namespace AutoTest.Test.Core.TestRunners
         }
 
         [Test]
-        public void When_invalid_line_number_should_return_0()
+        public void Should_parse_the_file_name()
         {
-            var line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs:line invalid");
-            line.LineNumber.ShouldEqual(0);
+            _line.File.ShouldEqual("c:\\CSharpNUnitTestProject\\Class1.cs");
         }
 
         [Test]
-        public void When_no_line_number_should_return_0()
+        public void Should_parse_the_method()
         {
-            var line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs:line");
-            line.LineNumber.ShouldEqual(0);
+            _line.Method.ShouldEqual("CSharpNUnitTestProject.Class1.Test1()");
         }
-		
-		[Test]
-		public void Should_parse_mono_type_stack_line()
-		{
-			var line = new NUnitStackLine("at AutoTest.Test.Core.Configuration.DIContainerFullTest.Should_perform_full_bootstrap () [0x00018] in /home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Configuration/DIContainerFullTest.cs:20");
-            line.File
-                .Replace('/', Path.DirectorySeparatorChar)
-                .ShouldEqual("/home/ack/src/AutoTest.Net/src/AutoTest.Test/Core/Configuration/DIContainerFullTest.cs".Replace('/', Path.DirectorySeparatorChar));
-			line.LineNumber.ShouldEqual(20);
-		}
+    }
+
+    [TestFixture]
+    public class When_parsing_a_Windows_stack_line_with_a_file_name_with_whitespace_characters
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    "at CSharpNUnitTestProject.Class1.Test1() in c:\\CSharp NUnit Test Project\\Some Class.cs:line 16");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("CSharpNUnitTestProject.Class1.Test1()");
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("c:\\CSharp NUnit Test Project\\Some Class.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(16);
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_Mono_stack_line_with_method_and_file_and_line_number
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine("at AutoTest.TestingExtensionMethods.ShouldEqual[Int32] (Int32 actual, Int32 expected) [0x00000] in /some/folder/the.file.cs:20");
+        }
+
+        [Test]
+        public void Should_parse_line_number()
+        {
+            _line.LineNumber.ShouldEqual(20);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("/some/folder/the.file.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("AutoTest.TestingExtensionMethods.ShouldEqual[Int32] (Int32 actual, Int32 expected)");
+        }
+    }
+    
+    [TestFixture]
+    public class When_parsing_a_Mono_stack_line_with_method_wothout_parameters_and_file_and_line_number
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine("at AutoTest.TestingExtensionMethods.ShouldEqual[Int32] () [0x00000] in /some/folder/the.file.cs:20");
+        }
+
+        [Test]
+        public void Should_parse_line_number()
+        {
+            _line.LineNumber.ShouldEqual(20);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("/some/folder/the.file.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("AutoTest.TestingExtensionMethods.ShouldEqual[Int32] ()");
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_Mono_stack_line_with_a_file_name_with_whitespace_characters
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    "at AutoTest.TestingExtensionMethods.ShouldEqual[Int32] (Int32 actual, Int32 expected) [0x00000] in /some folder/the file.cs:20");
+        }
+
+        [Test]
+        public void Should_parse_line_number()
+        {
+            _line.LineNumber.ShouldEqual(20);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("/some folder/the file.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("AutoTest.TestingExtensionMethods.ShouldEqual[Int32] (Int32 actual, Int32 expected)");
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_with_invalid_line_number
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs:line invalid");
+        }
+
+        [Test]
+        public void Should_not_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_without_line_number
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs");
+        }
+
+        [Test]
+        public void Should_not_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_not_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("");
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_with_incomplete_line_number
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line = new NUnitStackLine("() in c:\\CSharpNUnitTestProject\\Class1.cs:line");
+        }
+
+        [Test]
+        public void Should_not_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("c:\\CSharpNUnitTestProject\\Class1.cs");
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_that_is_missing_method_parenthesis
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line = new NUnitStackLine("at SomeMethodWithoutParentheses in ...");
+        }
+
+        [Test]
+        public void Should_not_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_not_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("");
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_with_description
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line = new NUnitStackLine("some description");
+        }
+
+        [Test]
+        public void Should_parse_description_line()
+        {
+            _line.ToString().ShouldEqual("some description");
+            _line.Method.ShouldEqual("");
+            _line.File.ShouldEqual("");
+            _line.LineNumber.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_not_parse_the_method()
+        {
+            _line.Method.ShouldEqual("");
+        }
+
+        [Test]
+        public void Should_not_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("");
+        }
+
+        [Test]
+        public void Should_not_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_German_stack_line
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    "bei CSharpNUnitTestProject.Class1.Test1() in c:\\CSharpNUnitTestProject\\Class1.cs:Zeile 16");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("CSharpNUnitTestProject.Class1.Test1()");
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("c:\\CSharpNUnitTestProject\\Class1.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(16);
+        }
+    }
+
+    [TestFixture]
+    public class When_parsing_a_Klingon_stack_line
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    "Daq tach CSharpNUnitTestProject.Class1.Test1() daq tach c:\\CSharpNUnitTestProject\\Class1.cs:tlh kegh 16");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual("CSharpNUnitTestProject.Class1.Test1()");
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("c:\\CSharpNUnitTestProject\\Class1.cs");
+        }
+
+        [Test]
+        public void Should_parse_the_line_number()
+        {
+            _line.LineNumber.ShouldEqual(16);
+        }
     }
 }

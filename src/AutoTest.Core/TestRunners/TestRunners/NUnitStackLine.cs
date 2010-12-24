@@ -1,29 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
+
+using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners
 {
+    internal static class StringExtensions
+    {
+        public static int LookBehindIndexOf(this string instance, char value)
+        {
+            var chars = instance.Reverse().ToArray();
+            var reversed = new string(chars);
+
+            var index = reversed.IndexOf(value);
+            if (index == -1)
+            {
+                return -1;
+            }
+
+            return instance.Length - index;
+        }
+
+        public static int LookBehindLastIndexOfAny(this string instance, char[] value)
+        {
+            var chars = instance.Reverse().ToArray();
+            var reversed = new string(chars);
+
+            var index = reversed.LastIndexOfAny(value);
+            if (index == -1)
+            {
+                return -1;
+            }
+
+            return instance.Length - index;
+        }
+    }
+
     public class NUnitStackLine : IStackLine
     {
-        private string _line;
-        private string _method = "";
-        private string _file = "";
-        private int _lineNumber = 0;
-		private bool _isMonoStyleStackTrace = false;
-
-        public string Method { get { return _method; } }
-        public string File { get { return _file; } }
-        public int LineNumber { get { return _lineNumber; } }
+        readonly string _file = "";
+        readonly string _line;
+        readonly int _lineNumber;
+        readonly string _method = "";
 
         public NUnitStackLine(string line)
         {
             _line = line;
-            _method = getMethod();
-            _file = getFile();
-            _lineNumber = getLineNumber();
+            _method = GetMethod();
+            _file = GetFile();
+            _lineNumber = GetLineNumber();
+        }
+
+        public string Method
+        {
+            get { return _method; }
+        }
+
+        public string File
+        {
+            get { return _file; }
+        }
+
+        public int LineNumber
+        {
+            get { return _lineNumber; }
         }
 
         public override string ToString()
@@ -31,86 +73,96 @@ namespace AutoTest.Core.TestRunners
             return _line;
         }
 
-        private string getMethod()
+        string GetMethod()
         {
-            var start = _line.IndexOf("at ");
-            if (start < 0)
-                return "";
-            start += "at ".Length;
             var end = _line.IndexOf(")");
             if (end < 0)
+            {
                 return "";
+            }
             end += 1;
+
+            var openParen = _line.Substring(0, end).LookBehindIndexOf('(');
+            if (openParen < 0)
+            {
+                return "";
+            }
+
+            var start = _line.Substring(0, openParen).LookBehindIndexOf(' ');
+            if (start < 0)
+            {
+                return "";
+            }
+
+            if (_line.Substring(0, start).LookBehindIndexOf(' ') == openParen - 1)
+            {
+                // This is Mono where at format is "at namespace.method ()".
+                start = _line.Substring(0, start - 1).LookBehindIndexOf(' ');
+                if (start < 0)
+                {
+                    return "";
+                }
+            }
+
             return _line.Substring(start, end - start);
         }
 
-        private string getFile()
+        string GetFile()
         {
-            var start = getFileStart();
-            if (start < 0)
-                return "";
-            var end = getFileEnd();
+            var end = _line.LastIndexOf(":");
             if (end < 0)
+            {
                 return "";
-            return _line.Substring(start, end - start);
-        }
-		
-		private int getFileStart()
-		{
-			var start = _line.IndexOf(") in ");
-			if (start >= 0)
-				return start + ") in ".Length;
-			start = _line.IndexOf("] in ");
-			if (start < 0)
-				return start;
-			_isMonoStyleStackTrace = true;
-			return start + "] in ".Length;
-		}
-		
-		private int getFileEnd()
-		{
-			int endStringLength;
-			return getFileEnd(out endStringLength);
-		}
-		
-		private int getFileEnd(out int endStringLength)
-		{
-			if (_isMonoStyleStackTrace)
-				return getMonoStyleFileEnd(out endStringLength);
-			else
-				return getMSStyleFileEnd(out endStringLength);
-		}
-		
-		private int getMonoStyleFileEnd(out int endStringLength)
-		{
-			var searchString = ":";
-			endStringLength = searchString.Length;
-			var fileStart = getFileStart();
-			if (fileStart >= 0)
-				return _line.IndexOf(searchString, fileStart);
-			return -1;
-		}
-		
-		private int getMSStyleFileEnd(out int endStringLength)
-		{
-			var searchString = ":line";
-			endStringLength = searchString.Length;
-			return _line.IndexOf(searchString);
-		}
+            }
 
-        private int getLineNumber()
+            var directorySeparator =
+                _line.Substring(0, end).LookBehindLastIndexOfAny(new[]
+                                                                 {
+                                                                     Path.DirectorySeparatorChar,
+                                                                     Path.AltDirectorySeparatorChar
+                                                                 });
+            if (directorySeparator < 0)
+            {
+                return "";
+            }
+
+            var whitespace = _line.Substring(0, directorySeparator).LookBehindIndexOf(' ');
+            if (whitespace < 0)
+            {
+                return "";
+            }
+
+            return _line.Substring(whitespace, end - whitespace);
+        }
+
+        int GetLineNumber()
         {
-			int fileEndLocatorStringLength;
-            var start = getFileEnd(out fileEndLocatorStringLength);
-            if (start < 0)
+            var end = _line.LastIndexOf(":");
+            if (end < 0)
+            {
                 return 0;
-            start += fileEndLocatorStringLength;
-            if (start >= _line.Length)
+            }
+
+            var whitespace = _line.Substring(end).LastIndexOf(' ');
+            if (whitespace < 0)
+            {
+                // This might be a Mono stack line, which does not have whitespace after the ':' separator.
+                whitespace = 0;
+            }
+            whitespace = whitespace + end + 1;
+
+            if (_line.Length < whitespace)
+            {
                 return 0;
-            var chunk = _line.Substring(start, _line.Length - start);
-            int lineNumber;
-            if (int.TryParse(chunk, out lineNumber))
-                return lineNumber;
+            }
+
+            var lineString = _line.Substring(whitespace);
+            int line;
+            if (int.TryParse(lineString, NumberStyles.None, CultureInfo.InvariantCulture, out line))
+            {
+                return line;
+            }
+
             return 0;
         }
     }
