@@ -16,6 +16,7 @@ namespace AutoTest.Core.Configuration
 		string GetSpesificNunitTestRunner(string version);
         string MSTestRunner(string version);
         string XunitTestRunner(string version);
+        string MSpecTestRunner(string version);
         CodeEditor CodeEditor { get; }
         bool DebuggingEnabled { get; }
 		bool NotifyOnRunStarted { get; }

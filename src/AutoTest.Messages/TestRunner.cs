@@ -10,6 +10,7 @@ namespace AutoTest.Messages
         Any = 0,
         NUnit = 1,
         MSTest = 2,
-        XUnit = 3
+        XUnit = 3,
+        MSpec = 4
     }
 }

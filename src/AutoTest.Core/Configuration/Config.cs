@@ -21,6 +21,7 @@ namespace AutoTest.Core.Configuration
         private List<KeyValuePair<string, string>> _nunitTestRunners = new List<KeyValuePair<string, string>>();
         private List<KeyValuePair<string, string>> _msTestRunner = new List<KeyValuePair<string, string>>();
         private List<KeyValuePair<string, string>> _xunitTestRunner = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<string, string>> _mspecTestRunner = new List<KeyValuePair<string, string>>();
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
 
@@ -75,6 +76,7 @@ namespace AutoTest.Core.Configuration
 			mergeVersionedItem(_nunitTestRunners, core.NUnitTestRunner);
 			mergeVersionedItem(_msTestRunner, core.MSTestRunner);
 			mergeVersionedItem(_xunitTestRunner, core.XUnitTestRunner);
+			mergeVersionedItem(_mspecTestRunner, core.MSpecTestRunner);
             mergeCodeEditor(core.CodeEditor);
 			if (core.DebuggingEnabled.WasReadFromConfig)
 				_debuggingEnabled = core.DebuggingEnabled.Value;
@@ -109,6 +111,7 @@ namespace AutoTest.Core.Configuration
                 _nunitTestRunners.AddRange(core.NUnitTestRunner.Value);
                 _msTestRunner.AddRange(core.MSTestRunner.Value);
                 _xunitTestRunner.AddRange(core.XUnitTestRunner.Value);
+                _mspecTestRunner.AddRange(core.MSpecTestRunner.Value);
                 _codeEditor = core.CodeEditor.Value;
                 _debuggingEnabled = core.DebuggingEnabled.Value;
 				GrowlNotify = core.GrowlNotify.Value;
@@ -211,6 +214,8 @@ namespace AutoTest.Core.Configuration
                 _bus.Publish(new WarningMessage("MSTest test runner not specified. MSTest tests will not be run."));
 			if (noneExists(_xunitTestRunner))
                 _bus.Publish(new WarningMessage("XUnit test runner not specified. XUnit tests will not be run."));
+            if (noneExists(_mspecTestRunner))
+                _bus.Publish(new WarningMessage("Machine.Specifications test runner not specified. Machine.Specifications tests will not be run."));
             if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
                 _bus.Publish(new WarningMessage("Code editor not specified"));
         }
@@ -290,6 +295,11 @@ namespace AutoTest.Core.Configuration
         public string XunitTestRunner(string version)
         {
             return getVersionedSetting(version, _xunitTestRunner);
+        }
+
+        public string MSpecTestRunner(string version)
+        {
+            return getVersionedSetting(version, _mspecTestRunner);
         }
 
         public CodeEditor CodeEditor

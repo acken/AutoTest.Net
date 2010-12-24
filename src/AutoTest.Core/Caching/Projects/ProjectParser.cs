@@ -15,6 +15,7 @@ namespace AutoTest.Core.Caching.Projects
         private const string MSTEST_REFERENCE = "<Reference Include=\"Microsoft.VisualStudio.QualityTools.UnitTestFramework";
         private const string XUNIT_REFERENCE = "<Reference Include=\"xunit,";
 		private const string XUNIT_REFERENCE_ANY_VERSION = "<Reference Include=\"xunit\"";
+		private const string MSPEC_REFERENCE = "<Reference Include=\"Machine.Specifications";
         private const string ASSEMBLYNAME_NODE = "AssemblyName";
         private const string OUTPUT_TYPE = "OutputType";
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
@@ -151,6 +152,11 @@ namespace AutoTest.Core.Caching.Projects
 			{
                 document.SetAsXUnitTestContainer();
 				Debug.WriteMessage(string.Format("{0} contains XUnit tests", _projectFile));
+			}
+            if (_fileContent.Contains(MSPEC_REFERENCE))
+			{
+                document.SetAsMSpecTestContainer();
+				Debug.WriteMessage(string.Format("{0} contains MSpec contexts", _projectFile));
 			}
         }
 
