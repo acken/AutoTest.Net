@@ -18,6 +18,7 @@ Features
 		* MSTest
 		* NUnit
 		* XUnit
+		* MSpec
 	* Supports notifications through
 		* notify-send (Linux)
 		* Snarl through it's tcp interface (Windows)
@@ -44,3 +45,4 @@ go in and run build and deploy scripts (biuld.sh/build.bat and deploy.sh/deploy.
 depending on whether you are on Windows(bat) or something else(sh)). After running
 build and deploy scripts you will find the built binaries under the ReleaseBinaries
 folder.
+PS! For building on mono you need 2.8 or later

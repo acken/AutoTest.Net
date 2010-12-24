@@ -15,6 +15,10 @@
 	<!-- run all tests for any built assembly. -->
 	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
 	
+	<!-- If set it will always use msbuild to build solution file instead of only changed projects -->
+  	<!-- when AutoTest.Net is set to watch a solution file -->
+  	<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
+	
 	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version -->
 	<!-- from within the csproj/vbproj file using the framework attribute. -->
@@ -83,10 +87,6 @@
 	
 	<!-- Rerun failed tests before doing a full testrun -->
 	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
-  
-  <!-- If set it will always use msbuild to build solution file instead of only changed projects -->
-  <!-- when AutoTest.Net is set to watch a solution file -->
-  <!--<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>-->
 	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
