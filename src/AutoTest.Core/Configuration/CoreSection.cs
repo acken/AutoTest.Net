@@ -78,7 +78,7 @@ namespace AutoTest.Core.Configuration
 			WatchIgnoreFile = getValueItem("configuration/IgnoreFile", "");
 			TestAssembliesToIgnore = getValues("configuration/ShouldIgnoreTestAssembly/Assembly", true);
 			TestCategoriesToIgnore = getValues("configuration/ShouldIgnoreTestCategories/Category", true);
-			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 100);
+			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 200);
 			CustomOutputPath = getValueItem("configuration/CustomOutput", "");
 			RerunFailedTestsFirst = getBoolItem("configuration/RerunFailedTestsFirst", false);
             WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", false);
