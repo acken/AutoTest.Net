@@ -27,6 +27,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<KeyValuePair<string, string>[]> NUnitTestRunner { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> MSTestRunner { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> XUnitTestRunner { get; private set; }
+        public ConfigItem<KeyValuePair<string, string>[]> MSpecTestRunner { get; private set; }
         public ConfigItem<CodeEditor> CodeEditor { get; private set; }
         public ConfigItem<bool> DebuggingEnabled { get; private set; }
 		public ConfigItem<string> GrowlNotify { get; private set; }
@@ -47,6 +48,7 @@ namespace AutoTest.Core.Configuration
             NUnitTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             MSTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             XUnitTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
+            MSpecTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             CodeEditor = new ConfigItem<CodeEditor>(new CodeEditor("", ""));
             DebuggingEnabled = new ConfigItem<bool>(false);
 			GrowlNotify = new ConfigItem<string>(null);
@@ -70,6 +72,7 @@ namespace AutoTest.Core.Configuration
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");
             MSTestRunner = getVersionedSetting("configuration/MSTestRunner");
             XUnitTestRunner = getVersionedSetting("configuration/XUnitTestRunner");
+            MSpecTestRunner = getVersionedSetting("configuration/MachineSpecificationsTestRunner");
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getBoolItem("configuration/Debugging", false);
 			GrowlNotify = getValueItem("configuration/growlnotify", null);
