@@ -1,6 +1,8 @@
 ﻿using AutoTest.Core.TestRunners;
 
 using NUnit.Framework;
+using System.IO;
+using System;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -8,8 +10,11 @@ namespace AutoTest.Test.Core.TestRunners
 	{
 		protected string adjustToEnvironment(string text)
 		{
-			text = text.Replace("C:\\", "/");
-			text = text.Replace("\\", "/");
+			if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+			{
+				text = text.Replace("C:\\", "/");
+				text = text.Replace("\\", "/");
+			}
 			return text;
 		}
 	}
