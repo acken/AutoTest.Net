@@ -235,12 +235,33 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             var tagStart = "<stack-trace><![CDATA[";
             var tagEnd = "]]></stack-trace>";
-            var lines = getStringContent(testCase, tagStart, tagEnd).TrimEnd().Split(new string[]{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+			var content = getStringContent(testCase, tagStart, tagEnd).TrimEnd();
+            var lines = content.Split(new string[]{getStackSeparator(content)}, StringSplitOptions.RemoveEmptyEntries);
+			Debug.WriteMessage("Number of lines: " + lines.Length.ToString());
             List<IStackLine> stackLines = new List<IStackLine>();
             foreach (var line in lines)
+			{
+				Debug.WriteMessage("Parsing stack line " + line);
                 stackLines.Add(new NUnitStackLine(line));
+			}
             return stackLines.ToArray();
         }
+		
+		private string getStackSeparator(string content)
+		{
+			var start = content.IndexOf(" (");
+			if (start == -1)
+			{
+				start = content.IndexOf("(");
+				if (start == -1)
+					return Environment.NewLine;
+			}
+			var prefix = content.Substring(0, start);
+			var prefixEnd = prefix.LastIndexOf(" ");
+			if (prefixEnd == -1)
+				return Environment.NewLine;
+			return prefix.Substring(0, prefixEnd + 1);
+		}
 
         private string getStringContent(string testCase, string tagStart, string tagEnd)
         {
