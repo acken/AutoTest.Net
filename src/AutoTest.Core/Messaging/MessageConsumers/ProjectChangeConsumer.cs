@@ -222,14 +222,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var modifiedResults = new List<TestRunResults>();
 			foreach (var result in results)
 			{
-                var modified = _removedTestLocator.SetRemovedTestsAsPassed(result, runInfos);
 	            runReport.AddTestRun(
-                    modified.Project,
-                    modified.Assembly,
-                    modified.TimeSpent,
-                    modified.Passed.Length,
-                    modified.Ignored.Length,
-                    modified.Failed.Length);
+                    result.Project,
+                    result.Assembly,
+                    result.TimeSpent,
+                    result.Passed.Length,
+                    result.Ignored.Length,
+                    result.Failed.Length);
+                var modified = _removedTestLocator.SetRemovedTestsAsPassed(result, runInfos);
                 _bus.Publish(new TestRunMessage(modified));
                 modifiedResults.Add(modified);
 			}

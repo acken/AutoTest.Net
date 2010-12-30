@@ -109,13 +109,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			tests = "";
 			foreach (var runInfo in runInfos)
 			{
+                DebugLog.Debug.WriteMessage(string.Format("About to add {0}", runInfo.Assembly));
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
 				{
+                    DebugLog.Debug.WriteMessage(string.Format("It only run specified tests is {0} and test count is {1}", runInfo.OnlyRunSpcifiedTestsFor(TestRunner.NUnit), runInfo.GetTestsFor(TestRunner.NUnit).Length));
                     if (runInfo.OnlyRunSpcifiedTestsFor(TestRunner.NUnit) && runInfo.GetTestsFor(TestRunner.NUnit).Length.Equals(0))
                         continue;
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
 					var assemblyTests = getTestsList(runInfo);
+                    DebugLog.Debug.WriteMessage(string.Format("Test list is {0}", assemblyTests));
 					if (assemblyTests.Length > 0)
 						tests += (tests.Length > 0 ? "," : "") + assemblyTests;
 				}
