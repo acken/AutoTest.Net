@@ -4,6 +4,7 @@ using System.Linq;
 
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
+using System;
 
 namespace AutoTest.Core.TestRunners
 {
@@ -47,7 +48,7 @@ namespace AutoTest.Core.TestRunners
 
         public NUnitStackLine(string line)
         {
-            _line = line;
+            _line = line.Replace(Environment.NewLine, "");
             _method = GetMethod();
             _file = GetFile();
             _lineNumber = GetLineNumber();

@@ -87,4 +87,42 @@ namespace AutoTest.Test.Core.TestRunners
             _parser.Result[0].IsPartialTestRun.ShouldBeTrue();
         }
     }
+
+    [TestFixture]
+    public class NUnitFailsToParseResponseParserTest
+    {
+        private NUnitTestResponseParser _parser;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var bus = MockRepository.GenerateMock<IMessageBus>();
+            _parser = new NUnitTestResponseParser(bus, TestRunner.NUnit);
+            var sources = new TestRunInfo[]
+				{ 
+					new TestRunInfo(new Project("project1", null), @"C:\Users\ack\src\SomeProject\SomeFile.dll")
+				};
+            _parser.Parse(File.ReadAllText("TestResources/NUnit/FailsToParse.txt"), sources, true);
+        }
+
+        [Test]
+        public void Should_parse_successfully()
+        {
+            _parser.Result.Length.ShouldEqual(1);
+            _parser.Result[0].Failed.Length.ShouldEqual(1);
+            _parser.Result[0].Failed[0].Name.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml");
+            _parser.Result[0].Failed[0].Message.ShouldEqual("  Did not write xml header at line 0" + Environment.NewLine +
+  "  Expected string length 38 but was 253. Strings differ at index 30." + Environment.NewLine +
+  "  Expected: \"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\"" + Environment.NewLine +
+  "  But was:  \"<?xml version=\"1.0\" encoding=\"utf-8\"?><paycheck_messages />\\0\\0...\"" + Environment.NewLine +
+  "  -----------------------------------------^");
+            _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(2);
+            _parser.Result[0].Failed[0].StackTrace[0].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)");
+            _parser.Result[0].Failed[0].StackTrace[0].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
+            _parser.Result[0].Failed[0].StackTrace[0].LineNumber.ShouldEqual(55);
+            _parser.Result[0].Failed[0].StackTrace[1].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml()");
+            _parser.Result[0].Failed[0].StackTrace[1].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
+            _parser.Result[0].Failed[0].StackTrace[1].LineNumber.ShouldEqual(44);
+        }
+    }
 }

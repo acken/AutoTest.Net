@@ -200,7 +200,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private int getTestCaseEnd(string content, int start)
         {
+            var closingBracket = content.IndexOf(">", start);
             int selfClosedEnd = content.IndexOf("/>", start);
+            if (selfClosedEnd > closingBracket)
+                selfClosedEnd = -1;
             int endTag = content.IndexOf("</test-case>", start, StringComparison.CurrentCultureIgnoreCase);
             if (selfClosedEnd < 0 && endTag < 0)
             {
@@ -228,7 +231,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             string tagStart = "<message><![CDATA[";
             string tagEnd = "]]></message>";
-            return getStringContent(testCase, tagStart, tagEnd).TrimEnd();
+            var content = getStringContent(testCase, tagStart, tagEnd).TrimEnd();
+            return content;
         }
 
         private IStackLine[] getStackTrace(string testCase)
@@ -236,13 +240,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var tagStart = "<stack-trace><![CDATA[";
             var tagEnd = "]]></stack-trace>";
 			var content = getStringContent(testCase, tagStart, tagEnd).TrimEnd();
-            var lines = content.Split(new string[]{getStackSeparator(content)}, StringSplitOptions.RemoveEmptyEntries);
+            var separator = getStackSeparator(content);
+            var lines = content.Split(new string[]{separator}, StringSplitOptions.RemoveEmptyEntries);
 			Debug.WriteMessage("Number of lines: " + lines.Length.ToString());
             List<IStackLine> stackLines = new List<IStackLine>();
             foreach (var line in lines)
 			{
 				Debug.WriteMessage("Parsing stack line " + line);
-                stackLines.Add(new NUnitStackLine(line));
+                stackLines.Add(new NUnitStackLine(separator + line));
 			}
             return stackLines.ToArray();
         }

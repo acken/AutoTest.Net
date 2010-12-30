@@ -371,4 +371,36 @@ namespace AutoTest.Test.Core.TestRunners
             _line.LineNumber.ShouldEqual(16);
         }
     }
+
+    [TestFixture]
+    public class When_parsing_a_stack_line_containing_new_line_it_should_replace_newline_with_emtpy_string : BaseFixture
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    adjustToEnvironment(@"at DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message) in c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs:line 55" + Environment.NewLine));
+        }
+
+        [Test]
+        public void Should_parse_line_number()
+        {
+            _line.LineNumber.ShouldEqual(55);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual(adjustToEnvironment(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs"));
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual(adjustToEnvironment("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)"));
+        }
+    }
 }

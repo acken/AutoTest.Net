@@ -134,7 +134,7 @@
     <Compile Include="Core\TestRunners\MSpecReportParserTest.cs" />
     <Compile Include="Core\TestRunners\MSpecTestRunnerTest.cs" />
     <Compile Include="Core\TestRunners\MSTestResponseParserTest.cs" />
-	<Compile Include="Core\TestRunners\TestRunners\MSTestRunConfigParserTest.cs" />
+    <Compile Include="Core\TestRunners\TestRunners\MSTestRunConfigParserTest.cs" />
     <Compile Include="Core\TestRunners\MSTestRunnerTest.cs" />
     <Compile Include="Core\TestRunners\NUnitTestResponseParserTest.cs" />
     <Compile Include="Core\TestRunners\NUnitStackLineTest.cs" />
@@ -232,6 +232,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestResources\MSTest\mstestrun_run_error.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\NUnit\FailsToParse.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestResources\VS2008\AutoTest.NET.sln">
