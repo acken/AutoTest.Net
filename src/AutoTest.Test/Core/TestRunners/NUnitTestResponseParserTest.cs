@@ -117,12 +117,15 @@ namespace AutoTest.Test.Core.TestRunners
   "  But was:  \"<?xml version=\"1.0\" encoding=\"utf-8\"?><paycheck_messages />\\0\\0...\"" + Environment.NewLine +
   "  -----------------------------------------^");
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(2);
-            _parser.Result[0].Failed[0].StackTrace[0].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)");
-            _parser.Result[0].Failed[0].StackTrace[0].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
+			_parser.Result[0].Failed[0].StackTrace[0].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)");
             _parser.Result[0].Failed[0].StackTrace[0].LineNumber.ShouldEqual(55);
             _parser.Result[0].Failed[0].StackTrace[1].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml()");
-            _parser.Result[0].Failed[0].StackTrace[1].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
             _parser.Result[0].Failed[0].StackTrace[1].LineNumber.ShouldEqual(44);
+			
+			if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
+            	_parser.Result[0].Failed[0].StackTrace[0].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
+			else
+				_parser.Result[0].Failed[0].StackTrace[1].File.ShouldEqual(@"/Users/ack/src/DoDoTransferAgent/DoDoTransferAgent.Engine.UnitTests/UBL/PaycheckWriterTests.cs");
         }
     }
 }

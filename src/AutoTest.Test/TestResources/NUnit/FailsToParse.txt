@@ -42,7 +42,7 @@ Selected test(s): DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Sho
   -----------------------------------------^
 ]]></message>
                               <stack-trace><![CDATA[at DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message) in c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs:line 55
-at DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml() in c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs:line 44
+at DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml() in /Users/ack/src/DoDoTransferAgent/DoDoTransferAgent.Engine.UnitTests/UBL/PaycheckWriterTests.cs:line 44
 ]]></stack-trace>
                             </failure>
                           </test-case>
