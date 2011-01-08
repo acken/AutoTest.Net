@@ -20,7 +20,6 @@ namespace AutoTest.Test.Core.TestRunners
         [SetUp]
         public void SetUp()
         {
-            _bus = MockRepository.GenerateMock<IMessageBus>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
             _referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
             _fileSystem = MockRepository.GenerateStub<IFileSystemService>();
@@ -35,7 +34,6 @@ namespace AutoTest.Test.Core.TestRunners
         }
 
         MSpecTestRunner _runner;
-        IMessageBus _bus;
         IConfiguration _configuration;
         IResolveAssemblyReferences _referenceResolver;
         IFileSystemService _fileSystem;

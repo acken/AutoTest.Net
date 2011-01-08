@@ -55,7 +55,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
             return runInfos
-                .GroupBy(Framework)
+                .GroupBy(x => x.Project == null ? String.Empty : x.Project.Value.Framework)
                 .Select(x => new Run
                              {
                                  RunnerExe = _configuration.MSpecTestRunner(x.Key),
