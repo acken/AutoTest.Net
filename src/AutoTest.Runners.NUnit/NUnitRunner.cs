@@ -13,7 +13,7 @@ using AutoTest.TestRunners.Shared;
 
 namespace AutoTest.TestRunners.NUnit
 {
-    class NUnitRunner
+    public class NUnitRunner
     {
         public static readonly int OK = 0;
 		public static readonly int INVALID_ARG = -1;
