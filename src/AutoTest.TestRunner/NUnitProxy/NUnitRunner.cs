@@ -7,8 +7,10 @@ using NUnit.Util;
 using NUnit.Core.Filters;
 using System.IO;
 using System.Collections;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 
-namespace AutoTest.TestRunner.NUnitProxy
+namespace AutoTest.TestRunners.NUnitProxy
 {
     class NUnitRunner
     {
@@ -18,10 +20,32 @@ namespace AutoTest.TestRunner.NUnitProxy
 		public static readonly int FIXTURE_NOT_FOUND = -3;
 		public static readonly int UNEXPECTED_ERROR = -100;
 
+        public void Initialize()
+        {
+            // Create SettingsService early so we know the trace level right at the start
+            SettingsService settingsService = new SettingsService();
+            //InternalTraceLevel level = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default);
+
+            //InternalTrace.Initialize("nunit-console_%p.log", level);
+
+            // Add Standard Services to ServiceManager
+            ServiceManager.Services.AddService(settingsService);
+            ServiceManager.Services.AddService(new DomainManager());
+            //ServiceManager.Services.AddService( new RecentFilesService() );
+            ServiceManager.Services.AddService(new ProjectService());
+            //ServiceManager.Services.AddService( new TestLoader() );
+            ServiceManager.Services.AddService(new AddinRegistry());
+            ServiceManager.Services.AddService(new AddinManager());
+            ServiceManager.Services.AddService(new TestAgency());
+
+            // Initialize Services
+            ServiceManager.Services.InitializeServices();
+        }
+
 		public int Execute(RunnerOptions runnerOptions)
 		{
-            var parser = new NUnitOptionsParser(runnerOptions);
-            var options = parser.Parse();
+            var options = new NUnitOptionsParser(runnerOptions);
+            options.Parse();
             TestPackage package = MakeTestPackage(options);
 
             Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", 
@@ -36,78 +60,82 @@ namespace AutoTest.TestRunner.NUnitProxy
                 package.Settings.Contains("RuntimeFramework")
                     ? package.Settings["RuntimeFramework"]
                     : "Default");
-
-            using (NUnit.Core.TestRunner testRunner = new DefaultTestRunnerFactory().MakeTestRunner(package))
-			{
-                testRunner.Load(package);
-
-                //if (testRunner.Test == null)
-                //{
-                //    testRunner.Unload();
-                //    Console.Error.WriteLine("Unable to locate fixture {0}", options.fixture);
-                //    return FIXTURE_NOT_FOUND;
-                //}
-
-				EventCollector collector = new EventCollector( options, null, null );
-
-				TestFilter testFilter = TestFilter.Empty;
-                if (options.Tests != null && options.Tests != string.Empty)
-				{
-                    Console.WriteLine("Selected test(s): " + options.Tests);
-                    testFilter = new SimpleNameFilter(options.Tests);
-				}
-
-                if (options.Categories != null && options.Categories != string.Empty)
-				{
-                    Console.WriteLine("Excluded categories: " + options.Categories);
-                    TestFilter excludeFilter = new NotFilter(new CategoryExpression(options.Categories).Filter);
-					if ( testFilter.IsEmpty )
-						testFilter = excludeFilter;
-					else if ( testFilter is AndFilter )
-						((AndFilter)testFilter).Add( excludeFilter );
-					else
-						testFilter = new AndFilter( testFilter, excludeFilter );
-				}
-
-                if (testFilter is NotFilter)
-                    ((NotFilter)testFilter).TopLevel = true;
-
-				TestResult result = null;
-				string savedDirectory = Environment.CurrentDirectory;
-				TextWriter savedOut = Console.Out;
-				TextWriter savedError = Console.Error;
-
-				try
-				{
-					result = testRunner.Run( collector, testFilter );
-				}
-				finally
-				{
-					Environment.CurrentDirectory = savedDirectory;
-					Console.SetOut( savedOut );
-					Console.SetError( savedError );
-				}
-
-				Console.WriteLine();
-
-                int returnCode = UNEXPECTED_ERROR;
-
-                if (result != null)
-                {
-                    string xmlOutput = CreateXmlOutput(result);
-                    ResultSummarizer summary = new ResultSummarizer(result);
-                    returnCode = summary.ErrorsAndFailures;
-                }
-
-				if ( collector.HasExceptions )
-				{
-					collector.WriteExceptions();
-					returnCode = UNEXPECTED_ERROR;
-				}
             
-				return returnCode;
-			}
+            using (TestRunner testRunner = new DefaultTestRunnerFactory().MakeTestRunner(package))
+            {
+                return runTests(options, package, testRunner);
+            }
 		}
+
+        private static int runTests(NUnitOptionsParser options, TestPackage package, TestRunner testRunner)
+        {
+            testRunner.Load(package);
+
+            if (testRunner.Test == null)
+            {
+                testRunner.Unload();
+                //Console.Error.WriteLine("Unable to locate fixture {0}", options.fixture);
+                return FIXTURE_NOT_FOUND;
+            }
+
+            EventCollector collector = new EventCollector(options, null, null);
+
+            TestFilter testFilter = TestFilter.Empty;
+            if (options.Tests != null && options.Tests != string.Empty)
+            {
+                Console.WriteLine("Selected test(s): " + options.Tests);
+                testFilter = new SimpleNameFilter(options.Tests);
+            }
+
+            if (options.Categories != null && options.Categories != string.Empty)
+            {
+                Console.WriteLine("Excluded categories: " + options.Categories);
+                TestFilter excludeFilter = new NotFilter(new CategoryExpression(options.Categories).Filter);
+                if (testFilter.IsEmpty)
+                    testFilter = excludeFilter;
+                else if (testFilter is AndFilter)
+                    ((AndFilter)testFilter).Add(excludeFilter);
+                else
+                    testFilter = new AndFilter(testFilter, excludeFilter);
+            }
+
+            if (testFilter is NotFilter)
+                ((NotFilter)testFilter).TopLevel = true;
+
+            TestResult result = null;
+            string savedDirectory = Environment.CurrentDirectory;
+            TextWriter savedOut = Console.Out;
+            TextWriter savedError = Console.Error;
+
+            try
+            {
+                result = testRunner.Run(collector, testFilter);
+            }
+            finally
+            {
+                Environment.CurrentDirectory = savedDirectory;
+                Console.SetOut(savedOut);
+                Console.SetError(savedError);
+            }
+
+            Console.WriteLine();
+
+            int returnCode = UNEXPECTED_ERROR;
+
+            if (result != null)
+            {
+                string xmlOutput = CreateXmlOutput(result);
+                ResultSummarizer summary = new ResultSummarizer(result);
+                returnCode = summary.ErrorsAndFailures;
+            }
+
+            if (collector.HasExceptions)
+            {
+                collector.WriteExceptions();
+                returnCode = UNEXPECTED_ERROR;
+            }
+            return returnCode;
+        }
 
 		#region Helper Methods
         // TODO: See if this can be unified with the Gui's MakeTestPackage
@@ -118,47 +146,47 @@ namespace AutoTest.TestRunner.NUnitProxy
             ProcessModel processModel = ProcessModel.Default;
             RuntimeFramework framework = null;
 
-            string[] parameters = new string[options.ParameterCount];
-            for (int i = 0; i < options.ParameterCount; i++)
-                parameters[i] = Path.GetFullPath((string)options.Parameters[i]);
+            //string[] parameters = new string[options.ParameterCount];
+            //for (int i = 0; i < options.ParameterCount; i++)
+            //    parameters[i] = Path.GetFullPath((string)options.Parameters[i]);
 
-			if (options.IsTestProject)
-			{
-				NUnitProject project = 
-					Services.ProjectService.LoadProject(parameters[0]);
+            //if (options.IsTestProject)
+            //{
+                //NUnitProject project = 
+                //    Services.ProjectService.LoadProject(options.Assemblies);
 
-				string configName = options.config;
-				if (configName != null)
-					project.SetActiveConfig(configName);
+                ////string configName = options.config;
+                ////if (configName != null)
+                ////    project.SetActiveConfig(configName);
 
-				package = project.ActiveConfig.MakeTestPackage();
-                processModel = project.ProcessModel;
-                domainUsage = project.DomainUsage;
-                framework = project.ActiveConfig.RuntimeFramework;
-			}
-			else if (parameters.Length == 1)
-			{
-                package = new TestPackage(parameters[0]);
-				domainUsage = DomainUsage.Single;
-			}
-			else
-			{
-                // TODO: Figure out a better way to handle "anonymous" packages
-				package = new TestPackage(null, parameters);
-                package.AutoBinPath = true;
-				domainUsage = DomainUsage.Multiple;
-			}
+                //package = project.ActiveConfig.MakeTestPackage();
+                //processModel = project.ProcessModel;
+                //domainUsage = project.DomainUsage;
+                //framework = project.ActiveConfig.RuntimeFramework;
+            //}
+            //else if (parameters.Length == 1)
+            //{
+                package = new TestPackage(options.Assemblies);
+                domainUsage = DomainUsage.Single;
+            //}
+            //else
+            //{
+            //    // TODO: Figure out a better way to handle "anonymous" packages
+            //    package = new TestPackage(null, parameters);
+            //    package.AutoBinPath = true;
+            //    domainUsage = DomainUsage.Multiple;
+            //}
 
-            if (options.process != ProcessModel.Default)
-                processModel = options.process;
+            //if (options.process != ProcessModel.Default)
+            //    processModel = options.process;
 
-			if (options.domain != DomainUsage.Default)
-				domainUsage = options.domain;
+            //if (options.domain != DomainUsage.Default)
+            //    domainUsage = options.domain;
 
-            if (options.framework != null)
-                framework = RuntimeFramework.Parse(options.framework);
+            if (options.Framework != null)
+                framework = RuntimeFramework.Parse(options.Framework);
 
-			package.TestName = options.fixture;
+			package.TestName = null;
             
             package.Settings["ProcessModel"] = processModel;
             package.Settings["DomainUsage"] = domainUsage;
@@ -166,16 +194,15 @@ namespace AutoTest.TestRunner.NUnitProxy
                 package.Settings["RuntimeFramework"] = framework;
 
             
-
             if (domainUsage == DomainUsage.None)
             {
                 // Make sure that addins are available
                 CoreExtensions.Host.AddinRegistry = Services.AddinRegistry;
             }
 
-            package.Settings["ShadowCopyFiles"] = !options.noshadow;
-			package.Settings["UseThreadedRunner"] = !options.nothread;
-            package.Settings["DefaultTimeout"] = options.timeout;
+            package.Settings["ShadowCopyFiles"] = false;
+			package.Settings["UseThreadedRunner"] = false;
+            package.Settings["DefaultTimeout"] = 0;
 
             return package;
 		}
@@ -263,14 +290,14 @@ namespace AutoTest.TestRunner.NUnitProxy
 	    #endregion
     }
 
-    public class EventCollector : MarshalByRefObject, EventListener
+    class EventCollector : MarshalByRefObject, EventListener
     {
         private int testRunCount;
         private int testIgnoreCount;
         private int failureCount;
         private int level;
 
-        private ConsoleOptions options;
+        private NUnitOptionsParser options;
         private TextWriter outWriter;
         private TextWriter errorWriter;
 
@@ -288,7 +315,7 @@ namespace AutoTest.TestRunner.NUnitProxy
             this.outWriter = outWriter;
             this.errorWriter = errorWriter;
             this.currentTestName = string.Empty;
-            this.progress = !options.xmlConsole && !options.labels && !options.nodots;
+            this.progress = false;
 
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(OnUnhandledException);
@@ -372,9 +399,8 @@ namespace AutoTest.TestRunner.NUnitProxy
         public void TestStarted(TestName testName)
         {
             currentTestName = testName.FullName;
-
-            if (options.labels)
-                outWriter.WriteLine("***** {0}", currentTestName);
+            //if (options.labels)
+            //    outWriter.WriteLine("***** {0}", currentTestName);
 
             if (progress)
                 Console.Write(".");
@@ -388,8 +414,8 @@ namespace AutoTest.TestRunner.NUnitProxy
                 testRunCount = 0;
                 testIgnoreCount = 0;
                 failureCount = 0;
-                Trace.WriteLine("################################ UNIT TESTS ################################");
-                Trace.WriteLine("Running tests in '" + testName.FullName + "'...");
+                //Trace.WriteLine("################################ UNIT TESTS ################################");
+                //Trace.WriteLine("Running tests in '" + testName.FullName + "'...");
             }
         }
 
@@ -397,29 +423,29 @@ namespace AutoTest.TestRunner.NUnitProxy
         {
             if (--level == 0)
             {
-                Trace.WriteLine("############################################################################");
+                //Trace.WriteLine("############################################################################");
 
-                if (messages.Count == 0)
-                {
-                    Trace.WriteLine("##############                 S U C C E S S               #################");
-                }
-                else
-                {
-                    Trace.WriteLine("##############                F A I L U R E S              #################");
+                //if (messages.Count == 0)
+                //{
+                //    Trace.WriteLine("##############                 S U C C E S S               #################");
+                //}
+                //else
+                //{
+                //    Trace.WriteLine("##############                F A I L U R E S              #################");
 
-                    foreach (string s in messages)
-                    {
-                        Trace.WriteLine(s);
-                    }
-                }
+                //    foreach (string s in messages)
+                //    {
+                //        Trace.WriteLine(s);
+                //    }
+                //}
 
-                Trace.WriteLine("############################################################################");
-                Trace.WriteLine("Executed tests       : " + testRunCount);
-                Trace.WriteLine("Ignored tests        : " + testIgnoreCount);
-                Trace.WriteLine("Failed tests         : " + failureCount);
-                Trace.WriteLine("Unhandled exceptions : " + unhandledExceptions.Count);
-                Trace.WriteLine("Total time           : " + suiteResult.Time + " seconds");
-                Trace.WriteLine("############################################################################");
+                //Trace.WriteLine("############################################################################");
+                //Trace.WriteLine("Executed tests       : " + testRunCount);
+                //Trace.WriteLine("Ignored tests        : " + testIgnoreCount);
+                //Trace.WriteLine("Failed tests         : " + failureCount);
+                //Trace.WriteLine("Unhandled exceptions : " + unhandledExceptions.Count);
+                //Trace.WriteLine("Total time           : " + suiteResult.Time + " seconds");
+                //Trace.WriteLine("############################################################################");
             }
         }
 
@@ -441,8 +467,8 @@ namespace AutoTest.TestRunner.NUnitProxy
             //outWriter.WriteLine(msg);
             //outWriter.WriteLine(exception.ToString());
 
-            Trace.WriteLine(msg);
-            Trace.WriteLine(exception.ToString());
+            //Trace.WriteLine(msg);
+            //Trace.WriteLine(exception.ToString());
         }
 
         public void TestOutput(TestOutput output)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AutoTest.TestRunner.NUnitProxy
+namespace AutoTest.TestRunners.NUnitProxy
 {
     class NUnitOptionsParser
     {
@@ -12,15 +12,17 @@ namespace AutoTest.TestRunner.NUnitProxy
         public string Tests { get; private set; }
         public string Categories { get; private set; }
         public string Assemblies { get; private set; }
+        public string Framework { get; private set; }
 
         public NUnitOptionsParser(RunnerOptions options)
         {
             _options = options;
         }
 
-        public NUnitOptionsParser Parse()
+        public void Parse()
         {
-            throw new NotImplementedException();
+            Assemblies = @"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Test\bin\AutoTest.NET\AutoTest.Test.dll";
+            Tests = "AutoTest.Test.Core.TestRunners.When_parsing_a_stack_line_with_description.Should_not_parse_the_file_name";
         }
     }
 }

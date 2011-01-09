@@ -8,7 +8,7 @@
     <ProjectGuid>{E648C29A-EF25-44CB-924E-019949ABD6B9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunner</RootNamespace>
+    <RootNamespace>AutoTest.TestRunners</RootNamespace>
     <AssemblyName>AutoTest.TestRunner</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,13 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core">
+    <Reference Include="nunit.core, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NUnit\lib\nunit.core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.core.interfaces">
+    <Reference Include="nunit.core.interfaces, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NUnit\lib\nunit.core.interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.util">
+    <Reference Include="nunit.util, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NUnit\lib\nunit.util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
