@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50C99985-64CF-4E34-98A6-AD3CB3527A42}</ProjectGuid>
+    <ProjectGuid>{8FC77959-F864-4795-87DF-7F52CE953F3E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.Runners.NUnit.Tests</RootNamespace>
-    <AssemblyName>AutoTest.Runners.NUnit.Tests</AssemblyName>
+    <RootNamespace>AutoTest.Runners.NUnit.Tests.TestResource</RootNamespace>
+    <AssemblyName>AutoTest.Runners.NUnit.Tests.TestResource</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,22 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fixture1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunnerTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AutoTest.Runners.NUnit.Tests.TestResource\AutoTest.Runners.NUnit.Tests.TestResource.csproj">
-      <Project>{8FC77959-F864-4795-87DF-7F52CE953F3E}</Project>
-      <Name>AutoTest.Runners.NUnit.Tests.TestResource</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.Runners.NUnit\AutoTest.Runners.NUnit.csproj">
-      <Project>{C8D15BC2-50DA-48CD-9B7B-48CFB7FF36F5}</Project>
-      <Name>AutoTest.Runners.NUnit</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.Runners.Shared\AutoTest.Runners.Shared.csproj">
-      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
-      <Name>AutoTest.Runners.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

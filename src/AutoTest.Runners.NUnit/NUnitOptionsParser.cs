@@ -22,8 +22,8 @@ namespace AutoTest.TestRunners.NUnit
 
         public void Parse()
         {
-            Assemblies = @"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Test\bin\AutoTest.NET\AutoTest.Test.dll";
-            Tests = "AutoTest.Test.Core.TestRunners.When_parsing_a_stack_line_with_description.Should_not_parse_the_file_name";
+            Assemblies = System.IO.Path.GetFullPath(@"AutoTest.Runners.NUnit.Tests.TestResource.dll");
+            Tests = "AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_pass";
         }
     }
 }
