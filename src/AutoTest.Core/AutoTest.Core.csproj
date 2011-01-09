@@ -103,6 +103,7 @@
     <Compile Include="Configuration\IServiceLocator.cs" />
     <Compile Include="Configuration\ServiceLocator.cs" />
     <Compile Include="DebugLog\Debug.cs" />
+    <Compile Include="FileSystem\PathParser.cs" />
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BlockedMessage.cs" />
     <Compile Include="Messaging\IBlockingConsumerOf.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="TestRunners\TestRunners\MSpecReportParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSpecTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestResponseParser.cs" />
-	<Compile Include="TestRunners\TestRunners\MSTestRunConfigParser.cs" />
+    <Compile Include="TestRunners\TestRunners\MSTestRunConfigParser.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\MSTestStackLine.cs" />
     <Compile Include="TestRunners\TestRunners\NUnitTestResponseParser.cs" />

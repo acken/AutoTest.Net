@@ -238,7 +238,7 @@ namespace AutoTest.Core.Caching.Projects
                 match.Length - (PROJECT_REFERENCE_START.Length + PROJECT_REFERENCE_END.Length))
                 .Replace("\\", Path.DirectorySeparatorChar.ToString());
             if (path.Substring(0, 2).Equals(".."))
-                return getAbsolutePath(path);
+                return new PathParser(path).ToAbsolute(_projectFile);
             return path;
         }
 
@@ -247,52 +247,6 @@ namespace AutoTest.Core.Caching.Projects
             if (existingDocument != null)
                 newDocument.AddReferencedBy(existingDocument.ReferencedBy);
             newDocument.HasBeenReadFromFile();
-        }
-
-        private string getAbsolutePath(string relativePath)
-        {
-			var combinedPath = Path.Combine(Path.GetDirectoryName(_projectFile), relativePath);
-			var chunkList = new List<string>();
-			if (combinedPath.StartsWith(Path.DirectorySeparatorChar.ToString()))
-				chunkList.Add(Path.DirectorySeparatorChar.ToString());
-            chunkList.AddRange(combinedPath.Split(Path.DirectorySeparatorChar));
-			var chunks = chunkList.ToArray();
-            var folders = makeAbsolute(chunks);
-            var path = buildPathFromArray(folders);
-            return Path.GetFullPath(path);
-        }
-
-        private List<string> makeAbsolute(string[] chunks)
-        {
-            List<string> folders = new List<string>();
-            foreach (var chunk in chunks)
-            {
-                if (chunk.Equals(".."))
-                {
-                    folders.RemoveAt(folders.Count - 1);
-                    continue;
-                }
-                folders.Add(chunk);
-            }
-            return folders;
-        }
-
-        private string buildPathFromArray(List<string> folders)
-        {
-            var path = "";
-            foreach (var item in folders)
-            {
-                if (path.Length == 0)
-                    path += item;
-                else
-				{
-					if (path.Equals(Path.DirectorySeparatorChar.ToString()))
-						path += item;
-					else
-                    	path += string.Format("{0}{1}", Path.DirectorySeparatorChar, item);
-				}
-            }
-            return path;
         }
     }
 }
