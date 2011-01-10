@@ -14,5 +14,17 @@ namespace AutoTest.Runners.NUnit.Tests.TestResource
         {
             Assert.AreEqual(1, 1);
         }
+
+        [Test]
+        public void Should_fail()
+        {
+            Assert.Fail("failing test");
+        }
+
+        [Test]
+        public void Should_ignore()
+        {
+            Assert.Ignore("ignored test");
+        }
     }
 }

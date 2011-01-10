@@ -13,7 +13,7 @@ using AutoTest.TestRunners.Shared;
 
 namespace AutoTest.TestRunners.NUnit
 {
-    public class NUnitRunner
+    class NUnitRunner
     {
         public static readonly int OK = 0;
 		public static readonly int INVALID_ARG = -1;
@@ -43,10 +43,8 @@ namespace AutoTest.TestRunners.NUnit
             ServiceManager.Services.InitializeServices();
         }
 
-		public int Execute(RunnerOptions runnerOptions)
+		public IEnumerable<AutoTest.Runners.Shared.TestResult> Execute(Options options)
 		{
-            var options = new NUnitOptionsParser(runnerOptions);
-            options.Parse();
             TestPackage package = MakeTestPackage(options);
 
             Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", 
@@ -68,7 +66,7 @@ namespace AutoTest.TestRunners.NUnit
             }
 		}
 
-        private static int runTests(NUnitOptionsParser options, TestPackage package, TestRunner testRunner)
+        private static IEnumerable<AutoTest.Runners.Shared.TestResult> runTests(Options options, TestPackage package, TestRunner testRunner)
         {
             testRunner.Load(package);
 
@@ -76,7 +74,7 @@ namespace AutoTest.TestRunners.NUnit
             {
                 testRunner.Unload();
                 //Console.Error.WriteLine("Unable to locate fixture {0}", options.fixture);
-                return FIXTURE_NOT_FOUND;
+                return new AutoTest.Runners.Shared.TestResult[] { new AutoTest.Runners.Shared.TestResult(options.Assemblies, "", "", Runners.Shared.TestState.Panic, "Unable to locate fixture") };
             }
 
             EventCollector collector = new EventCollector(options, null, null);
@@ -128,19 +126,19 @@ namespace AutoTest.TestRunners.NUnit
                 string xmlOutput = CreateXmlOutput(result);
                 ResultSummarizer summary = new ResultSummarizer(result);
                 returnCode = summary.ErrorsAndFailures;
+                return collector.Results;
             }
 
             if (collector.HasExceptions)
             {
-                collector.WriteExceptions();
-                returnCode = UNEXPECTED_ERROR;
+                return new AutoTest.Runners.Shared.TestResult[] { new AutoTest.Runners.Shared.TestResult(options.Assemblies, "", "", Runners.Shared.TestState.Panic, collector.WriteExceptions()) };
             }
-            return returnCode;
+            return collector.Results;
         }
 
 		#region Helper Methods
         // TODO: See if this can be unified with the Gui's MakeTestPackage
-        private static TestPackage MakeTestPackage(NUnitOptionsParser options)
+        private static TestPackage MakeTestPackage(Options options)
         {
 			TestPackage package;
 			DomainUsage domainUsage = DomainUsage.Default;
@@ -298,7 +296,7 @@ namespace AutoTest.TestRunners.NUnit
         private int failureCount;
         private int level;
 
-        private NUnitOptionsParser options;
+        private Options options;
         private TextWriter outWriter;
         private TextWriter errorWriter;
 
@@ -307,9 +305,15 @@ namespace AutoTest.TestRunners.NUnit
         private bool progress = false;
         private string currentTestName;
 
+        private string currentAssembly = "";
+
         private ArrayList unhandledExceptions = new ArrayList();
 
-        public EventCollector(NUnitOptionsParser options, TextWriter outWriter, TextWriter errorWriter)
+        private List<AutoTest.Runners.Shared.TestResult> _results = new List<AutoTest.Runners.Shared.TestResult>();
+
+        public IEnumerable<AutoTest.Runners.Shared.TestResult> Results { get { return _results; } }
+
+        public EventCollector(Options options, TextWriter outWriter, TextWriter errorWriter)
         {
             level = 0;
             this.options = options;
@@ -327,17 +331,19 @@ namespace AutoTest.TestRunners.NUnit
             get { return unhandledExceptions.Count > 0; }
         }
 
-        public void WriteExceptions()
+        public string WriteExceptions()
         {
-            Console.WriteLine();
-            Console.WriteLine("Unhandled exceptions:");
+            var sb = new StringBuilder();
+            sb.AppendLine("Unhandled exceptions:");
             int index = 1;
             foreach (string msg in unhandledExceptions)
-                Console.WriteLine("{0}) {1}", index++, msg);
+                sb.AppendLine(string.Format("{0}) {1}", index++, msg));
+            return sb.ToString();
         }
 
         public void RunStarted(string name, int testCount)
         {
+            currentAssembly = name;
         }
 
         public void RunFinished(TestResult result)
@@ -355,15 +361,14 @@ namespace AutoTest.TestRunners.NUnit
                 case ResultState.Error:
                 case ResultState.Failure:
                 case ResultState.Cancelled:
+                    var result = new AutoTest.Runners.Shared.TestResult(currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Test.TestName.FullName, Runners.Shared.TestState.Failed, testResult.Message);
+
                     testRunCount++;
                     failureCount++;
 
-                    if (progress)
-                        Console.Write("F");
-
                     messages.Add(string.Format("{0}) {1} :", failureCount, testResult.Test.TestName.FullName));
                     messages.Add(testResult.Message.Trim(Environment.NewLine.ToCharArray()));
-
+                    
                     string stackTrace = StackTraceFilter.Filter(testResult.StackTrace);
                     if (stackTrace != null && stackTrace != string.Empty)
                     {
@@ -372,22 +377,42 @@ namespace AutoTest.TestRunners.NUnit
                         {
                             if (s != string.Empty)
                             {
-                                string link = Regex.Replace(s.Trim(), @".* in (.*):line (.*)", "$1($2)");
-                                messages.Add(string.Format("at\n{0}", link));
+                                result.AddStackLine(new Runners.Shared.StackLine(s));
+                                //string link = Regex.Replace(s.Trim(), @".* in (.*):line (.*)", "$1($2)");
+                                //messages.Add(string.Format("at\n{0}", link));
                             }
                         }
                     }
+                    _results.Add(result);
                     break;
 
                 case ResultState.Inconclusive:
                 case ResultState.Success:
                     testRunCount++;
+                    _results.Add(new AutoTest.Runners.Shared.TestResult(currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Test.TestName.FullName, Runners.Shared.TestState.Passed, testResult.Message));
                     break;
 
                 case ResultState.Ignored:
                 case ResultState.Skipped:
                 case ResultState.NotRunnable:
                     testIgnoreCount++;
+                    var ignoreResult = new AutoTest.Runners.Shared.TestResult(currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Test.TestName.FullName, Runners.Shared.TestState.Ignored, testResult.Message);
+
+                    string ignoreStackTrace = StackTraceFilter.Filter(testResult.StackTrace);
+                    if (ignoreStackTrace != null && ignoreStackTrace != string.Empty)
+                    {
+                        string[] ignoreTrace = ignoreStackTrace.Split(System.Environment.NewLine.ToCharArray());
+                        foreach (string s in ignoreTrace)
+                        {
+                            if (s != string.Empty)
+                            {
+                                ignoreResult.AddStackLine(new Runners.Shared.StackLine(s));
+                                //string link = Regex.Replace(s.Trim(), @".* in (.*):line (.*)", "$1($2)");
+                                //messages.Add(string.Format("at\n{0}", link));
+                            }
+                        }
+                    }
+                    _results.Add(ignoreResult);
 
                     if (progress)
                         Console.Write("N");
@@ -395,6 +420,14 @@ namespace AutoTest.TestRunners.NUnit
             }
 
             currentTestName = string.Empty;
+        }
+
+        private string getFixture(string fullname)
+        {
+            var end = fullname.LastIndexOf(".");
+            if (end == -1)
+                return "";
+            return fullname.Substring(0, end);
         }
 
         public void TestStarted(TestName testName)

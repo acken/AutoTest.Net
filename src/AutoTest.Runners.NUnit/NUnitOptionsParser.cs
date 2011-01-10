@@ -8,22 +8,77 @@ namespace AutoTest.TestRunners.NUnit
 {
     class NUnitOptionsParser
     {
-        private RunnerOptions _options;
+        private RunnerOptions _runnerOptions;
+        private List<Options> _options = new List<Options>();
 
-        public string Tests { get; private set; }
-        public string Categories { get; private set; }
-        public string Assemblies { get; private set; }
-        public string Framework { get; private set; }
+        public IEnumerable<Options> Options { get { return _options; } }
 
         public NUnitOptionsParser(RunnerOptions options)
         {
-            _options = options;
+            _runnerOptions = options;
         }
 
         public void Parse()
         {
-            Assemblies = System.IO.Path.GetFullPath(@"AutoTest.Runners.NUnit.Tests.TestResource.dll");
-            Tests = "AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_pass";
+            var query = _runnerOptions.Assemblies
+                .GroupBy(x => x.Framework)
+                .Select(x => x);
+            foreach (var item in query)
+                addOptions(item);
+        }
+
+        private void addOptions(IGrouping<string, AssemblyOptions> x)
+        {
+            var options = new Options(
+                    getAssemblies(x),
+                    getCategories(),
+                    x.First().Framework,
+                    getTests(x)
+                );
+            _options.Add(options);
+        }
+
+        private string getAssemblies(IGrouping<string, AssemblyOptions> x)
+        {
+            var assemblies = "";
+            foreach (var item in x)
+                assemblies += assemblies.Length.Equals(0) ? item.Assembly : string.Format(",{0}", item.Assembly);
+            return assemblies;
+        }
+
+        private string getCategories()
+        {
+            var categories = "";
+            foreach (var category in _runnerOptions.Categories)
+                categories += categories.Length.Equals(0) ? category : string.Format(",{0}", category);
+            return categories;
+        }
+
+        private string getTests(IGrouping<string, AssemblyOptions> x)
+        {
+            var tests = "";
+            foreach (var item in x)
+            {
+                foreach (var test in item.Tests)
+                    tests += tests.Length.Equals(0) ? test : string.Format(",{0}", test);
+            }
+            return tests;
+        }
+    }
+
+    class Options
+    {
+        public string Assemblies { get; private set; }
+        public string Categories { get; private set; }
+        public string Framework { get; private set; }
+        public string Tests { get; private set; }
+
+        public Options(string assemblies, string categories, string framework, string tests)
+        {
+            Assemblies = assemblies;
+            Categories = categories;
+            Framework = framework;
+            Tests = tests;
         }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="NUnitOptionsParser.cs" />
     <Compile Include="NUnitRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Runners.Shared\AutoTest.Runners.Shared.csproj">

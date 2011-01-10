@@ -9,6 +9,6 @@ namespace AutoTest.Runners.Shared
     public interface IAutoTestNetTestRunner
     {
         bool Handles(string identifier);
-        TestResults Run(RunnerOptions options);
+        IEnumerable<TestResult> Run(RunnerOptions options);
     }
 }
