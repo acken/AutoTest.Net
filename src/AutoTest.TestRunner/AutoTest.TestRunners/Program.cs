@@ -33,7 +33,41 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
+            Console.WriteLine("AutoTest.TestRunner v0.1");
+            Console.WriteLine("Author - Svein Arne Ackenhausen");
             Console.WriteLine("AutoTest.TestRunner is a plugin based generic test runner. ");
+            Console.WriteLine("");
+            Console.WriteLine("Syntax: AutoTest.TestRunner.exe OPTIONS_FILE RESULT_FILE");
+            Console.WriteLine("");
+            Console.WriteLine("Options format");
+            Console.WriteLine("<=====================================================>");
+            Console.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
+            Console.WriteLine("<run>");
+            Console.WriteLine("\t<!--It can contain 0-n plugins. If 0 the runner will load all available plugins-->");
+            Console.WriteLine("\t<plugin type=\"Plugin.IAutoTestNetTestRunner.Implementation\">C:\\Some\\Path\\PluginAssembly.dll</plugin>");
+            Console.WriteLine("\t<!--It can contain 0-n runners. The id is what determines which runner will handle that run-->");
+            Console.WriteLine("\t<runner id=\"NUnit\">");
+            Console.WriteLine("\t\t<!--It can contain 0-n categories to ignore-->");
+            Console.WriteLine("\t\t<categories>");
+            Console.WriteLine("\t\t\t<ignore_category>IgnoreCategory</ignore_category>");
+            Console.WriteLine("\t\t</categories>");
+            Console.WriteLine("\t\t<!--It can contain 1-n assemblies to test. Framework is optional-->");
+            Console.WriteLine("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\" framework=\"3.5\">");
+            Console.WriteLine("\t\t\t<!--It can contain 0-n tests-->");
+            Console.WriteLine("\t\t\t<tests>");
+            Console.WriteLine("\t\t\t\t<test>testassembly.class.test1</test>");
+            Console.WriteLine("\t\t\t</tests>");
+            Console.WriteLine("\t\t\t<!--It can contain 0-n members-->");
+            Console.WriteLine("\t\t\t<members>");
+            Console.WriteLine("\t\t\t\t<member>testassembly.class2</member>");
+            Console.WriteLine("\t\t\t</members>");
+            Console.WriteLine("\t\t\t<!--It can contain 0-n namespaces-->");
+            Console.WriteLine("\t\t\t<namespaces>");
+            Console.WriteLine("\t\t\t\t<namespace>testassembly.somenamespace1</namespace>");
+            Console.WriteLine("\t\t\t</namespaces>");
+            Console.WriteLine("\t\t</test_assembly>");
+            Console.WriteLine("\t</runner>");
+            Console.WriteLine("</run>");
         }
 
         private static IEnumerable<TestResult> run(OptionsParser parser)
