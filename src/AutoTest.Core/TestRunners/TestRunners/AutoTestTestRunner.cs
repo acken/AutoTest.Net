@@ -6,16 +6,19 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Messages;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
+using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class AutoTestTestRunner : ITestRunner
     {
         private IResolveAssemblyReferences _referenceResolver;
+        private IConfiguration _configuration;
 
-        public AutoTestTestRunner(IResolveAssemblyReferences referenceResolver)
+        public AutoTestTestRunner(IResolveAssemblyReferences referenceResolver, IConfiguration configuration)
         {
             _referenceResolver = referenceResolver;
+            _configuration = configuration;
         }
 
         public bool CanHandleTestFor(ProjectDocument document)
@@ -31,6 +34,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
+            if (!_configuration.UseAutoTestTestRunner)
+                return new TestRunResults[] { };
+
             return new TestRunResults[] { };
         }
     }
