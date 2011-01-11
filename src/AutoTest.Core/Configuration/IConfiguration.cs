@@ -30,6 +30,7 @@ namespace AutoTest.Core.Configuration
 		string CustomOutputPath { get; }
 		bool RerunFailedTestsFirst { get; }
         bool WhenWatchingSolutionBuildSolution { get; }
+        bool UseAutoTestTestRunner { get; }
 
         bool ShouldBuildSolution { get; }
 

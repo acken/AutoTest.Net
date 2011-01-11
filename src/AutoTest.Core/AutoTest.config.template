@@ -16,25 +16,28 @@
 	<BuildExecutable>C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
 	
 	<!-- If set it will always use msbuild to build solution file instead of only changed projects -->
-  	<!-- when AutoTest.Net is set to watch a solution file -->
-  	<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
+  <!-- when AutoTest.Net is set to watch a solution file -->
+  <WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
+
+  <!-- Wether to use AutoTest.Net's own testrunner-->
+  <UseAutoTestTestRunner>true</UseAutoTestTestRunner>
 	
 	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
 	<!-- You have the posibility to specify multiple build executables based on framework version -->
 	<!-- from within the csproj/vbproj file using the framework attribute. -->
 	<!-- (framework only, not framework and product version like with the build exe) -->
-	<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>
+	<!--<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>-->
 	
 	<!-- MSTest test runner. (Optional) -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>
+	<!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
 	
 	<!-- XUnit test runner. (Optional) -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>
+	<!--<XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>-->
 
 	<!-- Machine.Specifications test runner. (Optional) -->
-	<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>
+	<!--<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>-->
 	
 	<!-- Code editor configuration. You can specify a code editor to open files in. -->
 	<!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->

@@ -40,6 +40,7 @@ namespace AutoTest.Core.Configuration
 		public ConfigItem<string> CustomOutputPath { get; private set; }
 		public ConfigItem<bool> RerunFailedTestsFirst { get; private set; }
         public ConfigItem<bool> WhenWatchingSolutionBuildSolution { get; private set; }
+        public ConfigItem<bool> UseAutoTestTestRunner { get; private set; }
 
         public CoreSection()
         {
@@ -61,6 +62,7 @@ namespace AutoTest.Core.Configuration
 			CustomOutputPath = new ConfigItem<string>("");
 			RerunFailedTestsFirst = new ConfigItem<bool>(false);
             WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(false);
+            UseAutoTestTestRunner = new ConfigItem<bool>(true);
         }
 
         public void Read(string configFile)
@@ -85,6 +87,7 @@ namespace AutoTest.Core.Configuration
 			CustomOutputPath = getValueItem("configuration/CustomOutput", "");
 			RerunFailedTestsFirst = getBoolItem("configuration/RerunFailedTestsFirst", false);
             WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", false);
+            UseAutoTestTestRunner = getBoolItem("configuration/UseAutoTestTestRunner", true);
         }
 		
 		private bool tryLoadXml(string configFile)

@@ -38,6 +38,7 @@ namespace AutoTest.Core.Configuration
 		public string CustomOutputPath { get; private set; }
 		public bool RerunFailedTestsFirst { get; private set; }
         public bool WhenWatchingSolutionBuildSolution { get; private set; }
+        public bool UseAutoTestTestRunner { get; private set; }
 
         public bool ShouldBuildSolution { get { return File.Exists(WatchPath) && WhenWatchingSolutionBuildSolution; } }
 		
@@ -100,6 +101,8 @@ namespace AutoTest.Core.Configuration
 				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
             if (core.WhenWatchingSolutionBuildSolution.WasReadFromConfig)
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
+            if (core.UseAutoTestTestRunner.WasReadFromConfig)
+                UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
 		}
 		
 		private void tryToConfigure(CoreSection core)
@@ -124,6 +127,7 @@ namespace AutoTest.Core.Configuration
 				CustomOutputPath = core.CustomOutputPath.Value;
 				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
+                UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
             }
             catch (Exception ex)
             {

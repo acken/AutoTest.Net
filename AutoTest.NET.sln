@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Console.Test", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Messages", "src\AutoTest.Messages\AutoTest.Messages.csproj", "{5352CB10-E898-4089-BFF0-79D635FB44C9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestRunner", "TestRunner", "{64E18F23-8359-44D3-8B24-584FFBA63D67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.Shared", "src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj", "{7D34AABB-DD67-4826-AD89-75D91A1375F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,7 @@ Global
 		{D2BE27D7-36C9-4C0E-92A6-E2768666F430} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 		{34B13716-6F2A-4894-B586-51956BB03F54} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
 		{06800CE6-375C-4DEB-916C-52CCDD7FD0E7} = {D0A96165-68B5-4DD8-82A6-04BFBEB67D12}
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5} = {64E18F23-8359-44D3-8B24-584FFBA63D67}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\AutoTest.WinForms\AutoTest.WinForms.csproj

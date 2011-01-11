@@ -263,6 +263,12 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.ShouldBuildSolution.ShouldBeFalse();
         }
+
+        [Test]
+        public void Should_get_autotest_runner_setting()
+        {
+            _config.UseAutoTestTestRunner.ShouldBeFalse();
+        }
 		
 		private void createMergeFile()
 		{
