@@ -217,6 +217,10 @@
       <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
       <Name>AutoTest.Messages</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
+      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
+      <Name>AutoTest.TestRunners.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
