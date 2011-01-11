@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50C99985-64CF-4E34-98A6-AD3CB3527A42}</ProjectGuid>
+    <ProjectGuid>{C8D15BC2-50DA-48CD-9B7B-48CFB7FF36F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners.NUnit.Tests</RootNamespace>
-    <AssemblyName>AutoTest.TestRunners.NUnit.Tests</AssemblyName>
+    <RootNamespace>AutoTest.TestRunners.NUnit</RootNamespace>
+    <AssemblyName>AutoTest.TestRunners.NUnit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,9 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.core">
+      <HintPath>..\..\lib\NUnit\lib\nunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\..\lib\NUnit\lib\nunit.core.interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\..\lib\NUnit\lib\nunit.util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,20 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NUnitOptionsParser.cs" />
+    <Compile Include="NUnitRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunnerTests.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="TestHarvester.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoTest.TestRunners.NUnit.Tests.TestResource\AutoTest.TestRunners.NUnit.Tests.TestResource.csproj">
-      <Project>{8FC77959-F864-4795-87DF-7F52CE953F3E}</Project>
-      <Name>AutoTest.TestRunners.NUnit.Tests.TestResource</Name>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.NUnit\AutoTest.TestRunners.NUnit.csproj">
-      <Project>{C8D15BC2-50DA-48CD-9B7B-48CFB7FF36F5}</Project>
-      <Name>AutoTest.TestRunners.NUnit</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
+    <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>
