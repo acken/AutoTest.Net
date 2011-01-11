@@ -33,13 +33,13 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            Console.WriteLine("Useage to come");
+            Console.WriteLine("AutoTest.TestRunner is a plugin based generic test runner. ");
         }
 
         private static IEnumerable<TestResult> run(OptionsParser parser)
         {
             var results = new List<TestResult>();
-            foreach (var runner in getRunnersFrom(parser.Plugins))
+            foreach (var runner in getRunners(parser))
             {
                 foreach (var testRun in parser.Options.TestRuns)
                 {
@@ -48,6 +48,13 @@ namespace AutoTest.TestRunners
                 }
             }
             return results;
+        }
+
+        private static IEnumerable<IAutoTestNetTestRunner> getRunners(OptionsParser parser)
+        {
+            if (parser.Plugins.Count() == 0)
+                return allPlugins();
+            return getRunnersFrom(parser.Plugins);
         }
 
         private static IEnumerable<IAutoTestNetTestRunner> getRunnersFrom(IEnumerable<Plugin> plugins)
@@ -60,6 +67,15 @@ namespace AutoTest.TestRunners
                     runners.Add(runner);
             }
             return runners;
+        }
+
+        private static IEnumerable<IAutoTestNetTestRunner> allPlugins()
+        {
+            var dir = Path.GetFullPath("TestRunners");
+            if (!Directory.Exists(dir))
+                return new IAutoTestNetTestRunner[] { };
+            var locator = new PluginLocator(dir);
+            return getRunnersFrom(locator.Locate());
         }
     }
 }
