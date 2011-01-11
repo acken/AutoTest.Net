@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoTest.TestRunners.Shared;
 
-namespace AutoTest.Runners.Shared
+namespace AutoTest.TestRunners.Shared
 {
     public interface IAutoTestNetTestRunner
     {

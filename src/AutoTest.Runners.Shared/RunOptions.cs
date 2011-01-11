@@ -9,14 +9,14 @@ namespace AutoTest.TestRunners.Shared
     {
         private List<RunnerOptions> _runners = new List<RunnerOptions>();
 
-        public IEnumerable<RunnerOptions> Runners { get { return _runners; } }
+        public IEnumerable<RunnerOptions> TestRuns { get { return _runners; } }
 
-        public void AddRunner(RunnerOptions runner)
+        public void AddTestRun(RunnerOptions runner)
         {
             _runners.Add(runner);
         }
 
-        public void AddRunners(IEnumerable<RunnerOptions> runners)
+        public void AddTestRun(IEnumerable<RunnerOptions> runners)
         {
             _runners.AddRange(runners);
         }
@@ -27,8 +27,15 @@ namespace AutoTest.TestRunners.Shared
         private List<AssemblyOptions> _assemblies = new List<AssemblyOptions>();
         private List<string> _categories = new List<string>();
 
+        public string ID { get; private set; }
+
         public IEnumerable<AssemblyOptions> Assemblies { get { return _assemblies; } }
         public IEnumerable<string> Categories { get { return _categories; } }
+
+        public RunnerOptions(string id)
+        {
+            ID = id;
+        }
 
         public void AddAssembly(AssemblyOptions options)
         {
@@ -54,9 +61,13 @@ namespace AutoTest.TestRunners.Shared
     public class AssemblyOptions
     {
         private List<string> _tests = new List<string>();
+        private List<string> _members = new List<string>();
+        private List<string> _namespaces = new List<string>();
 
         public string Assembly { get; private set; }
         public IEnumerable<string> Tests { get { return _tests; } }
+        public IEnumerable<string> Members { get { return _members; } }
+        public IEnumerable<string> Namespaces { get { return _namespaces; } }
         public string Framework { get; private set; }
 
         public AssemblyOptions(string assembly)
@@ -71,18 +82,11 @@ namespace AutoTest.TestRunners.Shared
             Framework = framework;
         }
 
-        public AssemblyOptions(string assembly, IEnumerable<string> tests)
-        {
-            Assembly = assembly;
-            Framework = null;
-            _tests.AddRange(tests);
-        }
-
-        public AssemblyOptions(string assembly, string framework, IEnumerable<string> tests)
-        {
-            Assembly = assembly;
-            Framework = framework;
-            _tests.AddRange(tests);
-        }
+        public void AddTest(string test) { _tests.Add(test); }
+        public void AddTests(string[] tests) { _tests.AddRange(tests); }
+        public void AddMember(string member) { _members.Add(member); }
+        public void AddMembers(string[] members) { _members.AddRange(members); }
+        public void AddNamespace(string ns) { _namespaces.Add(ns); }
+        public void AddNamespaces(string[] namespaces) { _namespaces.AddRange(namespaces); }
     }
 }

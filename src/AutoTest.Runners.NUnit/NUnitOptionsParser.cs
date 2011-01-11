@@ -61,6 +61,10 @@ namespace AutoTest.TestRunners.NUnit
             {
                 foreach (var test in item.Tests)
                     tests += tests.Length.Equals(0) ? test : string.Format(",{0}", test);
+                foreach (var member in item.Members)
+                    tests += tests.Length.Equals(0) ? member : string.Format(",{0}", member);
+                foreach (var ns in item.Namespaces)
+                    tests += tests.Length.Equals(0) ? ns : string.Format(",{0}", ns);
             }
             return tests;
         }

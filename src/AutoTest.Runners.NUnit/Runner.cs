@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoTest.Runners.Shared;
 using AutoTest.TestRunners.Shared;
 
 namespace AutoTest.TestRunners.NUnit

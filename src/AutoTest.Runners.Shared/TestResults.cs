@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 
-namespace AutoTest.Runners.Shared
+namespace AutoTest.TestRunners.Shared
 {
     public enum TestState
     {
@@ -19,6 +19,7 @@ namespace AutoTest.Runners.Shared
     {
         private List<StackLine> _stackLines = new List<StackLine>();
 
+        public string Runner { get; private set; }
         public string Assembly { get; private set; }
         public string TestFixture { get; private set; }
         public string TestName { get; private set; }
@@ -26,8 +27,9 @@ namespace AutoTest.Runners.Shared
         public string Message { get; private set; }
         public IEnumerable<StackLine> StackLines { get { return _stackLines; } }
 
-        public TestResult(string assembly, string fixture, string testName, TestState state, string message)
+        public TestResult(string runner, string assembly, string fixture, string testName, TestState state, string message)
         {
+            Runner = runner;
             Assembly = assembly;
             TestFixture = fixture;
             TestName = testName;
@@ -38,6 +40,11 @@ namespace AutoTest.Runners.Shared
         public void AddStackLine(StackLine line)
         {
             _stackLines.Add(line);
+        }
+
+        public void AddStackLines(StackLine[] lines)
+        {
+            _stackLines.AddRange(lines);
         }
 
     }

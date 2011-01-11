@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace AutoTest.Runners.NUnit.Tests.TestResource
+namespace AutoTest.TestRunners.NUnit.Tests.TestResource
 {
     [TestFixture]
     public class Fixture1

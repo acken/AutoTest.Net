@@ -2,19 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E648C29A-EF25-44CB-924E-019949ABD6B9}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{C8D15BC2-50DA-48CD-9B7B-48CFB7FF36F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners</RootNamespace>
-    <AssemblyName>AutoTest.TestRunner</AssemblyName>
+    <RootNamespace>AutoTest.TestRunners.NUnit</RootNamespace>
+    <AssemblyName>AutoTest.TestRunners.NUnit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,16 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.core">
       <HintPath>..\..\lib\NUnit\lib\nunit.core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.core.interfaces, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.core.interfaces">
       <HintPath>..\..\lib\NUnit\lib\nunit.core.interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.util, Version=2.5.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.util">
       <HintPath>..\..\lib\NUnit\lib\nunit.util.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -53,10 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CmdArguments\OptionsParser.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="NUnitOptionsParser.cs" />
+    <Compile Include="NUnitRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\ResultsXmlWriter.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="TestHarvester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Runners.Shared\AutoTest.TestRunners.Shared.csproj">
