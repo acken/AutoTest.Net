@@ -47,16 +47,16 @@
     <Compile Include="RunnerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoTest.Runners.NUnit.Tests.TestResource\AutoTest.TestRunners.NUnit.Tests.TestResource.csproj">
+    <ProjectReference Include="..\AutoTest.TestRunners.NUnit.Tests.TestResource\AutoTest.TestRunners.NUnit.Tests.TestResource.csproj">
       <Project>{8FC77959-F864-4795-87DF-7F52CE953F3E}</Project>
       <Name>AutoTest.TestRunners.NUnit.Tests.TestResource</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\AutoTest.Runners.NUnit\AutoTest.TestRunners.NUnit.csproj">
+    <ProjectReference Include="..\AutoTest.TestRunners.NUnit\AutoTest.TestRunners.NUnit.csproj">
       <Project>{C8D15BC2-50DA-48CD-9B7B-48CFB7FF36F5}</Project>
       <Name>AutoTest.TestRunners.NUnit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AutoTest.Runners.Shared\AutoTest.TestRunners.Shared.csproj">
+    <ProjectReference Include="..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>

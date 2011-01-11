@@ -59,7 +59,7 @@
     <Compile Include="Results\ResultsXmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoTest.Runners.Shared\AutoTest.TestRunners.Shared.csproj">
+    <ProjectReference Include="..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>
