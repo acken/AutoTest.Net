@@ -153,6 +153,7 @@
     <Compile Include="Presenters\RunFeedbackPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRunners\ITestRunner.cs" />
+    <Compile Include="TestRunners\TestRunners\AutoTestTestRunner.cs" />
     <Compile Include="TestRunners\TestRunners\HiddenExternalProcess.cs" />
     <Compile Include="TestRunners\TestRunners\MSpecCommandLineBuilder.cs" />
     <Compile Include="TestRunners\TestRunners\MSpecReportParser.cs" />

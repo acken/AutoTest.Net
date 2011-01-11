@@ -181,7 +181,7 @@ namespace AutoTest.Test.Core.Configuration
         public void Should_register_test_runners()
         {
             var testRunners = _locator.LocateAll<ITestRunner>();
-            testRunners.Length.ShouldEqual(4);
+            testRunners.Length.ShouldEqual(5);
         }
 
         [Test]

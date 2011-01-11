@@ -68,6 +68,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ITestRunner>().ImplementedBy<MSTestRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<XUnitTestRunner>())
                 .Register(Component.For<ITestRunner>().ImplementedBy<MSpecTestRunner>())
+                .Register(Component.For<ITestRunner>().ImplementedBy<AutoTestTestRunner>())
                 .Register(Component.For<IExternalProcess>().ImplementedBy<HiddenExternalProcess>())
                 .Register(Component.For<IMSpecCommandLineBuilder>().ImplementedBy<MSpecCommandLineBuilder>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
