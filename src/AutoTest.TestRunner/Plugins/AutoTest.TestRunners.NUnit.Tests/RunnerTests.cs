@@ -52,8 +52,8 @@ namespace AutoTest.TestRunners.NUnit.Tests
         {
             var options = new RunnerOptions("nunit");
             options.AddAssembly(new AssemblyOptions(
-                Path.GetFullPath(@"AutoTest.Runners.NUnit.Tests.TestResource.dll")));
-            options.Assemblies.ElementAt(0).AddMember("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2");
+                Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
+            options.Assemblies.ElementAt(0).AddMember("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture2");
             var runner = new Runner();
             var results = runner.Run(options);
             Assert.That(results.Count(), Is.EqualTo(2));

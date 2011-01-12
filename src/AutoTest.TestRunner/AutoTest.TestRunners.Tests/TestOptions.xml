@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <run>
   <plugin type="This.Is.Full.Type.Name.For.Class.Implementing.IAutoTestNetTestRunner">C:\Some\Path\Assembly.dll</plugin>
   <plugin type="Some.Class.Name">C:\Some\Path\Assembly.dll</plugin>

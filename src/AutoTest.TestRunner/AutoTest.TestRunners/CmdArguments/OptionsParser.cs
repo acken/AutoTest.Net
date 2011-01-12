@@ -158,16 +158,16 @@ namespace AutoTest.TestRunners.CmdArguments
             }
         }
 
-        private IEnumerable<string> getCategories(XmlNode parent)
+        private string[] getCategories(XmlNode parent)
         {
             var categories = new List<string>();
             var nodes = parent.SelectNodes("categories/ignore_category");
             foreach (XmlNode node in nodes)
                 categories.Add(node.InnerXml);
-            return categories;
+            return categories.ToArray();
         }
 
-        private IEnumerable<AssemblyOptions> getAssemblies(XmlNode parent)
+        private AssemblyOptions[] getAssemblies(XmlNode parent)
         {
             var assemblies = new List<AssemblyOptions>();
             var nodes = parent.SelectNodes("test_assembly");
@@ -187,7 +187,7 @@ namespace AutoTest.TestRunners.CmdArguments
                 assembly.AddNamespaces(getNamespaces(node));
                 assemblies.Add(assembly);
             }
-            return assemblies;
+            return assemblies.ToArray();
         }
 
         private string[] getTests(XmlNode parent)

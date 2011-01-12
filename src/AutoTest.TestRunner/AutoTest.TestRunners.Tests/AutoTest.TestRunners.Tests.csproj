@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdArguments\OptionsParserTests.cs" />
+    <Compile Include="OptionsXmlWriterTests.cs" />
     <Compile Include="PluginLocatorTests.cs" />
     <Compile Include="Plugins\Plugin1.cs" />
     <Compile Include="Plugins\Plugin2.cs" />

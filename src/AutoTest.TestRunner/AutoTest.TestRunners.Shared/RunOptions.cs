@@ -42,7 +42,7 @@ namespace AutoTest.TestRunners.Shared
             _assemblies.Add(options);
         }
 
-        public void AddAssemblies(IEnumerable<AssemblyOptions> options)
+        public void AddAssemblies(AssemblyOptions[] options)
         {
             _assemblies.AddRange(options);
         }
@@ -52,7 +52,7 @@ namespace AutoTest.TestRunners.Shared
             _categories.Add(category);
         }
 
-        public void AddCategories(IEnumerable<string> categories)
+        public void AddCategories(string[] categories)
         {
             _categories.AddRange(categories);
         }
