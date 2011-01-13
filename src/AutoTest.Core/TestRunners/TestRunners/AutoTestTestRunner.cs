@@ -48,7 +48,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!generateOptions(runInfos, optionsFile))
                 return new TestRunResults[] { };
 
+            DebugLog.Debug.WriteMessage(File.ReadAllText(optionsFile));
             RunTests(optionsFile, outputFile);
+            DebugLog.Debug.WriteMessage(File.ReadAllText(outputFile));
             var results = getResults(outputFile, runInfos);
             
             File.Delete(optionsFile);
@@ -66,11 +68,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var runner = TestRunner.NUnit;
                 foreach (var byAssembly in byRunner.GroupBy(x => x.Assembly))
                 {
-                    var info = runInfos.Where(x => x.Assembly.Equals(byAssembly.Key)).First();
+                    var info = runInfos.Where(x => x.Assembly.Equals(byAssembly.Key)).FirstOrDefault();
                     var project = "";
-                    if (info.Project != null)
-                        project = info.Project.Key;
-                    var partial = info.OnlyRunSpcifiedTestsFor(runner) || info.GetTestsFor(runner).Count() > 0;
+                    var partial = false;
+                    if (info != null)
+                    {
+                        if (info.Project != null)
+                            project = info.Project.Key;
+                        partial = info.OnlyRunSpcifiedTestsFor(runner) || info.GetTestsFor(runner).Count() > 0;
+                    }
                     results.Add(new TestRunResults(
                         project,
                         byAssembly.Key,
@@ -112,10 +118,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var proc = new Process();
             proc.StartInfo = new ProcessStartInfo(exe, arguments);
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.CreateNoWindow = true;
             proc.Start();
+            var output = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit();
+            if (output.Length > 0)
+                DebugLog.Debug.WriteMessage("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
         }
 
         private bool generateOptions(TestRunInfo[] runInfos, string file)
@@ -153,6 +163,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 assembly.AddTests(info.GetTestsFor(TestRunner.Any));
+                if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0)
+                    continue;
                 runner.AddAssembly(assembly);
             }
             return runner;

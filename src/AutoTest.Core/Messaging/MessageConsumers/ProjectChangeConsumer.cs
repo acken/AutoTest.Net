@@ -54,12 +54,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private RunReport execute(ProjectChangeMessage message)
         {
             var runReport = new RunReport();
-            var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
-			var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
-            if (!buildAll(list, runReport))
-				return runReport;
-            markAllAsBuilt(list);
-			testAll(list, runReport);
+            try
+            {
+                var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
+                var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
+                if (!buildAll(list, runReport))
+                    return runReport;
+                markAllAsBuilt(list);
+                testAll(list, runReport);
+            }
+            catch (Exception ex)
+            {
+                var result = new TestRunResults("", "", false, TestRunner.Any, new TestResult[] { new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Net internal error", ex.ToString()) });
+                _bus.Publish(new TestRunMessage(result));
+            }
             return runReport;
         }
 

@@ -43,7 +43,7 @@ namespace AutoTest.TestRunners.NUnit
             if (testRunner.Test == null)
             {
                 testRunner.Unload();
-                return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", options.Assemblies, "", "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
+                return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", "AutoTest.TestRunner.exe internal error", "", "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
             }
 
             var harvester = new TestHarvester();
@@ -99,8 +99,17 @@ namespace AutoTest.TestRunners.NUnit
             ProcessModel processModel = ProcessModel.Default;
             RuntimeFramework framework = null;
 
-            package = new TestPackage(options.Assemblies);
-            domainUsage = DomainUsage.Single;
+            if (options.Assemblies.Length == 1)
+            {
+                package = new TestPackage(options.Assemblies[0]);
+                domainUsage = DomainUsage.Single;
+            }
+            else
+            {
+                package = new TestPackage(null, options.Assemblies);
+                package.AutoBinPath = true;
+                domainUsage = DomainUsage.Multiple;
+            }
             
             if (options.Framework != null)
                 framework = RuntimeFramework.Parse(options.Framework);

@@ -15,20 +15,33 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { "testrun.xml", "testoutput.xml" };
+            //args = new string[] { @"C:\Users\ack\AppData\Local\Temp\tmp410A.tmp", @"C:\Users\ack\AppData\Local\Temp\tmp410B.tmp" };
             if (args.Length != 2)
             {
                 printUseage();
                 return;
             }
-            var parser = new OptionsXmlReader(args[0]);
-            parser.Parse();
-            if (!parser.IsValid)
-                return;
+            tryRunTests(args);
+        }
 
-            var result = run(parser);
+        private static void tryRunTests(string[] args)
+        {
+            try
+            {
+                var parser = new OptionsXmlReader(args[0]);
+                parser.Parse();
+                if (!parser.IsValid)
+                    return;
 
-            var writer = new ResultsXmlWriter(result);
-            writer.Write(args[1]);
+                var result = run(parser);
+
+                var writer = new ResultsXmlWriter(result);
+                writer.Write(args[1]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private static void printUseage()

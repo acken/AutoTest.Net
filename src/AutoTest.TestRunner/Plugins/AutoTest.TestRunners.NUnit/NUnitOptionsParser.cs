@@ -31,20 +31,12 @@ namespace AutoTest.TestRunners.NUnit
         private void addOptions(IGrouping<string, AssemblyOptions> x)
         {
             var options = new Options(
-                    getAssemblies(x),
+                    x.Select(y => y.Assembly).ToArray(),
                     getCategories(),
                     x.First().Framework,
                     getTests(x)
                 );
             _options.Add(options);
-        }
-
-        private string getAssemblies(IGrouping<string, AssemblyOptions> x)
-        {
-            var assemblies = "";
-            foreach (var item in x)
-                assemblies += assemblies.Length.Equals(0) ? item.Assembly : string.Format(",{0}", item.Assembly);
-            return assemblies;
         }
 
         private string getCategories()
@@ -73,12 +65,12 @@ namespace AutoTest.TestRunners.NUnit
 
     class Options
     {
-        public string Assemblies { get; private set; }
+        public string[] Assemblies { get; private set; }
         public string Categories { get; private set; }
         public string Framework { get; private set; }
         public string Tests { get; private set; }
 
-        public Options(string assemblies, string categories, string framework, string tests)
+        public Options(string[] assemblies, string categories, string framework, string tests)
         {
             Assemblies = assemblies;
             Categories = categories;

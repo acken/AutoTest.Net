@@ -26,27 +26,35 @@ namespace AutoTest.TestRunners.Shared.Results
         public IEnumerable<TestResult> Read()
         {
             _results = new List<TestResult>();
-            using (var reader = new XmlTextReader(_file))
+            try
             {
-                while (reader.Read())
+                using (var reader = new XmlTextReader(_file))
                 {
-                    if (reader.Name.Equals("runner"))
-                        getRunner(reader);
-                    else if (reader.Name.Equals("assembly"))
-                        getAssembly(reader);
-                    else if (reader.Name.Equals("fixture"))
-                        getFixture(reader);
-                    else if (reader.Name.Equals("test"))
-                        getTest(reader);
-                    else if (reader.Name.Equals("message") && reader.NodeType != XmlNodeType.EndElement)
-                        _currentTest.Message = reader.ReadElementContentAsString();
-                    else if (reader.Name.Equals("line"))
-                        getStackLine(reader);
-                    else if (reader.Name.Equals("method") && reader.NodeType != XmlNodeType.EndElement)
-                        _currentStackLine.Method = reader.ReadElementContentAsString();
-                    else if (reader.Name.Equals("file") && reader.NodeType != XmlNodeType.EndElement)
-                        readFile(reader);
+                    while (reader.Read())
+                    {
+                        if (reader.Name.Equals("runner"))
+                            getRunner(reader);
+                        else if (reader.Name.Equals("assembly"))
+                            getAssembly(reader);
+                        else if (reader.Name.Equals("fixture"))
+                            getFixture(reader);
+                        else if (reader.Name.Equals("test"))
+                            getTest(reader);
+                        else if (reader.Name.Equals("message") && reader.NodeType != XmlNodeType.EndElement)
+                            _currentTest.Message = reader.ReadElementContentAsString();
+                        else if (reader.Name.Equals("line"))
+                            getStackLine(reader);
+                        else if (reader.Name.Equals("method") && reader.NodeType != XmlNodeType.EndElement)
+                            _currentStackLine.Method = reader.ReadElementContentAsString();
+                        else if (reader.Name.Equals("file") && reader.NodeType != XmlNodeType.EndElement)
+                            readFile(reader);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _results = new List<TestResult>();
+                _results.Add(new TestResult("", "", "", "Failed to read AutoTest.TestRunner.exe output xml", TestState.Panic, ex.ToString()));
             }
             return _results;
         }
