@@ -112,10 +112,10 @@ namespace AutoTest.Test.Core.TestRunners
             _parser.Result[0].Failed.Length.ShouldEqual(1);
             _parser.Result[0].Failed[0].Name.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml");
             _parser.Result[0].Failed[0].Message.ShouldEqual("  Did not write xml header at line 0" + Environment.NewLine +
-  "  Expected string length 38 but was 253. Strings differ at index 30." + Environment.NewLine +
-  "  Expected: \"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\"" + Environment.NewLine +
-  "  But was:  \"<?xml version=\"1.0\" encoding=\"utf-8\"?><paycheck_messages />\\0\\0...\"" + Environment.NewLine +
-  "  -----------------------------------------^");
+															  "  Expected string length 38 but was 253. Strings differ at index 30." + Environment.NewLine +
+															  "  Expected: \"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\"" + Environment.NewLine +
+															  "  But was:  \"<?xml version=\"1.0\" encoding=\"utf-8\"?><paycheck_messages />\\0\\0...\"" + Environment.NewLine +
+															  "  -----------------------------------------^");
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(2);
 			_parser.Result[0].Failed[0].StackTrace[0].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)");
             _parser.Result[0].Failed[0].StackTrace[0].LineNumber.ShouldEqual(55);
