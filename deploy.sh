@@ -11,11 +11,13 @@ if [ ! -d $DEPLOYDIR ]; then
 {
 	mkdir $DEPLOYDIR
 	mkdir $DEPLOYDIR/Icons
+	mkdir $DEPLOYDIR/TestRunners
 }
 else
 {
 	rm -rf $DEPLOYDIR/*
 	mkdir $DEPLOYDIR/Icons
+	mkdir $DEPLOYDIR/TestRunners
 }
 fi
 
@@ -27,6 +29,13 @@ cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
 cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt
+
+cp $BINARYDIR/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.exe
+cp $BINARYDIR/AutoTest.TestRunners.Shared.dll $DEPLOYDIR/AutoTest.TestRunners.Shared.dll
+cp $BINARYDIR/AutoTest.TestRunners.NUnit.dll $DEPLOYDIR/TestRunners\AutoTest.TestRunners.NUnit.dll
+cp $BINARYDIR/nunit.core.dll $DEPLOYDIR/TestRunners\nunit.core.dll
+cp $BINARYDIR/nunit.core.interfaces.dll $DEPLOYDIR/TestRunners\nunit.core.interfaces.dll
+cp $BINARYDIR/nunit.util.dll $DEPLOYDIR/TestRunners\nunit.util.dll
 
 cp $BINARYDIR/Castle.Core.dll $DEPLOYDIR/Castle.Core.dll
 cp $BINARYDIR/Castle.Facilities.Logging.dll $DEPLOYDIR/Castle.Facilities.Logging.dll

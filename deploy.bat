@@ -10,11 +10,17 @@ SET RESOURCES="%DIR%src\Resources"
 IF NOT EXIST %DEPLOYDIR% (
   mkdir %DEPLOYDIR%
   mkdir %DEPLOYDIR%\Icons
+  mkdir %DEPLOYDIR%\TestRunners
 ) ELSE (
   IF NOT EXIST %DEPLOYDIR%\Icons (
 	mkdir %DEPLOYDIR%\Icons
   ) ELSE (
 	del %DEPLOYDIR%\Icons\* /Q
+  )
+  IF NOT EXIST %DEPLOYDIR%\TestRunners (
+	mkdir %DEPLOYDIR%\TestRunners
+  ) ELSE (
+	del %DEPLOYDIR%\TestRunners\* /Q
   )
   del  %DEPLOYDIR%\* /Q
 )
@@ -26,6 +32,13 @@ copy %BINARYDIR%\AutoTest.WinForms.exe %DEPLOYDIR%\AutoTest.WinForms.exe
 copy %BINARYDIR%\AutoTest.config.template %DEPLOYDIR%\AutoTest.config
 copy %DIR%README %DEPLOYDIR%\README
 copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
+
+copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.exe
+copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunners.Shared.dll
+copy %BINARYDIR%\AutoTest.TestRunners.NUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.NUnit.dll
+copy %BINARYDIR%\nunit.core.dll %DEPLOYDIR%\TestRunners\nunit.core.dll
+copy %BINARYDIR%\nunit.core.interfaces.dll %DEPLOYDIR%\TestRunners\nunit.core.interfaces.dll
+copy %BINARYDIR%\nunit.util.dll %DEPLOYDIR%\TestRunners\nunit.util.dll
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
