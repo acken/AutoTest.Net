@@ -30,7 +30,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
             Assert.That(results.ElementAt(0).StackLines.Count(), Is.EqualTo(1));
             Assert.That(File.Exists(results.ElementAt(0).StackLines.ElementAt(0).File), Is.True);
             Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Method.Replace(" ()", "()"), Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail()"));
-            Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Line, Is.EqualTo(21));
+            Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Line, Is.EqualTo(23));
 
             Assert.That(results.ElementAt(1).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
             Assert.That(results.ElementAt(1).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));
@@ -39,7 +39,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
             Assert.That(results.ElementAt(1).StackLines.Count(), Is.EqualTo(1));
             Assert.That(File.Exists(results.ElementAt(0).StackLines.ElementAt(0).File), Is.True);
             Assert.That(results.ElementAt(1).StackLines.ElementAt(0).Method.Replace(" ()", "()"), Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_ignore()"));
-            Assert.That(results.ElementAt(1).StackLines.ElementAt(0).Line, Is.EqualTo(27));
+            Assert.That(results.ElementAt(1).StackLines.ElementAt(0).Line, Is.EqualTo(30));
 
             Assert.That(results.ElementAt(2).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
             Assert.That(results.ElementAt(2).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));

@@ -10,11 +10,13 @@ namespace AutoTest.TestRunners.NUnit.Tests.TestResource
     public class Fixture2
     {
         [Test]
+		[Category("notworking")]
         public void Should_also_pass()
         {
         }
 
         [Test]
+		[Category("notworking")]
         public void Should_also_pass_again()
         {
         }

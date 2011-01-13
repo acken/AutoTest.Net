@@ -10,18 +10,21 @@ namespace AutoTest.TestRunners.NUnit.Tests.TestResource
     public class Fixture1
     {
         [Test]
+		[Category("notworking")]
         public void Should_pass()
         {
             Assert.AreEqual(1, 1);
         }
 
         [Test]
+		[Category("notworking")]
         public void Should_fail()
         {
             Assert.Fail("failing test");
         }
 
         [Test]
+		[Category("notworking")]
         public void Should_ignore()
         {
             Assert.Ignore("ignored test");
