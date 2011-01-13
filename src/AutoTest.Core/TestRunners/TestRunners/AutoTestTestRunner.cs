@@ -10,6 +10,10 @@ using AutoTest.Core.Configuration;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Plugins;
 using System.IO;
+using System.Diagnostics;
+using System.Reflection;
+using AutoTest.TestRunners.Shared.Options;
+using AutoTest.TestRunners.Shared.Results;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -39,35 +43,124 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!_configuration.UseAutoTestTestRunner)
                 return new TestRunResults[] { };
 
-            var optionsFile = generateOptions(runInfos);
+            var optionsFile = Path.GetTempFileName();
+            var outputFile = Path.GetTempFileName();
+            if (!generateOptions(runInfos, optionsFile))
+                return new TestRunResults[] { };
 
-            return new TestRunResults[] { };
+            RunTests(optionsFile, outputFile);
+            var results = getResults(outputFile, runInfos);
+            
+            File.Delete(optionsFile);
+            File.Delete(outputFile);
+            return results.ToArray();
         }
 
-        private string generateOptions(TestRunInfo[] runInfos)
+        private TestRunResults[] getResults(string outputFile, TestRunInfo[] runInfos)
+        {
+            var results = new List<TestRunResults>();
+            var reader = new ResultXmlReader(outputFile);
+            var tests = reader.Read();
+            foreach (var byRunner in tests.GroupBy(x => x.Runner))
+            {
+                var runner = TestRunner.NUnit;
+                foreach (var byAssembly in byRunner.GroupBy(x => x.Assembly))
+                {
+                    var info = runInfos.Where(x => x.Assembly.Equals(byAssembly.Key)).First();
+                    var project = "";
+                    if (info.Project != null)
+                        project = info.Project.Key;
+                    var partial = info.OnlyRunSpcifiedTestsFor(runner) || info.GetTestsFor(runner).Count() > 0;
+                    results.Add(new TestRunResults(
+                        project,
+                        byAssembly.Key,
+                        partial,
+                        runner,
+                        byAssembly.Select(x => new Messages.TestResult(
+                            runner,
+                            getTestState(x.State),
+                            x.TestName,
+                            x.Message,
+                            x.StackLines.Select(y => (IStackLine) new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>()
+                            )).ToArray()
+                            ));
+                }
+            }
+            return results.ToArray();
+        }
+
+        private TestRunStatus getTestState(TestState testState)
+        {
+            switch (testState)
+            {
+                case TestState.Failed:
+                case TestState.Panic:
+                    return TestRunStatus.Failed;
+                case TestState.Ignored:
+                    return TestRunStatus.Ignored;
+                case TestState.Passed:
+                    return TestRunStatus.Passed;
+            }
+            return TestRunStatus.Failed;
+        }
+
+        private void RunTests(string optionsFile, string outputFile)
+        {
+            var arguments = string.Format("\"{0}\" \"{1}\"", optionsFile, outputFile);
+            var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
+            DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", exe, arguments));
+            var proc = new Process();
+            proc.StartInfo = new ProcessStartInfo(exe, arguments);
+            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            proc.StartInfo.UseShellExecute = false;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.Start();
+            proc.WaitForExit();
+        }
+
+        private bool generateOptions(TestRunInfo[] runInfos, string file)
         {
             var plugins = new List<Plugin>();
             var options = new RunOptions();
+            addNUnitTests(runInfos, plugins, options);
+            if (options.TestRuns.Count() == 0)
+                return false;
+
+            var writer = new OptionsXmlWriter(plugins, options);
+            writer.Write(file);
+            return true;
+        }
+
+        private void addNUnitTests(TestRunInfo[] runInfos, List<Plugin> plugins, RunOptions options)
+        {
             var nunitInfos = runInfos.Where(x => canHandleNUnit(x));
             if (nunitInfos.Count() > 0)
             {
                 plugins.Add(new Plugin(Path.GetFullPath(Path.Combine("TestRunners", "AutoTest.TestRunners.NUnit.dll")), "AutoTest.TestRunners.NUnit.Runner"));
-                var runner = getRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework);
-                options.AddTestRun(runner);
+                var runner = getNUnitRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework);
+                if (runner.Assemblies.Count() > 0)
+                    options.AddTestRun(runner);
             }
-            return "";
         }
 
-        private RunnerOptions getRunnerOptions(IEnumerable<TestRunInfo> nunitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator)
+        private RunnerOptions getNUnitRunnerOptions(IEnumerable<TestRunInfo> nunitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator)
         {
             var runner = new RunnerOptions(id);
             foreach (var info in nunitInfos)
             {
-                var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info));
+                if (hasOtherNUnitRunners(info))
+                    continue;
+                var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 assembly.AddTests(info.GetTestsFor(TestRunner.Any));
+                runner.AddAssembly(assembly);
             }
             return runner;
+        }
+
+        private bool hasOtherNUnitRunners(TestRunInfo info)
+        {
+            return _configuration.NunitTestRunner(getFramework(info)).Length > 0;
         }
 
         private string getFramework(TestRunInfo info)
@@ -79,7 +172,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 return null;
             if (info.Project.Value.Framework == null)
                 return null;
-            return info.Project.Value.Framework.Replace("v", "");
+            return info.Project.Value.Framework;
         }
 
         private bool canHandleNUnit(TestRunInfo info)

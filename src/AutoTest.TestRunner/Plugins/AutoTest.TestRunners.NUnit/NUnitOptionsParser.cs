@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.TestRunners.Shared;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.NUnit
 {

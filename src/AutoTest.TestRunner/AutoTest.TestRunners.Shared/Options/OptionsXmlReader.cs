@@ -7,9 +7,9 @@ using System.IO;
 using System.Xml;
 using AutoTest.TestRunners.Shared.Plugins;
 
-namespace AutoTest.TestRunners.CmdArguments
+namespace AutoTest.TestRunners.Shared.Options
 {
-    class OptionsParser
+    public class OptionsXmlReader
     {
         private string _file;
         private List<Plugin> _plugins = new List<Plugin>();
@@ -23,7 +23,7 @@ namespace AutoTest.TestRunners.CmdArguments
         public RunOptions Options { get { return _options; } }
         public bool IsValid { get; private set; }
 
-        public OptionsParser(string file)
+        public OptionsXmlReader(string file)
         {
             _file = file;
             IsValid = false;

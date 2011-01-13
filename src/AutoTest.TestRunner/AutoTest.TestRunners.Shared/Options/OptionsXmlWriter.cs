@@ -5,7 +5,7 @@ using System.Text;
 using AutoTest.TestRunners.Shared.Plugins;
 using System.Xml;
 
-namespace AutoTest.TestRunners.Shared
+namespace AutoTest.TestRunners.Shared.Options
 {
     public class OptionsXmlWriter
     {

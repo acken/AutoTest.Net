@@ -27,7 +27,7 @@ namespace AutoTest.TestRunners.NUnit
             ServiceManager.Services.InitializeServices();
         }
 
-		public IEnumerable<AutoTest.TestRunners.Shared.TestResult> Execute(Options options)
+		public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Execute(Options options)
 		{
             TestPackage package = createPackage(options);
             using (TestRunner testRunner = new DefaultTestRunnerFactory().MakeTestRunner(package))
@@ -36,14 +36,14 @@ namespace AutoTest.TestRunners.NUnit
             }
 		}
 
-        private IEnumerable<AutoTest.TestRunners.Shared.TestResult> runTests(Options options, TestPackage package, TestRunner testRunner)
+        private IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> runTests(Options options, TestPackage package, TestRunner testRunner)
         {
             testRunner.Load(package);
 
             if (testRunner.Test == null)
             {
                 testRunner.Unload();
-                return new AutoTest.TestRunners.Shared.TestResult[] { new AutoTest.TestRunners.Shared.TestResult("nunit", options.Assemblies, "", "", TestRunners.Shared.TestState.Panic, "Unable to locate fixture") };
+                return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", options.Assemblies, "", "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
             }
 
             var harvester = new TestHarvester(options);

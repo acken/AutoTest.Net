@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.TestRunners.Shared;
 using System.IO;
 using AutoTest.TestRunners.Shared.Plugins;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.Tests
 {

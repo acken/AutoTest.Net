@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.NUnit;
 using System.IO;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.NUnit.Tests
 {
@@ -24,7 +25,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
 
             Assert.That(results.ElementAt(0).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
             Assert.That(results.ElementAt(0).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));
-            Assert.That(results.ElementAt(0).State, Is.EqualTo(Shared.TestState.Failed));
+            Assert.That(results.ElementAt(0).State, Is.EqualTo(Shared.Results.TestState.Failed));
             Assert.That(results.ElementAt(0).TestName, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail"));
             Assert.That(results.ElementAt(0).StackLines.Count(), Is.EqualTo(1));
             Assert.That(File.Exists(results.ElementAt(0).StackLines.ElementAt(0).File), Is.True);
@@ -33,7 +34,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
 
             Assert.That(results.ElementAt(1).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
             Assert.That(results.ElementAt(1).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));
-            Assert.That(results.ElementAt(1).State, Is.EqualTo(Shared.TestState.Ignored));
+            Assert.That(results.ElementAt(1).State, Is.EqualTo(Shared.Results.TestState.Ignored));
             Assert.That(results.ElementAt(1).TestName, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_ignore"));
             Assert.That(results.ElementAt(1).StackLines.Count(), Is.EqualTo(1));
             Assert.That(File.Exists(results.ElementAt(0).StackLines.ElementAt(0).File), Is.True);
@@ -42,7 +43,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
 
             Assert.That(results.ElementAt(2).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
             Assert.That(results.ElementAt(2).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));
-            Assert.That(results.ElementAt(2).State, Is.EqualTo(Shared.TestState.Passed));
+            Assert.That(results.ElementAt(2).State, Is.EqualTo(Shared.Results.TestState.Passed));
             Assert.That(results.ElementAt(2).TestName, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_pass"));
             Assert.That(results.ElementAt(2).StackLines.Count(), Is.EqualTo(0));
         }

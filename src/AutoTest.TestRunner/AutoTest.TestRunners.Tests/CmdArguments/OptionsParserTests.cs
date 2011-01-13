@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using AutoTest.TestRunners.CmdArguments;
 using AutoTest.TestRunners.Shared;
 using System.Diagnostics;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.Tests.CmdArguments
 {
     [TestFixture]
     public class OptionsParserTests
     {
-        private OptionsParser _parser;
+        private OptionsXmlReader _parser;
 
         [SetUp]
         public void SetUp()
         {
-            _parser = new OptionsParser("TestOptions.xml");
+            _parser = new OptionsXmlReader("TestOptions.xml");
             _parser.Parse();
         }
 
         [Test]
         public void When_file_does_not_exist_plugins_should_be_null()
         {
-            var parser = new OptionsParser("");
+            var parser = new OptionsXmlReader("");
             parser.Parse();
             Assert.That(parser.Plugins, Is.Null);
             Assert.That(parser.IsValid, Is.False);
@@ -33,7 +33,7 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         [Test]
         public void When_file_does_not_exist_options_should_be_null()
         {
-            var parser = new OptionsParser("");
+            var parser = new OptionsXmlReader("");
             parser.Parse();
             Assert.That(parser.Options, Is.Null);
         }

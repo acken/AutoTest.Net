@@ -19,7 +19,7 @@ namespace AutoTest.TestRunners.Tests
             var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var locator = new PluginLocator(path);
             var plugins = locator.Locate();
-
+            
             Assert.IsTrue(plugins.Count() > 0);
             Assert.That(plugins.Where(x => x.Assembly.Equals(Path.Combine(path, "AutoTest.TestRunners.Tests.dll")) && x.Type.Equals("AutoTest.TestRunners.Tests.Plugins.Plugin1")).Count(), Is.EqualTo(1));
             Assert.That(plugins.Where(x => x.Assembly.Equals(Path.Combine(path, "AutoTest.TestRunners.Tests.dll")) && x.Type.Equals("AutoTest.TestRunners.Tests.Plugins.Plugin2")).Count(), Is.EqualTo(1));

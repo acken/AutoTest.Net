@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoTest.TestRunners.CmdArguments;
 using System.IO;
-using AutoTest.TestRunners.Results;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Plugins;
+using AutoTest.TestRunners.Shared.Results;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners
 {
@@ -20,7 +20,7 @@ namespace AutoTest.TestRunners
                 printUseage();
                 return;
             }
-            var parser = new OptionsParser(args[0]);
+            var parser = new OptionsXmlReader(args[0]);
             parser.Parse();
             if (!parser.IsValid)
                 return;
@@ -70,7 +70,7 @@ namespace AutoTest.TestRunners
             Console.WriteLine("</run>");
         }
 
-        private static IEnumerable<TestResult> run(OptionsParser parser)
+        private static IEnumerable<TestResult> run(OptionsXmlReader parser)
         {
             var results = new List<TestResult>();
             foreach (var runner in getRunners(parser))
@@ -84,7 +84,7 @@ namespace AutoTest.TestRunners
             return results;
         }
 
-        private static IEnumerable<IAutoTestNetTestRunner> getRunners(OptionsParser parser)
+        private static IEnumerable<IAutoTestNetTestRunner> getRunners(OptionsXmlReader parser)
         {
             if (parser.Plugins.Count() == 0)
                 return allPlugins();

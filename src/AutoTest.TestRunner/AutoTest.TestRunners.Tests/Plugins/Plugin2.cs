@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoTest.TestRunners.Shared;
 
 namespace AutoTest.TestRunners.Tests.Plugins
 {
-    public class Plugin2 : IAutoTestNetTestRunner
+    public class Plugin2 : AutoTest.TestRunners.Shared.IAutoTestNetTestRunner
     {
-        public bool Handles(string identifier)
+        bool Shared.IAutoTestNetTestRunner.Handles(string identifier)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TestResult> Run(Shared.RunnerOptions options)
+        IEnumerable<Shared.Results.TestResult> Shared.IAutoTestNetTestRunner.Run(Shared.Options.RunnerOptions options)
         {
             throw new NotImplementedException();
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 
-namespace AutoTest.TestRunners.Shared
+namespace AutoTest.TestRunners.Shared.Results
 {
     public enum TestState
     {
@@ -19,13 +19,23 @@ namespace AutoTest.TestRunners.Shared
     {
         private List<StackLine> _stackLines = new List<StackLine>();
 
-        public string Runner { get; private set; }
-        public string Assembly { get; private set; }
-        public string TestFixture { get; private set; }
-        public string TestName { get; private set; }
-        public TestState State { get; private set; }
-        public string Message { get; private set; }
+        public string Runner { get; set; }
+        public string Assembly { get; set; }
+        public string TestFixture { get; set; }
+        public string TestName { get; set; }
+        public TestState State { get; set; }
+        public string Message { get; set; }
         public IEnumerable<StackLine> StackLines { get { return _stackLines; } }
+
+        public TestResult()
+        {
+            Runner = "";
+            Assembly = "";
+            TestFixture = "";
+            TestName = "";
+            State = TestState.Failed;
+            Message = "";
+        }
 
         public TestResult(string runner, string assembly, string fixture, string testName, TestState state, string message)
         {
@@ -51,10 +61,14 @@ namespace AutoTest.TestRunners.Shared
 
     public class StackLine
     {
-        readonly string _file = "";
+        private string _file = "";
         readonly string _line;
-        readonly int _lineNumber;
-        readonly string _method = "";
+        private int _lineNumber;
+        private string _method = "";
+
+        public StackLine()
+        {
+        }
 
         public StackLine(string line)
         {
@@ -67,16 +81,19 @@ namespace AutoTest.TestRunners.Shared
         public string Method
         {
             get { return _method; }
+            set { _method = value; }
         }
 
         public string File
         {
             get { return _file; }
+            set { _file = value; }
         }
 
         public int Line
         {
             get { return _lineNumber; }
+            set { _lineNumber = value; }
         }
 
         public override string ToString()

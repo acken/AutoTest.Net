@@ -5,9 +5,9 @@ using System.Text;
 using System.Xml;
 using AutoTest.TestRunners.Shared;
 
-namespace AutoTest.TestRunners.Results
+namespace AutoTest.TestRunners.Shared.Results
 {
-    class ResultsXmlWriter
+    public class ResultsXmlWriter
     {
         private IEnumerable<TestResult> _results;
 
