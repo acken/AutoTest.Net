@@ -10,16 +10,13 @@ namespace AutoTest.TestRunners.NUnit
 {
     class TestHarvester : MarshalByRefObject, EventListener
     {
-        private Options options;
         private string currentAssembly = "";
-        private ArrayList unhandledExceptions = new ArrayList();
         private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<AutoTest.TestRunners.Shared.Results.TestResult>();
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
 
-        public TestHarvester(Options options)
+        public TestHarvester()
         {
-            this.options = options;
         }
 
         public void RunStarted(string name, int testCount)

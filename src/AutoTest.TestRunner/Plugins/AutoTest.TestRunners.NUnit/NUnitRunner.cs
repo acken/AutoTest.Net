@@ -46,7 +46,7 @@ namespace AutoTest.TestRunners.NUnit
                 return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", options.Assemblies, "", "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
             }
 
-            var harvester = new TestHarvester(options);
+            var harvester = new TestHarvester();
             var testFilter = getTestFilter(options);
             string savedDirectory = Environment.CurrentDirectory;
             var result = run(testRunner, harvester, testFilter, savedDirectory);
