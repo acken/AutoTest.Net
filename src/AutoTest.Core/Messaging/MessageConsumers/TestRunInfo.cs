@@ -8,6 +8,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	public class TestRunInfo
 	{
 		private List<TestToRun> _testsToRun;
+        private List<TestToRun> _membersToRun;
+        private List<TestToRun> _namespacesToRun;
         private List<TestRunner> _onlyRunTestsFor;
         private List<TestRunner> _rerunAllWhenFinishedFor;
 		
@@ -19,14 +21,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			Project = project;
 			Assembly = assembly;
             _testsToRun = new List<TestToRun>();
+            _membersToRun = new List<TestToRun>();
+            _namespacesToRun = new List<TestToRun>();
             _onlyRunTestsFor = new List<TestRunner>();
             _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
-
-        public void AddTestsToRun(TestToRun[] tests)
-        {
-            _testsToRun.AddRange(tests);
-        }
 
         public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
         {
@@ -54,22 +53,29 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 _rerunAllWhenFinishedFor.Add(runner);
         }
 
-        public TestToRun[] GetTests()
-        {
-            return _testsToRun.ToArray();
-        }
-
-        public string[] GetTestsFor(TestRunner runner)
-        {
-            var query = from t in _testsToRun
-                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Any)
-                        select t.Test;
-            return query.ToArray();
-        }
-
         public bool RerunAllTestWhenFinishedForAny()
         {
             return _rerunAllWhenFinishedFor.Count > 0;
+        }
+
+        public void AddTestsToRun(TestToRun[] tests) { _testsToRun.AddRange(tests); }
+        public TestToRun[] GetTests() { return _testsToRun.ToArray(); }
+        public string[] GetTestsFor(TestRunner runner) { return getRunItemsFor(runner, _testsToRun); }
+
+        public void AddMembersToRun(TestToRun[] members) { _membersToRun.AddRange(members); }
+        public TestToRun[] GetMembers() { return _membersToRun.ToArray(); }
+        public string[] GetMembersFor(TestRunner runner) { return getRunItemsFor(runner, _membersToRun); }
+
+        public void AddNamespacesToRun(TestToRun[] namespaces) { _namespacesToRun.AddRange(namespaces); }
+        public TestToRun[] GetNamespaces() { return _namespacesToRun.ToArray(); }
+        public string[] GetNamespacesFor(TestRunner runner) { return getRunItemsFor(runner, _namespacesToRun); }
+
+        private string[] getRunItemsFor(TestRunner runner, List<TestToRun> runList)
+        {
+            var query = from t in runList
+                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Any)
+                        select t.Test;
+            return query.ToArray();
         }
 	}
 }

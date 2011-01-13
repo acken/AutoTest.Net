@@ -163,7 +163,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 assembly.AddTests(info.GetTestsFor(TestRunner.Any));
-                if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0)
+                assembly.AddMembers(info.GetMembersFor(testRunner));
+                assembly.AddMembers(info.GetMembersFor(TestRunner.Any));
+                assembly.AddNamespaces(info.GetNamespacesFor(testRunner));
+                assembly.AddNamespaces(info.GetNamespacesFor(TestRunner.Any));
+                if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0 && assembly.Members.Count() == 0 && assembly.Namespaces.Count() == 0)
                     continue;
                 runner.AddAssembly(assembly);
             }
