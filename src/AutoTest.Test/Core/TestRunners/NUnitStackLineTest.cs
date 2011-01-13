@@ -403,4 +403,36 @@ namespace AutoTest.Test.Core.TestRunners
             _line.Method.ShouldEqual(adjustToEnvironment("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.verifyLine(Int32 line, String message)"));
         }
     }
+
+    [TestFixture]
+    public class When_parsing_one_of_nunits_funky_I_have_no_file_parameters_then_th_should_still_get_method : BaseFixture
+    {
+        NUnitStackLine _line;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _line =
+                new NUnitStackLine(
+                    adjustToEnvironment(@"at AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_run_test()" + Environment.NewLine));
+        }
+
+        [Test]
+        public void Should_parse_line_number()
+        {
+            _line.LineNumber.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Should_parse_the_file_name()
+        {
+            _line.File.ShouldEqual("");
+        }
+
+        [Test]
+        public void Should_parse_the_method()
+        {
+            _line.Method.ShouldEqual(adjustToEnvironment("AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_run_test()"));
+        }
+    }
 }
