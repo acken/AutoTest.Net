@@ -112,7 +112,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void RunTests(string optionsFile, string outputFile)
         {
-            var arguments = string.Format("\"{0}\" \"{1}\"", optionsFile, outputFile);
+            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", optionsFile, outputFile);
             var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
             DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", exe, arguments));
             var proc = new Process();
