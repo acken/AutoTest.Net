@@ -20,6 +20,7 @@ namespace AutoTest.TestRunners.Tests.Results
             Assert.That(results.ElementAt(0).Message, Is.EqualTo("failing test"));
             Assert.That(results.ElementAt(0).State, Is.EqualTo(AutoTest.TestRunners.Shared.Results.TestState.Failed));
             Assert.That(results.ElementAt(0).TestFixture, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture1"));
+            Assert.That(results.ElementAt(0).DurationInMilliseconds, Is.EqualTo(100));
             Assert.That(results.ElementAt(0).TestName, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_fail"));
             Assert.That(results.ElementAt(0).StackLines.Count(), Is.EqualTo(1));
             Assert.That(results.ElementAt(0).StackLines.ElementAt(0).File, Is.EqualTo(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Runners.NUnit.Tests.TestResource\Fixture1.cs"));
@@ -30,6 +31,7 @@ namespace AutoTest.TestRunners.Tests.Results
             Assert.That(results.ElementAt(1).StackLines.Count(), Is.EqualTo(1));
 
             Assert.That(results.ElementAt(4).Assembly, Is.EqualTo(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Runners.NUnit.Tests.TestResource\bin\AutoTest.NET\AutoTest.Runners.NUnit.Tests.TestResource.dll"));
+            Assert.That(results.ElementAt(4).DurationInMilliseconds, Is.EqualTo(250));
             Assert.That(results.ElementAt(4).Message, Is.EqualTo(""));
             Assert.That(results.ElementAt(4).State, Is.EqualTo(AutoTest.TestRunners.Shared.Results.TestState.Passed));
             Assert.That(results.ElementAt(4).TestFixture, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2"));

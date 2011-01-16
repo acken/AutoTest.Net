@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B0BD39D5-958D-4860-9897-9BB98907EF99}</ProjectGuid>
+    <ProjectGuid>{AFC7C4E0-8298-4EEB-B77D-0D4CE739A847}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners.XUnit</RootNamespace>
-    <AssemblyName>AutoTest.TestRunners.XUnit</AssemblyName>
+    <RootNamespace>AutoTest.TestRunners.XUnit.Tests</RootNamespace>
+    <AssemblyName>AutoTest.TestRunners.XUnit.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,26 +31,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit.runner.utility">
-      <HintPath>..\..\..\..\lib\XUnit\xunit.runner.utility.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Runner.cs" />
+    <Compile Include="RunnerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XUnitLogger.cs" />
-    <Compile Include="XUnitRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.TestRunners.XUnit.Tests.TestResource\AutoTest.TestRunners.XUnit.Tests.TestResource.csproj">
+      <Project>{A756C120-9E09-4D1F-BAA8-D0AF982EEA28}</Project>
+      <Name>AutoTest.TestRunners.XUnit.Tests.TestResource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.TestRunners.XUnit\AutoTest.TestRunners.XUnit.csproj">
+      <Project>{B0BD39D5-958D-4860-9897-9BB98907EF99}</Project>
+      <Name>AutoTest.TestRunners.XUnit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

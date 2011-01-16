@@ -3,7 +3,7 @@
   <runner id="nunit">
     <assembly name="C:\Users\ack\src\AutoTest.Net\src\AutoTest.Runners.NUnit.Tests.TestResource\bin\AutoTest.NET\AutoTest.Runners.NUnit.Tests.TestResource.dll">
       <fixture name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1">
-        <test state="Failed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_fail">
+        <test state="Failed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_fail" duration="100">
           <message><![CDATA[failing test]]></message>
           <stack-trace>
             <line>
@@ -12,7 +12,7 @@
             </line>
           </stack-trace>
         </test>
-        <test state="Ignored" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_ignore">
+        <test state="Ignored" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_ignore" duration="20">
           <message><![CDATA[ignored test]]></message>
           <stack-trace>
             <line>
@@ -21,15 +21,15 @@
             </line>
           </stack-trace>
         </test>
-        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_pass">
+        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_pass" duration="20">
           <message><![CDATA[]]></message>
         </test>
       </fixture>
       <fixture name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2">
-        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass">
+        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass" duration="20">
           <message><![CDATA[]]></message>
         </test>
-        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again">
+        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again" duration="250">
           <message><![CDATA[]]></message>
         </test>
       </fixture>

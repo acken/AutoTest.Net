@@ -43,7 +43,7 @@ namespace AutoTest.TestRunners.NUnit
             if (testRunner.Test == null)
             {
                 testRunner.Unload();
-                return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", "AutoTest.TestRunner.exe internal error", "", "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
+                return new AutoTest.TestRunners.Shared.Results.TestResult[] { new AutoTest.TestRunners.Shared.Results.TestResult("nunit", "AutoTest.TestRunner.exe internal error", "", 0, "", TestRunners.Shared.Results.TestState.Panic, "Unable to locate fixture") };
             }
 
             var harvester = new TestHarvester();

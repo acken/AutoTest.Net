@@ -22,6 +22,7 @@ namespace AutoTest.TestRunners.Shared.Results
         public string Runner { get; set; }
         public string Assembly { get; set; }
         public string TestFixture { get; set; }
+        public double DurationInMilliseconds { get; set; }
         public string TestName { get; set; }
         public TestState State { get; set; }
         public string Message { get; set; }
@@ -32,16 +33,18 @@ namespace AutoTest.TestRunners.Shared.Results
             Runner = "";
             Assembly = "";
             TestFixture = "";
+            DurationInMilliseconds = 0;
             TestName = "";
             State = TestState.Failed;
             Message = "";
         }
 
-        public TestResult(string runner, string assembly, string fixture, string testName, TestState state, string message)
+        public TestResult(string runner, string assembly, string fixture, double milliseconds, string testName, TestState state, string message)
         {
             Runner = runner;
             Assembly = assembly;
             TestFixture = fixture;
+            DurationInMilliseconds = milliseconds;
             TestName = testName;
             State = state;
             Message = message;

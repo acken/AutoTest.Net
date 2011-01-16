@@ -54,7 +54,7 @@ namespace AutoTest.TestRunners.Shared.Results
             catch (Exception ex)
             {
                 _results = new List<TestResult>();
-                _results.Add(new TestResult("", "", "", "Failed to read AutoTest.TestRunner.exe output xml", TestState.Panic, ex.ToString()));
+                _results.Add(new TestResult("", "", "", 0, "Failed to read AutoTest.TestRunner.exe output xml", TestState.Panic, ex.ToString()));
             }
             return _results;
         }
@@ -88,6 +88,7 @@ namespace AutoTest.TestRunners.Shared.Results
                 _currentTest.Assembly = _currentAssembly;
                 _currentTest.TestFixture = _currentFixture;
                 _currentTest.State = getTestState(reader.GetAttribute("state"));
+                _currentTest.DurationInMilliseconds = double.Parse(reader.GetAttribute("duration"));
                 _currentTest.TestName = reader.GetAttribute("name");
             }
         }

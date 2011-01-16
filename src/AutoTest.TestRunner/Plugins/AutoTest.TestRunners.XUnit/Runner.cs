@@ -22,7 +22,9 @@ namespace AutoTest.TestRunners.XUnit
 
         public IEnumerable<TestResult> Run(RunnerOptions options)
         {
-            throw new NotImplementedException();
+            var runner = new XUnitRunner();
+            runner.Run(options);
+            return null;
         }
     }
 }
