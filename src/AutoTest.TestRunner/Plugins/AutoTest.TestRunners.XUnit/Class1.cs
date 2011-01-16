@@ -7,7 +7,7 @@ using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Logging;
 
-namespace AutoTest.TestRunners.NUnit
+namespace AutoTest.TestRunners.XUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
@@ -17,19 +17,12 @@ namespace AutoTest.TestRunners.NUnit
 
         public bool Handles(string identifier)
         {
-            return identifier.ToLower().Equals("nunit");
+            return identifier.Equals("XUnit");
         }
 
         public IEnumerable<TestResult> Run(RunnerOptions options)
         {
-            var runner = new NUnitRunner();
-            runner.Initialize();
-            var parser = new NUnitOptionsParser(options);
-            parser.Parse();
-            var results = new List<TestResult>();
-            foreach (var option in parser.Options)
-                results.AddRange(runner.Execute(option));
-            return results;
+            throw new NotImplementedException();
         }
     }
 }

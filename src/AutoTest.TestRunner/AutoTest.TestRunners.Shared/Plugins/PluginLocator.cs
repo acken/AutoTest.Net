@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -21,7 +22,9 @@ namespace AutoTest.TestRunners.Shared.Plugins
         public IAutoTestNetTestRunner New()
         {
             var asm = System.Reflection.Assembly.LoadFrom(Assembly);
-            return (IAutoTestNetTestRunner)asm.CreateInstance(Type);
+            var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
+            runner.SetLogger(new NullLogger());
+            return runner;
         }
     }
 

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</ProjectGuid>
+    <ProjectGuid>{B0BD39D5-958D-4860-9897-9BB98907EF99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners.Shared</RootNamespace>
-    <AssemblyName>AutoTest.TestRunners.Shared</AssemblyName>
+    <RootNamespace>AutoTest.TestRunners.XUnit</RootNamespace>
+    <AssemblyName>AutoTest.TestRunners.XUnit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,17 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAutoTestNetTestRunner.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
-    <Compile Include="Options\OptionsXmlReader.cs" />
-    <Compile Include="Options\OptionsXmlWriter.cs" />
-    <Compile Include="Plugins\PluginLocator.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Options\RunOptions.cs" />
-    <Compile Include="Results\ResultsXmlWriter.cs" />
-    <Compile Include="Results\ResultXmlReader.cs" />
-    <Compile Include="Results\TestResults.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
+      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
+      <Name>AutoTest.TestRunners.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
