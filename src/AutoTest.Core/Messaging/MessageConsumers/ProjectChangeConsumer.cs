@@ -88,6 +88,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private bool buildAll(RunInfo[] projectList, RunReport runReport)
 		{
+            if (projectList.Where(x => x.ShouldBeBuilt).Select(x => x).Count() == 0)
+                return true;
+
             if (_configuration.ShouldBuildSolution)
                 return buildSolution(projectList, runReport);
             else

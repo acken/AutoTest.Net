@@ -20,6 +20,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 	public class RunInfo
 	{
         private List<TestToRun> _testsToRun;
+        private List<TestToRun> _membersToRun;
+        private List<TestToRun> _namespacesToRun;
         private List<TestRunner> _onlyRunTestsFor;
         private List<TestRunner> _rerunAllWhenFinishedFor;
 
@@ -33,6 +35,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			ShouldBeBuilt = false;
 			Assembly = null;
             _testsToRun = new List<TestToRun>();
+            _membersToRun = new List<TestToRun>();
+            _namespacesToRun = new List<TestToRun>();
             _onlyRunTestsFor = new List<TestRunner>();
             _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
@@ -41,22 +45,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		{
 			ShouldBeBuilt = true;
 		}
+
+        public void ShouldNotBuild()
+        {
+            ShouldBeBuilt = false;
+        }
 		
 		public void SetAssembly(string assembly)
 		{
 			Assembly = assembly;
 		}
-
-        public void AddTestsToRun(TestRunner runner, string[] tests)
-        {
-            foreach (var test in tests)
-                AddTestsToRun(runner, test);
-        }
-
-        public void AddTestsToRun(TestRunner runner, string test)
-        {
-            _testsToRun.Add(new TestToRun(runner, test));
-        }
 
         public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
         {
@@ -84,14 +82,27 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 _rerunAllWhenFinishedFor.Add(runner);
         }
 
-        public TestToRun[] GetTests()
-        {
-            return _testsToRun.ToArray();
+        public void AddTestsToRun(TestRunner runner, string test) { _testsToRun.Add(new TestToRun(runner, test)); }
+        public void AddTestsToRun(TestRunner runner, IEnumerable<string> tests)
+        { 
+            foreach (var test in tests)
+                _testsToRun.Add(new TestToRun(runner, test));
         }
+        public void AddTestsToRun(TestToRun[] tests) { _testsToRun.AddRange(tests); }
+        public TestToRun[] GetTests() { return _testsToRun.ToArray(); }
+        public string[] GetTestsFor(TestRunner runner) { return getRunItemsFor(runner, _testsToRun); }
 
-        public string[] GetTestsFor(TestRunner runner)
+        public void AddMembersToRun(TestToRun[] members) { _membersToRun.AddRange(members); }
+        public TestToRun[] GetMembers() { return _membersToRun.ToArray(); }
+        public string[] GetMembersFor(TestRunner runner) { return getRunItemsFor(runner, _membersToRun); }
+
+        public void AddNamespacesToRun(TestToRun[] namespaces) { _namespacesToRun.AddRange(namespaces); }
+        public TestToRun[] GetNamespaces() { return _namespacesToRun.ToArray(); }
+        public string[] GetNamespacesFor(TestRunner runner) { return getRunItemsFor(runner, _namespacesToRun); }
+
+        private string[] getRunItemsFor(TestRunner runner, List<TestToRun> runList)
         {
-            var query = from t in _testsToRun
+            var query = from t in runList
                         where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Any)
                         select t.Test;
             return query.ToArray();
@@ -101,6 +112,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var runInfo = new TestRunInfo(Project, Assembly);
             runInfo.AddTestsToRun(GetTests());
+            runInfo.AddMembersToRun(GetMembers());
+            runInfo.AddNamespacesToRun(GetNamespaces());
             foreach (var runner in _onlyRunTestsFor)
                 runInfo.ShouldOnlyRunSpcifiedTestsFor(runner);
             foreach (var runner in _rerunAllWhenFinishedFor)

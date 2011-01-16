@@ -18,8 +18,8 @@ namespace AutoTest.Core.TestRunners
 		{
 			foreach (var info in details)
 			{
-				info.AddTestsToRun(TestRunner.Any, getTestsFor(info, _resultCache.Failed));
-                info.AddTestsToRun(TestRunner.Any, getTestsFor(info, _resultCache.Ignored));
+				info.AddTestsToRun(getTestsFor(info, _resultCache.Failed));
+                info.AddTestsToRun(getTestsFor(info, _resultCache.Ignored));
 				info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
                 info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
 			}
@@ -30,13 +30,13 @@ namespace AutoTest.Core.TestRunners
 		{
 		}
 		
-		private string[] getTestsFor(RunInfo info, TestItem[] cachedTests)
+		private TestToRun[] getTestsFor(RunInfo info, TestItem[] cachedTests)
 		{
-			var tests = new List<string>();
+			var tests = new List<TestToRun>();
 			foreach (var failed in cachedTests)
 			{
 				if (failed.Key.Equals(info.Assembly))
-					tests.Add(failed.Value.Name);
+					tests.Add(new TestToRun(TestRunner.Any, failed.Value.Name));
 			}
 			return tests.ToArray();
 		}
