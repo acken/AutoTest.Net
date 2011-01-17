@@ -78,6 +78,7 @@ namespace AutoTest.Core.Configuration
 				.Register(Component.For<IDetermineIfAssemblyShouldBeTested>().ImplementedBy<TestRunValidator>())
 				.Register(Component.For<IOptimizeBuildConfiguration>().ImplementedBy<BuildOptimizer>())
 				.Register(Component.For<IPreProcessTestruns>().ImplementedBy<NullPreProcessor>())
+                .Register(Component.For<IPreProcessBuildruns>().ImplementedBy<NullBuildPreProcessor>())
 				.Register(Component.For<IHandleDelayedConfiguration>().ImplementedBy<DelayedConfigurer>())
 				.Register(Component.For<ILocateWriteLocation>().Instance(defaultConfigurationLocator))
 				.Register(Component.For<IMarkProjectsForRebuild>().ImplementedBy<ProjectRebuildMarker>())

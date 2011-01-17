@@ -357,5 +357,12 @@ namespace AutoTest.Test.Core.Configuration
             var config2 = _locator.Locate<IConfiguration>();
             Assert.AreSame(config1, config2);
         }
+
+        [Test]
+        public void Shoud_not_contain_build_pre_processors()
+        {
+            var preProcessors = _locator.LocateAll<IPreProcessBuildruns>();
+            preProcessors.Length.ShouldEqual(1);
+        }
     }
 }

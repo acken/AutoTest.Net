@@ -25,10 +25,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
+        private IPreProcessBuildruns[] _preBuildProcessors;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator, IPreProcessBuildruns[] preBuildProcessors)
         {
             _bus = bus;
             _listGenerator = listGenerator;
@@ -38,6 +39,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			_testAssemblyValidator = testAssemblyValidator;
 			_buildOptimizer = buildOptimizer;
             _preProcessors = preProcessors;
+            _preBuildProcessors = preBuildProcessors;
             _removedTestLocator = removedTestLocator;
         }
 
@@ -58,7 +60,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             {
                 var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
                 var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
-                list = preProcessRun(list);
+                list = preProcessBuildRun(list);
                 if (!buildAll(list, runReport))
                     return runReport;
                 markAllAsBuilt(list);
@@ -70,6 +72,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 _bus.Publish(new TestRunMessage(result));
             }
             return runReport;
+        }
+
+        private RunInfo[] preProcessBuildRun(RunInfo[] runInfos)
+        {
+            foreach (var preProcessor in _preBuildProcessors)
+                runInfos = preProcessor.PreProcess(runInfos);
+            return runInfos;
         }
 
         private void markAllAsBuilt(RunInfo[] list)
@@ -137,6 +146,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
+            projectList = preProcessTestRun(projectList);
             runPreProcessedTestRun(projectList, runReport);
 		}
 		
@@ -178,7 +188,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
 		}
 
-        private RunInfo[] preProcessRun(RunInfo[] runInfos)
+        private RunInfo[] preProcessTestRun(RunInfo[] runInfos)
         {
             foreach (var preProcessor in _preProcessors)
                 runInfos = preProcessor.PreProcess(runInfos);

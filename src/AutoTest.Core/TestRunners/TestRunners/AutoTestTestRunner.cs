@@ -53,9 +53,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
             RunTests(optionsFile, outputFile);
             DebugLog.Debug.WriteMessage(File.ReadAllText(outputFile));
             var results = getResults(outputFile, runInfos);
-            
-            File.Delete(optionsFile);
-            File.Delete(outputFile);
+
+            if (!_configuration.DebuggingEnabled)
+            {
+                File.Delete(optionsFile);
+                File.Delete(outputFile);
+            }
             return results.ToArray();
         }
 
@@ -125,20 +128,27 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void RunTests(string optionsFile, string outputFile)
         {
-            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", optionsFile, outputFile);
-            var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
-            DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", exe, arguments));
-            var proc = new Process();
-            proc.StartInfo = new ProcessStartInfo(exe, arguments);
-            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.Start();
-            var output = proc.StandardOutput.ReadToEnd();
-            proc.WaitForExit();
-            if (output.Length > 0)
-                DebugLog.Debug.WriteMessage("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
+            try
+            {
+                var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", optionsFile, outputFile);
+                var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
+                DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", exe, arguments));
+                var proc = new Process();
+                proc.StartInfo = new ProcessStartInfo(exe, arguments);
+                proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.Start();
+                var output = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit();
+                if (output.Length > 0)
+                    DebugLog.Debug.WriteMessage("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.WriteException(ex);
+            }
         }
 
         private bool generateOptions(TestRunInfo[] runInfos, string file)

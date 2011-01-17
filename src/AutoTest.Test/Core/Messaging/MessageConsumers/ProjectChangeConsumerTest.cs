@@ -55,8 +55,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _preProcessor = MockRepository.GenerateMock<IPreProcessTestruns>();
             _preProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             var preProcessors = new IPreProcessTestruns[] { _preProcessor };
+            var buildPreProcessor = MockRepository.GenerateMock<IPreProcessBuildruns>();
+            buildPreProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
+            var buildPreProcessors = new IPreProcessBuildruns[] { buildPreProcessor };
             _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator);
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator, buildPreProcessors);
         }
 
         [Test]
