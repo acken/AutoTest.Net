@@ -88,7 +88,7 @@ namespace AutoTest.TestRunners.Shared.Results
                 _currentTest.Assembly = _currentAssembly;
                 _currentTest.TestFixture = _currentFixture;
                 _currentTest.State = getTestState(reader.GetAttribute("state"));
-                _currentTest.DurationInMilliseconds = double.Parse(reader.GetAttribute("duration"));
+                _currentTest.DurationInMilliseconds = long.Parse(reader.GetAttribute("duration"));
                 _currentTest.TestName = reader.GetAttribute("name");
             }
         }

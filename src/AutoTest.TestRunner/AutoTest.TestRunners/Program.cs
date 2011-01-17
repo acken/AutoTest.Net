@@ -53,7 +53,17 @@ namespace AutoTest.TestRunners
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                try
+                {
+                    var result = new List<TestResult>();
+                    result.Add(new TestResult("", "AutoTest.TestRunner.exe internal error", "", 0, "", TestState.Panic, ex.ToString()));
+                    var writer = new ResultsXmlWriter(result);
+                    writer.Write(_arguments.OutputFile);
+                }
+                catch
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
         }
 
