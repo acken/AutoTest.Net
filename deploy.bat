@@ -36,9 +36,11 @@ copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.exe
 copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunners.Shared.dll
 copy %BINARYDIR%\AutoTest.TestRunners.NUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.NUnit.dll
+copy %BINARYDIR%\AutoTest.TestRunners.XUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.XUnit.dll
 copy %BINARYDIR%\nunit.core.dll %DEPLOYDIR%\nunit.core.dll
 copy %BINARYDIR%\nunit.core.interfaces.dll %DEPLOYDIR%\nunit.core.interfaces.dll
 copy %BINARYDIR%\nunit.util.dll %DEPLOYDIR%\nunit.util.dll
+copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\xunit.runner.utility.dll
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll

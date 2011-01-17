@@ -30,12 +30,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(ProjectDocument document)
         {
-            return document.ContainsNUnitTests;
+            return document.ContainsNUnitTests || document.ContainsXUnitTests;
         }
 
         public bool CanHandleTestFor(string assembly)
         {
-            return assemblyReferences(assembly, "nunit.framework");
+            var references = _referenceResolver.GetReferences(assembly);
+            return references.Contains("nunit.framework") || references.Contains("xunit");
         }
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
@@ -65,7 +66,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var tests = reader.Read();
             foreach (var byRunner in tests.GroupBy(x => x.Runner))
             {
-                var runner = TestRunner.NUnit;
+                var runner = getRunnerFromType(byRunner.Key);
                 foreach (var byAssembly in byRunner.GroupBy(x => x.Assembly))
                 {
                     var info = runInfos.Where(x => x.Assembly.Equals(byAssembly.Key)).FirstOrDefault();
@@ -93,6 +94,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 }
             }
             return results.ToArray();
+        }
+
+        private TestRunner getRunnerFromType(string type)
+        {
+            switch (type.ToLower())
+            {
+                case "nunit":
+                    return TestRunner.NUnit;
+                case "xunit":
+                    return TestRunner.XUnit;
+            }
+            return TestRunner.Any;
         }
 
         private TestRunStatus getTestState(TestState testState)
@@ -133,6 +146,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var plugins = new List<Plugin>();
             var options = new RunOptions();
             addNUnitTests(runInfos, plugins, options);
+            addXUnitTests(runInfos, plugins, options);
             if (options.TestRuns.Count() == 0)
                 return false;
 
@@ -143,22 +157,34 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void addNUnitTests(TestRunInfo[] runInfos, List<Plugin> plugins, RunOptions options)
         {
-            var nunitInfos = runInfos.Where(x => canHandleNUnit(x));
+            var nunitInfos = runInfos.Where(x => canHandle(x, "nunit.framework", (ProjectDocument doc) => { return doc.ContainsNUnitTests; }));
             if (nunitInfos.Count() > 0)
             {
                 plugins.Add(new Plugin(Path.GetFullPath(Path.Combine("TestRunners", "AutoTest.TestRunners.NUnit.dll")), "AutoTest.TestRunners.NUnit.Runner"));
-                var runner = getNUnitRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework);
+                var runner = getRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework, (TestRunInfo info) => { return _configuration.NunitTestRunner(getFramework(info)).Length > 0; });
                 if (runner.Assemblies.Count() > 0)
                     options.AddTestRun(runner);
             }
         }
 
-        private RunnerOptions getNUnitRunnerOptions(IEnumerable<TestRunInfo> nunitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator)
+        private void addXUnitTests(TestRunInfo[] runInfos, List<Plugin> plugins, RunOptions options)
+        {
+            var xunitInfos = runInfos.Where(x => canHandle(x, "xunit", (ProjectDocument doc) => { return doc.ContainsXUnitTests; }));
+            if (xunitInfos.Count() > 0)
+            {
+                plugins.Add(new Plugin(Path.GetFullPath(Path.Combine("TestRunners", "AutoTest.TestRunners.XUnit.dll")), "AutoTest.TestRunners.XUnit.Runner"));
+                var runner = getRunnerOptions(xunitInfos, "XUnit", TestRunner.XUnit, getFramework, (TestRunInfo info) => { return _configuration.XunitTestRunner(getFramework(info)).Length > 0; });
+                if (runner.Assemblies.Count() > 0)
+                    options.AddTestRun(runner);
+            }
+        }
+
+        private RunnerOptions getRunnerOptions(IEnumerable<TestRunInfo> unitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator, Func<TestRunInfo, bool> hasOtherRunners)
         {
             var runner = new RunnerOptions(id);
-            foreach (var info in nunitInfos)
+            foreach (var info in unitInfos)
             {
-                if (hasOtherNUnitRunners(info))
+                if (hasOtherRunners.Invoke(info))
                     continue;
                 var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
                 assembly.AddTests(info.GetTestsFor(testRunner));
@@ -174,11 +200,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return runner;
         }
 
-        private bool hasOtherNUnitRunners(TestRunInfo info)
-        {
-            return _configuration.NunitTestRunner(getFramework(info)).Length > 0;
-        }
-
         private string getFramework(TestRunInfo info)
         {
             if (Environment.OSVersion.Platform.Equals(PlatformID.Unix) || Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
@@ -191,17 +212,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return info.Project.Value.Framework;
         }
 
-        private bool canHandleNUnit(TestRunInfo info)
+        private bool canHandle(TestRunInfo info, string reference, Func<ProjectDocument, bool> frameworkValidator)
         {
             if (info.Project != null && info.Project.Value != null)
-                return info.Project.Value.ContainsNUnitTests;
-            return assemblyReferences(info.Assembly, "nunit.framework");
-        }
-
-        private bool assemblyReferences(string assembly, string reference)
-        {
-            var references = _referenceResolver.GetReferences(assembly);
-            return references.Contains(reference);
+                return frameworkValidator.Invoke(info.Project.Value);
+            return _referenceResolver.GetReferences(info.Assembly).Contains(reference);
         }
     }
 }

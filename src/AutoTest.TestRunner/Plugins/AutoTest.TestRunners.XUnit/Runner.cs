@@ -23,8 +23,7 @@ namespace AutoTest.TestRunners.XUnit
         public IEnumerable<TestResult> Run(RunnerOptions options)
         {
             var runner = new XUnitRunner();
-            runner.Run(options);
-            return null;
+            return runner.Run(options);
         }
     }
 }
