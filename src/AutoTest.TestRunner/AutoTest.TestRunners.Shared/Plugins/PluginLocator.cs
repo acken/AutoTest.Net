@@ -8,6 +8,7 @@ using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
+    [Serializable]
     public class Plugin
     {
         public string Assembly { get; private set; }

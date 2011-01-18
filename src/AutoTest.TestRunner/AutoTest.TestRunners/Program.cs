@@ -8,6 +8,7 @@ using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Options;
 using System.Runtime.Remoting;
+using AutoTest.TestRunners.Shared.Errors;
 
 namespace AutoTest.TestRunners
 {
@@ -19,7 +20,7 @@ namespace AutoTest.TestRunners
 
         static void Main(string[] args)
         {
-            args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -61,7 +62,7 @@ namespace AutoTest.TestRunners
                 try
                 {
                     var result = new List<TestResult>();
-                    result.Add(new TestResult("", "AutoTest.TestRunner.exe internal error", "", 0, "", TestState.Panic, ex.ToString()));
+                    result.Add(ErrorHandler.GetError(ex));
                     var writer = new ResultsXmlWriter(result);
                     writer.Write(_arguments.OutputFile);
                 }
@@ -74,7 +75,7 @@ namespace AutoTest.TestRunners
 
         static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            _results.Add(new TestResult(_currentRunner, "", "AutoTest.TestRunner.exe internal error", 0, "", TestState.Panic, args.ExceptionObject.ToString()));
+            _results.Add(ErrorHandler.GetError(_currentRunner, args.ExceptionObject.ToString()));
             var writer = new ResultsXmlWriter(_results);
             writer.Write(_arguments.OutputFile);
             Environment.Exit(-1);
@@ -117,55 +118,64 @@ namespace AutoTest.TestRunners
 
         private static void run(OptionsXmlReader parser)
         {
-            foreach (var runner in getRunners(parser))
+            foreach (var plugin in getPlugins(parser))
             {
-                foreach (var testRun in parser.Options.TestRuns)
-                {
-                    if (runner.Handles(testRun.ID))
-                        runByRunner(runner, testRun);
-                }
+                runByRunner(plugin, parser.Options);
             }
         }
 
-        private static void runByRunner(IAutoTestNetTestRunner runner, RunnerOptions testRun)
+        private static void runByRunner(Plugin plugin, RunOptions options)
         {
             try
             {
-                var output = runner.Run(testRun);
-                _results.AddRange(output);
+                AppDomain childDomain = null;
+                try
+                {
+                    // Construct and initialize settings for a second AppDomain.
+                    AppDomainSetup domainSetup = new AppDomainSetup()
+                    {
+                        ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                        ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
+                        ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
+                        LoaderOptimization = LoaderOptimization.MultiDomainHost
+                    };
+
+                    // Create the child AppDomain used for the service tool at runtime.
+                    childDomain = AppDomain.CreateDomain(plugin.Type + " app domain", null, domainSetup);
+
+                    // Create an instance of the runtime in the second AppDomain. 
+                    // A proxy to the object is returned.
+                    ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+
+                    // start the runtime.  call will marshal into the child runtime appdomain
+                    _results.AddRange(runtime.Run(plugin, options));
+                }
+                finally
+                {
+                    if (childDomain != null)
+                        AppDomain.Unload(childDomain);
+                }
             }
             catch (Exception ex)
             {
-                _results.Add(new TestResult(testRun.ID, "", "AutoTest.TestRunner.exe internal error", 0, "", TestState.Panic, ex.ToString()));
+                _results.Add(ErrorHandler.GetError(ex));
             }
         }
 
-        private static IEnumerable<IAutoTestNetTestRunner> getRunners(OptionsXmlReader parser)
+        private static IEnumerable<Plugin> getPlugins(OptionsXmlReader parser)
         {
             if (parser.Plugins.Count() == 0)
                 return allPlugins();
-            return getRunnersFrom(parser.Plugins);
+            return parser.Plugins;
         }
 
-        private static IEnumerable<IAutoTestNetTestRunner> getRunnersFrom(IEnumerable<Plugin> plugins)
-        {
-            var runners = new List<IAutoTestNetTestRunner>();
-            foreach (var plugin in plugins)
-            {
-                var runner = plugin.New();
-                if (runner != null)
-                    runners.Add(runner);
-            }
-            return runners;
-        }
-
-        private static IEnumerable<IAutoTestNetTestRunner> allPlugins()
+        private static IEnumerable<Plugin> allPlugins()
         {
             var dir = Path.GetFullPath("TestRunners");
             if (!Directory.Exists(dir))
-                return new IAutoTestNetTestRunner[] { };
+                return new Plugin[] { };
             var locator = new PluginLocator(dir);
-            return getRunnersFrom(locator.Locate());
+            return locator.Locate();
         }
 
         private static void write(string message)

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AutoTest.TestRunners.Shared.Options
 {
+    [Serializable]
     public class RunOptions
     {
         private List<RunnerOptions> _runners = new List<RunnerOptions>();
@@ -22,6 +23,7 @@ namespace AutoTest.TestRunners.Shared.Options
         }
     }
 
+    [Serializable]
     public class RunnerOptions
     {
         private List<AssemblyOptions> _assemblies = new List<AssemblyOptions>();
@@ -58,6 +60,7 @@ namespace AutoTest.TestRunners.Shared.Options
         }
     }
 
+    [Serializable]
     public class AssemblyOptions
     {
         private List<string> _tests = new List<string>();

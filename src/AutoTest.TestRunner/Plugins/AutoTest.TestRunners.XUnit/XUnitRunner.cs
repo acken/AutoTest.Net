@@ -16,6 +16,9 @@ namespace AutoTest.TestRunners.XUnit
             XunitProject project = new XunitProject();
             foreach (var runner in options.Assemblies)
             {
+                // Set assembly externally as XUnit screws up the casing
+                logger.SetCurrentAssembly(runner.Assembly);
+
                 XunitProjectAssembly assembly = new XunitProjectAssembly
                 {
                     AssemblyFilename = runner.Assembly,

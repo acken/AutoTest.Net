@@ -13,13 +13,17 @@ namespace AutoTest.TestRunners.XUnit
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
 
+        public void SetCurrentAssembly(string assembly)
+        {
+            _currentAssembly = assembly;
+        }
+
         public void AssemblyFinished(string assemblyFilename, int total, int failed, int skipped, double time)
         {
         }
 
         public void AssemblyStart(string assemblyFilename, string configFilename, string xUnitVersion)
         {
-            _currentAssembly = assemblyFilename;
         }
 
         public bool ClassFailed(string className, string exceptionType, string message, string stackTrace)

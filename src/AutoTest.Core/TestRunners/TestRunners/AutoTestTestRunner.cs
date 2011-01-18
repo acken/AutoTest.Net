@@ -79,7 +79,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     {
                         if (info.Project != null)
                             project = info.Project.Key;
-                        partial = info.OnlyRunSpcifiedTestsFor(runner) || info.GetTestsFor(runner).Count() > 0;
+                        partial = info.OnlyRunSpcifiedTestsFor(runner) ||
+                                  info.GetTestsFor(runner).Count() > 0 ||
+                                  info.GetMembersFor(runner).Count() > 0 ||
+                                  info.GetNamespacesFor(runner).Count() > 0;
                     }
                     results.Add(new TestRunResults(
                         project,

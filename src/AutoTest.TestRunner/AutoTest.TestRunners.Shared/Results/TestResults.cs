@@ -15,6 +15,7 @@ namespace AutoTest.TestRunners.Shared.Results
         Panic
     }
 
+    [Serializable]
     public class TestResult
     {
         private List<StackLine> _stackLines = new List<StackLine>();
@@ -62,6 +63,7 @@ namespace AutoTest.TestRunners.Shared.Results
 
     }
 
+    [Serializable]
     public class StackLine
     {
         private string _file = "";
