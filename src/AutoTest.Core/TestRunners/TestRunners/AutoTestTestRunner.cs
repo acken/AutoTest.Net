@@ -84,19 +84,23 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                   info.GetMembersFor(runner).Count() > 0 ||
                                   info.GetNamespacesFor(runner).Count() > 0;
                     }
-                    results.Add(new TestRunResults(
-                        project,
-                        byAssembly.Key,
-                        partial,
-                        runner,
-                        byAssembly.Select(x => new Messages.TestResult(
-                            runner,
-                            getTestState(x.State),
-                            x.TestName,
-                            x.Message,
-                            x.StackLines.Select(y => (IStackLine) new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>()
-                            )).ToArray()
-                            ));
+                    DebugLog.Debug.WriteMessage(string.Format("Partial run is {0} for runner {1}", partial, runner));
+                    
+                    var result = new TestRunResults(
+                                        project,
+                                        byAssembly.Key,
+                                        partial,
+                                        runner,
+                                        byAssembly.Select(x => new Messages.TestResult(
+                                            runner,
+                                            getTestState(x.State),
+                                            x.TestName,
+                                            x.Message,
+                                            x.StackLines.Select(y => (IStackLine)new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>()
+                                            )).ToArray()
+                                            );
+                    result.SetTimeSpent(TimeSpan.FromMilliseconds(byAssembly.Sum(x => x.DurationInMilliseconds)));
+                    results.Add(result);
                 }
             }
             return results.ToArray();

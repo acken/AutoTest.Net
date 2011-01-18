@@ -20,7 +20,7 @@ namespace AutoTest.TestRunners
 
         static void Main(string[] args)
         {
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -128,37 +128,42 @@ namespace AutoTest.TestRunners
         {
             try
             {
-                AppDomain childDomain = null;
-                try
-                {
-                    // Construct and initialize settings for a second AppDomain.
-                    AppDomainSetup domainSetup = new AppDomainSetup()
-                    {
-                        ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                        ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
-                        ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
-                        LoaderOptimization = LoaderOptimization.MultiDomainHost
-                    };
-
-                    // Create the child AppDomain used for the service tool at runtime.
-                    childDomain = AppDomain.CreateDomain(plugin.Type + " app domain", null, domainSetup);
-
-                    // Create an instance of the runtime in the second AppDomain. 
-                    // A proxy to the object is returned.
-                    ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
-
-                    // start the runtime.  call will marshal into the child runtime appdomain
-                    _results.AddRange(runtime.Run(plugin, options));
-                }
-                finally
-                {
-                    if (childDomain != null)
-                        AppDomain.Unload(childDomain);
-                }
+                runInSubDomain(plugin, options);
             }
             catch (Exception ex)
             {
                 _results.Add(ErrorHandler.GetError(ex));
+            }
+        }
+
+        private static void runInSubDomain(Plugin plugin, RunOptions options)
+        {
+            AppDomain childDomain = null;
+            try
+            {
+                // Construct and initialize settings for a second AppDomain.
+                AppDomainSetup domainSetup = new AppDomainSetup()
+                {
+                    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                    ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
+                    ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
+                    LoaderOptimization = LoaderOptimization.MultiDomainHost
+                };
+
+                // Create the child AppDomain used for the service tool at runtime.
+                childDomain = AppDomain.CreateDomain(plugin.Type + " app domain", null, domainSetup);
+
+                // Create an instance of the runtime in the second AppDomain. 
+                // A proxy to the object is returned.
+                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+
+                // start the runtime.  call will marshal into the child runtime appdomain
+                _results.AddRange(runtime.Run(plugin, options));
+            }
+            finally
+            {
+                if (childDomain != null)
+                    AppDomain.Unload(childDomain);
             }
         }
 
