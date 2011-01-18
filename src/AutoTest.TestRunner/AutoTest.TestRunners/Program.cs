@@ -7,15 +7,19 @@ using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Options;
+using System.Runtime.Remoting;
 
 namespace AutoTest.TestRunners
 {
     class Program
     {
         private static Arguments _arguments;
+        private static List<TestResult> _results = new List<TestResult>();
+        private static string _currentRunner = "";
 
         static void Main(string[] args)
         {
+            args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -39,6 +43,7 @@ namespace AutoTest.TestRunners
 
         private static void tryRunTests()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledExceptionHandler;
             try
             {
                 var parser = new OptionsXmlReader(_arguments.InputFile);
@@ -46,9 +51,9 @@ namespace AutoTest.TestRunners
                 if (!parser.IsValid)
                     return;
 
-                var result = run(parser);
+                run(parser);
 
-                var writer = new ResultsXmlWriter(result);
+                var writer = new ResultsXmlWriter(_results);
                 writer.Write(_arguments.OutputFile);
             }
             catch (Exception ex)
@@ -65,6 +70,14 @@ namespace AutoTest.TestRunners
                     Console.WriteLine(ex.ToString());
                 }
             }
+        }
+
+        static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            _results.Add(new TestResult(_currentRunner, "", "AutoTest.TestRunner.exe internal error", 0, "", TestState.Panic, args.ExceptionObject.ToString()));
+            var writer = new ResultsXmlWriter(_results);
+            writer.Write(_arguments.OutputFile);
+            Environment.Exit(-1);
         }
 
         private static void printUseage()
@@ -102,18 +115,29 @@ namespace AutoTest.TestRunners
             write("</run>");
         }
 
-        private static IEnumerable<TestResult> run(OptionsXmlReader parser)
+        private static void run(OptionsXmlReader parser)
         {
-            var results = new List<TestResult>();
             foreach (var runner in getRunners(parser))
             {
                 foreach (var testRun in parser.Options.TestRuns)
                 {
                     if (runner.Handles(testRun.ID))
-                        results.AddRange(runner.Run(testRun));
+                        runByRunner(runner, testRun);
                 }
             }
-            return results;
+        }
+
+        private static void runByRunner(IAutoTestNetTestRunner runner, RunnerOptions testRun)
+        {
+            try
+            {
+                var output = runner.Run(testRun);
+                _results.AddRange(output);
+            }
+            catch (Exception ex)
+            {
+                _results.Add(new TestResult(testRun.ID, "", "AutoTest.TestRunner.exe internal error", 0, "", TestState.Panic, ex.ToString()));
+            }
         }
 
         private static IEnumerable<IAutoTestNetTestRunner> getRunners(OptionsXmlReader parser)
