@@ -3,7 +3,11 @@ namespace AutoTest.Core.DebugLog
 {
 	public interface IWriteDebugInfo
 	{
-		void Write(string message);
+        void WriteError(string message);
+        void WriteInfo(string message);
+		void WriteDebug(string message);
+        void WritePreProcessor(string message);
+        void WriteDetail(string message);
 	}
 }
 

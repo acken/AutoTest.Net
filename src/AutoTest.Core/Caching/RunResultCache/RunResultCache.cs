@@ -33,7 +33,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
-                Debug.WriteMessage("Merging build run results");
+                Debug.WriteDebug("Merging build run results");
                 mergeBuildList(_errors, results.Project, results.Errors);
                 mergeBuildList(_warnings, results.Project, results.Warnings);
             }
@@ -43,7 +43,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             lock (_padLock)
             {
-                Debug.WriteMessage("Merging test run results");
+                Debug.WriteDebug("Merging test run results");
                 removeChanged(results);
                 mergeTestList(_failed, results.Assembly, results.Project, results.Failed, results.Passed);
                 mergeTestList(_ignored, results.Assembly, results.Project, results.Ignored, results.Passed);
@@ -93,7 +93,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 }
                 if (!found && item.Key.Equals(key))
                 {
-                    Debug.WriteMessage("\t" + string.Format("Removing old build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+                    Debug.WriteDebug("Removing old build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition);
                     itemsToRemove.Add(item);
                 }
             }
@@ -104,7 +104,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 var item = new BuildItem(key, message);
                 if (!list.Contains(item))
                 {
-                    Debug.WriteMessage("\t" + string.Format("Adding new build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+                    Debug.WriteDebug("Adding new build item from {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition);
                     list.Insert(0, item);
                 }
             }
@@ -164,7 +164,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void logTest(string prefix, TestItem item)
         {
-            Debug.WriteMessage("\t" + prefix + string.Format(" ({2}.{1}) from {0} named {4} saying {3} in {5}", item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+            Debug.WriteDebug("{6} ({2}.{1}) from {0} named {4} saying {3} in {5}", item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace), prefix);
         }
 
         private string getStackTrace(IStackLine[] iStackLine)

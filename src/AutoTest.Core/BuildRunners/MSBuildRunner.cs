@@ -46,7 +46,7 @@ namespace AutoTest.Core.BuildRunners
         private static BuildRunResults runBuild(string buildExecutable, string arguments, string target)
         {
             var timer = Stopwatch.StartNew();
-            DebugLog.Debug.WriteMessage(string.Format("Running build: {0} {1}", buildExecutable, arguments));
+            DebugLog.Debug.WriteInfo("Running build: {0} {1}", buildExecutable, arguments);
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(buildExecutable, arguments);
             process.StartInfo.RedirectStandardOutput = true;

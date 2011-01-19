@@ -21,7 +21,7 @@ namespace AutoTest.Core.FileSystem
 			}
 			catch
 			{
-				Debug.WriteMessage(string.Format("Could not load assemblies for {0}", assembly));
+				Debug.WriteError("Could not load assemblies for {0}", assembly);
 			}
 			return new string[] { };
 		}

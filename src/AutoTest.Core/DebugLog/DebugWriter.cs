@@ -19,8 +19,33 @@ namespace AutoTest.Core.DebugLog
 			_path = path;
 			_logFile = filename;
 		}
+
+        public void WriteError(string message)
+        {
+            write(message);
+        }
+
+        public void WriteDebug(string message)
+        {
+            write(message);
+        }
+
+        public void WriteInfo(string message)
+        {
+            write(message);
+        }
+
+        public void WritePreProcessor(string message)
+        {
+            write(message);
+        }
+
+        public void WriteDetail(string message)
+        {
+            write(message);
+        }
 		
-		public void Write(string text)
+		private void write(string text)
 		{
 			lock (_padLock)
             {
@@ -44,6 +69,6 @@ namespace AutoTest.Core.DebugLog
 			else
 				return new StreamWriter(file);
 		}
-	}
+    }
 }
 

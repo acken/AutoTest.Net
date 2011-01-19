@@ -48,9 +48,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!generateOptions(runInfos, optionsFile))
                 return new TestRunResults[] { };
 
-            DebugLog.Debug.WriteMessage(File.ReadAllText(optionsFile));
+            DebugLog.Debug.WriteDetail(File.ReadAllText(optionsFile));
             RunTests(optionsFile, outputFile);
-            DebugLog.Debug.WriteMessage(File.ReadAllText(outputFile));
+            DebugLog.Debug.WriteDetail(File.ReadAllText(outputFile));
             var results = getResults(outputFile, runInfos);
 
             if (!_configuration.DebuggingEnabled)
@@ -83,7 +83,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                   info.GetMembersFor(runner).Count() > 0 ||
                                   info.GetNamespacesFor(runner).Count() > 0;
                     }
-                    DebugLog.Debug.WriteMessage(string.Format("Partial run is {0} for runner {1}", partial, runner));
+                    DebugLog.Debug.WriteDetail(string.Format("Partial run is {0} for runner {1}", partial, runner));
                     
                     var result = new TestRunResults(
                                         project,
@@ -138,7 +138,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             {
                 var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", optionsFile, outputFile);
                 var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
-                DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", exe, arguments));
+                DebugLog.Debug.WriteInfo("Running tests: {0} {1}", exe, arguments);
                 var proc = new Process();
                 proc.StartInfo = new ProcessStartInfo(exe, arguments);
                 proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -149,7 +149,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var output = proc.StandardOutput.ReadToEnd();
                 proc.WaitForExit();
                 if (output.Length > 0)
-                    DebugLog.Debug.WriteMessage("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
+                    DebugLog.Debug.WriteError("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
             }
             catch (Exception ex)
             {

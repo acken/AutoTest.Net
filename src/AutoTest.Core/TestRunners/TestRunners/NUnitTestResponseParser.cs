@@ -36,12 +36,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			_testSources = runInfos;
             _isPartialTestRuns = isPartialTestRun;
 			var testSuites = getTestSuites();
-			Debug.WriteMessage(string.Format("Found {0} test sections", testSuites.Length));
+			Debug.WriteDetail(string.Format("Found {0} test sections", testSuites.Length));
 			foreach (var testSuite in testSuites)
 			{
 				_result.Clear();
 	            string[] testCases = getTestCases(testSuite);
-				Debug.WriteMessage(string.Format("Found {0} test cases in section {1}", testCases.Length, getAssemblyName(testSuite)));
+				Debug.WriteDetail(string.Format("Found {0} test cases in section {1}", testCases.Length, getAssemblyName(testSuite)));
 	            foreach (var testCase in testCases)
 	            {
 	                string name = getname(testCase);
@@ -66,7 +66,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				var runInfo = matchToTestSource(testSuite);
 				if (runInfo ==  null)
 				{
-					Debug.WriteMessage(string.Format("Could not match test suite {0} to any of the tested assemblies", getAssemblyName(testSuite)));
+					Debug.WriteError("Could not match test suite {0} to any of the tested assemblies", getAssemblyName(testSuite));
 					continue;
 				}
 				var results = getTestResults(runInfo);
@@ -242,11 +242,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var content = getStringContent(testCase, tagStart, tagEnd).TrimEnd();
             var separator = getStackSeparator(content);
             var lines = content.Split(new string[]{separator}, StringSplitOptions.RemoveEmptyEntries);
-			Debug.WriteMessage("Number of lines: " + lines.Length.ToString());
+			Debug.WriteDetail("Number of lines: " + lines.Length.ToString());
             List<IStackLine> stackLines = new List<IStackLine>();
             foreach (var line in lines)
 			{
-				Debug.WriteMessage("Parsing stack line " + line);
+				Debug.WriteDetail("Parsing stack line " + line);
                 stackLines.Add(new NUnitStackLine(separator + line));
 			}
             return stackLines.ToArray();

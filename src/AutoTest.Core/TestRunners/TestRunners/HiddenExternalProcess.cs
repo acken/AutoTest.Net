@@ -23,7 +23,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                               CreateNoWindow = true
                                           }
                           };
-            DebugLog.Debug.WriteMessage(string.Format("Launching: {0} {1}", executable, arguments));
+            DebugLog.Debug.WriteDebug(string.Format("Launching: {0} {1}", executable, arguments));
             process.Start();
 
             WaitForExit(process);

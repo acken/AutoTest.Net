@@ -81,8 +81,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             if (runInfo == null)
             {
-                Debug.WriteMessage(string.Format(
-                    "Could not match reported assembly {0} to any of the tested assemblies", assembly.AssemblyLocation));
+                Debug.WriteError("Could not match reported assembly {0} to any of the tested assemblies", assembly.AssemblyLocation);
             }
 
             return runInfo;

@@ -44,7 +44,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     if (_results.IsPartialTestRun && !wasRun(test))
                         continue;
                     tests.Add(new TestResult(test.Value.Runner, TestRunStatus.Passed, test.Value.Name));
-                    Debug.WriteMessage("Adding deleted test previously failing as passed: " + test.Value.Name);
+                    Debug.WriteDebug("Adding deleted test previously failing as passed: " + test.Value.Name);
                 }
             }
             return tests.ToArray();
@@ -60,7 +60,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                         return true;
                 }
             }
-            Debug.WriteMessage(test.Value.Name + " was not run");
+            Debug.WriteDebug(test.Value.Name + " was not run");
             return false;
         }
     }

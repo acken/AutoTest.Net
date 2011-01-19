@@ -56,7 +56,7 @@ namespace AutoTest.Core.Launchers
 		{
 			var invalid = !File.Exists(_configuration.CodeEditor.Executable);
 			if (invalid)
-				DebugLog.Debug.WriteMessage(string.Format("Invalid launcher: {0}", _configuration.CodeEditor.Executable));
+				DebugLog.Debug.WriteError("Invalid launcher: {0}", _configuration.CodeEditor.Executable);
 			return invalid;
 		}
     }

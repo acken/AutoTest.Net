@@ -39,7 +39,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             var stackTrace = new StringBuilder();
             foreach (var line in Value.StackTrace)
             {
-				DebugLog.Debug.WriteMessage("Stack line message " + line.File);
+				DebugLog.Debug.WriteDetail("Stack line message " + line.File);
                 if (File.Exists(line.File))
                 {
                     stackTrace.AppendLine(string.Format("at {0} in {1}{2}:line {3}{4}",

@@ -46,7 +46,7 @@ namespace AutoTest.Core.Caching.Projects
             catch (Exception exception)
             {
                 var messageString = string.Format("Failed parsing project {0}. Project will not be built. ({1})", record.Key, exception.Message);
-                Debug.WriteMessage(messageString);
+                Debug.WriteInfo(messageString);
             }
             return null;
         }

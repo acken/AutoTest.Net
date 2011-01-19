@@ -47,7 +47,7 @@ namespace AutoTest.Core.Caching.Crawlers
                     continue;
                 if (!_fsService.FileExists(project))
                 {
-                    Debug.WriteMessage(string.Format("Could not find project {0}", project));
+                    Debug.WriteError("Could not find project {0}", project);
                     continue;
                 }
                 tryAddProject(project);
@@ -110,7 +110,7 @@ namespace AutoTest.Core.Caching.Crawlers
                 return true;
             var message = string.Format("{0} is not a valid solution file", solutionFile);
             _bus.Publish(new ErrorMessage(message));
-            Debug.WriteMessage(message);
+            Debug.WriteInfo(message);
             return false;
         }
     }

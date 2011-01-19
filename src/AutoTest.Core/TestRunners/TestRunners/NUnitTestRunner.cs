@@ -55,7 +55,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 if (assemblies == null)
                     continue;
 				var arguments = getExecutableArguments(nUnitExe, assemblies, tests, runInfos);
-				DebugLog.Debug.WriteMessage(string.Format("Running tests: {0} {1}", nUnitExe.Exe, arguments)); 
+                DebugLog.Debug.WriteInfo("Running tests: {0} {1}", nUnitExe.Exe, arguments); 
 	            var proc = new Process();
 	            proc.StartInfo = new ProcessStartInfo(nUnitExe.Exe, arguments);
 	            proc.StartInfo.RedirectStandardOutput = true;
@@ -111,16 +111,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			tests = "";
 			foreach (var runInfo in runInfos)
 			{
-                DebugLog.Debug.WriteMessage(string.Format("About to add {0}", runInfo.Assembly));
+                DebugLog.Debug.WriteDetail("About to add {0}", runInfo.Assembly);
 				var unitTestExe = _configuration.NunitTestRunner(getFramework(runInfo));
 				if (unitTestExe.Equals(testRunnerExes))
 				{
-                    DebugLog.Debug.WriteMessage(string.Format("It only run specified tests is {0} and test count is {1}", runInfo.OnlyRunSpcifiedTestsFor(TestRunner.NUnit), runInfo.GetTestsFor(TestRunner.NUnit).Length));
+                    DebugLog.Debug.WriteDetail("It only run specified tests is {0} and test count is {1}", runInfo.OnlyRunSpcifiedTestsFor(TestRunner.NUnit), runInfo.GetTestsFor(TestRunner.NUnit).Length);
                     if (runInfo.OnlyRunSpcifiedTestsFor(TestRunner.NUnit) && runInfo.GetTestsFor(TestRunner.NUnit).Length.Equals(0))
                         continue;
 					assemblies += string.Format("\"{0}\"", runInfo.Assembly) + " ";
 					var assemblyTests = getTestsList(runInfo);
-                    DebugLog.Debug.WriteMessage(string.Format("Test list is {0}", assemblyTests));
+                    DebugLog.Debug.WriteDetail("Test list is {0}", assemblyTests);
 					if (assemblyTests.Length > 0)
 						tests += (tests.Length > 0 ? "," : "") + assemblyTests;
 				}

@@ -17,10 +17,34 @@ namespace AutoTest.Core.DebugLog
 
         public static bool IsDisabled { get { return _isDisabled; } }
 
-        private static void write(string text)
+        private static void writeError(string text)
+        {
+            if (_isDisabled) return;
+            _debugWriter.WriteError(text);
+        }
+
+        private static void writeInfo(string text)
+        {
+            if (_isDisabled) return;
+            _debugWriter.WriteInfo(text);
+        }
+
+        private static void writeDebug(string text)
         {
 			if (_isDisabled) return;
-            _debugWriter.Write(text);
+            _debugWriter.WriteDebug(text);
+        }
+
+        private static void writePreProcessor(string text)
+        {
+            if (_isDisabled) return;
+            _debugWriter.WritePreProcessor(text);
+        }
+
+        private static void writeDetail(string text)
+        {
+            if (_isDisabled) return;
+            _debugWriter.WriteDetail(text);
         }
 
         public static void EnableLogging(IWriteDebugInfo debugWriter)
@@ -36,72 +60,61 @@ namespace AutoTest.Core.DebugLog
 
         public static void InitialConfigurationFinished()
         {
-            if (_isDisabled) return;
-            write("Initial configuration finished");
+            writeInfo("Initial configuration finished");
         }
 
         public static void InitializedCache()
         {
-            if (_isDisabled) return;
-            write("Cache initialized");
+            writeInfo("Cache initialized");
         }
 
         public static void RegisteredAssembly(Assembly assembly)
         {
-            if (_isDisabled) return;
-            write(string.Format("Registered assembly {0}", assembly.FullName));
+            writeDebug(string.Format("Registered assembly {0}", assembly.FullName));
         }
 
         public static void ShutingDownContainer()
         {
-            if (_isDisabled) return;
-            write("Shuting down configuration");
+            writeInfo("Shuting down configuration");
         }
 
         public static void RawFileChangeDetected(string file, WatcherChangeTypes type)
         {
-            if (_isDisabled) return;
-            write(string.Format("Directory watcher found a change ({1}) in file: {0}", file, type.ToString()));
+            writeDetail(string.Format("Directory watcher found a change ({1}) in file: {0}", file, type.ToString()));
         }
 
         public static void AboutToPublishFileChanges(int numberOfFiles)
         {
-            if (_isDisabled) return;
-            write(string.Format("Directory watcher about to publish change for {0} files", numberOfFiles));
+            writeDebug(string.Format("Directory watcher about to publish change for {0} files", numberOfFiles));
         }
 
         internal static void Publishing<T>()
         {
-            if (_isDisabled) return;
-            write(string.Format("Publishing message of type {0}", typeof(T)));
+            writeDebug(string.Format("Publishing message of type {0}", typeof(T)));
         }
 
         internal static void WitholdingMessage(object message)
         {
-            if (_isDisabled) return;
-            write(string.Format("Message bus witheld a message of type {0}", message.GetType()));
+            writeDetail(string.Format("Message bus witheld a message of type {0}", message.GetType()));
         }
 
         internal static void Blocking<T>()
         {
-            if (_isDisabled) return;
-            write(string.Format("Message bus started blocking {0}", typeof(T)));
+            writeDetail(string.Format("Message bus started blocking {0}", typeof(T)));
         }
 
         internal static void ConsumingFileChange(FileChangeMessage message)
         {
-            if (_isDisabled) return;
             var builder = new StringBuilder();
             builder.AppendLine("Consuming file change for:");
             foreach (var file in message.Files)
                 builder.AppendLine(string.Format("    {0}", file.FullName));
-            write(builder.ToString());
+            writeDebug(builder.ToString());
         }
 
         internal static void AboutToPublishProjectChanges(ProjectChangeMessage projectChange)
         {
-            if (_isDisabled) return;
-            write(string.Format("File change consumer about to publish change for {0} files", projectChange.Files.Length));
+            writeDetail(string.Format("File change consumer about to publish change for {0} files", projectChange.Files.Length));
         }
 
         internal static void ConsumingProjectChangeMessage(ProjectChangeMessage message)
@@ -111,85 +124,76 @@ namespace AutoTest.Core.DebugLog
             builder.AppendLine("Consuming project changes for:");
             foreach (var file in message.Files)
                 builder.AppendLine(string.Format("    {0}", file.FullName));
-            write(builder.ToString());
+            writeDebug(builder.ToString());
         }
 
         internal static void PresenterRecievedRunStartedMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received run start message");
+            writeDetail("Presenter received run start message");
         }
 
         internal static void PresenterRecievedRunFinishedMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received run finished message");
+            writeDetail("Presenter received run finished message");
         }
 
         internal static void PresenterRecievedBuildMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received build message");
+            writeDetail("Presenter received build message");
         }
 
         internal static void PresenterRecievedTestRunMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received test run message");
+            writeDetail("Presenter received test run message");
         }
 
         internal static void PresenterRecievedRunInformationMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received run information message");
+            writeDetail("Presenter received run information message");
         }
 
         internal static void PresenterRecievedInformationMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received information message");
+            writeDetail("Presenter received information message");
         }
 
         internal static void PresenterRecievedWarningMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received warning message");
+            writeDetail("Presenter received warning message");
         }
 
         internal static void PresenterRecievedErrorMessage()
         {
-            if (_isDisabled) return;
-            write("Presenter received error message");
+            writeDetail("Presenter received error message");
         }
     	
 		public static void LaunchingEditor(string executable, string arguments)
 		{
-			if (_isDisabled) return;
-			write(string.Format("Launching {0} with {1}", executable, arguments));
+			writeDetail(string.Format("Launching {0} with {1}", executable, arguments));
 		}
     	
 		public static void ConfigurationFileMissing()
 		{
-			write("The configuration file (AutoTest.config) is missing.");
+			writeInfo("The configuration file (AutoTest.config) is missing.");
 		}
 
         public static void FailedToConfigure(Exception ex)
         {
-            write("Failed to configure application");
+            writeError("Failed to configure application");
             writeException(ex);
         }
 
-        public static void WriteMessage(string message)
-        {
-            if (_isDisabled) return;
-            write(message);
-        }
-
-        public static void WriteException(Exception ex)
-        {
-            if (_isDisabled) return;
-            writeException(ex);
-        }
+        public static void WriteError(string message) { writeError(message); }
+        public static void WriteError(string message, params object[] args) { writeError(string.Format(message, args)); }
+        public static void WriteInfo(string message) { writeInfo(message); }
+        public static void WriteInfo(string message, params object[] args) { writeInfo(string.Format(message, args)); }
+        public static void WriteDebug(string message) { writeDebug(message); }
+        public static void WriteDebug(string message, params object[] args) { writeDebug(string.Format(message, args)); }
+        public static void WritePreProcessor(string message) { writePreProcessor(message); }
+        public static void WritePreProcessor(string message, params object[] args) { writePreProcessor(string.Format(message, args)); }
+        public static void WriteDetail(string message) { writeDetail(message); }
+        public static void WriteDetail(string message, params object[] args) { writeDetail(string.Format(message, args)); }
+        public static void WriteException(Exception ex) { writeException(ex); }
 		
 		public static void ConsumingAssemblyChangeMessage(AssemblyChangeMessage message)
 		{
@@ -198,18 +202,26 @@ namespace AutoTest.Core.DebugLog
             builder.AppendLine("Consuming assembly changes for:");
             foreach (var file in message.Files)
                 builder.AppendLine(string.Format("    {0}", file.FullName));
-            write(builder.ToString());
+            writeDebug(builder.ToString());
 		}
 		
 		public static void ChangedBuildProvider(string buildProvider)
 		{
 			if (_isDisabled) return;
-			write(string.Format("Build provider changed to '{0}'", buildProvider));
+			writeDebug(string.Format("Build provider changed to '{0}'", buildProvider));
 		}
 
         private static void writeException(Exception ex)
         {
-            write(string.Format("{1}{0}{2}", Environment.NewLine, ex.Message, ex.StackTrace));
+            writeError(getExceptionString(ex));
+        }
+
+        private static string getExceptionString(Exception ex)
+        {
+            var text = ex.ToString();
+            if (ex.InnerException != null)
+                text += Environment.NewLine + "Inner exception:" + Environment.NewLine + getExceptionString(ex.InnerException);
+            return text;
         }
     }
 }

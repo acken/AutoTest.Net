@@ -108,7 +108,7 @@ namespace AutoTest.Core.FileSystem
 
         void WatcherErrorHandler(object sender, ErrorEventArgs e)
         {
-            Debug.WriteMessage("FileSystemWatcher failed to handle changes");
+            Debug.WriteError("FileSystemWatcher failed to handle changes");
             Debug.WriteException(e.GetException());
         }
 

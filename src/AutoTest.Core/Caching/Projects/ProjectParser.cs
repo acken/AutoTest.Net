@@ -141,22 +141,22 @@ namespace AutoTest.Core.Caching.Projects
             if (_fileContent.Contains(NUNIT_REFERENCE))
 			{
                 document.SetAsNUnitTestContainer();
-				Debug.WriteMessage(string.Format("{0} contains NUnit tests", _projectFile));
+				Debug.WriteDebug("{0} contains NUnit tests", _projectFile);
 			}
             if (_fileContent.Contains(MSTEST_REFERENCE))
 			{
                 document.SetAsMSTestContainer();
-				Debug.WriteMessage(string.Format("{0} contains MSTest tests", _projectFile));
+				Debug.WriteDebug("{0} contains MSTest tests", _projectFile);
 			}
             if (_fileContent.Contains(XUNIT_REFERENCE) || _fileContent.Contains(XUNIT_REFERENCE_ANY_VERSION))
 			{
                 document.SetAsXUnitTestContainer();
-				Debug.WriteMessage(string.Format("{0} contains XUnit tests", _projectFile));
+				Debug.WriteDebug("{0} contains XUnit tests", _projectFile);
 			}
             if (_fileContent.Contains(MSPEC_REFERENCE))
 			{
                 document.SetAsMSpecTestContainer();
-				Debug.WriteMessage(string.Format("{0} contains MSpec contexts", _projectFile));
+				Debug.WriteDebug("{0} contains MSpec contexts", _projectFile);
 			}
         }
 

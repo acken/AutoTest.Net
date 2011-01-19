@@ -23,7 +23,7 @@ namespace AutoTest.Core.Messaging
 		public void Consume(FileChangeMessage message)
 		{
 			
-			Debug.WriteMessage("Consuming filechange through BinaryFileChangeConsumer");
+			Debug.WriteDebug("Consuming filechange through BinaryFileChangeConsumer");
 			var assemblyFiles = new List<ChangedFile>();
 			foreach (var file in message.Files)
 			{

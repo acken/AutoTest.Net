@@ -74,7 +74,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             if (Debug.IsDisabled)
                 return;
 
-            Debug.WriteMessage("Result deltas");
+            Debug.WriteDebug("Result deltas");
             foreach (var error in _addedErrors)
                 logBuildItem("Added error", error);
             foreach (var error in _removedErrors)
@@ -93,12 +93,12 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void logBuildItem(string prefix, BuildItem item)
         {
-            Debug.WriteMessage("\t" + prefix + string.Format(" {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition));
+            Debug.WriteDebug("{6} {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition, prefix);
         }
 
         private void logTest(string prefix, TestItem item)
         {
-            Debug.WriteMessage("\t" + prefix + string.Format(" ({2}.{1}) from {0} named {4} saying {3} in {5}", item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace)));
+            Debug.WriteDebug("{6} ({2}.{1}) from {0} named {4} saying {3} in {5}", item.Key, item.Value.Status, item.Value.Runner, item.Value.Name, item.Value.Message, getStackTrace(item.Value.StackTrace), prefix);
         }
 
         private string getStackTrace(IStackLine[] iStackLine)
