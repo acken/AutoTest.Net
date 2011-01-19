@@ -31,10 +31,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(ProjectDocument document)
         {
-            return document.ContainsMSTests;
+            return document.ContainsMSTests && _fsService.FileExists(_configuration.MSTestRunner(document.Framework));
         }
-		
-		public bool CanHandleTestFor(string assembly)
+
+        public bool CanHandleTestFor(string assembly)
 		{
 			var references = _referenceResolver.GetReferences(assembly);
 			return references.Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");

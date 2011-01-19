@@ -58,6 +58,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var runReport = new RunReport();
             try
             {
+                Debug.WriteMessage("Starting project change run");
                 var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
                 var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
                 list = preProcessBuildRun(list);
@@ -100,6 +101,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (projectList.Where(x => x.ShouldBeBuilt).Select(x => x).Count() == 0)
                 return true;
 
+            Debug.WriteMessage("Running builds");
             if (_configuration.ShouldBuildSolution)
                 return buildSolution(projectList, runReport);
             else
@@ -154,6 +156,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		{
 			foreach (var runner in _testRunners)
             {
+                Debug.WriteMessage("Preparing runner " + runner.GetType().ToString());
 				var runInfos = new List<TestRunInfo>();
 				foreach (var file in projectList)
 	            {
@@ -173,6 +176,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				}
 				if (runInfos.Count > 0)
 				{
+                    Debug.WriteMessage("Running tests for runner " + runner.GetType().ToString());
 					runTests(runner, runInfos.ToArray(), runReport);
 					
 					var rerunInfos = new List<TestRunInfo>();
@@ -181,8 +185,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 						if (info.RerunAllTestWhenFinishedForAny())
 							rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
 					}
-					if (rerunInfos.Count > 0)
-						runTests(runner, rerunInfos.ToArray(), runReport);
+                    if (rerunInfos.Count > 0)
+                    {
+                        Debug.WriteMessage("Rerunning all tests for runner " + runner.GetType().ToString());
+                        runTests(runner, rerunInfos.ToArray(), runReport);
+                    }
 				}
 				
 			}

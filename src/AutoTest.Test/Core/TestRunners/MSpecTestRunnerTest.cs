@@ -113,7 +113,10 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_handle_projects_referencing_mspec()
         {
+            _configuration.Stub(c => c.MSpecTestRunner("3.5")).Return("testRunner.exe");
+            _fileSystem.Stub(x => x.FileExists("testRunner.exe")).Return(true);
             var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("3.5");
             document.SetAsMSpecTestContainer();
 
             var handles = _runner.CanHandleTestFor(document);

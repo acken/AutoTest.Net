@@ -20,6 +20,7 @@ namespace AutoTest.Test.Core.TestRunners
         private IMessageBus _bus;
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
+        private IFileSystemService _fsService;
 
         [SetUp]
         public void SetUp()
@@ -27,13 +28,17 @@ namespace AutoTest.Test.Core.TestRunners
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
 			_referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
-            _runner = new XUnitTestRunner(_bus, _configuration, _referenceResolver);
+            _fsService = MockRepository.GenerateMock<IFileSystemService>();
+            _runner = new XUnitTestRunner(_bus, _configuration, _referenceResolver, _fsService);
         }
 
         [Test]
         public void Should_handle_projects_referencing_xunit()
         {
+            _configuration.Stub(c => c.XunitTestRunner("3.5")).Return("testRunner.exe");
+            _fsService.Stub(x => x.FileExists("testRunner.exe")).Return(true);
             var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("3.5");
             document.SetAsXUnitTestContainer();
             _runner.CanHandleTestFor(document).ShouldBeTrue();
         }

@@ -43,7 +43,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(ProjectDocument document)
         {
-            return document.ContainsMSpecTests;
+            return document.ContainsMSpecTests && _fileSystem.FileExists(_configuration.MSpecTestRunner(document.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)

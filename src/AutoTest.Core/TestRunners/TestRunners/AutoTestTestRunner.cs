@@ -30,6 +30,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(ProjectDocument document)
         {
+            if (!_configuration.UseAutoTestTestRunner)
+                return false;
             return document.ContainsNUnitTests || document.ContainsXUnitTests;
         }
 
@@ -41,9 +43,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
-            if (!_configuration.UseAutoTestTestRunner)
-                return new TestRunResults[] { };
-
             var optionsFile = Path.GetTempFileName();
             var outputFile = Path.GetTempFileName();
             if (!generateOptions(runInfos, optionsFile))

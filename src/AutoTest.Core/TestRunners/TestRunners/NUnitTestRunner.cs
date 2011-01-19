@@ -19,22 +19,24 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private IMessageBus _bus;
         private IConfiguration _configuration;
 		private IResolveAssemblyReferences _referenceResolver;
+        private IFileSystemService _fsService;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IFileSystemService fsService)
         {
             _bus = bus;
             _configuration = configuration;
 			_referenceResolver = referenceResolver;
+            _fsService = fsService;
         }
 
         #region ITestRunner Members
 
         public bool CanHandleTestFor(ProjectDocument document)
         {
-            return document.ContainsNUnitTests;
+            return document.ContainsNUnitTests && _fsService.FileExists(_configuration.NunitTestRunner(document.Framework));
         }
-		
-		public bool CanHandleTestFor(string assembly)
+
+        public bool CanHandleTestFor(string assembly)
 		{
 			var references = _referenceResolver.GetReferences(assembly);
 			return references.Contains("nunit.framework");

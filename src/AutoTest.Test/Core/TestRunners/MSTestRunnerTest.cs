@@ -33,7 +33,10 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_handle_projects_referencing_mstest()
         {
+            _configuration.Stub(c => c.MSTestRunner("3.5")).Return("testRunner.exe");
+            _fsService.Stub(x => x.FileExists("testRunner.exe")).Return(true);
             var document = new ProjectDocument(ProjectType.CSharp);
+            document.SetFramework("3.5");
             document.SetAsMSTestContainer();
             _runner.CanHandleTestFor(document).ShouldBeTrue();
         }
