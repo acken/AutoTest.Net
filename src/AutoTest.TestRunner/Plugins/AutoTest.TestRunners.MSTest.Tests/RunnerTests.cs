@@ -12,6 +12,8 @@ namespace AutoTest.TestRunners.MSTest.Tests
         [Test]
         public void Should_run_tests()
         {
+			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+				return;
             var runner = new Runner();
             runner.Run(null);
         }
