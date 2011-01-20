@@ -93,7 +93,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void logBuildItem(string prefix, BuildItem item)
         {
-            Debug.WriteDebug("{6} {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition, prefix);
+            Debug.WriteDebug("{5} {0} in {1}, {2} {3}:{4}", item.Key, item.Value.File, item.Value.ErrorMessage, item.Value.LineNumber, item.Value.LinePosition, prefix);
         }
 
         private void logTest(string prefix, TestItem item)

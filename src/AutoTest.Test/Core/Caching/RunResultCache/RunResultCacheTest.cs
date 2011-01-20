@@ -35,7 +35,6 @@ namespace AutoTest.Test.Core.Caching
         [Test]
         public void Should_merge_build_errors()
         {
-            int i = 3;
             var results = new BuildRunResults("project");
             results.AddError(new BuildMessage() {File = "some file", ErrorMessage = "some error message"});
             _runResultCache.Merge(results);

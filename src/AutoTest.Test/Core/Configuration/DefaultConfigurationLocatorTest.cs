@@ -3,6 +3,7 @@ using NUnit.Framework;
 using AutoTest.Core.Configuration;
 using System.IO;
 using AutoTest.Core.DebugLog;
+using Rhino.Mocks;
 namespace AutoTest.Test
 {
 	[TestFixture]
@@ -21,13 +22,6 @@ namespace AutoTest.Test
 		{
 			 var configFile = _locator.GetConfigurationFile();
 			Directory.Exists(Path.GetDirectoryName(configFile)).ShouldBeTrue();
-		}
-		
-		[Test]
-		public void Should_return_debug_logger()
-		{
-			var logger = _locator.GetDebugLogger();
-			logger.ShouldBeOfType<IWriteDebugInfo>();
 		}
 	}
 }

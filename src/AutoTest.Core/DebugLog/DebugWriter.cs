@@ -1,27 +1,33 @@
 using System;
 using System.IO;
 using AutoTest.Core.FileSystem;
+using AutoTest.Core.Messaging;
+using AutoTest.Messages;
+using System.Reflection;
+using AutoTest.Core.Configuration;
 namespace AutoTest.Core.DebugLog
 {
 	public class DebugWriter : IWriteDebugInfo
 	{
+        private IMessageBus _bus;
 		private object _padLock = new object();
-        private string _logFile = "debug.log";
-		private string _path;
+		private string _logFile;
 		
-		public DebugWriter(string path)
+		public DebugWriter(ILocateWriteLocation locator, IMessageBus bus)
 		{
-			_path = path;
+            _bus = bus; 
+            _logFile = locator.GetLogfile();
 		}
-		
-		public DebugWriter(string path, string filename)
-		{
-			_path = path;
-			_logFile = filename;
-		}
-
+        
         public void WriteError(string message)
         {
+            _bus.Publish(new ErrorMessage(message));
+            write(message);
+        }
+
+        public void WriteInfo(string message)
+        {
+            _bus.Publish(new InformationMessage(message));
             write(message);
         }
 
@@ -30,16 +36,11 @@ namespace AutoTest.Core.DebugLog
             write(message);
         }
 
-        public void WriteInfo(string message)
-        {
-            write(message);
-        }
-
         public void WritePreProcessor(string message)
         {
             write(message);
         }
-
+        
         public void WriteDetail(string message)
         {
             write(message);
@@ -49,15 +50,14 @@ namespace AutoTest.Core.DebugLog
 		{
 			lock (_padLock)
             {
-				var file = Path.Combine(_path, _logFile);
-                using (var writer = getWriter(file))
+                using (var writer = getWriter(_logFile))
                 {
                     writer.WriteLine(text);
                 }
-                if ((new FileInfo(file)).Length > 1024000)
+                if ((new FileInfo(_logFile)).Length > 1024000)
                 {
-                    File.Delete(string.Format("{0}.old", file));
-                    File.Move(file, string.Format("{0}.old", file));
+                    File.Delete(string.Format("{0}.old", _logFile));
+                    File.Move(_logFile, string.Format("{0}.old", _logFile));
                 }
             }
 		}

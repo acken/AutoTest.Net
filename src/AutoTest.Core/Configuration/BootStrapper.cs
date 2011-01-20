@@ -65,8 +65,8 @@ namespace AutoTest.Core.Configuration
 		
 		private static void enableLogging()
 		{
-			var debugLogger = _container.Services.Locate<ILocateWriteLocation>();
-			Debug.EnableLogging(debugLogger.GetDebugLogger());
+			var debugLogger = _container.Services.Locate<IWriteDebugInfo>();
+			Debug.EnableLogging(debugLogger);
 		}
     }
 }

@@ -364,5 +364,13 @@ namespace AutoTest.Test.Core.Configuration
             var preProcessors = _locator.LocateAll<IPreProcessBuildruns>();
             preProcessors.Length.ShouldEqual(1);
         }
+
+        [Test]
+        public void Shoud_not_contain_singleton_debug_writer()
+        {
+            var writer1 = _locator.Locate<IWriteDebugInfo>();
+            var writer2 = _locator.Locate<IWriteDebugInfo>();
+            writer1.ShouldBeTheSameAs(writer2);
+        }
     }
 }

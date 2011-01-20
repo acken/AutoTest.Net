@@ -8,6 +8,7 @@ using Rhino.Mocks;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
 using System.IO;
+using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Test.Core.Configuration
 {
