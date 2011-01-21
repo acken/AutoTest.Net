@@ -12,6 +12,9 @@ namespace AutoTest.TestRunners.Shared
     {
         void SetLogger(ILogger logger);
 
+        bool IsTest(string assembly, string type);
+        bool ContainsTests(string assembly, string type);
+
         bool Handles(string identifier);
         IEnumerable<TestResult> Run(RunnerOptions options);
     }

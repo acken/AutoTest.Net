@@ -28,9 +28,9 @@ namespace AutoTest.TestRunners.NUnit.Tests
     [TestFixture]
     public class RunnerTests
     {
-        private AppDomain _childDomain = null;
-        private Plugin _plugin = null;
-        private ITestRunner _runner;
+        //private AppDomain _childDomain = null;
+        //private Plugin _plugin = null;
+        //private ITestRunner _runner;
 
         //[TestFixtureSetUp]
         //public void SetUp()

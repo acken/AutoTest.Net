@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParserTests.cs" />
+    <Compile Include="AssemblyAnalysis\TypeLocatorTests.cs" />
     <Compile Include="CmdArguments\OptionsParserTests.cs" />
     <Compile Include="OptionsXmlWriterTests.cs" />
     <Compile Include="PluginLocatorTests.cs" />

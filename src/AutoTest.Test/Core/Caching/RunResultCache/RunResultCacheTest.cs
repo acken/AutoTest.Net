@@ -38,7 +38,7 @@ namespace AutoTest.Test.Core.Caching
             var results = new BuildRunResults("project");
             results.AddError(new BuildMessage() {File = "some file", ErrorMessage = "some error message"});
             _runResultCache.Merge(results);
-
+            
             results = new BuildRunResults("project");
             results.AddError(new BuildMessage() { File = "some file", ErrorMessage = "some error message" });
             results.AddError(new BuildMessage() { File = "some other file", ErrorMessage = "some other error message" });

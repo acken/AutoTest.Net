@@ -12,14 +12,24 @@ namespace AutoTest.TestRunners.Tests.Plugins
         {
         }
 
+        public bool IsTest(string assembly, string type)
+        {
+            return true;
+        }
+
+        public bool ContainsTests(string assembly, string type)
+        {
+            return true;
+        }
+
         public bool Handles(string identifier)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public IEnumerable<Shared.Results.TestResult> Run(Shared.Options.RunnerOptions options)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

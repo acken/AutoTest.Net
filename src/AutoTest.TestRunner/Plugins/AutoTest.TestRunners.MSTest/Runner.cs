@@ -17,6 +17,16 @@ namespace AutoTest.TestRunners.MSTest
         {
         }
 
+        public bool IsTest(string assembly, string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ContainsTests(string assembly, string type)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Handles(string identifier)
         {
             return identifier == "MSTest";

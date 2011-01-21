@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\lib\Cecil\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyAnalysis\SimpleType.cs" />
+    <Compile Include="AssemblyAnalysis\TypeLocator.cs" />
     <Compile Include="Errors\ErrorHandler.cs" />
     <Compile Include="IAutoTestNetTestRunner.cs" />
     <Compile Include="Logging\ILogger.cs" />

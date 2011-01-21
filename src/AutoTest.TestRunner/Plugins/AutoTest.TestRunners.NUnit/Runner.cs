@@ -15,6 +15,16 @@ namespace AutoTest.TestRunners.NUnit
         {
         }
 
+        public bool IsTest(string assembly, string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ContainsTests(string assembly, string type)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Handles(string identifier)
         {
             return identifier.ToLower().Equals("nunit");
