@@ -55,17 +55,27 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             return null;
         }
 
-        private static SimpleType getType(TypeDefinition type)
+        private SimpleType getType(TypeDefinition type)
         {
             return new SimpleType(
                 TypeCategory.Class,
                 type.FullName,
-                type.CustomAttributes.Select(x => x.AttributeType.FullName),
+                getTypeAttributes(type),
                 type.Methods.Select(x => new SimpleType(
                     TypeCategory.Method,
                     type.FullName + "." + x.Name,
                     x.CustomAttributes.Select(m => m.AttributeType.FullName),
                     new SimpleType[] { })));
+        }
+
+        private IEnumerable<string> getTypeAttributes(TypeDefinition type)
+        {
+            var attributes = new List<string>();
+            attributes.AddRange(type.CustomAttributes.Select(x => x.AttributeType.FullName));
+            var baseType = type.BaseType as TypeDefinition;
+            if (baseType != null)
+                attributes.AddRange(getTypeAttributes(baseType));
+            return attributes;
         }
 
         private SimpleType locateSimpleType(Collection<MethodDefinition> methods, string typeFullname)

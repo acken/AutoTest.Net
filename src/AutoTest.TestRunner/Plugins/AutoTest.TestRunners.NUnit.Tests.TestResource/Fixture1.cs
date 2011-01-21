@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.NUnit.Tests.TestResource
             Assert.AreEqual(1, 1);
         }
 
-        [Test]
+        [TestCase]
 		[Category("notworking")]
         public void Should_fail()
         {

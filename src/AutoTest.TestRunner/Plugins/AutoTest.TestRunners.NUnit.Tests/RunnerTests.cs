@@ -54,6 +54,42 @@ namespace AutoTest.TestRunners.NUnit.Tests
         //        AppDomain.Unload(_childDomain);
         //}
 
+        [Test]
+        public void Should_recognize_test()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_pass";
+            Assert.That(runner.IsTest(assembly, method), Is.True);
+        }
+
+        [Test]
+        public void Should_recognize_testcase()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail";
+            Assert.That(runner.IsTest(assembly, method), Is.True);
+        }
+
+        [Test]
+        public void Should_recognize_fixture()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1";
+            Assert.That(runner.ContainsTests(assembly, cls), Is.True);
+        }
+
+        [Test]
+        public void Should_recognize_inherited_fixture()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.InheritedFixture";
+            Assert.That(runner.ContainsTests(assembly, cls), Is.True);
+        }
+
         //[Test]
         //public void Should_run_test()
         //{
