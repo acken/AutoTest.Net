@@ -68,7 +68,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var tests = reader.Read();
             foreach (var byRunner in tests.GroupBy(x => x.Runner))
             {
-                var runner = getRunnerFromType(byRunner.Key);
+                var runner = TestRunnerConverter.FromString(byRunner.Key);
                 foreach (var byAssembly in byRunner.GroupBy(x => x.Assembly))
                 {
                     var info = runInfos.Where(x => x.Assembly.Equals(byAssembly.Key)).FirstOrDefault();
@@ -103,18 +103,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 }
             }
             return results.ToArray();
-        }
-
-        private TestRunner getRunnerFromType(string type)
-        {
-            switch (type.ToLower())
-            {
-                case "nunit":
-                    return TestRunner.NUnit;
-                case "xunit":
-                    return TestRunner.XUnit;
-            }
-            return TestRunner.Any;
         }
 
         private TestRunStatus getTestState(TestState testState)

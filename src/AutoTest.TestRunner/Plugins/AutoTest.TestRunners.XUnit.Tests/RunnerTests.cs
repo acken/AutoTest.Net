@@ -53,6 +53,24 @@ namespace AutoTest.TestRunners.XUnit.Tests
         //        AppDomain.Unload(_childDomain);
         //}
 
+        [Test]
+        public void Should_identify_test()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.XUnit.Tests.TestResource.dll");
+            var method = "AutoTest.TestRunners.XUnit.Tests.TestResource.Class1.Should_pass";
+            Assert.That(runner.IsTest(assembly, method), Is.True);
+        }
+
+        [Test]
+        public void Should_identify_test_container()
+        {
+            var runner = new Runner();
+            var assembly = Path.GetFullPath("AutoTest.TestRunners.XUnit.Tests.TestResource.dll");
+            var cls = "AutoTest.TestRunners.XUnit.Tests.TestResource.Class1";
+            Assert.That(runner.ContainsTests(assembly, cls), Is.True);
+        }
+
         //[Test]
         //public void Should_run_tests()
         //{

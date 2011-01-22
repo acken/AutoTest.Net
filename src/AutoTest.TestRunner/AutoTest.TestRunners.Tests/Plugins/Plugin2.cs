@@ -8,6 +8,8 @@ namespace AutoTest.TestRunners.Tests.Plugins
 {
     public class Plugin2 : AutoTest.TestRunners.Shared.IAutoTestNetTestRunner
     {
+        public string Identifier { get { return ""; } }
+
         public void SetLogger(ILogger logger)
         {
         }

@@ -12,22 +12,24 @@ namespace AutoTest.TestRunners.NUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        public string Identifier { get { return "NUnit"; } }
+
         public void SetLogger(ILogger logger)
         {
         }
 
-        public bool IsTest(string assembly, string type)
+        public bool IsTest(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly, type);
+            var locator = new SimpleTypeLocator(assembly, member);
             var method = locator.Locate();
             if (method.Category != TypeCategory.Method)
                 return false;
             return method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute");
         }
 
-        public bool ContainsTests(string assembly, string type)
+        public bool ContainsTests(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly, type);
+            var locator = new SimpleTypeLocator(assembly, member);
             var cls = locator.Locate();
             if (cls.Category != TypeCategory.Class)
                 return false;
@@ -36,7 +38,7 @@ namespace AutoTest.TestRunners.NUnit
 
         public bool Handles(string identifier)
         {
-            return identifier.ToLower().Equals("nunit");
+            return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
         public IEnumerable<TestResult> Run(RunnerOptions options)

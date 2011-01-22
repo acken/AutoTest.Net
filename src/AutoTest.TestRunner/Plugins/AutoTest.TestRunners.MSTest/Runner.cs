@@ -13,6 +13,8 @@ namespace AutoTest.TestRunners.MSTest
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        public string Identifier { get { return "MSTest"; } }
+
         public void SetLogger(ILogger logger)
         {
         }
@@ -29,7 +31,7 @@ namespace AutoTest.TestRunners.MSTest
 
         public bool Handles(string identifier)
         {
-            return identifier == "MSTest";
+            return identifier.ToLower().Equals(identifier.ToLower());
         }
 
         public IEnumerable<TestResult> Run(RunnerOptions options)

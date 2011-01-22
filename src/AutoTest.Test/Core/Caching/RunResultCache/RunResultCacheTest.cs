@@ -21,7 +21,7 @@ namespace AutoTest.Test.Core.Caching
         {
             _runResultCache = new RunResultCache();
         }
-
+        
         [Test]
         public void Should_add_build_errors()
         {

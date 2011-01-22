@@ -10,10 +10,12 @@ namespace AutoTest.TestRunners.Shared
 {
     public interface IAutoTestNetTestRunner
     {
+        string Identifier { get; }
+
         void SetLogger(ILogger logger);
 
-        bool IsTest(string assembly, string type);
-        bool ContainsTests(string assembly, string type);
+        bool IsTest(string assembly, string member);
+        bool ContainsTests(string assembly, string member);
 
         bool Handles(string identifier);
         IEnumerable<TestResult> Run(RunnerOptions options);

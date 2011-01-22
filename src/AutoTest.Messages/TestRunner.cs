@@ -13,4 +13,17 @@ namespace AutoTest.Messages
         XUnit = 3,
         MSpec = 4
     }
+
+    public static class TestRunnerConverter
+    {
+        public static string ToString(TestRunner runner)
+        {
+            return runner.ToString();
+        }
+
+        public static TestRunner FromString(string runner)
+        {
+            return (TestRunner)Enum.Parse(typeof(TestRunner), runner);
+        }
+    }
 }
