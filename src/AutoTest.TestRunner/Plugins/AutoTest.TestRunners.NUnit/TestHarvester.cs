@@ -10,7 +10,7 @@ namespace AutoTest.TestRunners.NUnit
 {
     class TestHarvester : MarshalByRefObject, EventListener
     {
-        private string currentAssembly = "";
+        private string currentAssembly = "Run started was never called";
         private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<AutoTest.TestRunners.Shared.Results.TestResult>();
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
@@ -39,20 +39,20 @@ namespace AutoTest.TestRunners.NUnit
                 case ResultState.Error:
                 case ResultState.Failure:
                 case ResultState.Cancelled:
-                    var result = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
+                    var result = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
                     result.AddStackLines(getStackLines(testResult).ToArray());
                     _results.Add(result);
                     break;
 
                 case ResultState.Inconclusive:
                 case ResultState.Success:
-                    _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
+                    _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
                     break;
 
                 case ResultState.Ignored:
                 case ResultState.Skipped:
                 case ResultState.NotRunnable:
-                    var ignoreResult = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Ignored, testResult.Message);
+                    var ignoreResult = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Ignored, testResult.Message);
                     ignoreResult.AddStackLines(getStackLines(testResult).ToArray());
                     _results.Add(ignoreResult);
                     break;

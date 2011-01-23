@@ -97,12 +97,12 @@ namespace AutoTest.TestRunners.NUnit.Tests
         //    options.AddAssembly(new AssemblyOptions(
         //        Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
         //    var results = _runner.Run(_plugin, options);
-        //    Assert.That(results.Count(), Is.EqualTo(5));
+        //    Assert.That(results.Count(), Is.EqualTo(8));
 
         //    Assert.That(results.ElementAt(0).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
         //    Assert.That(results.ElementAt(0).TestFixture, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1"));
         //    Assert.That(results.ElementAt(0).State, Is.EqualTo(Shared.Results.TestState.Failed));
-        //    Assert.That(results.ElementAt(0).TestName, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail"));
+        //    Assert.That(results.ElementAt(0).TestName, Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail()"));
         //    Assert.That(results.ElementAt(0).StackLines.Count(), Is.EqualTo(1));
         //    Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Method.Replace(" ()", "()"), Is.EqualTo("AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail()"));
 

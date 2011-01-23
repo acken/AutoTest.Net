@@ -64,6 +64,10 @@ namespace AutoTest.TestRunners.NUnit
             {
                 result = testRunner.Run(harvester, testFilter);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
             finally
             {
                 Environment.CurrentDirectory = savedDirectory;
