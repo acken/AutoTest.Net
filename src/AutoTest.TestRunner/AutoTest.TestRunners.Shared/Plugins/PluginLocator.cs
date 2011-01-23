@@ -41,9 +41,18 @@ namespace AutoTest.TestRunners.Shared.Plugins
         public IEnumerable<Plugin> Locate()
         {
             var plugins = new List<Plugin>();
-            var files = Directory.GetFiles(_path);
-            foreach (var file in files)
-                plugins.AddRange(getPlugins(file));
+            var currentDirectory = Environment.CurrentDirectory;
+            try
+            {
+                Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var files = Directory.GetFiles(_path);
+                foreach (var file in files)
+                    plugins.AddRange(getPlugins(file));
+            }
+            finally
+            {
+                Environment.CurrentDirectory = currentDirectory;
+            }
             return plugins;
         }
 

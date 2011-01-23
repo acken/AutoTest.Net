@@ -23,7 +23,7 @@ namespace AutoTest.Messages
 
         public static TestRunner FromString(string runner)
         {
-            return (TestRunner)Enum.Parse(typeof(TestRunner), runner);
+            return (TestRunner)Enum.Parse(typeof(TestRunner), runner, true);
         }
     }
 }

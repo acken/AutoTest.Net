@@ -43,7 +43,7 @@ namespace AutoTest.TestRunners.Shared.Options
                     {
                         writer.WriteStartElement("test_assembly");
                         writer.WriteAttributeString("name", assembly.Assembly);
-                        if (assembly.Framework != null)
+                        if (assembly.Framework != null && assembly.Framework.Length > 0)
                             writer.WriteAttributeString("framework", assembly.Framework);
                         writeStringList(writer, assembly.Tests, "tests", "test");
                         writeStringList(writer, assembly.Members, "members", "member");

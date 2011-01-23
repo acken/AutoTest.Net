@@ -9,6 +9,7 @@ using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Options;
 using System.Runtime.Remoting;
 using AutoTest.TestRunners.Shared.Errors;
+using System.Reflection;
 
 namespace AutoTest.TestRunners
 {
@@ -20,7 +21,7 @@ namespace AutoTest.TestRunners
 
         static void Main(string[] args)
         {
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp4452.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -176,7 +177,8 @@ namespace AutoTest.TestRunners
 
         private static IEnumerable<Plugin> allPlugins()
         {
-            var dir = Path.GetFullPath("TestRunners");
+            var currentDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var dir = Path.Combine(currentDir, "TestRunners");
             if (!Directory.Exists(dir))
                 return new Plugin[] { };
             var locator = new PluginLocator(dir);
