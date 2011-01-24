@@ -185,20 +185,28 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private RunnerOptions getRunnerOptions(IEnumerable<TestRunInfo> unitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator, Func<TestRunInfo, bool> hasOtherRunners)
         {
+			DebugLog.Debug.WriteDetail("Getting runner options for {0}", id);
             var runner = new RunnerOptions(id);
             foreach (var info in unitInfos)
             {
+				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
                 if (hasOtherRunners.Invoke(info))
                     continue;
+				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
+				DebugLog.Debug.WriteDetail("About to add tests");
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 assembly.AddTests(info.GetTestsFor(TestRunner.Any));
+				DebugLog.Debug.WriteDetail("About to add members");
                 assembly.AddMembers(info.GetMembersFor(testRunner));
                 assembly.AddMembers(info.GetMembersFor(TestRunner.Any));
+				DebugLog.Debug.WriteDetail("About to add namespaces");
                 assembly.AddNamespaces(info.GetNamespacesFor(testRunner));
                 assembly.AddNamespaces(info.GetNamespacesFor(TestRunner.Any));
+				DebugLog.Debug.WriteDetail("Should we add test run?");
                 if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0 && assembly.Members.Count() == 0 && assembly.Namespaces.Count() == 0)
                     continue;
+				DebugLog.Debug.WriteDetail("Adding assembly");
                 runner.AddAssembly(assembly);
             }
             return runner;
@@ -207,12 +215,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private string getFramework(TestRunInfo info)
         {
             if (Environment.OSVersion.Platform.Equals(PlatformID.Unix) || Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
-                return null;
+                return "";
 
             if (info.Project == null || info.Project.Value == null)
-                return null;
+                return "";
             if (info.Project.Value.Framework == null)
-                return null;
+                return "";
             return info.Project.Value.Framework;
         }
 
