@@ -31,7 +31,7 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.That(cls.Category, Is.EqualTo(TypeCategory.Class));
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
-            Assert.AreEqual(4, cls.Methods.Count());
+            Assert.AreEqual(5, cls.Methods.Count());
         }
 
         [Test]
@@ -42,14 +42,31 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.MyAttribute", cls.Attributes.ElementAt(1));
         }
-    }
 
+        [Test]
+        public void Should_find_inherited_attributes_in_methods()
+        {
+            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, "AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh");
+            var cls = locator.Locate();
+            Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh", cls.Fullname);
+            Assert.AreEqual(3, cls.Attributes.Count());
+        }
+    }
+    
     [MyAttribute]
     public class BaseClass
     {
+        [MyOtherAttribute]
+        public void Blargh()
+        {
+        }
     }
 
     public class MyAttribute : Attribute
+    {
+    }
+
+    public class MyOtherAttribute : MyAttribute
     {
     }
 }

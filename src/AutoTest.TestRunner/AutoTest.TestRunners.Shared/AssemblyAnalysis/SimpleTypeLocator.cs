@@ -64,18 +64,41 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                 type.Methods.Select(x => new SimpleType(
                     TypeCategory.Method,
                     type.FullName + "." + x.Name,
-                    x.CustomAttributes.Select(m => m.AttributeType.FullName),
+                    getAttributes(x.CustomAttributes),
                     new SimpleType[] { })));
         }
 
         private IEnumerable<string> getTypeAttributes(TypeDefinition type)
         {
             var attributes = new List<string>();
-            attributes.AddRange(type.CustomAttributes.Select(x => x.AttributeType.FullName));
+            attributes.AddRange(getAttributes(type.CustomAttributes));
             var baseType = type.BaseType as TypeDefinition;
             if (baseType != null)
                 attributes.AddRange(getTypeAttributes(baseType));
             return attributes;
+        }
+
+        private IEnumerable<string> getAttributes(ICollection<CustomAttribute> customAttributes)
+        {
+            var attributes = new List<string>();
+            foreach (var attribute in customAttributes)
+            {
+                var type = attribute.AttributeType;
+                attributes.Add(type.FullName);
+                addBaseAttributes(attributes, type as TypeDefinition);
+            }
+            return attributes;
+        }
+
+        private void addBaseAttributes(List<string> attributes, TypeDefinition type)
+        {
+            int i = 8;
+            if (type == null)
+                return;
+            if (type.BaseType == null)
+                return;
+            attributes.Add(type.BaseType.FullName);
+            addBaseAttributes(attributes, type.BaseType as TypeDefinition);
         }
 
         private SimpleType locateSimpleType(Collection<MethodDefinition> methods, string typeFullname)
@@ -84,7 +107,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             {
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(_type))
-                    return new SimpleType(TypeCategory.Method, fullName, method.CustomAttributes.Select(x => x.AttributeType.FullName), new SimpleType[] {});
+                    return new SimpleType(TypeCategory.Method, fullName, getAttributes(method.CustomAttributes), new SimpleType[] { });
             }
             return null;
         }
