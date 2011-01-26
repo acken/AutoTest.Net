@@ -92,7 +92,6 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 
         private void addBaseAttributes(List<string> attributes, TypeDefinition type)
         {
-            int i = 8;
             if (type == null)
                 return;
             if (type.BaseType == null)

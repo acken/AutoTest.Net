@@ -21,6 +21,10 @@ namespace AutoTest.TestRunners.NUnit
 
         public void RunStarted(string name, int testCount)
         {
+            if (name == null)
+                return;
+            if (name.Trim().Length == 0)
+                return;
             currentAssembly = name;
         }
 
