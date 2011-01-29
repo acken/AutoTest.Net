@@ -9,17 +9,18 @@ using System.IO;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Results;
+using System.Reflection;
 
 namespace AutoTest.TestRunners.NUnit.Tests
 {
     interface ITestRunner
     {
-        IEnumerable<TestResult> Run(Plugin plugin, RunnerOptions options);
+        IEnumerable<TestResult> Run(Plugin plugin, RunSettings options);
     }
 
     class TestRunner : MarshalByRefObject, ITestRunner
     {
-        public IEnumerable<TestResult> Run(Plugin plugin, RunnerOptions options)
+        public IEnumerable<TestResult> Run(Plugin plugin, RunSettings options)
         {
             return plugin.New().Run(options);
         }
@@ -57,8 +58,9 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_test()
         {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var runner = new Runner();
-            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_pass";
             Assert.That(runner.IsTest(assembly, method), Is.True);
         }
@@ -66,8 +68,9 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_testcase()
         {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var runner = new Runner();
-            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail";
             Assert.That(runner.IsTest(assembly, method), Is.True);
         }
@@ -75,19 +78,30 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_fixture()
         {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var runner = new Runner();
-            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1";
-            Assert.That(runner.ContainsTests(assembly, cls), Is.True);
+            Assert.That(runner.ContainsTestsFor(assembly, cls), Is.True);
         }
 
         [Test]
         public void Should_recognize_inherited_fixture()
         {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var runner = new Runner();
-            var assembly = Path.GetFullPath("AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.InheritedFixture";
-            Assert.That(runner.ContainsTests(assembly, cls), Is.True);
+            Assert.That(runner.ContainsTestsFor(assembly, cls), Is.True);
+        }
+
+        [Test]
+        public void Should_contain_tests_for()
+        {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var runner = new Runner();
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            Assert.That(runner.ContainsTestsFor(assembly), Is.True);
         }
 
         //[Test]
@@ -96,7 +110,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         //    var options = new RunnerOptions("nunit");
         //    options.AddAssembly(new AssemblyOptions(
         //        Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));
-        //    var results = _runner.Run(_plugin, options);
+        //    var results = _runner.Run(_plugin, options);i
         //    Assert.That(results.Count(), Is.EqualTo(8));
 
         //    Assert.That(results.ElementAt(0).Assembly, Is.EqualTo(Path.GetFullPath(@"AutoTest.TestRunners.NUnit.Tests.TestResource.dll")));

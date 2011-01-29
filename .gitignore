@@ -22,3 +22,4 @@ openlocal.bat
 ~$*
 Debug/
 Release/
+AutoTest.config

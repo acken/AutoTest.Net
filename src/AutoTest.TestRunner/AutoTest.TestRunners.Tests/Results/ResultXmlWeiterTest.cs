@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.TestRunners.Shared.Results;
 using System.IO;
+using System.Reflection;
 
 namespace AutoTest.TestRunners.Tests.Results
 {
@@ -40,7 +41,13 @@ namespace AutoTest.TestRunners.Tests.Results
             var writer = new ResultsXmlWriter(result);
             writer.Write(file);
 
-            Assert.That(File.ReadAllText(file), Is.EqualTo(File.ReadAllText("Results.xml")));
+            Assert.That(File.ReadAllText(file), Is.EqualTo(File.ReadAllText(getPath("Results.xml"))));
+        }
+
+        private string getPath(string relativePath)
+        {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, relativePath);
         }
     }
 }

@@ -7,6 +7,7 @@ using AutoTest.TestRunners.Shared;
 using System.IO;
 using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Options;
+using System.Reflection;
 
 namespace AutoTest.TestRunners.Tests
 {
@@ -23,11 +24,11 @@ namespace AutoTest.TestRunners.Tests
 
             var runner1 = new RunnerOptions("nunit");
             runner1.AddCategories(new string[] { "SomeTestCategory", "SomeOtherTestCategory" });
-            var assembly1 = new AssemblyOptions(@"C:\my\testassembly.dll", "3.5");
+            var assembly1 = new AssemblyOptions(@"C:\my\testassembly.dll");
             assembly1.AddTests(new string[] { "testassembly.class.test1", "testassembly.class.test2" });
             assembly1.AddMembers(new string[] { "testassembly.class2", "testassembly.class3" });
             assembly1.AddNamespaces(new string[] { "testassembly.somenamespace1", "testassembly.somenamespace2" });
-            runner1.AddAssemblies(new AssemblyOptions[] { assembly1, new AssemblyOptions(@"C:\my\anothernunitassembly.dll", "4.0") });
+            runner1.AddAssemblies(new AssemblyOptions[] { assembly1, new AssemblyOptions(@"C:\my\anothernunitassembly.dll") });
             options.AddTestRun(runner1);
 
             var runner2 = new RunnerOptions("another");
@@ -38,7 +39,8 @@ namespace AutoTest.TestRunners.Tests
             var file = Path.GetTempFileName();
             writer.Write(file);
 
-            Assert.That(File.ReadAllText(file), Is.EqualTo(File.ReadAllText("TestOptions.xml")));
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            Assert.That(File.ReadAllText(file), Is.EqualTo(File.ReadAllText(Path.Combine(path, "TestOptions.xml"))));
         }
     }
 }

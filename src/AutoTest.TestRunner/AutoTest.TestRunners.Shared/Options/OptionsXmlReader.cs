@@ -76,11 +76,11 @@ namespace AutoTest.TestRunners.Shared.Options
         private void getAssembly(XmlTextReader reader)
         {
             if (reader.IsEmptyElement)
-                _currentRunner.AddAssembly(new AssemblyOptions(reader.GetAttribute("name"), reader.GetAttribute("framework")));
+                _currentRunner.AddAssembly(new AssemblyOptions(reader.GetAttribute("name")));
             else if (reader.NodeType == XmlNodeType.EndElement)
                 _currentRunner.AddAssembly(_currentAssembly);
             else
-                _currentAssembly = new AssemblyOptions(reader.GetAttribute("name"), reader.GetAttribute("framework"));
+                _currentAssembly = new AssemblyOptions(reader.GetAttribute("name"));
         }
 
         private void getTest(XmlTextReader reader)
@@ -177,11 +177,7 @@ namespace AutoTest.TestRunners.Shared.Options
                 string name = null;
                 if (nameNode != null)
                     name = nameNode.InnerXml;
-                XmlNode frameworkNode = node.Attributes.GetNamedItem("framework");
-                string framework = null;
-                if (frameworkNode != null)
-                    framework = frameworkNode.InnerXml;
-                var assembly = new AssemblyOptions(name, framework);
+                var assembly = new AssemblyOptions(name);
                 assembly.AddTests(getTests(node));
                 assembly.AddMembers(getMembers(node));
                 assembly.AddNamespaces(getNamespaces(node));

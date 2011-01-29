@@ -12,8 +12,8 @@ namespace AutoTest.TestRunners.Shared.Targeting
     {
         public string Get(string testAssembly)
         {
-            var locator = new TargetFrameworkLocator();
-            return Get(locator.Locate(testAssembly));
+            var locator = new AssemblyParser();
+            return Get(locator.GetTargetFramework(testAssembly));
         }
 
         public string Get(Version version)

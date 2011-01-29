@@ -47,9 +47,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
+            var now = DateTime.Now;
             Debug.ConsumingProjectChangeMessage(message);
             _bus.Publish(new RunStartedMessage(message.Files));
             var runReport = execute(message);
+            runReport.SetTimeSpent(DateTime.Now.Subtract(now));
             _bus.Publish(new RunFinishedMessage(runReport));
         }
 
@@ -169,8 +171,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
 					    continue;
                     if (runner.CanHandleTestFor(project))
+                    {
                         runInfos.Add(file.CloneToTestRunInfo());
-					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
+                        _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
+                    }
 				}
 				if (runInfos.Count > 0)
 				{

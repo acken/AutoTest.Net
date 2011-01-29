@@ -5,22 +5,29 @@ using System.Text;
 using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Errors;
+using System.Threading;
+using System.IO;
 
 namespace AutoTest.TestRunners
 {
     class SubDomainRunner
     {
         private Plugin _plugin;
-        private RunOptions _options;
+        private IEnumerable<string> _categories;
+        private AssemblyOptions _assembly;
 
-        public SubDomainRunner(Plugin plugin, RunOptions options)
+        public SubDomainRunner(Plugin plugin, IEnumerable<string> categories, AssemblyOptions assembly)
         {
             _plugin = plugin;
-            _options = options;
+            _categories = categories;
+            _assembly = assembly;
         }
 
-        public void Run()
+        public void Run(object waitHandle)
         {
+            ManualResetEvent handle = null;
+            if (waitHandle != null)
+                handle = (ManualResetEvent)waitHandle;
             AppDomain childDomain = null;
             try
             {
@@ -41,7 +48,7 @@ namespace AutoTest.TestRunners
                 ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_plugin, _options));
+                Program.AddResults(runtime.Run(_plugin, new RunSettings(_assembly, _categories)));
             }
             catch (Exception ex)
             {
@@ -51,6 +58,9 @@ namespace AutoTest.TestRunners
             {
                 if (childDomain != null)
                     AppDomain.Unload(childDomain);
+                if (handle != null)
+                    handle.Set();
+                Program.WriteNow("Finished running tests for " + _assembly.Assembly);
             }
         }
     }

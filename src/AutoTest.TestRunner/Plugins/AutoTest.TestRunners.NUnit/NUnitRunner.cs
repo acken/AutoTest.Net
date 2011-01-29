@@ -102,23 +102,9 @@ namespace AutoTest.TestRunners.NUnit
 			TestPackage package;
 			DomainUsage domainUsage = DomainUsage.Default;
             ProcessModel processModel = ProcessModel.Default;
-            RuntimeFramework framework = null;
-
-            if (options.Assemblies.Length == 1)
-            {
-                package = new TestPackage(options.Assemblies[0]);
-                domainUsage = DomainUsage.Single;
-            }
-            else
-            {
-                package = new TestPackage(null, options.Assemblies);
-                package.AutoBinPath = true;
-                domainUsage = DomainUsage.Multiple;
-            }
             
-            if (options.Framework != null)
-                framework = RuntimeFramework.Parse(options.Framework);
-
+            package = new TestPackage(options.Assembly);
+            domainUsage = DomainUsage.Single;
 			package.TestName = null;
             
             package.Settings["ProcessModel"] = processModel;

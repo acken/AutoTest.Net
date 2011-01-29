@@ -10,10 +10,10 @@ namespace AutoTest.TestRunners.Shared.Targeting
     class TargetedRunAssembler
     {
         private RunOptions _options;
-        private ITargetFrameworkLocator _locator;
+        private IAssemblyParser _locator;
         private List<TargetedRun> _runs;
 
-        public TargetedRunAssembler(RunOptions options, ITargetFrameworkLocator locator)
+        public TargetedRunAssembler(RunOptions options, IAssemblyParser locator)
         {
             _options = options;
             _locator = locator;
@@ -47,7 +47,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
 
         private Version getTargetFramework(string assembly)
         {
-            return _locator.Locate(assembly);
+            return _locator.GetTargetFramework(assembly);
         }
     }
 }

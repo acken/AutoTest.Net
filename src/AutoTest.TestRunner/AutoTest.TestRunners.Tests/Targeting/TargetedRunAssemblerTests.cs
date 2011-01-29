@@ -16,11 +16,11 @@ namespace AutoTest.TestRunners.Tests.Targeting
         [Test]
         public void Should_group_by_assembly()
         {
-            var locator = MockRepository.GenerateMock<ITargetFrameworkLocator>();
-            locator.Stub(x => x.Locate("Assembly1")).Return(new Version(2, 0));
-            locator.Stub(x => x.Locate("Assembly3")).Return(new Version(2, 0));
-            locator.Stub(x => x.Locate("Assembly4")).Return(new Version(2, 0));
-            locator.Stub(x => x.Locate("Assembly2")).Return(new Version(4, 0));
+            var locator = MockRepository.GenerateMock<IAssemblyParser>();
+            locator.Stub(x => x.GetTargetFramework("Assembly1")).Return(new Version(2, 0));
+            locator.Stub(x => x.GetTargetFramework("Assembly3")).Return(new Version(2, 0));
+            locator.Stub(x => x.GetTargetFramework("Assembly4")).Return(new Version(2, 0));
+            locator.Stub(x => x.GetTargetFramework("Assembly2")).Return(new Version(4, 0));
 
             var options = new RunOptions();
             var runner = new RunnerOptions("NUnit");

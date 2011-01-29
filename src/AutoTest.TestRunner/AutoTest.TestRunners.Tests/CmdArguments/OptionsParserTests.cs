@@ -6,6 +6,8 @@ using NUnit.Framework;
 using AutoTest.TestRunners.Shared;
 using System.Diagnostics;
 using AutoTest.TestRunners.Shared.Options;
+using System.Reflection;
+using System.IO;
 
 namespace AutoTest.TestRunners.Tests.CmdArguments
 {
@@ -17,8 +19,14 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         [SetUp]
         public void SetUp()
         {
-            _parser = new OptionsXmlReader("TestOptions.xml");
+            _parser = new OptionsXmlReader(getPath("TestOptions.xml"));
             _parser.Parse();
+        }
+
+        private string getPath(string relativePath)
+        {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, relativePath);
         }
 
         [Test]
@@ -81,13 +89,10 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
             Assert.That(_parser.Options.TestRuns.ElementAt(1).Assemblies.Count(), Is.EqualTo(1));
 
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Assembly, Is.EqualTo(@"C:\my\testassembly.dll"));
-            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Framework, Is.EqualTo("3.5"));
 
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(1).Assembly, Is.EqualTo(@"C:\my\anothernunitassembly.dll"));
-            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(1).Framework, Is.EqualTo("4.0"));
 
             Assert.That(_parser.Options.TestRuns.ElementAt(1).Assemblies.ElementAt(0).Assembly, Is.EqualTo(@"C:\my\other\testassembly.dll"));
-            Assert.That(_parser.Options.TestRuns.ElementAt(1).Assemblies.ElementAt(0).Framework, Is.Null);
         }
 
         [Test]

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.BuildRunners;
 using System.IO;
 using AutoTest.Messages;
+using System.Reflection;
 
 namespace AutoTest.Test.Core.BuildRunners
 {
@@ -18,7 +19,7 @@ namespace AutoTest.Test.Core.BuildRunners
 			// Test will fail on other platforms than windows because of Path.GetDirectoryName
 			if (!isWindows())
 				return;
-            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows.txt", Path.DirectorySeparatorChar);
+            var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_windows.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
@@ -37,7 +38,7 @@ namespace AutoTest.Test.Core.BuildRunners
 			// Test will fail on other platforms than windows because of Path.GetDirectoryName
 			if (!isWindows())
 				return;
-            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_windows_warnings.txt", Path.DirectorySeparatorChar);
+            var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_windows_warnings.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
@@ -62,7 +63,7 @@ namespace AutoTest.Test.Core.BuildRunners
         [Test]
         public void Should_parse_errors()
         {
-			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_errors.txt", Path.DirectorySeparatorChar);
+			var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_errors.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
@@ -78,7 +79,7 @@ namespace AutoTest.Test.Core.BuildRunners
         [Test]
         public void Should_parse_warning()
         {
-			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_warnings.txt", Path.DirectorySeparatorChar);
+			var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_warnings.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
@@ -102,7 +103,7 @@ namespace AutoTest.Test.Core.BuildRunners
 		[Test]
         public void Should_parse_succeeded()
         {
-			var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_succeeded.txt", Path.DirectorySeparatorChar);
+			var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_succeeded.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
@@ -113,12 +114,18 @@ namespace AutoTest.Test.Core.BuildRunners
         [Test]
         public void Should_parse_errors_from_rebuild()
         {
-            var resultfile = string.Format("TestResources{0}MSBuild{0}msbuild_rebuild.txt", Path.DirectorySeparatorChar);
+            var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_rebuild.txt", Path.DirectorySeparatorChar));
             var result = new BuildRunResults("");
             var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
             parser.Parse();
             result.WarningCount.ShouldEqual(0);
             result.ErrorCount.ShouldEqual(2);
+        }
+
+        private string getPath(string relativePath)
+        {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, relativePath);
         }
     }
 }

@@ -32,25 +32,25 @@ namespace AutoTest.TestRunners
                 printUseage();
                 return;
             }
-            write("Test run options:");
-            write(File.ReadAllText(_arguments.InputFile));
+            Write("Test run options:");
+            Write(File.ReadAllText(_arguments.InputFile));
             if (_arguments.StartSuspended)
                 Console.ReadLine();
             tryRunTests();
-            write(" ");
+            Write(" ");
             if (File.Exists(_arguments.OutputFile))
             {
-                write("Test run result:");
-                write(File.ReadAllText(_arguments.OutputFile));
+                Write("Test run result:");
+                Write(File.ReadAllText(_arguments.OutputFile));
             }
         }
 
         private static void writeHeader()
         {
-            write("AutoTest.TestRunner v0.1");
-            write("Author - Svein Arne Ackenhausen");
-            write("AutoTest.TestRunner is a plugin based generic test runner. ");
-            write("");
+            Write("AutoTest.TestRunner v0.1");
+            Write("Author - Svein Arne Ackenhausen");
+            Write("AutoTest.TestRunner is a plugin based generic test runner. ");
+            Write("");
         }
 
         private static void tryRunTests()
@@ -94,51 +94,63 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent]");
-            write("");
-            write("Options format");
-            write("<=====================================================>");
-            write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
-            write("<run>");
-            write("\t<!--It can contain 0-n plugins. If 0 the runner will load all available plugins-->");
-            write("\t<plugin type=\"Plugin.IAutoTestNetTestRunner.Implementation\">C:\\Some\\Path\\PluginAssembly.dll</plugin>");
-            write("\t<!--It can contain 0-n runners. The id is what determines which runner will handle that run-->");
-            write("\t<runner id=\"NUnit\">");
-            write("\t\t<!--It can contain 0-n categories to ignore-->");
-            write("\t\t<categories>");
-            write("\t\t\t<ignore_category>IgnoreCategory</ignore_category>");
-            write("\t\t</categories>");
-            write("\t\t<!--It can contain 1-n assemblies to test. Framework is optional-->");
-            write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\" framework=\"3.5\">");
-            write("\t\t\t<!--It can contain 0-n tests-->");
-            write("\t\t\t<tests>");
-            write("\t\t\t\t<test>testassembly.class.test1</test>");
-            write("\t\t\t</tests>");
-            write("\t\t\t<!--It can contain 0-n members-->");
-            write("\t\t\t<members>");
-            write("\t\t\t\t<member>testassembly.class2</member>");
-            write("\t\t\t</members>");
-            write("\t\t\t<!--It can contain 0-n namespaces-->");
-            write("\t\t\t<namespaces>");
-            write("\t\t\t\t<namespace>testassembly.somenamespace1</namespace>");
-            write("\t\t\t</namespaces>");
-            write("\t\t</test_assembly>");
-            write("\t</runner>");
-            write("</run>");
+            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent]");
+            Write("");
+            Write("Options format");
+            Write("<=====================================================>");
+            Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
+            Write("<run>");
+            Write("\t<!--It can contain 0-n plugins. If 0 the runner will load all available plugins-->");
+            Write("\t<plugin type=\"Plugin.IAutoTestNetTestRunner.Implementation\">C:\\Some\\Path\\PluginAssembly.dll</plugin>");
+            Write("\t<!--It can contain 0-n runners. The id is what determines which runner will handle that run-->");
+            Write("\t<runner id=\"NUnit\">");
+            Write("\t\t<!--It can contain 0-n categories to ignore-->");
+            Write("\t\t<categories>");
+            Write("\t\t\t<ignore_category>IgnoreCategory</ignore_category>");
+            Write("\t\t</categories>");
+            Write("\t\t<!--It can contain 1-n assemblies to test.-->");
+            Write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\">");
+            Write("\t\t\t<!--It can contain 0-n tests-->");
+            Write("\t\t\t<tests>");
+            Write("\t\t\t\t<test>testassembly.class.test1</test>");
+            Write("\t\t\t</tests>");
+            Write("\t\t\t<!--It can contain 0-n members-->");
+            Write("\t\t\t<members>");
+            Write("\t\t\t\t<member>testassembly.class2</member>");
+            Write("\t\t\t</members>");
+            Write("\t\t\t<!--It can contain 0-n namespaces-->");
+            Write("\t\t\t<namespaces>");
+            Write("\t\t\t\t<namespace>testassembly.somenamespace1</namespace>");
+            Write("\t\t\t</namespaces>");
+            Write("\t\t</test_assembly>");
+            Write("\t</runner>");
+            Write("</run>");
         }
 
         private static void run(OptionsXmlReader parser)
         {
-            var workers = new List<Thread>();
+            var handles = new List<ManualResetEvent>();
             foreach (var plugin in getPlugins(parser))
             {
-                var process = new SubDomainRunner(plugin, parser.Options);
-                var thread = new Thread(new ThreadStart(process.Run));
-                thread.Start();
-                workers.Add(thread);
+                foreach (var run in parser.Options.TestRuns)
+                {
+                    foreach (var assembly in run.Assemblies)
+                    {
+                        WriteNow("Running tests for " + assembly.Assembly);
+                        var process = new SubDomainRunner(plugin, run.Categories, assembly);
+                        if (_arguments.RunInParallel)
+                        {
+                            var handle = new ManualResetEvent(false);
+                            handles.Add(handle);
+                            ThreadPool.QueueUserWorkItem(process.Run, handle);
+                        }
+                        else
+                            process.Run(null);
+                    }
+                }
             }
-            foreach (var worker in workers)
-                worker.Join();
+            if (_arguments.RunInParallel)
+                WaitHandle.WaitAll(handles.ToArray());
         }
 
         public static void AddResults(IEnumerable<TestResult> results)
@@ -174,7 +186,12 @@ namespace AutoTest.TestRunners
             return locator.Locate();
         }
 
-        private static void write(string message)
+        public static void WriteNow(string message)
+        {
+            Write(string.Format("{0} {1}", DateTime.Now.ToLongTimeString(), message));
+        }
+
+        public static void Write(string message)
         {
             if (!_arguments.Silent)
                 Console.WriteLine(message);

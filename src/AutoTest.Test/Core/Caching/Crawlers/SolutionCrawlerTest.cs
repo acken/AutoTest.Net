@@ -11,6 +11,7 @@ using AutoTest.Core.Caching;
 using AutoTest.Messages;
 using System.IO;
 using AutoTest.Core.Caching.Projects;
+using System.Reflection;
 
 namespace AutoTest.Test.Core.Caching.Crawlers
 {
@@ -32,7 +33,8 @@ namespace AutoTest.Test.Core.Caching.Crawlers
         [Test]
         public void Should_add_references_projects_to_cache_from_vs_2008_sln()
         {
-            var solutionFile = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}AutoTest.NET.sln", Path.DirectorySeparatorChar));
+
+            var solutionFile = getFullPath(string.Format("TestResources{0}VS2008{0}AutoTest.NET.sln", Path.DirectorySeparatorChar));
             var fsService = MockRepository.GenerateMock<IFileSystemService>();
             fsService.Stub(f => f.DirectoryExists(Path.GetDirectoryName(solutionFile))).Return(true);
             fsService.Stub(f => f.DirectoryExists(getPath(@"Tests", solutionFile))).Return(true);
@@ -53,6 +55,12 @@ namespace AutoTest.Test.Core.Caching.Crawlers
             cache.AssertWasCalled(c => c.Add<Project>(getPath(@"src\AutoTest.Console.Test\AutoTest.Console.Test.csproj", solutionFile)));
             cache.AssertWasCalled(c => c.Add<Project>(getPath(@"src\AutoTest.Messages\AutoTest.Messages.csproj", solutionFile)));
             cache.AssertWasNotCalled(c => c.Add<Project>(getPath(@"Tests", solutionFile)));
+        }
+
+        private string getFullPath(string relativePath)
+        {
+            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, relativePath);
         }
 
         private string getPath(string path, string solutionFile)

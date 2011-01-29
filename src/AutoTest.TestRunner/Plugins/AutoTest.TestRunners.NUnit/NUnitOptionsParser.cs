@@ -9,32 +9,22 @@ namespace AutoTest.TestRunners.NUnit
 {
     class NUnitOptionsParser
     {
-        private RunnerOptions _runnerOptions;
+        private RunSettings _runnerSettings;
         private List<Options> _options = new List<Options>();
 
         public IEnumerable<Options> Options { get { return _options; } }
 
-        public NUnitOptionsParser(RunnerOptions options)
+        public NUnitOptionsParser(RunSettings settings)
         {
-            _runnerOptions = options;
+            _runnerSettings = settings;
         }
 
         public void Parse()
         {
-            var query = _runnerOptions.Assemblies
-                .GroupBy(x => x.Framework)
-                .Select(x => x);
-            foreach (var item in query)
-                addOptions(item);
-        }
-
-        private void addOptions(IGrouping<string, AssemblyOptions> x)
-        {
             var options = new Options(
-                    x.Select(y => y.Assembly).ToArray(),
+                    _runnerSettings.Assembly.Assembly,
                     getCategories(),
-                    x.First().Framework,
-                    getTests(x)
+                    getTests()
                 );
             _options.Add(options);
         }
@@ -42,39 +32,35 @@ namespace AutoTest.TestRunners.NUnit
         private string getCategories()
         {
             var categories = "";
-            foreach (var category in _runnerOptions.Categories)
+            foreach (var category in _runnerSettings.IgnoreCategories)
                 categories += categories.Length.Equals(0) ? category : string.Format(",{0}", category);
             return categories;
         }
 
-        private string getTests(IGrouping<string, AssemblyOptions> x)
+        private string getTests()
         {
             var tests = "";
-            foreach (var item in x)
-            {
-                foreach (var test in item.Tests)
-                    tests += tests.Length.Equals(0) ? test : string.Format(",{0}", test);
-                foreach (var member in item.Members)
-                    tests += tests.Length.Equals(0) ? member : string.Format(",{0}", member);
-                foreach (var ns in item.Namespaces)
-                    tests += tests.Length.Equals(0) ? ns : string.Format(",{0}", ns);
-            }
+            var item = _runnerSettings.Assembly;
+            foreach (var test in item.Tests)
+                tests += tests.Length.Equals(0) ? test : string.Format(",{0}", test);
+            foreach (var member in item.Members)
+                tests += tests.Length.Equals(0) ? member : string.Format(",{0}", member);
+            foreach (var ns in item.Namespaces)
+                tests += tests.Length.Equals(0) ? ns : string.Format(",{0}", ns);
             return tests;
         }
     }
 
     class Options
     {
-        public string[] Assemblies { get; private set; }
+        public string Assembly { get; private set; }
         public string Categories { get; private set; }
-        public string Framework { get; private set; }
         public string Tests { get; private set; }
 
-        public Options(string[] assemblies, string categories, string framework, string tests)
+        public Options(string assembly, string categories, string tests)
         {
-            Assemblies = assemblies;
+            Assembly = assembly;
             Categories = categories;
-            Framework = framework;
             Tests = tests;
         }
     }

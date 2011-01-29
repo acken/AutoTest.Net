@@ -21,12 +21,17 @@ namespace AutoTest.TestRunners.MSTest
 
         public bool IsTest(string assembly, string type)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
-        public bool ContainsTests(string assembly, string type)
+        public bool ContainsTestsFor(string assembly, string type)
         {
-            throw new NotImplementedException();
+            return false;
+        }
+
+        public bool ContainsTestsFor(string assembly)
+        {
+            return false;
         }
 
         public bool Handles(string identifier)
@@ -34,12 +39,12 @@ namespace AutoTest.TestRunners.MSTest
             return identifier.ToLower().Equals(identifier.ToLower());
         }
 
-        public IEnumerable<TestResult> Run(RunnerOptions options)
+        public IEnumerable<TestResult> Run(RunSettings settings)
         {
-            var cmd = new Executor();
-            var result = cmd.Execute();
-            if (result == false)
-                throw new Exception("failed");
+            //var cmd = new Executor();
+            //var result = cmd.Execute();
+            //if (result == false)
+            //    throw new Exception("failed");
 
             //string executableDir = @"C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.CommandLine.dll";
             //string executableDir = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.QualityTools.CommandLine\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.QualityTools.CommandLine.dll";

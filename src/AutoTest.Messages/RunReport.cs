@@ -5,6 +5,7 @@ namespace AutoTest.Messages
 {
 	public class RunReport : ICustomBinarySerializable
 	{
+        private TimeSpan _timeSpent = new TimeSpan();
 		private int _numberOfBuildsSucceeded = 0;
         private int _numberOfBuildsFailed = 0;
         private int _numberOfTestsPassed = 0;
@@ -12,6 +13,7 @@ namespace AutoTest.Messages
         private int _numberOfTestsIgnored = 0;
         private List<RunAction> _runActions = new List<RunAction>();
 
+        public TimeSpan RealTimeSpent { get { return _timeSpent; } }
         public int NumberOfBuildsSucceeded { get { return _numberOfBuildsSucceeded; } }
         public int NumberOfBuildsFailed { get { return _numberOfBuildsFailed; } }
         public int NumberOfProjectsBuilt { get { return _numberOfBuildsSucceeded + _numberOfBuildsFailed; } }
@@ -40,9 +42,15 @@ namespace AutoTest.Messages
             _numberOfTestsFailed += failed;
         }
 
+        public void SetTimeSpent(TimeSpan time)
+        {
+            _timeSpent = time;
+        }
+
 		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
+            writer.Write(_timeSpent.TotalMilliseconds);
 			writer.Write((int) _numberOfBuildsSucceeded);
 			writer.Write((int) _numberOfBuildsFailed);
 			writer.Write((int) _numberOfTestsPassed);
@@ -55,6 +63,7 @@ namespace AutoTest.Messages
 
 		public void SetDataFrom(BinaryReader reader)
 		{
+            _timeSpent = TimeSpan.FromMilliseconds(reader.ReadDouble());
 			_numberOfBuildsSucceeded = reader.ReadInt32();
 			_numberOfBuildsFailed = reader.ReadInt32();
 			_numberOfTestsPassed = reader.ReadInt32();

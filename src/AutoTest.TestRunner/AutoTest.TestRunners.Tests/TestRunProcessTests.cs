@@ -15,7 +15,7 @@ namespace AutoTest.TestRunners.Tests
         //[Test]
         //public void Should_run_tests()
         //{
-        //    int i = 19;
+        //    return;
         //    var options = new RunOptions();
         //    var runner = new RunnerOptions("NUnit");
         //    options.AddTestRun(runner);
@@ -28,8 +28,9 @@ namespace AutoTest.TestRunners.Tests
         //    var results = process.ProcessTestRuns(options);
 
         //    var sb = new StringBuilder();
+        //    sb.AppendLine("");
         //    foreach (var result in results)
-        //        sb.AppendLine(result.TestName + ", " + result.Message);
+        //        sb.AppendLine(result.Runner + ", " + result.TestName + ", " + result.Message);
 
         //    throw new Exception(sb.ToString());
         //}

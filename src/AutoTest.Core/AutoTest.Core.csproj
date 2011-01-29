@@ -187,9 +187,7 @@
     <Compile Include="Messaging\MessageConsumers\IOptimizeBuildConfiguration.cs" />
     <Compile Include="Launchers\MonoDevelopLauncher.cs" />
     <Compile Include="TestRunners\IPreProcessTestruns.cs" />
-    <Compile Include="TestRunners\TestRunDetails.cs" />
     <Compile Include="TestRunners\NullPreProcessor.cs" />
-    <Compile Include="TestRunners\TestRunnerType.cs" />
     <Compile Include="TestRunners\RunFailedTestsFirstPreProcessor.cs" />
     <Compile Include="Configuration\IHandleDelayedConfiguration.cs" />
     <Compile Include="Configuration\DelayedConfigurer.cs" />

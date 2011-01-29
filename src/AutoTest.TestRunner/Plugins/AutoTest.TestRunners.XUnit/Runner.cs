@@ -27,7 +27,7 @@ namespace AutoTest.TestRunners.XUnit
             return method.Attributes.Contains("Xunit.FactAttribute");
         }
 
-        public bool ContainsTests(string assembly, string member)
+        public bool ContainsTestsFor(string assembly, string member)
         {
             var locator = new SimpleTypeLocator(assembly, member);
             var cls = locator.Locate();
@@ -36,15 +36,21 @@ namespace AutoTest.TestRunners.XUnit
             return cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
         }
 
+        public bool ContainsTestsFor(string assembly)
+        {
+            var parser = new AssemblyParser();
+            return parser.GetReferences(assembly).Contains("xunit");
+        }
+
         public bool Handles(string identifier)
         {
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
-        public IEnumerable<TestResult> Run(RunnerOptions options)
+        public IEnumerable<TestResult> Run(RunSettings settings)
         {
             var runner = new XUnitRunner();
-            return runner.Run(options);
+            return runner.Run(settings);
         }
     }
 }

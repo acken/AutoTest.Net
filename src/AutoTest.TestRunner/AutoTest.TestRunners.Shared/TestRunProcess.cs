@@ -10,11 +10,12 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.Shared
 {
-    public class TestRunProcess
+    public class TestRunProcess : AutoTest.TestRunners.Shared.ITestRunProcess
     {
         private static List<TestResult> _results = new List<TestResult>();
-        private ITargetFrameworkLocator _locator;
+        private IAssemblyParser _locator;
         private ITestRunProcessFeedback _feedback = null;
+        private bool _runInParallel = false;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -26,13 +27,19 @@ namespace AutoTest.TestRunners.Shared
 
         public TestRunProcess()
         {
-            _locator = new TargetFrameworkLocator();
+            _locator = new AssemblyParser();
         }
 
         public TestRunProcess(ITestRunProcessFeedback feedback)
         {
-            _locator = new TargetFrameworkLocator();
+            _locator = new AssemblyParser();
             _feedback = feedback;
+        }
+
+        public TestRunProcess RunParallel()
+        {
+            _runInParallel = true;
+            return this;
         }
 
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
@@ -43,6 +50,8 @@ namespace AutoTest.TestRunners.Shared
             foreach (var target in testRuns)
             {
                 var process = new TestProcess(target, _feedback);
+                if (_runInParallel)
+                    process.RunParallel();
                 var thread = new Thread(new ThreadStart(process.Start));
                 thread.Start();
                 workers.Add(thread);

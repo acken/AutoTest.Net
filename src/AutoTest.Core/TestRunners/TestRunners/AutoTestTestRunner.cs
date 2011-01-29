@@ -32,16 +32,23 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             if (!_configuration.UseAutoTestTestRunner)
                 return false;
-            return new ProjectReferenceParser()
-                .GetAllBinaryReferences(project.Key)
-                .Where(x => x.ToLower().StartsWith("nunit.framework") || x.ToLower().StartsWith("xunit"))
-                .Count() > 0;
+            return CanHandleTestFor(project.GetAssembly(_configuration.CustomOutputPath));
         }
 
         public bool CanHandleTestFor(string assembly)
         {
-            var references = _referenceResolver.GetReferences(assembly);
-            return references.Contains("nunit.framework") || references.Contains("xunit");
+            if (!_configuration.UseAutoTestTestRunner)
+                return false;
+            var plugins = new PluginLocator().Locate();
+            foreach (var plugin in plugins)
+            {
+                var instance = plugin.New();
+                if (instance == null)
+                    continue;
+                if (instance.ContainsTestsFor(assembly))
+                    return true;
+            }
+            return false;
         }
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
@@ -114,50 +121,42 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private RunOptions generateOptions(TestRunInfo[] runInfos)
         {
             var options = new RunOptions();
-            addNUnitTests(runInfos, options);
-            addXUnitTests(runInfos, options);
+            var plugins = new PluginLocator().Locate();
+            foreach (var plugin in plugins)
+            {
+                var testRun = getTests(plugin, runInfos);
+                if (testRun != null)
+                    options.AddTestRun(testRun);
+            }
+                
             if (options.TestRuns.Count() == 0)
                 return null;
             return options;
         }
 
-        private void addNUnitTests(TestRunInfo[] runInfos, RunOptions options)
+        private RunnerOptions getTests(Plugin plugin, TestRunInfo[] runInfos)
         {
-            //var nunitInfos = runInfos.Where(x => canHandle(x, "nunit.framework", (ProjectDocument doc) => { return doc.ContainsNUnitTests; }));
-            var nunitInfos = runInfos;
-            throw new Exception("Should heck contains nunit tests from plugin instead");
-            if (nunitInfos.Count() > 0)
-            {
-                var runner = getRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework, (TestRunInfo info) => { return _configuration.NunitTestRunner(getFramework(info)).Length > 0; });
-                if (runner.Assemblies.Count() > 0)
-                    options.AddTestRun(runner);
-            }
+            var instance = plugin.New();
+            if (instance == null)
+                return null;
+            var infos = runInfos.Where(x => instance.ContainsTestsFor(x.Assembly));
+            if (infos.Count() == 0)
+                return null;
+            return getRunnerOptions(infos, instance);
         }
 
-        private void addXUnitTests(TestRunInfo[] runInfos, RunOptions options)
+        private RunnerOptions getRunnerOptions(IEnumerable<TestRunInfo> unitInfos, IAutoTestNetTestRunner instance)
         {
-            //var xunitInfos = runInfos.Where(x => canHandle(x, "xunit", (ProjectDocument doc) => { return doc.ContainsXUnitTests; }));
-            var xunitInfos = runInfos;
-            throw new Exception("Should heck contains xunit tests from plugin instead");
-            if (xunitInfos.Count() > 0)
-            {
-                var runner = getRunnerOptions(xunitInfos, "XUnit", TestRunner.XUnit, getFramework, (TestRunInfo info) => { return _configuration.XunitTestRunner(getFramework(info)).Length > 0; });
-                if (runner.Assemblies.Count() > 0)
-                    options.AddTestRun(runner);
-            }
-        }
-
-        private RunnerOptions getRunnerOptions(IEnumerable<TestRunInfo> unitInfos, string id, TestRunner testRunner, Func<TestRunInfo, string> frameworkEvaluator, Func<TestRunInfo, bool> hasOtherRunners)
-        {
-			DebugLog.Debug.WriteDetail("Getting runner options for {0}", id);
-            var runner = new RunnerOptions(id);
+            DebugLog.Debug.WriteDetail("Getting runner options for {0}", instance.Identifier);
+            var runner = new RunnerOptions(instance.Identifier);
+            var testRunner = TestRunnerConverter.FromString(instance.Identifier);
             foreach (var info in unitInfos)
             {
-				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
-                if (hasOtherRunners.Invoke(info))
+                if (!instance.ContainsTestsFor(info.Assembly))
                     continue;
+				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add assembly");
-                var assembly = new AssemblyOptions(info.Assembly, frameworkEvaluator.Invoke(info).Replace("v", ""));
+                var assembly = new AssemblyOptions(info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add tests");
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 assembly.AddTests(info.GetTestsFor(TestRunner.Any));
@@ -174,25 +173,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 runner.AddAssembly(assembly);
             }
             return runner;
-        }
-
-        private string getFramework(TestRunInfo info)
-        {
-            if (Environment.OSVersion.Platform.Equals(PlatformID.Unix) || Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
-                return "";
-
-            if (info.Project == null || info.Project.Value == null)
-                return "";
-            if (info.Project.Value.Framework == null)
-                return "";
-            return info.Project.Value.Framework;
-        }
-
-        private bool canHandle(TestRunInfo info, string reference, Func<ProjectDocument, bool> frameworkValidator)
-        {
-            if (info.Project != null && info.Project.Value != null)
-                return frameworkValidator.Invoke(info.Project.Value);
-            return _referenceResolver.GetReferences(info.Assembly).Contains(reference);
         }
     }
 

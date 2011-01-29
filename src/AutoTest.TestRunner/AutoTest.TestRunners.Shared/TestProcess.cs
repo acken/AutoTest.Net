@@ -17,11 +17,18 @@ namespace AutoTest.TestRunners.Shared
     {
         private ITestRunProcessFeedback _feedback;
         private TargetedRun _targetedRun;
+        private bool _runInParallel = false;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
             _targetedRun = targetedRun;
             _feedback = feedback;
+        }
+
+        public TestProcess RunParallel()
+        {
+            _runInParallel = true;
+            return this;
         }
 
         public void Start()
@@ -35,6 +42,8 @@ namespace AutoTest.TestRunners.Shared
         private void runProcess(string executable, string input, string output)
         {
             var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", input, output);
+            if (_runInParallel)
+                arguments += " --run_assemblies_parallel";
             if (_feedback != null)
                 _feedback.ProcessStart(executable + " " + arguments);
             var proc = new Process();

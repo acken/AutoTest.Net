@@ -131,7 +131,6 @@
     <Compile Include="Core\Presenters\Fakes\FakeRunResultMerger.cs" />
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
-    <Compile Include="Core\TestRunners\AutoTestRunnerTests.cs" />
     <Compile Include="Core\TestRunners\MSpecCommandLineBuilderTest.cs" />
     <Compile Include="Core\TestRunners\MSpecReportParserTest.cs" />
     <Compile Include="Core\TestRunners\MSpecTestRunnerTest.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="Core\Configuration\CoreSectionTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\BuildOptimizerTest.cs" />
     <Compile Include="Messages\SerializerTests.cs" />
-    <Compile Include="Core\TestRunners\TestRunDetailsTest.cs" />
     <Compile Include="Core\TestRunners\TestRunInfoTests.cs" />
     <Compile Include="Core\Caching\Projects\Fakes\ProjectTest.cs" />
     <Compile Include="Core\TestRunners\RunFailedTestsFirstPreProcessorTest.cs" />

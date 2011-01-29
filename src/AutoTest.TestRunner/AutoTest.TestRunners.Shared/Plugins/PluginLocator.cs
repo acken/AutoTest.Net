@@ -23,16 +23,28 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public IAutoTestNetTestRunner New()
         {
-            var asm = System.Reflection.Assembly.LoadFrom(Assembly);
-            var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
-            runner.SetLogger(new NullLogger());
-            return runner;
+            try
+            {
+                var asm = System.Reflection.Assembly.LoadFrom(Assembly);
+                var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
+                runner.SetLogger(new NullLogger());
+                return runner;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 
     public class PluginLocator
     {
         private string _path;
+
+        public PluginLocator()
+        {
+            _path = "TestRunners";
+        }
 
         public PluginLocator(string path)
         {
@@ -71,7 +83,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         private IEnumerable<Plugin> getPlugins(string file)
         {
-            var assembly = loadAssembly(file);
+            var assembly = loadAssembly(Path.GetFullPath(file));
             if (assembly == null)
                 return new Plugin[] {};
             return assembly

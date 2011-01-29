@@ -71,18 +71,10 @@ namespace AutoTest.TestRunners.Shared.Options
         public IEnumerable<string> Tests { get { return _tests; } }
         public IEnumerable<string> Members { get { return _members; } }
         public IEnumerable<string> Namespaces { get { return _namespaces; } }
-        public string Framework { get; private set; }
 
         public AssemblyOptions(string assembly)
         {
             Assembly = assembly;
-            Framework = null;
-        }
-
-        public AssemblyOptions(string assembly, string framework)
-        {
-            Assembly = assembly;
-            Framework = framework;
         }
 
         public void AddTest(string test) { _tests.Add(test); }

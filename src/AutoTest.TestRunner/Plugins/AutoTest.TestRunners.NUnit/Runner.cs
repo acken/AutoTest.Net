@@ -27,7 +27,7 @@ namespace AutoTest.TestRunners.NUnit
             return method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute");
         }
 
-        public bool ContainsTests(string assembly, string member)
+        public bool ContainsTestsFor(string assembly, string member)
         {
             var locator = new SimpleTypeLocator(assembly, member);
             var cls = locator.Locate();
@@ -36,16 +36,22 @@ namespace AutoTest.TestRunners.NUnit
             return cls.Attributes.Contains("NUnit.Framework.TestFixtureAttribute");
         }
 
+        public bool ContainsTestsFor(string assembly)
+        {
+            var parser = new AssemblyParser();
+            return parser.GetReferences(assembly).Contains("nunit.framework");
+        }
+
         public bool Handles(string identifier)
         {
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
-        public IEnumerable<TestResult> Run(RunnerOptions options)
+        public IEnumerable<TestResult> Run(RunSettings settings)
         {
             var runner = new NUnitRunner();
             runner.Initialize();
-            var parser = new NUnitOptionsParser(options);
+            var parser = new NUnitOptionsParser(settings);
             parser.Parse();
             var results = new List<TestResult>();
             foreach (var option in parser.Options)
