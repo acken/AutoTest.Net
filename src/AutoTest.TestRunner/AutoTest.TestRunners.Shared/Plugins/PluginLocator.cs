@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -52,6 +53,18 @@ namespace AutoTest.TestRunners.Shared.Plugins
             finally
             {
                 Environment.CurrentDirectory = currentDirectory;
+            }
+            return plugins;
+        }
+
+        public IEnumerable<Plugin> GetPluginsFrom(RunOptions options)
+        {
+            var plugins = new List<Plugin>();
+            foreach (var plugin in Locate())
+            {
+                var instance = plugin.New();
+                if (options.TestRuns.Where(x => x.ID.Equals(instance.Identifier)).Count() > 0)
+                    plugins.Add(plugin);
             }
             return plugins;
         }

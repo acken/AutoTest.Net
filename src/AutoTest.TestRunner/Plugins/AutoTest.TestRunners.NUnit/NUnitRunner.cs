@@ -123,8 +123,8 @@ namespace AutoTest.TestRunners.NUnit
             
             package.Settings["ProcessModel"] = processModel;
             package.Settings["DomainUsage"] = domainUsage;
-            if (framework != null)
-                package.Settings["RuntimeFramework"] = framework;
+            //if (framework != null)
+            //package.Settings["RuntimeFramework"] = Environment.Version.ToString();
             
             if (domainUsage == DomainUsage.None)
                 CoreExtensions.Host.AddinRegistry = Services.AddinRegistry;

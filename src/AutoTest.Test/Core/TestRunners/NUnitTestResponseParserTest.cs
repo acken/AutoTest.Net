@@ -102,7 +102,10 @@ namespace AutoTest.Test.Core.TestRunners
 				{ 
 					new TestRunInfo(new Project("project1", null), @"C:\Users\ack\src\SomeProject\SomeFile.dll")
 				};
-            _parser.Parse(File.ReadAllText("TestResources/NUnit/FailsToParse.txt").Replace("\n", Environment.NewLine), sources, true);
+            var text = File.ReadAllText("TestResources/NUnit/FailsToParse.txt");
+            _parser.Parse(text, sources, true);
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+                text = text.Replace("\n", Environment.NewLine);
         }
 
         [Test]

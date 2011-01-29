@@ -5,6 +5,7 @@ using System.Text;
 using AutoTest.TestRunners.Shared;
 using System.Xml;
 using AutoTest.TestRunners.Shared.Errors;
+using System.IO;
 
 namespace AutoTest.TestRunners.Shared.Results
 {
@@ -55,6 +56,7 @@ namespace AutoTest.TestRunners.Shared.Results
             catch (Exception ex)
             {
                 _results = new List<TestResult>();
+                _results.Add(ErrorHandler.GetError("Invalid result file" + Environment.NewLine + File.ReadAllText(_file)));
                 _results.Add(ErrorHandler.GetError(ex));
             }
             return _results;

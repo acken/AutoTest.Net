@@ -34,6 +34,8 @@ copy %DIR%README %DEPLOYDIR%\README
 copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
 
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.exe
+copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe
+copy %BINARYDIR%\AutoTest.TestRunner.exe.config %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe.config
 copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunners.Shared.dll
 copy %BINARYDIR%\AutoTest.TestRunners.NUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.NUnit.dll
 copy %BINARYDIR%\AutoTest.TestRunners.XUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.XUnit.dll

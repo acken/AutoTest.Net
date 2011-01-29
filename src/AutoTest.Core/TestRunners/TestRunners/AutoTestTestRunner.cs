@@ -43,29 +43,17 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
-            var optionsFile = Path.GetTempFileName();
-            var outputFile = Path.GetTempFileName();
-            if (!generateOptions(runInfos, optionsFile))
+            var options = generateOptions(runInfos);
+            if (options == null)
                 return new TestRunResults[] { };
-
-            DebugLog.Debug.WriteDetail(File.ReadAllText(optionsFile));
-            RunTests(optionsFile, outputFile);
-            DebugLog.Debug.WriteDetail(File.ReadAllText(outputFile));
-            var results = getResults(outputFile, runInfos);
-
-            if (!_configuration.DebuggingEnabled)
-            {
-                File.Delete(optionsFile);
-                File.Delete(outputFile);
-            }
-            return results.ToArray();
+            var runner = new TestRunProcess(new AutoTestRunnerFeedback());
+            var tests = runner.ProcessTestRuns(options);
+            return getResults(tests, runInfos).ToArray();
         }
 
-        private TestRunResults[] getResults(string outputFile, TestRunInfo[] runInfos)
+        private TestRunResults[] getResults(IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> tests, TestRunInfo[] runInfos)
         {
             var results = new List<TestRunResults>();
-            var reader = new ResultXmlReader(outputFile);
-            var tests = reader.Read();
             foreach (var byRunner in tests.GroupBy(x => x.Runner))
             {
                 var runner = TestRunnerConverter.FromString(byRunner.Key);
@@ -120,63 +108,32 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return TestRunStatus.Failed;
         }
 
-        private void RunTests(string optionsFile, string outputFile)
+        private RunOptions generateOptions(TestRunInfo[] runInfos)
         {
-            try
-            {
-                var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", optionsFile, outputFile);
-                var exe = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "AutoTest.TestRunner.exe");
-                DebugLog.Debug.WriteInfo("Running tests: {0} {1}", exe, arguments);
-                var proc = new Process();
-                proc.StartInfo = new ProcessStartInfo(exe, arguments);
-                proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                proc.StartInfo.RedirectStandardOutput = true;
-                proc.StartInfo.UseShellExecute = false;
-                proc.StartInfo.CreateNoWindow = true;
-                proc.Start();
-                var output = proc.StandardOutput.ReadToEnd();
-                proc.WaitForExit();
-                if (output.Length > 0)
-                    DebugLog.Debug.WriteError("AutoTest.TestRunner.exe failed with the following error" + Environment.NewLine + output);
-            }
-            catch (Exception ex)
-            {
-                DebugLog.Debug.WriteException(ex);
-            }
-        }
-
-        private bool generateOptions(TestRunInfo[] runInfos, string file)
-        {
-            var plugins = new List<Plugin>();
             var options = new RunOptions();
-            addNUnitTests(runInfos, plugins, options);
-            addXUnitTests(runInfos, plugins, options);
+            addNUnitTests(runInfos, options);
+            addXUnitTests(runInfos, options);
             if (options.TestRuns.Count() == 0)
-                return false;
-
-            var writer = new OptionsXmlWriter(plugins, options);
-            writer.Write(file);
-            return true;
+                return null;
+            return options;
         }
 
-        private void addNUnitTests(TestRunInfo[] runInfos, List<Plugin> plugins, RunOptions options)
+        private void addNUnitTests(TestRunInfo[] runInfos, RunOptions options)
         {
             var nunitInfos = runInfos.Where(x => canHandle(x, "nunit.framework", (ProjectDocument doc) => { return doc.ContainsNUnitTests; }));
             if (nunitInfos.Count() > 0)
             {
-                plugins.Add(new Plugin(Path.GetFullPath(Path.Combine("TestRunners", "AutoTest.TestRunners.NUnit.dll")), "AutoTest.TestRunners.NUnit.Runner"));
                 var runner = getRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework, (TestRunInfo info) => { return _configuration.NunitTestRunner(getFramework(info)).Length > 0; });
                 if (runner.Assemblies.Count() > 0)
                     options.AddTestRun(runner);
             }
         }
 
-        private void addXUnitTests(TestRunInfo[] runInfos, List<Plugin> plugins, RunOptions options)
+        private void addXUnitTests(TestRunInfo[] runInfos, RunOptions options)
         {
             var xunitInfos = runInfos.Where(x => canHandle(x, "xunit", (ProjectDocument doc) => { return doc.ContainsXUnitTests; }));
             if (xunitInfos.Count() > 0)
             {
-                plugins.Add(new Plugin(Path.GetFullPath(Path.Combine("TestRunners", "AutoTest.TestRunners.XUnit.dll")), "AutoTest.TestRunners.XUnit.Runner"));
                 var runner = getRunnerOptions(xunitInfos, "XUnit", TestRunner.XUnit, getFramework, (TestRunInfo info) => { return _configuration.XunitTestRunner(getFramework(info)).Length > 0; });
                 if (runner.Assemblies.Count() > 0)
                     options.AddTestRun(runner);
@@ -229,6 +186,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (info.Project != null && info.Project.Value != null)
                 return frameworkValidator.Invoke(info.Project.Value);
             return _referenceResolver.GetReferences(info.Assembly).Contains(reference);
+        }
+    }
+
+    class AutoTestRunnerFeedback : ITestRunProcessFeedback
+    {
+        public void ProcessStart(string commandline)
+        {
+            DebugLog.Debug.WriteInfo("Running tests: " + commandline);
         }
     }
 }

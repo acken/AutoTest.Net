@@ -52,7 +52,6 @@ namespace AutoTest.Core.Configuration
 		
 		public void SetBuildProvider()
 		{
-            int i = 3;
 			if (_buildExecutables == null)
 				return;
 			

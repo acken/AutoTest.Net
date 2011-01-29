@@ -10,6 +10,7 @@ using AutoTest.TestRunners.Shared.Options;
 using System.Runtime.Remoting;
 using AutoTest.TestRunners.Shared.Errors;
 using System.Reflection;
+using System.Threading;
 
 namespace AutoTest.TestRunners
 {
@@ -18,11 +19,11 @@ namespace AutoTest.TestRunners
         private static Arguments _arguments;
         private static List<TestResult> _results = new List<TestResult>();
         private static string _currentRunner = "";
-
+        
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp5F23.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp", "--silent" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp6C57.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp", "--silent" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -31,9 +32,17 @@ namespace AutoTest.TestRunners
                 printUseage();
                 return;
             }
+            write("Test run options:");
+            write(File.ReadAllText(_arguments.InputFile));
             if (_arguments.StartSuspended)
                 Console.ReadLine();
             tryRunTests();
+            write(" ");
+            if (File.Exists(_arguments.OutputFile))
+            {
+                write("Test run result:");
+                write(File.ReadAllText(_arguments.OutputFile));
+            }
         }
 
         private static void writeHeader()
@@ -77,7 +86,7 @@ namespace AutoTest.TestRunners
 
         static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            _results.Add(ErrorHandler.GetError(_currentRunner, args.ExceptionObject.ToString()));
+            AddResults(ErrorHandler.GetError(_currentRunner, args.ExceptionObject.ToString()));
             var writer = new ResultsXmlWriter(_results);
             writer.Write(_arguments.OutputFile);
             Environment.Exit(-1);
@@ -120,52 +129,31 @@ namespace AutoTest.TestRunners
 
         private static void run(OptionsXmlReader parser)
         {
+            var workers = new List<Thread>();
             foreach (var plugin in getPlugins(parser))
             {
-                runByRunner(plugin, parser.Options);
+                var process = new SubDomainRunner(plugin, parser.Options);
+                var thread = new Thread(new ThreadStart(process.Run));
+                thread.Start();
+                workers.Add(thread);
+            }
+            foreach (var worker in workers)
+                worker.Join();
+        }
+
+        public static void AddResults(IEnumerable<TestResult> results)
+        {
+            lock(_results)
+            {
+                _results.AddRange(results);
             }
         }
 
-        private static void runByRunner(Plugin plugin, RunOptions options)
+        public static void AddResults(TestResult result)
         {
-            try
+            lock (_results)
             {
-                runInSubDomain(plugin, options);
-            }
-            catch (Exception ex)
-            {
-                _results.Add(ErrorHandler.GetError(ex));
-            }
-        }
-
-        private static void runInSubDomain(Plugin plugin, RunOptions options)
-        {
-            AppDomain childDomain = null;
-            try
-            {
-                // Construct and initialize settings for a second AppDomain.
-                AppDomainSetup domainSetup = new AppDomainSetup()
-                {
-                    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                    ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
-                    ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
-                    LoaderOptimization = LoaderOptimization.MultiDomainHost
-                };
-
-                // Create the child AppDomain used for the service tool at runtime.
-                childDomain = AppDomain.CreateDomain(plugin.Type + " app domain", null, domainSetup);
-
-                // Create an instance of the runtime in the second AppDomain. 
-                // A proxy to the object is returned.
-                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
-
-                // start the runtime.  call will marshal into the child runtime appdomain
-                _results.AddRange(runtime.Run(plugin, options));
-            }
-            finally
-            {
-                if (childDomain != null)
-                    AppDomain.Unload(childDomain);
+                _results.Add(result);
             }
         }
 
