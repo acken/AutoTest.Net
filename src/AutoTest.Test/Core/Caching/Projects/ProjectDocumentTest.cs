@@ -91,27 +91,6 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
-        public void Has_NUnit_Tests()
-        {
-            _document.SetAsNUnitTestContainer();
-            _document.ContainsNUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Has_MSTest_tests()
-        {
-            _document.SetAsMSTestContainer();
-            _document.ContainsMSTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Has_XUnit_tests()
-        {
-            _document.SetAsXUnitTestContainer();
-            _document.ContainsXUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
         public void Should_set_assembly_name()
         {
             _document.SetAssemblyName("some name");

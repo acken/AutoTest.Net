@@ -43,7 +43,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(Project project)
         {
-            return project.Value.ContainsMSpecTests && _fileSystem.FileExists(_configuration.MSpecTestRunner(project.Value.Framework));
+            return new ProjectReferenceParser()
+                .GetAllBinaryReferences(project.Key)
+                .Where(x => x.ToLower().StartsWith("machine.specifications"))
+                .Count() > 0 && _fileSystem.FileExists(_configuration.MSpecTestRunner(project.Value.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)

@@ -39,6 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\bin\XUnit-1.5\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="Machine.Specifications">
+      <HintPath>..\..\machine.specifications\Build\Debug\Machine.Specifications.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">

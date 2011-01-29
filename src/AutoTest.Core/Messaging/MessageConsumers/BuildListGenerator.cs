@@ -30,6 +30,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void addProject(string key)
         {
             var project = _cache.Get<Project>(key);
+            if (project == null || project.Value == null)
+                return;
             addToList(key);
             foreach (var reference in project.Value.ReferencedBy)
                 addProject(reference);

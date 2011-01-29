@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -84,6 +84,7 @@
     <Compile Include="BuildRunners\NullBuildPreProcessor.cs" />
     <Compile Include="Caching\Crawlers\ISolutionParser.cs" />
     <Compile Include="Caching\Crawlers\SolutionCrawler.cs" />
+    <Compile Include="Caching\Projects\ProjectReferenceParser.cs" />
     <Compile Include="Caching\RunResultCache\BuildItem.cs" />
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICreate.cs" />

@@ -11,6 +11,7 @@ using AutoTest.Messages;
 using NUnit.Framework;
 
 using Rhino.Mocks;
+using System.IO;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -113,13 +114,13 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_handle_projects_referencing_mspec()
         {
+            var projectFile = string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);
             _configuration.Stub(c => c.MSpecTestRunner("3.5")).Return("testRunner.exe");
             _fileSystem.Stub(x => x.FileExists("testRunner.exe")).Return(true);
             var document = new ProjectDocument(ProjectType.CSharp);
             document.SetFramework("3.5");
-            document.SetAsMSpecTestContainer();
 
-            var handles = _runner.CanHandleTestFor(new Project("someProject", document));
+            var handles = _runner.CanHandleTestFor(new Project(projectFile, document));
 
             handles.ShouldBeTrue();
         }

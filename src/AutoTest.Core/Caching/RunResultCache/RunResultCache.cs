@@ -124,7 +124,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void removeIfExists(TestItem item, List<TestItem> list)
         {
-            if (list.Exists(i => i.IsTheSameTestAs(item)))
+            if (list.Exists(i => i.IsTheSameTestAs(item)) || item.Value.Runner == TestRunner.Any)
             {
                 logTest("Removing passing test ", item);
                 list.RemoveAll(i => i.IsTheSameTestAs(item));

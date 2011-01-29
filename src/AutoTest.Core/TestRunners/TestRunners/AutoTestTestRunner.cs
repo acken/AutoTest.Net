@@ -32,7 +32,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             if (!_configuration.UseAutoTestTestRunner)
                 return false;
-            return project.Value.ContainsNUnitTests || project.Value.ContainsXUnitTests;
+            return new ProjectReferenceParser()
+                .GetAllBinaryReferences(project.Key)
+                .Where(x => x.ToLower().StartsWith("nunit.framework") || x.ToLower().StartsWith("xunit"))
+                .Count() > 0;
         }
 
         public bool CanHandleTestFor(string assembly)
@@ -120,7 +123,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void addNUnitTests(TestRunInfo[] runInfos, RunOptions options)
         {
-            var nunitInfos = runInfos.Where(x => canHandle(x, "nunit.framework", (ProjectDocument doc) => { return doc.ContainsNUnitTests; }));
+            //var nunitInfos = runInfos.Where(x => canHandle(x, "nunit.framework", (ProjectDocument doc) => { return doc.ContainsNUnitTests; }));
+            var nunitInfos = runInfos;
+            throw new Exception("Should heck contains nunit tests from plugin instead");
             if (nunitInfos.Count() > 0)
             {
                 var runner = getRunnerOptions(nunitInfos, "NUnit", TestRunner.NUnit, getFramework, (TestRunInfo info) => { return _configuration.NunitTestRunner(getFramework(info)).Length > 0; });
@@ -131,7 +136,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void addXUnitTests(TestRunInfo[] runInfos, RunOptions options)
         {
-            var xunitInfos = runInfos.Where(x => canHandle(x, "xunit", (ProjectDocument doc) => { return doc.ContainsXUnitTests; }));
+            //var xunitInfos = runInfos.Where(x => canHandle(x, "xunit", (ProjectDocument doc) => { return doc.ContainsXUnitTests; }));
+            var xunitInfos = runInfos;
+            throw new Exception("Should heck contains xunit tests from plugin instead");
             if (xunitInfos.Count() > 0)
             {
                 var runner = getRunnerOptions(xunitInfos, "XUnit", TestRunner.XUnit, getFramework, (TestRunInfo info) => { return _configuration.XunitTestRunner(getFramework(info)).Length > 0; });

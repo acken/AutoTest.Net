@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -93,6 +93,7 @@
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
     <Compile Include="Core\Caching\Crawlers\SolutionCrawlerTest.cs" />
     <Compile Include="Core\Caching\Fakes\FakeStackLine.cs" />
+    <Compile Include="Core\Caching\Projects\ProjectReferenceParserTests.cs" />
     <Compile Include="Core\Caching\RunResultCache\LinkParserTest.cs" />
     <Compile Include="Core\Caching\Projects\ProjectReloaderTest.cs" />
     <Compile Include="Core\Caching\RunResultCache\RunResultCacheTest.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Core\Presenters\Fakes\FakeRunResultMerger.cs" />
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
+    <Compile Include="Core\TestRunners\AutoTestRunnerTests.cs" />
     <Compile Include="Core\TestRunners\MSpecCommandLineBuilderTest.cs" />
     <Compile Include="Core\TestRunners\MSpecReportParserTest.cs" />
     <Compile Include="Core\TestRunners\MSpecTestRunnerTest.cs" />

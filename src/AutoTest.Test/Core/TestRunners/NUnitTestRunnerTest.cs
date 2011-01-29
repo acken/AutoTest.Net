@@ -10,6 +10,7 @@ using Rhino.Mocks;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
+using System.IO;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -36,12 +37,12 @@ namespace AutoTest.Test.Core.TestRunners
         [Test]
         public void Should_handle_projects_referencing_nunit()
         {
+            var file = string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);
             _configuration.Stub(c => c.NunitTestRunner("3.5")).Return("testRunner.exe");
             _fsService.Stub(x => x.FileExists("testRunner.exe")).Return(true);
             var document = new ProjectDocument(ProjectType.CSharp);
             document.SetFramework("3.5");
-            document.SetAsNUnitTestContainer();
-            _runner.CanHandleTestFor(new Project("someProject", document)).ShouldBeTrue();
+            _runner.CanHandleTestFor(new Project(file, document)).ShouldBeTrue();
         }
 
         [Test]

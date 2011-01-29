@@ -32,7 +32,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(Project project)
         {
-            return project.Value.ContainsXUnitTests && _fsService.FileExists(_configuration.XunitTestRunner(project.Value.Framework));
+            return new ProjectReferenceParser()
+                .GetAllBinaryReferences(project.Key)
+                .Where(x => x.ToLower().StartsWith("xunit"))
+                .Count() > 0 && _fsService.FileExists(_configuration.XunitTestRunner(project.Value.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)

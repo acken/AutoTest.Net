@@ -116,7 +116,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         [Test]
         public void Should_run_tests()
         {
-            _project.Value.SetAsNUnitTestContainer();
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
@@ -136,7 +135,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void Should_invalidate_test_assemblys()
 		{
-			_project.Value.SetAsNUnitTestContainer();
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
@@ -155,7 +153,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         [Test]
         public void Should_pre_process_run_information()
         {
-            _project.Value.SetAsNUnitTestContainer();
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
@@ -174,7 +171,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void Should_rerun_test_if_pre_processor_says_so()
 		{
-			_project.Value.SetAsNUnitTestContainer();
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });

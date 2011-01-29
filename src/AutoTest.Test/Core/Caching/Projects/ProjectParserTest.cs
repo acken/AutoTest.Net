@@ -31,48 +31,6 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
-        public void Should_Find_CSharp_Project_With_NUnit_Tests()
-        {
-            var document = _parser.Parse(getCSharpProject(), null);
-            document.ContainsNUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_Find_VisualBasic_Project_With_NUnit_Tests()
-        {
-            var document = _parser.Parse(getVisualBasicProject(), null);
-            document.ContainsNUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_Find_CSharp_Project_With_MS_Tests()
-        {
-            var document = _parser.Parse(getCSharpProject(), null);
-            document.ContainsMSTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_Find_VisualBasic_Project_With_MS_Tests()
-        {
-            var document = _parser.Parse(getVisualBasicProject(), null);
-            document.ContainsMSTests.ShouldBeTrue();
-        }
-        
-        [Test]
-        public void Should_Find_CSharp_Project_With_XUnit_Tests()
-        {
-            var document = _parser.Parse(getCSharpProject(), null);
-            document.ContainsXUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_Find_VisualBasic_Project_With_XUnit_Tests()
-        {
-            var document = _parser.Parse(getVisualBasicProject(), null);
-            document.ContainsXUnitTests.ShouldBeTrue();
-        }
-
-        [Test]
         public void Should_find_CSharp_references()
         {
             var document = _parser.Parse(getCSharpProject(), null);

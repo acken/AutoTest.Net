@@ -31,7 +31,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public bool CanHandleTestFor(Project project)
         {
-            return project.Value.ContainsMSTests && _fsService.FileExists(_configuration.MSTestRunner(project.Value.Framework));
+            return new ProjectReferenceParser()
+                .GetAllBinaryReferences(project.Key)
+                .Where(x => x.ToLower().StartsWith("microsoft.visualstudio.qualitytools.unittestframework"))
+                .Count() > 0 && _fsService.FileExists(_configuration.MSTestRunner(project.Value.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)

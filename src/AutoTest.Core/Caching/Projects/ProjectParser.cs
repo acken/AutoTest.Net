@@ -12,10 +12,10 @@ namespace AutoTest.Core.Caching.Projects
     class ProjectParser : IProjectParser
     {
         private const string NUNIT_REFERENCE = "<Reference Include=\"nunit.framework";
-        private const string MSTEST_REFERENCE = "<Reference Include=\"Microsoft.VisualStudio.QualityTools.UnitTestFramework";
-        private const string XUNIT_REFERENCE = "<Reference Include=\"xunit,";
-		private const string XUNIT_REFERENCE_ANY_VERSION = "<Reference Include=\"xunit\"";
-		private const string MSPEC_REFERENCE = "<Reference Include=\"Machine.Specifications";
+        //private const string MSTEST_REFERENCE = "<Reference Include=\"Microsoft.VisualStudio.QualityTools.UnitTestFramework";
+        //private const string XUNIT_REFERENCE = "<Reference Include=\"xunit,";
+        //private const string XUNIT_REFERENCE_ANY_VERSION = "<Reference Include=\"xunit\"";
+        //private const string MSPEC_REFERENCE = "<Reference Include=\"Machine.Specifications";
         private const string ASSEMBLYNAME_NODE = "AssemblyName";
         private const string OUTPUT_TYPE = "OutputType";
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
@@ -56,7 +56,6 @@ namespace AutoTest.Core.Caching.Projects
             setOutputPath(newDocument);
             setFrameworkVersion(newDocument);
             setProductVersion(newDocument);
-            setContainsTests(newDocument);
             setReferences(newDocument);
             setReferencedBy(newDocument, existingDocument);
             return newDocument;
@@ -134,30 +133,6 @@ namespace AutoTest.Core.Caching.Projects
                     return ProjectType.VisualBasic;
             }
             return ProjectType.None;
-        }
-
-        private void setContainsTests(ProjectDocument document)
-        {
-            if (_fileContent.Contains(NUNIT_REFERENCE))
-			{
-                document.SetAsNUnitTestContainer();
-				Debug.WriteDebug("{0} contains NUnit tests", _projectFile);
-			}
-            if (_fileContent.Contains(MSTEST_REFERENCE))
-			{
-                document.SetAsMSTestContainer();
-				Debug.WriteDebug("{0} contains MSTest tests", _projectFile);
-			}
-            if (_fileContent.Contains(XUNIT_REFERENCE) || _fileContent.Contains(XUNIT_REFERENCE_ANY_VERSION))
-			{
-                document.SetAsXUnitTestContainer();
-				Debug.WriteDebug("{0} contains XUnit tests", _projectFile);
-			}
-            if (_fileContent.Contains(MSPEC_REFERENCE))
-			{
-                document.SetAsMSpecTestContainer();
-				Debug.WriteDebug("{0} contains MSpec contexts", _projectFile);
-			}
         }
 
         private void setReferences(ProjectDocument document)
