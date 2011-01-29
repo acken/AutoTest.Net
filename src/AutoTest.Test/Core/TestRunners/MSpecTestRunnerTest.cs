@@ -119,7 +119,7 @@ namespace AutoTest.Test.Core.TestRunners
             document.SetFramework("3.5");
             document.SetAsMSpecTestContainer();
 
-            var handles = _runner.CanHandleTestFor(document);
+            var handles = _runner.CanHandleTestFor(new Project("someProject", document));
 
             handles.ShouldBeTrue();
         }
@@ -129,7 +129,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             var document = new ProjectDocument(ProjectType.CSharp);
 
-            var handles = _runner.CanHandleTestFor(document);
+            var handles = _runner.CanHandleTestFor(new Project("someProject", document));
 
             handles.ShouldBeFalse();
         }

@@ -41,14 +41,14 @@ namespace AutoTest.Test.Core.TestRunners
             var document = new ProjectDocument(ProjectType.CSharp);
             document.SetFramework("3.5");
             document.SetAsNUnitTestContainer();
-            _runner.CanHandleTestFor(document).ShouldBeTrue();
+            _runner.CanHandleTestFor(new Project("someProject", document)).ShouldBeTrue();
         }
 
         [Test]
         public void Should_not_handle_projects_not_referencing_nunit()
         {
             var document = new ProjectDocument(ProjectType.CSharp);
-            _runner.CanHandleTestFor(document).ShouldBeFalse();
+            _runner.CanHandleTestFor(new Project("someProject", document)).ShouldBeFalse();
         }
 		
 		[Test]

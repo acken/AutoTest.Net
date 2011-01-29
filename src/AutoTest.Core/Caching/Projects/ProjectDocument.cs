@@ -30,7 +30,6 @@ namespace AutoTest.Core.Caching.Projects
         public string OutputPath { get { return _outputPath; } }
         public string Framework { get { return _framework; } }
         public string ProductVersion { get { return _vsVersion; } }
-        public bool ContainsTests { get { return _containsTestsFor.Count > 0; } }
         public bool ContainsNUnitTests { get { return _containsTestsFor.Contains(typeof (NUnitTestRunner)); } }
         public bool ContainsMSTests { get { return _containsTestsFor.Contains(typeof(MSTestRunner)); } }
         public bool ContainsXUnitTests { get { return _containsTestsFor.Contains(typeof (XUnitTestRunner)); } }

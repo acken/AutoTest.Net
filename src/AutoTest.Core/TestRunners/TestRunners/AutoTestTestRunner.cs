@@ -28,11 +28,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             _configuration = configuration;
         }
 
-        public bool CanHandleTestFor(ProjectDocument document)
+        public bool CanHandleTestFor(Project project)
         {
             if (!_configuration.UseAutoTestTestRunner)
                 return false;
-            return document.ContainsNUnitTests || document.ContainsXUnitTests;
+            return project.Value.ContainsNUnitTests || project.Value.ContainsXUnitTests;
         }
 
         public bool CanHandleTestFor(string assembly)

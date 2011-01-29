@@ -41,9 +41,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
             _commandLineBuilder = commandLineBuilder;
         }
 
-        public bool CanHandleTestFor(ProjectDocument document)
+        public bool CanHandleTestFor(Project project)
         {
-            return document.ContainsMSpecTests && _fileSystem.FileExists(_configuration.MSpecTestRunner(document.Framework));
+            return project.Value.ContainsMSpecTests && _fileSystem.FileExists(_configuration.MSpecTestRunner(project.Value.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)

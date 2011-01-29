@@ -168,9 +168,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
 					    continue;
-					if (!project.Value.ContainsTests)
-	                	continue;
-                    if (runner.CanHandleTestFor(project.Value))
+                    if (runner.CanHandleTestFor(project))
                         runInfos.Add(file.CloneToTestRunInfo());
 					_bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));
 				}

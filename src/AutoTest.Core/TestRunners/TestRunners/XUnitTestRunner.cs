@@ -30,9 +30,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         #region ITestRunner Members
 
-        public bool CanHandleTestFor(ProjectDocument document)
+        public bool CanHandleTestFor(Project project)
         {
-            return document.ContainsXUnitTests && _fsService.FileExists(_configuration.XunitTestRunner(document.Framework));
+            return project.Value.ContainsXUnitTests && _fsService.FileExists(_configuration.XunitTestRunner(project.Value.Framework));
         }
 
         public bool CanHandleTestFor(string assembly)
