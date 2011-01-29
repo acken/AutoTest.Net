@@ -37,6 +37,7 @@ namespace AutoTest.TestRunners.Shared
 
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {
+            _results = new List<TestResult>();
             var workers = new List<Thread>();
             var testRuns = getTargetedRuns(options);
             foreach (var target in testRuns)
