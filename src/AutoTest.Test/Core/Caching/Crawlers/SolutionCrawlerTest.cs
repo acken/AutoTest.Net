@@ -33,7 +33,6 @@ namespace AutoTest.Test.Core.Caching.Crawlers
         [Test]
         public void Should_add_references_projects_to_cache_from_vs_2008_sln()
         {
-
             var solutionFile = getFullPath(string.Format("TestResources{0}VS2008{0}AutoTest.NET.sln", Path.DirectorySeparatorChar));
             var fsService = MockRepository.GenerateMock<IFileSystemService>();
             fsService.Stub(f => f.DirectoryExists(Path.GetDirectoryName(solutionFile))).Return(true);
