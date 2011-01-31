@@ -58,7 +58,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>())
                 .Register(Component.For<IInformationFeedbackPresenter>().ImplementedBy<InformationFeedbackPresenter>())
                 .Register(Component.For<IRunFeedbackPresenter>().ImplementedBy<RunFeedbackPresenter>())
-                .Register(Component.For<IDirectoryWatcher>().ImplementedBy<DirectoryWatcher>())
+                .Register(Component.For<IDirectoryWatcher>().ImplementedBy<DirectoryWatcher>().LifeStyle.Singleton)
                 .Register(Component.For<IConfiguration>().ImplementedBy<Config>())
                 .Register(Component.For<ICrawlForProjectFiles>().ImplementedBy<ProjectFileCrawler>())
                 .Register(Component.For<IReload<Project>>().ImplementedBy<ProjectReloader>())

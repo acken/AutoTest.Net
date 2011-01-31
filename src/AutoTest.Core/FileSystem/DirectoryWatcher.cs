@@ -20,6 +20,7 @@ namespace AutoTest.Core.FileSystem
         private IWatchValidator _validator;
 		private IConfiguration _configuration;
 		private string _watchPath = "";
+        private bool _paused = true;
 
         public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer)
         {
@@ -39,6 +40,18 @@ namespace AutoTest.Core.FileSystem
             _watcher.Deleted += WatcherChangeHandler;
             _watcher.Renamed += WatcherChangeHandler;
             _watcher.Error += WatcherErrorHandler;
+            if (!_configuration.StartPaused)
+                Resume();
+        }
+
+        public void Pause()
+        {
+            _paused = true;
+        }
+
+        public void Resume()
+        {
+            _paused = false;
         }
 
         public void Watch(string path)
@@ -102,6 +115,8 @@ namespace AutoTest.Core.FileSystem
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
         {
+            if (_paused)
+                return;
             Debug.RawFileChangeDetected(e.FullPath, e.ChangeType);
             addToBuffer(new ChangedFile(e.FullPath));
         }

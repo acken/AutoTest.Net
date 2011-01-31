@@ -25,6 +25,7 @@ namespace AutoTest.Core.Configuration
         private CodeEditor _codeEditor;
         private bool _debuggingEnabled;
 
+        public bool StartPaused { get; private set; }
         public string WatchPath { get; private set; }
 		
 		public string GrowlNotify { get; private set; }
@@ -73,6 +74,8 @@ namespace AutoTest.Core.Configuration
 		public void Merge(string configuratoinFile)
 		{
 			var core = getConfiguration(configuratoinFile);
+            if (core.StartPaused.WasReadFromConfig)
+                StartPaused = core.StartPaused.Value;
 			mergeVersionedItem(_buildExecutables, core.BuildExecutables);
 			mergeVersionedItem(_nunitTestRunners, core.NUnitTestRunner);
 			mergeVersionedItem(_msTestRunner, core.MSTestRunner);
@@ -109,6 +112,7 @@ namespace AutoTest.Core.Configuration
         {
             try
             {
+                StartPaused = core.StartPaused.Value;
                 _watchDirectories = core.WatchDirectories.Value;
                 _buildExecutables.AddRange(core.BuildExecutables.Value);
                 _nunitTestRunners.AddRange(core.NUnitTestRunner.Value);

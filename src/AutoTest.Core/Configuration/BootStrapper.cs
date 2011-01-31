@@ -56,6 +56,18 @@ namespace AutoTest.Core.Configuration
             Debug.RegisteredAssembly(assembly);
         }
 
+        public static void PauseFilWatcher()
+        {
+            var watcher = _container.Services.Locate<IDirectoryWatcher>();
+            watcher.Pause();
+        }
+
+        public static void ResumeFileWatcher()
+        {
+            var watcher = _container.Services.Locate<IDirectoryWatcher>();
+            watcher.Resume();
+        }
+
         public static void ShutDown()
         {
             Debug.ShutingDownContainer();

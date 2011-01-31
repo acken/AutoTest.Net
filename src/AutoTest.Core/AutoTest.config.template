@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
+  <!-- Makes the file change watcher start in paused state -->
+  <!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
+  <!--<StartPaused>true</StartPaused>-->
+  
 	<!-- Directory to watch (Optional) -->
 	<!-- You can have zero or multiple watch directories specified in the config file. -->
 	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->

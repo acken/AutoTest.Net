@@ -21,7 +21,8 @@ namespace AutoTest.Core.Configuration
     class CoreSection
     {
         private XmlDocument _xml = new XmlDocument();
-        
+
+        public ConfigItem<bool> StartPaused { get; private set; }
         public ConfigItem<string[]> WatchDirectories { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> BuildExecutables { get; private set; }
         public ConfigItem<KeyValuePair<string, string>[]> NUnitTestRunner { get; private set; }
@@ -44,6 +45,7 @@ namespace AutoTest.Core.Configuration
 
         public CoreSection()
         {
+            StartPaused = new ConfigItem<bool>(false);
 			WatchDirectories = new ConfigItem<string[]>(new string[] {});
             BuildExecutables = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
             NUnitTestRunner = new ConfigItem<KeyValuePair<string, string>[]>(new KeyValuePair<string, string>[] {});
@@ -69,6 +71,7 @@ namespace AutoTest.Core.Configuration
         {
             if (!tryLoadXml(configFile))
 				return;
+            StartPaused = getBoolItem("configuration/StartPaused", false);
 			WatchDirectories = getValues("configuration/DirectoryToWatch", false);
             BuildExecutables = getVersionedSetting("configuration/BuildExecutable");
             NUnitTestRunner = getVersionedSetting("configuration/NUnitTestRunner");

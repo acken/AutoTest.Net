@@ -270,6 +270,12 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.UseAutoTestTestRunner.ShouldBeFalse();
         }
+
+        [Test]
+        public void Should_start_paused_setting()
+        {
+            _config.StartPaused.ShouldBeTrue();
+        }
 		
 		private void createMergeFile()
 		{

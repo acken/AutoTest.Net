@@ -10,6 +10,7 @@ namespace AutoTest.Core.Configuration
     {
         string WatchPath { get; }
 
+        bool StartPaused { get; }
         string[] WatchDirectores { get; }
         string BuildExecutable(ProjectDocument project);
         string NunitTestRunner(string version);

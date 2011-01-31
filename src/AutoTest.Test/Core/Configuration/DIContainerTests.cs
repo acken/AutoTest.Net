@@ -372,5 +372,13 @@ namespace AutoTest.Test.Core.Configuration
             var writer2 = _locator.Locate<IWriteDebugInfo>();
             writer1.ShouldBeTheSameAs(writer2);
         }
+
+        [Test]
+        public void Should_register_directory_watcher_as_singleton()
+        {
+            var watcher1 = _locator.Locate<IDirectoryWatcher>();
+            var watcher2 = _locator.Locate<IDirectoryWatcher>();
+            watcher1.ShouldBeTheSameAs(watcher2);
+        }
     }
 }
