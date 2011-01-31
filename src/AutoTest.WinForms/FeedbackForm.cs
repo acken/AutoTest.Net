@@ -98,6 +98,10 @@ namespace AutoTest.WinForms
     
         #region IRunFeedbackView Members
 
+        public void RecievingFileChangeMessage(FileChangeMessage message)
+        {
+        }
+
         public void  RecievingRunStartedMessage(RunStartedMessage message)
         {
             _syncContext.Post(s =>

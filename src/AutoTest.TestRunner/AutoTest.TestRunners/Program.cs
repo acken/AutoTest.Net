@@ -23,7 +23,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp6C57.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp", "--silent" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp1DA6.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp"};
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -43,6 +43,8 @@ namespace AutoTest.TestRunners
                 Write("Test run result:");
                 Write(File.ReadAllText(_arguments.OutputFile));
             }
+            // We do this since NUnit threads some times keep staing in running mode even after finished.
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
 
         private static void writeHeader()

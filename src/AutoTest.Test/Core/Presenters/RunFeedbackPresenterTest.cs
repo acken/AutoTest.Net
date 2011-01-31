@@ -56,6 +56,15 @@ namespace AutoTest.Test.Core.Presenters
         }
 
         [Test]
+        public void Should_subscribe_to_file_change_messages()
+        {
+            var message = new FileChangeMessage();
+            _bus.Publish(message);
+            waitForAsyncCall();
+            _view.FileChangeMessage.ShouldBeTheSameAs(message);
+        }
+
+        [Test]
         public void Should_subscribe_to_run_started_messages()
         {
             var message = new RunStartedMessage(null);

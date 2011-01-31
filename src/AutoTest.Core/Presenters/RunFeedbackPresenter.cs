@@ -20,6 +20,7 @@ namespace AutoTest.Core.Presenters
             set
             {
                 _view = value;
+                _bus.OnFileChangeMessage += new EventHandler<FileChangeMessageEventArgs>(_bus_OnFileChangeMessage);
                 _bus.OnRunStartedMessage += new EventHandler<RunStartedMessageEventArgs>(_bus_OnRunStartedMessage);
                 _bus.OnRunFinishedMessage += new EventHandler<RunFinishedMessageEventArgs>(_bus_OnRunFinishedMessage);
                 _bus.OnBuildMessage +=new EventHandler<BuildMessageEventArgs>(_bus_OnBuildMessage);
@@ -32,6 +33,12 @@ namespace AutoTest.Core.Presenters
         {
             _bus = bus;
             _runResultMerger = runResultMerger;
+        }
+
+        void _bus_OnFileChangeMessage(object sender, FileChangeMessageEventArgs e)
+        {
+            Debug.WriteDebug("Presenter recieved " + e.Message.GetType().ToString());
+            _view.RecievingFileChangeMessage(e.Message);
         }
 
         void _bus_OnRunStartedMessage(object sender, RunStartedMessageEventArgs e)

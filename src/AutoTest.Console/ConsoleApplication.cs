@@ -63,6 +63,10 @@ namespace AutoTest.Console
 
         #region IRunFeedbackView Members
 
+        public void RecievingFileChangeMessage(FileChangeMessage message)
+        {
+        }
+
         public void RecievingBuildMessage(BuildRunMessage runMessage)
         {
             var buildReport = runMessage.Results;

@@ -39,6 +39,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             if (!_configuration.UseAutoTestTestRunner)
                 return false;
+            if (!File.Exists(assembly))
+                return false;
             var plugins = new PluginLocator().Locate();
             foreach (var plugin in plugins)
             {

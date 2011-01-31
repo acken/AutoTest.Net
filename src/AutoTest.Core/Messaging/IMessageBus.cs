@@ -4,6 +4,16 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.Messaging
 {
+    public class FileChangeMessageEventArgs : EventArgs
+    {
+        public FileChangeMessage Message { get; private set; }
+
+        public FileChangeMessageEventArgs(FileChangeMessage message)
+        {
+            Message = message;
+        }
+    }
+
     public class RunStartedMessageEventArgs : EventArgs
     {
         public RunStartedMessage Message { get; private set; }
@@ -86,6 +96,7 @@ namespace AutoTest.Core.Messaging
 
     public interface IMessageBus
     {
+        event EventHandler<FileChangeMessageEventArgs> OnFileChangeMessage;
         event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
         event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
         event EventHandler<InformationMessageEventArgs> OnInformationMessage;

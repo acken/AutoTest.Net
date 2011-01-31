@@ -14,6 +14,7 @@ namespace AutoTest.Core.Messaging
         private List<BlockedMessage> _blockedMessages = new List<BlockedMessage>();
 		private string _buildProvider = "MSBuild";
 
+        public event EventHandler<FileChangeMessageEventArgs> OnFileChangeMessage;
         public event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
         public event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
         public event EventHandler<InformationMessageEventArgs> OnInformationMessage;
@@ -133,6 +134,11 @@ namespace AutoTest.Core.Messaging
         private bool handleByType<T>(T message)
         {
             bool handled = false;
+            if (typeof(T) == typeof(FileChangeMessage))
+            {
+                if (OnFileChangeMessage != null)
+                    OnFileChangeMessage(this, new FileChangeMessageEventArgs((FileChangeMessage)(IMessage)message));
+            }
             if (typeof(T) == typeof(InformationMessage))
             {
                 if (OnInformationMessage != null)

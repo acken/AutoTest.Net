@@ -9,6 +9,7 @@ namespace AutoTest.Core.Presenters
 {
     public interface IRunFeedbackView
     {
+        void RecievingFileChangeMessage(FileChangeMessage message);
         void RecievingRunStartedMessage(RunStartedMessage message);
         void RecievingRunFinishedMessage(RunFinishedMessage message);
         void RecievingBuildMessage(BuildRunMessage message);

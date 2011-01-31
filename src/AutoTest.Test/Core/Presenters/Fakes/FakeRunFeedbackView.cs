@@ -10,12 +10,14 @@ namespace AutoTest.Test.Core.Presenters.Fakes
 {
     class FakeRunFeedbackView : IRunFeedbackView
     {
+        private FileChangeMessage _fileChangeMessage = null;
         private RunStartedMessage _runStartedMessage = null;
         private RunFinishedMessage _runFinishedMessage = null;
         private BuildRunMessage _buildRunMessage = null;
         private TestRunMessage _testRunMessage = null;
         private RunInformationMessage _runInformationMessage = null;
 
+        public FileChangeMessage FileChangeMessage { get { return _fileChangeMessage; } }
         public RunStartedMessage RunStartedMessage { get { return _runStartedMessage; } }
         public RunFinishedMessage RunFinishedMessage { get { return _runFinishedMessage; } }
         public BuildRunMessage BuildRunMessage { get { return _buildRunMessage; } }
@@ -23,6 +25,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public RunInformationMessage RunInformationMessage { get { return _runInformationMessage; } }
 
         #region IRunFeedbackView Members
+
+        public void RecievingFileChangeMessage(FileChangeMessage message)
+        {
+            _fileChangeMessage = message;
+        }
 
         public void RecievingBuildMessage(BuildRunMessage runMessage)
         {

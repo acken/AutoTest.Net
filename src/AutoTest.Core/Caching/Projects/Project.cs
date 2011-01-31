@@ -24,6 +24,8 @@ namespace AutoTest.Core.Caching.Projects
 
         public string GetAssembly(string customOutputPath)
         {
+            if (Value == null)
+                return "";
 			var outputPath = Value.OutputPath;
 			if (customOutputPath != null && customOutputPath.Length > 0)
 				outputPath = customOutputPath;
