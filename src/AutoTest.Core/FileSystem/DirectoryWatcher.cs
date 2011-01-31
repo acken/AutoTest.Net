@@ -22,6 +22,8 @@ namespace AutoTest.Core.FileSystem
 		private string _watchPath = "";
         private bool _paused = true;
 
+        public bool IsPaused { get { return _paused; } }
+
         public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer)
         {
             _bus = bus;
@@ -73,6 +75,10 @@ namespace AutoTest.Core.FileSystem
 			initializeWatchPath(path);
             _watcher.Path = path;
             _watcher.EnableRaisingEvents = true;
+            if (_configuration.StartPaused)
+                Pause();
+            else
+                Resume();
         }
 		
 		private void setupPreProcessors()

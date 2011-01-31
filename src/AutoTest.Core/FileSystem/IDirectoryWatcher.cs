@@ -4,6 +4,8 @@ namespace AutoTest.Core.FileSystem
 
     public interface IDirectoryWatcher : IDisposable
     {
+        bool IsPaused { get; }
+
         void Pause();
         void Resume();
         void Watch(string path);

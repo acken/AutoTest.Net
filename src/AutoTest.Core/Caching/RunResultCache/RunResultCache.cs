@@ -112,6 +112,8 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void removeChanged(TestRunResults results)
         {
+            _failed.RemoveAll(x => x.Value.Runner == TestRunner.Any);
+            _ignored.RemoveAll(x => x.Value.Runner == TestRunner.Any);
             foreach (var test in results.Passed)
             {
                 var item = new TestItem(results.Assembly, results.Project, test);
@@ -124,7 +126,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void removeIfExists(TestItem item, List<TestItem> list)
         {
-            if (list.Exists(i => i.IsTheSameTestAs(item)) || item.Value.Runner == TestRunner.Any)
+            if (list.Exists(i => i.IsTheSameTestAs(item)))
             {
                 logTest("Removing passing test ", item);
                 list.RemoveAll(i => i.IsTheSameTestAs(item));

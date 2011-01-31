@@ -50,6 +50,16 @@ namespace AutoTest.Core.Configuration
 			var core = getConfiguration();
             tryToConfigure(core);
         }
+
+        public void Reload(string localConfiguration)
+        {
+            var core = getConfiguration();
+            tryToConfigure(core);
+            if (localConfiguration == null)
+                return;
+            if (!File.Exists(localConfiguration))
+                Merge(localConfiguration);
+        }
 		
 		public void SetBuildProvider()
 		{
