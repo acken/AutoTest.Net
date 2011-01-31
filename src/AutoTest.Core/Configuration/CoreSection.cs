@@ -61,7 +61,7 @@ namespace AutoTest.Core.Configuration
 			FileChangeBatchDelay = new ConfigItem<int>(100);
 			CustomOutputPath = new ConfigItem<string>("");
 			RerunFailedTestsFirst = new ConfigItem<bool>(false);
-            WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(false);
+            WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(true);
             UseAutoTestTestRunner = new ConfigItem<bool>(true);
         }
 
@@ -86,7 +86,7 @@ namespace AutoTest.Core.Configuration
 			FileChangeBatchDelay = getIntItem("configuration/changedetectiondelay", 200);
 			CustomOutputPath = getValueItem("configuration/CustomOutput", "");
 			RerunFailedTestsFirst = getBoolItem("configuration/RerunFailedTestsFirst", false);
-            WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", false);
+            WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", true);
             UseAutoTestTestRunner = getBoolItem("configuration/UseAutoTestTestRunner", true);
         }
 		

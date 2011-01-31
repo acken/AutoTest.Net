@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using AutoTest.Core.DebugLog;
+using System.Threading;
 
 namespace AutoTest.Core.Notifiers
 {
@@ -17,6 +18,7 @@ namespace AutoTest.Core.Notifiers
         private const string CLASS_IGNORE = "Ignored";
         private const string CLASS_FAIL = "Failed";
         private const string MSG_TITLE = "AutoTest.Net";
+        private Socket _sock = null;
 
         #region ISendNotifications Members
 
@@ -58,38 +60,54 @@ namespace AutoTest.Core.Notifiers
 
         #endregion
 
-        private Socket connect()
+        private void connect()
         {
             var host = IPAddress.Parse("127.0.0.1");
             var hostep = new IPEndPoint(host, 9887);
-            var sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                sock.Connect(hostep);
+                _sock.Connect(hostep);
             }
             catch
             {
-                sock.Close();
-                sock = null;
+                _sock.Close();
+                _sock = null;
             }
-            return sock;
         }
 
         private bool send(string message)
         {
-            Socket sock = null;
+            _sock = null;
             try
             {
-                sock = connect();
-                sock.Send(Encoding.ASCII.GetBytes(message));
-                sock.Send(Encoding.ASCII.GetBytes("\r\n"));
+                var thread = new Thread(connect);
+                thread.Start();
+                var timeout = DateTime.Now.AddSeconds(1);
+                while (DateTime.Now < timeout)
+                {
+                    Thread.Sleep(10);
+                    if (_sock == null)
+                        continue;
+                    if (thread.ThreadState == ThreadState.Stopped)
+                        break;
+                }
+                thread.Abort();
+                if (_sock == null)
+                    return false;
+
+                _sock.Send(Encoding.ASCII.GetBytes(message));
+                _sock.Send(Encoding.ASCII.GetBytes("\r\n"));
                 return true;
             }
             catch (Exception e)
             {
                 Debug.WriteException(e);
-                if (sock != null)
-                    sock.Close();
+            }
+            finally
+            {
+                if (_sock != null)
+                    _sock.Close();
             }
             return false;
         }
