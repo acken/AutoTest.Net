@@ -88,7 +88,14 @@ namespace AutoTest.Core.Caching.Projects
 
         public void Pop()
         {
-            _nodes.RemoveAt(_nodes.Count - 1);
+            try
+            {
+                _nodes.RemoveAt(_nodes.Count - 1);
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.WriteException(ex);
+            }
         }
     }
 }

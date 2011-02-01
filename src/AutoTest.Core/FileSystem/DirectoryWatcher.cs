@@ -123,7 +123,7 @@ namespace AutoTest.Core.FileSystem
         {
             if (_paused)
                 return;
-            Debug.RawFileChangeDetected(e.FullPath, e.ChangeType);
+            //Debug.RawFileChangeDetected(e.FullPath, e.ChangeType);
             addToBuffer(new ChangedFile(e.FullPath));
         }
 

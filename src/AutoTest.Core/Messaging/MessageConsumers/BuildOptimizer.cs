@@ -46,15 +46,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             var runList = new List<RunInfo>();
             foreach (var project in projectList)
-                runList.Add(new RunInfo(project));
+            {
+                if (project.Value != null)
+                    runList.Add(new RunInfo(project));
+            }
             return runList;
         }
 		
 		private List<RunInfo> getRunInfoList(string[] projectList)
 		{
 			var runList = new List<RunInfo>();
-			foreach ( var project in projectList)
-				runList.Add(new RunInfo(_cache.Get<Project>(project)));
+            foreach (var project in projectList)
+            {
+                var projectItem = _cache.Get<Project>(project);
+                if (projectItem.Value != null)
+                    runList.Add(new RunInfo(projectItem));
+            }
 			return runList;
 		}
 
@@ -110,7 +117,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		{
 			foreach (var reference in info.Project.Value.ReferencedBy)
 			{
-				var item = runList.Single(x => x.Project.Key.Equals(reference));
+				var item = runList.Where(x => x.Project.Key.Equals(reference)).FirstOrDefault();
+                if (item == null)
+                {
+                    DebugLog.Debug.WriteDebug("Could not find project for reference " + reference);
+                    continue;
+                }
 				if (item.ShouldBeBuilt)
 				{
 					item.Project.Value.RebuildOnNextRun();

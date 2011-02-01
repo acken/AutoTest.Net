@@ -32,12 +32,12 @@ namespace AutoTest.Console
             _informationFeedback.View = this;
             _runFeedback = runFeedbackPresenter;
             _runFeedback.View = this;
-            configuration.ValidateSettings();
         }
 
         public void Start(string directory)
         {
             _watcher.Watch(directory);
+            _configuration.ValidateSettings();
             System.Console.ReadLine();
             Stop();
         }

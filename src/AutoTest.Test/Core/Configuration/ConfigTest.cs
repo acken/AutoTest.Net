@@ -151,8 +151,8 @@ namespace AutoTest.Test.Core.Configuration
 			_config.BuildIgnoreListFromPath("TestResources");
 			_config.WatchIgnoreList.Length.ShouldEqual(4);
 			_config.WatchIgnoreList[0].ShouldEqual("MyFolder");
-			_config.WatchIgnoreList[1].ShouldEqual(@"OtherFolder\SomeFile.txt");
-			_config.WatchIgnoreList[2].ShouldEqual(@"OhYeah\*");
+			_config.WatchIgnoreList[1].ShouldEqual(@"OtherFolder/SomeFile.txt");
+			_config.WatchIgnoreList[2].ShouldEqual(@"OhYeah/*");
 			_config.WatchIgnoreList[3].ShouldEqual("*TestOutput.xml");
 			if (File.Exists(file))
 				File.Delete(file);
@@ -178,8 +178,8 @@ namespace AutoTest.Test.Core.Configuration
 			_config.BuildIgnoreListFromPath("");
 			_config.WatchIgnoreList.Length.ShouldEqual(4);
 			_config.WatchIgnoreList[0].ShouldEqual("MyFolder");
-			_config.WatchIgnoreList[1].ShouldEqual(@"OtherFolder\SomeFile.txt");
-			_config.WatchIgnoreList[2].ShouldEqual(@"OhYeah\*");
+			_config.WatchIgnoreList[1].ShouldEqual(@"OtherFolder/SomeFile.txt");
+			_config.WatchIgnoreList[2].ShouldEqual(@"OhYeah/*");
 			_config.WatchIgnoreList[3].ShouldEqual("*TestOutput.xml");
 			if (File.Exists(file))
 				File.Delete(file);

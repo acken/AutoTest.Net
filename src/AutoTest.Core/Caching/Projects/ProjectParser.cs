@@ -11,11 +11,6 @@ namespace AutoTest.Core.Caching.Projects
 {
     class ProjectParser : IProjectParser
     {
-        private const string NUNIT_REFERENCE = "<Reference Include=\"nunit.framework";
-        //private const string MSTEST_REFERENCE = "<Reference Include=\"Microsoft.VisualStudio.QualityTools.UnitTestFramework";
-        //private const string XUNIT_REFERENCE = "<Reference Include=\"xunit,";
-        //private const string XUNIT_REFERENCE_ANY_VERSION = "<Reference Include=\"xunit\"";
-        //private const string MSPEC_REFERENCE = "<Reference Include=\"Machine.Specifications";
         private const string ASSEMBLYNAME_NODE = "AssemblyName";
         private const string OUTPUT_TYPE = "OutputType";
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";

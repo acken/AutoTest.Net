@@ -7,6 +7,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
+using System.Text;
 
 namespace AutoTest.Core.Configuration
 {
@@ -236,6 +237,16 @@ namespace AutoTest.Core.Configuration
                 _bus.Publish(new WarningMessage("Machine.Specifications test runner not specified. Machine.Specifications tests will not be run."));
             if (_codeEditor == null || !File.Exists(_codeEditor.Executable))
                 _bus.Publish(new WarningMessage("Code editor not specified"));
+            _bus.Publish(new InformationMessage(getIgnoreList()));
+        }
+
+        private string getIgnoreList()
+        {
+            var sb = new StringBuilder();
+            sb.Append("Ignore patterns: ");
+            foreach (var item in WatchIgnoreList)
+                sb.Append(item + "|");
+            return sb.ToString();
         }
 		
 		public void BuildIgnoreListFromPath(string watchPath)
@@ -243,12 +254,12 @@ namespace AutoTest.Core.Configuration
             var file = new PathParser(_ignoreFile).ToAbsolute(watchPath);
 			
 			if (File.Exists(file))
-				WatchIgnoreList = getLineArrayFromFile(file);
+				WatchIgnoreList = getLineArrayFromFile(file, watchPath);
 			else
 				WatchIgnoreList = new string[] { };
 		}
 
-		private string[] getLineArrayFromFile(string file)
+		private string[] getLineArrayFromFile(string file, string watchPath)
 		{
 			var lines = new List<string>();
 			using (var reader = new StreamReader(file))
@@ -263,11 +274,21 @@ namespace AutoTest.Core.Configuration
 						continue;
 					if (trimmedLine.StartsWith("#"))
 						continue;
+                    trimmedLine = trimmedLine.Replace('\\', '/');
+                    trimmedLine = getRelativePath(trimmedLine, watchPath);
 					lines.Add(trimmedLine);
 				}
 			}
 			return lines.ToArray();
 		}
+
+        private string getRelativePath(string path, string relativeTo)
+        {
+            var truePath = relativeTo.Replace('\\', '/');
+            if (path.StartsWith(truePath))
+                return path.Substring(truePath.Length, path.Length - truePath.Length);
+            return path;
+        }
 		
         private bool noneExists(List<KeyValuePair<string, string>> files)
         {

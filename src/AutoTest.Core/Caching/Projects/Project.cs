@@ -24,13 +24,22 @@ namespace AutoTest.Core.Caching.Projects
 
         public string GetAssembly(string customOutputPath)
         {
+            if (Key == null)
+                return "";
             if (Value == null)
                 return "";
 			var outputPath = Value.OutputPath;
+            if (outputPath == null)
+                return "";
 			if (customOutputPath != null && customOutputPath.Length > 0)
 				outputPath = customOutputPath;
-			if (!Directory.Exists(outputPath))
-            	outputPath = Path.Combine(Path.GetDirectoryName(Key), outputPath);
+            if (!Directory.Exists(outputPath))
+            {
+                var projectPath = Path.GetDirectoryName(Key);
+                if (projectPath == null)
+                    return "";
+                outputPath = Path.Combine(projectPath, outputPath);
+            }
             return Path.Combine(outputPath, Value.AssemblyName);
         }
     }

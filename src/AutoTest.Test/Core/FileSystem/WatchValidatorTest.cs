@@ -137,7 +137,15 @@ namespace AutoTest.Test.Core.FileSystem
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "meh" });
 			_validator.ShouldPublish("/Somedirectory/meh/AndAnotherOne").ShouldBeFalse();
 		}
-		
+
+        [Test]
+        public void Should_match_exact_pattern()
+        {
+            _configuration.Stub(c => c.ShouldUseIgnoreLists).Return(true);
+            _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { @"C:/Users/ack/src/Castle.Windsor/src/Castle.Windsor/AssemblyInfo.cs" });
+            _validator.ShouldPublish(@"C:\Users\ack\src\Castle.Windsor\src\Castle.Windsor\AssemblyInfo.cs").ShouldBeFalse();
+        }
+
 		[Test]
 		public void Should_match_pattern_to_path_end()
 		{

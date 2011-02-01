@@ -60,7 +60,6 @@ namespace AutoTest.WinForms
             _informationForm = informationForm;
             _informationForm.MessageArrived += new EventHandler<MessageRecievedEventArgs>(_informationForm_MessageArrived);
             InitializeComponent();
-            _configuration.ValidateSettings();
             readFormSpacing();
 			FeedbackForm_Resize(this, new EventArgs());
         }
@@ -87,6 +86,7 @@ namespace AutoTest.WinForms
         {
             _directoryToWatch = directory;
             _watcher.Watch(_directoryToWatch);
+            _configuration.ValidateSettings();
         }
 
         public Form Form
