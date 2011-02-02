@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Mono.Cecil;
 using Mono.Collections.Generic;
+using System.IO;
 
 namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
@@ -20,6 +21,8 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 
         public SimpleType Locate()
         {
+            if (!File.Exists(_assembly))
+                return null;
             var asm = AssemblyDefinition.ReadAssembly(_assembly);
             foreach (var module in asm.Modules)
             {
