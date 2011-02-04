@@ -13,16 +13,29 @@ namespace AutoTest.TestRunners.Shared.Targeting
         public string Get(string testAssembly)
         {
             var locator = new AssemblyParser();
-            return Get(locator.GetTargetFramework(testAssembly));
+            return Get(locator.GetPlatform(testAssembly), locator.GetTargetFramework(testAssembly));
         }
 
-        public string Get(Version version)
+        public string Get(Platform platform, Version version)
         {
             var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            var executable = Path.Combine(path, string.Format("AutoTest.TestRunner.v{0}.{1}.exe", version.Major, version.Minor));
-            if (!File.Exists(executable))
-                executable = Path.Combine(path, "AutoTest.TestRunner.exe");
-            return executable;
+            var platformString = getPlatformString(platform);
+            var frameworkString = getFrameworkString(version);
+            return Path.Combine(path, string.Format("AutoTest.TestRunner{0}{1}.exe", platformString, frameworkString));
+        }
+
+        private string getPlatformString(Platform platform)
+        {
+            if (platform == Platform.x86)
+                return ".x86";
+            return "";
+        }
+
+        private string getFrameworkString(Version version)
+        {
+            if (version.Major > 3)
+                return string.Format(".v{0}.{1}", version.Major, version.Minor);
+            return "";
         }
     }
 }

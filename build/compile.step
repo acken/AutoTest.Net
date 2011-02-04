@@ -270,10 +270,10 @@
 
           workingdir="${dirs.build}"
 
-          commandline="${solution.path} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+          commandline='${solution.path} /nologo /property:OutputPath="${msbuild.outputpath}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger /target:Clean' />
 
       <echo message="Building..." />
-      <echo message="${solution.path} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:normal" />
+      <echo message='${solution.path} /nologo /property:OutputPath="${msbuild.outputpath}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:normal' />
 
       <exec program="${app.xbuild}"
 
@@ -281,7 +281,7 @@
 
           workingdir="${dirs.build}"
 
-          commandline="${solution.path} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger" />
+          commandline='${solution.path} /nologo /property:OutputPath="${msbuild.outputpath}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger' />
 
     </if>
 
@@ -305,9 +305,9 @@
 
                 workingdir="${dirs.build.windows.mono}"
 
-                commandline="${solution.path.windows.mono} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger /target:Clean' />
 
-            <echo message='Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+            <echo message='Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
             <exec program="${app.xbuild}"
 
@@ -315,7 +315,7 @@
 
                 workingdir="${dirs.build.windows.mono}"
 
-                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
           </if>
 
@@ -346,6 +346,16 @@
             <!-- Do clean and build in two steps since xbuild has a bug with using OutputPath and Rebuild together Bug #628525 at Novell -->
 
             <echo message="Cleaning build..." />
+			
+			<echo message='Building without multitargeting by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
+			
+            <exec program="${app.xbuild}"
+
+                basedir="${dirs.build.windows.mono}"
+
+                workingdir="${dirs.build.windows.mono}"
+
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger /target:Clean' />
 
             <exec program="${app.xbuild}"
 
@@ -353,17 +363,7 @@
 
                 workingdir="${dirs.build.windows.mono}"
 
-                commandline="${solution.path.windows.mono} /nologo /property:OutputPath='${msbuild.outputpath}' /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
-
-            <echo message='Building without multitargeting by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
-
-            <exec program="${app.xbuild}"
-
-                basedir="${dirs.build.windows.mono}"
-
-                workingdir="${dirs.build.windows.mono}"
-
-                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration} /verbosity:minimal' />
+                commandline='${solution.path.windows.mono} /nologo /property:OutputPath="${msbuild.outputpath.windows.mono}" /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
           </if>
 
@@ -401,7 +401,7 @@
 
                 workingdir="${dirs.build}"
 
-                commandline="${solution.path} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+                commandline='${solution.path} /nologo /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger /target:Clean' />
 
             <echo message="Building..." />
 
@@ -411,7 +411,7 @@
 
                 workingdir="${dirs.build}"
 
-                commandline="${solution.path} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+                commandline='${solution.path} /nologo /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
           </if>
 
@@ -447,9 +447,9 @@
 
                 workingdir="${dirs.build.windows.mono}"
 
-                commandline="${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal /noconsolelogger /target:Clean" />
+                commandline='${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal /noconsolelogger /target:Clean' />
 
-            <echo message="Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+            <echo message='Building...by running this command ${app.xbuild} ${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
             <exec program="${app.xbuild}"
 
@@ -457,7 +457,7 @@
 
                 workingdir="${dirs.build.windows.mono}"
 
-                commandline="${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration} /verbosity:minimal" />
+                commandline='${solution.path.windows.mono} /nologo /property:Configuration=${msbuild.configuration};Platform="${msbuild.platform}" /verbosity:minimal' />
 
           </if>
 

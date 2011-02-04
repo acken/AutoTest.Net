@@ -103,7 +103,7 @@ namespace AutoTest.TestRunners.Shared
 
         private string getExecutable()
         {
-            return new TestProcessSelector().Get(_targetedRun.TargetFramework);
+            return new TestProcessSelector().Get(_targetedRun.Platform, _targetedRun.TargetFramework);
         }
     }
 }

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using AutoTest.Core.TestRunners;
 using AutoTest.Core.Configuration;
 using Rhino.Mocks;
+using AutoTest.Core.FileSystem;
 namespace AutoTest.Test.Core.TestRunners
 {
 	[TestFixture]
@@ -10,12 +11,17 @@ namespace AutoTest.Test.Core.TestRunners
 	{
 		private TestRunValidator _validator;
 		private IConfiguration _configuration;
+        private IFileSystemService _fs;
 		
 		[SetUp]
 		public void SetUp()
 		{
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
-			_validator = new TestRunValidator(_configuration);
+            _fs = MockRepository.GenerateMock<IFileSystemService>();
+			_validator = new TestRunValidator(_configuration, _fs);
+
+            _fs.Stub(x => x.FileExists("InvalidAssembly.dll")).Return(true);
+            _fs.Stub(x => x.FileExists("ValidAssembly.dll")).Return(true);
 		}
 		
 		[Test]
@@ -59,6 +65,12 @@ namespace AutoTest.Test.Core.TestRunners
 			_configuration.Stub(c => c.TestAssembliesToIgnore).Return(new string[] { "meh", "*alidA*" });
 			_validator.ShouldNotTestAssembly("InvalidAssembly.dll").ShouldBeTrue();
 		}
+
+        [Test]
+        public void Should_non_existent_assembly_should_be_ignored()
+        {
+            _validator.ShouldNotTestAssembly("IDontExist.dll").ShouldBeFalse();
+        }
 	}
 }
 

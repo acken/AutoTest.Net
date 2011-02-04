@@ -32,22 +32,28 @@ namespace AutoTest.TestRunners.Shared.Targeting
 
         private void addAssembly(string runnerID, IEnumerable<string> categories, AssemblyOptions assemblyOptions)
         {
+            var platform = getPlatform(assemblyOptions.Assembly);
             var targetFramework = getTargetFramework(assemblyOptions.Assembly);
-            var targeted = _runs.Where(x => x.TargetFramework.Equals(targetFramework)).FirstOrDefault();
+            var targeted = _runs.Where(x => x.TargetFramework.Equals(targetFramework) && x.Platform.Equals(platform)).FirstOrDefault();
             if (targeted == null)
-                targeted = addTarget(targetFramework);
+                targeted = addTarget(platform, targetFramework);
             targeted.AddRunner(runnerID, categories, assemblyOptions);
         }
 
-        private TargetedRun addTarget(Version targetFramework)
+        private TargetedRun addTarget(Platform platform, Version targetFramework)
         {
-            _runs.Add(new TargetedRun(targetFramework));
+            _runs.Add(new TargetedRun(platform, targetFramework));
             return _runs[_runs.Count -1];
         }
 
         private Version getTargetFramework(string assembly)
         {
             return _locator.GetTargetFramework(assembly);
+        }
+
+        private Platform getPlatform(string assembly)
+        {
+            return _locator.GetPlatform(assembly);
         }
     }
 }

@@ -6,16 +6,25 @@ using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.Shared.Targeting
 {
+    public enum Platform
+    {
+        Unknown,
+        AnyCPU,
+        x86
+    }
+
     class TargetedRun
     {
         private List<RunnerOptions> _runOptions = new List<RunnerOptions>();
 
+        public Platform Platform { get; private set; }
         public Version TargetFramework { get; private set; }
         public IEnumerable<RunnerOptions> Runners { get { return _runOptions; } }
 
-        public TargetedRun(Version targetFramework)
+        public TargetedRun(Platform platform, Version targetFramework)
         {
             TargetFramework = targetFramework;
+            Platform = platform;
         }
 
         public void AddRunner(string runnerID, IEnumerable<string> categories, AssemblyOptions assemblyOptions)

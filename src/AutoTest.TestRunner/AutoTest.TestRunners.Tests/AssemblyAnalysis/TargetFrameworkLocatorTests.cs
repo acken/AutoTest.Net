@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using System.Reflection;
+using AutoTest.TestRunners.Shared.Targeting;
 
 namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
 {

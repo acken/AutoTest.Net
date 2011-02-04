@@ -20,4 +20,5 @@ function displayUsage
 
 displayUsage $1
 
+mono ./lib/NAnt/NAnt.exe $1 /f:$(cd $(dirname "$0"); pwd)/build/default.build -D:build.config.settings=$(cd $(dirname "$0"); pwd)/Settings/UppercuTx86.config
 mono ./lib/NAnt/NAnt.exe $1 /f:$(cd $(dirname "$0"); pwd)/build/default.build -D:build.config.settings=$(cd $(dirname "$0"); pwd)/Settings/UppercuT.config

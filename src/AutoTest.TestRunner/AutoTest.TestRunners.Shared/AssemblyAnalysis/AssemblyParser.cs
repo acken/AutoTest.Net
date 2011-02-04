@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mono.Cecil;
+using AutoTest.TestRunners.Shared.Targeting;
 
 namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
@@ -10,9 +11,36 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
     {
         public Version GetTargetFramework(string assembly)
         {
-            var asm = AssemblyDefinition.ReadAssembly(assembly);
-            var runtime = asm.MainModule.Runtime.ToString().Replace("Net_", "").Replace("_", ".");
-            return new Version(runtime);
+            try
+            {
+                var asm = AssemblyDefinition.ReadAssembly(assembly);
+                var runtime = asm.MainModule.Runtime.ToString().Replace("Net_", "").Replace("_", ".");
+                return new Version(runtime);
+            }
+            catch
+            {
+                return new Version();
+            }
+        }
+
+        public Platform GetPlatform(string assembly)
+        {
+            try
+            {
+                var asm = AssemblyDefinition.ReadAssembly(assembly);
+                var architecture = asm.MainModule.Architecture;
+                if (architecture == TargetArchitecture.I386)
+                    return Platform.x86;
+                if (architecture == TargetArchitecture.AMD64)
+                    return Platform.AnyCPU;
+                if (architecture == TargetArchitecture.IA64)
+                    return Platform.AnyCPU;
+                return Platform.Unknown;
+            }
+            catch
+            {
+                return Platform.Unknown;
+            }
         }
 
         public IEnumerable<string> GetReferences(string assembly)

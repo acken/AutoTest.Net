@@ -1,0 +1,185 @@
+<HTML xmlns:html="http://www.w3.org/Profiles/XHTML-transitional"><HEAD><style type="text/css">
+            body {
+                font:normal 68% verdana,arial,helvetica;
+                color:#000000;
+            }
+
+            span.covered {
+                background: #00df00; 
+                border:#9c9c9c 1px solid;
+            }
+            span.uncovered {
+                background: #df0000; 
+                border-top:#9c9c9c 1px solid;
+                border-bottom:#9c9c9c 1px solid;
+                border-right:#9c9c9c 1px solid;
+                }
+            span.ignored {
+                background: #ffff00;
+                border-top:#9c9c9c 1px solid;
+                border-bottom:#9c9c9c 1px solid;
+                border-right:#9c9c9c 1px solid;
+            }
+
+            td {
+                FONT-SIZE: 68%;
+                BORDER-BOTTOM: #dcdcdc 1px solid; 
+                BORDER-RIGHT: #dcdcdc 1px solid;
+            }
+            p {
+                line-height:1.5em;
+                margin-top:0.5em; 
+                margin-bottom:1.0em;
+            }
+            h1 {
+                MARGIN: 0px 0px 5px; 
+                FONT: 165% verdana,arial,helvetica;
+            }
+            h2 {
+                MARGIN-TOP: 1em; 
+                MARGIN-BOTTOM: 0.5em; 
+                FONT: bold 125% verdana,arial,helvetica;
+            }
+            h3 {
+                MARGIN-BOTTOM: 0.5em; 
+                FONT: bold 115% verdana,arial,helvetica;
+            }
+            h4 {
+                MARGIN-BOTTOM: 0.5em; 
+                FONT: bold 100% verdana,arial,helvetica;
+            }
+            h5 {
+                MARGIN-BOTTOM: 0.5em; 
+                FONT: bold 100% verdana,arial,helvetica
+            }
+            h6 {
+                MARGIN-BOTTOM: 0.5em; 
+                FONT: bold 100% verdana,arial,helvetica
+            }    
+            .Error {
+                font-weight:bold; 
+            }
+            .Failure {
+                font-weight:bold; 
+                color:red;
+            }
+            .Ignored {
+                font-weight:bold; 
+            }
+            .FailureDetail {
+                font-size: -1;
+                padding-left: 2.0em;
+                background:#cdcdcd;
+            }
+            .Pass {
+                padding-left:2px;
+            }
+            .TableHeader {
+                background: #efefef;
+                color: #000;
+                font-weight: bold;
+                horizontal-align: center;
+            }
+            a:visited {
+                color: #0000ff;
+            }
+            a {
+                color: #0000ff;
+            }
+            a:active {
+                color: #800000;
+            }
+            a.summarie {
+                color:#000;
+                text-decoration: none;
+            }
+            a.summarie:active {
+                color:#000;
+                text-decoration: none;
+            }
+            a.summarie:visited {
+                color:#000;
+                text-decoration: none;
+            }
+            .description {
+                margin-top:1px;
+                padding:3px;
+                background-color:#dcdcdc;
+                color:#000;
+                font-weight:normal;
+            }
+            .method{
+                color:#000;
+                font-weight:normal;
+                padding-left:5px;
+            }
+            a.method{
+                text-decoration: none;
+                color:#000;
+                font-weight:normal;
+                padding-left:5px;
+            }
+            a.Failure {
+                font-weight:bold; 
+                color:red;
+                text-decoration: none;
+            }
+            a.Failure:visited {
+                font-weight:bold; 
+                color:red;
+                text-decoration: none;
+            }
+            a.Failure:active {
+                font-weight:bold; 
+                color:red;
+                text-decoration: none;
+            }
+            a.error {
+                font-weight:bold; 
+                color:red;
+            }
+            a.error:visited {
+                font-weight:bold; 
+                color:red;
+            }
+            a.error:active {
+                font-weight:bold; 
+                color:red;
+                /*text-decoration: none;
+                padding-left:5px;*/
+            }
+            a.ignored {
+                font-weight:bold; 
+                text-decoration: none;
+                padding-left:5px;
+            }
+            a.ignored:visited {
+                font-weight:bold; 
+                text-decoration: none;
+                padding-left:5px;
+            }
+            a.ignored:active {
+                font-weight:bold; 
+                text-decoration: none;
+                padding-left:5px;
+            }
+      </style><script language="JavaScript">   
+      function Toggle(id) {
+      var element = document.getElementById(id);
+
+         if ( element.style.display == "none" )
+            element.style.display = "block";
+         else 
+            element.style.display = "none";
+      }
+
+      function ToggleImage(id) {
+      var element = document.getElementById(id);
+
+         if ( element.innerText   == "-" )
+            element.innerText   = "+";
+         else 
+            element.innerText = "-";
+      }
+    </script></HEAD><body text="#000000" bgColor="#ffffff"><a name="#top"></a><h1 xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><span>Unit Tests Results</span> - NUnitTester</h1><table width="100%" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><tr><td align="left"><span>Generated by</span> <a target="_blank" href="http://sourceforge.net/projects/nunit2report/">NUnit2Report</a> : 2011-02-04 - 22:47:55  <a href="#envinfo">Environment Information</a></td><td align="right"><span>Designed for use with</span> <a href="http://nunit.sourceforge.net/">NUnit</a> <span>and</span> <a href="http://nant.sourceforge.net/">NAnt</a>.
+		</td></tr></table><hr size="1" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"></hr><h2 xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">Summary</h2><table border="0" cellpadding="2" cellspacing="0" width="95%" style="border: #dcdcdc 1px solid;" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><tr valign="top" class="TableHeader"><td width="50px"><b>Tests</b></td><td width="70px"><b>Failures</b></td><td width="70px"><b>Errors</b></td><td colspan="2"><b>Success Rate</b></td><td width="70px" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass"><td>35</td><td>0</td><td>0</td><td nowrap="nowrap" width="70px">100.00 %</td><td><span class="covered" style="width:200px"></span></td><td>3.650</td></tr></table><span xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">Note</span>: <i xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">failures</i> <span xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">are anticipated and checked for with assertions while</span> <i xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">errors</i> <span xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">are unanticipated.</span><hr size="1" width="95%" align="left"></hr><h2>TestSuite Summary</h2><table border="0" cellpadding="2" cellspacing="0" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="75%" colspan="3"><b>Name</b></td><td width="5%"><b>Tests</b></td><td width="5%"><b>Errors</b></td><td width="5%"><b>Failures</b></td><td width="10%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFHAAAAAAADAAAA" class="">ArgumentParserTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>4</td><td>0</td><td>0</td><td>0.088</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAAAAAAAAAAAFAAAA" class="">InheritedFixture</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.028</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAFAAAAAAADAAAA" class="">OptionsParserTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>10</td><td>0</td><td>0</td><td>0.064</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFEAAAAAAADAAAA" class="">OptionsXmlWriterTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.054</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFDAAAAAAADAAAA" class="">PluginLocatorTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>2</td><td>0</td><td>0</td><td>0.773</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFBACAAAAAAADAAAA" class="">ResultXmlReaderTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.018</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAACAAAAAAADAAAA" class="">ResultXmlWeiterTest</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.035</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAAAAAAAAAIAAAA" class="">RunnerTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.021</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAAAAAAAAAGAAAA" class="">RunnerTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>5</td><td>0</td><td>0</td><td>0.325</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAAAAAAAAABAAAA" class="">RunnerTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>3</td><td>0</td><td>0</td><td>0.357</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAABAAAAAAADAAAA" class="">TargetedRunAssemblerTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.315</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFBAGAAAAAAADAAAA" class="">TargetFrameworkLocatorTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>1</td><td>0</td><td>0</td><td>0.105</td></tr><tr valign="top" class="Pass"><td width="25%"><a href="#AFAAGAAAAAAADAAAA" class="">TypeLocatorTests</a></td><td nowrap="nowrap" width="6%" align="right"><b>100.00 %</b></td><td width="20%" height="9px"><span class="covered" style="width:200px"></span></td><td>4</td><td>0</td><td>0</td><td>0.130</td></tr></table><hr size="1" width="95%" align="left"></hr><a name="#AFHAAAAAAADAAAA"></a><h3>TestSuite ArgumentParserTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_parse_input_file</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.073</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_parse_output_file</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_parse_silent</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_parse_start_suspended</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr></table><a href="#top">Back to top</a><a name="#AFAAAAAAAAAAAAFAAAA"></a><h3>TestSuite InheritedFixture</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_pass</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.015</td></tr></table><a href="#top">Back to top</a><a name="#AFAAFAAAAAAADAAAA"></a><h3>TestSuite OptionsParserTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_assemblies</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.035</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_categories</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.004</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_members</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_namespaces</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.004</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_plugins</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_runners</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.003</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_tests</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> When_file_does_not_exist_options_should_be_null</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.003</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> When_file_does_not_exist_plugins_should_be_null</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> When_parse_is_successful_it_should_be_set_as_valid</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr></table><a href="#top">Back to top</a><a name="#AFEAAAAAAADAAAA"></a><h3>TestSuite OptionsXmlWriterTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_produce_xml</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.054</td></tr></table><a href="#top">Back to top</a><a name="#AFDAAAAAAADAAAA"></a><h3>TestSuite PluginLocatorTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_create_instance</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.554</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_locate_plugins</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.220</td></tr></table><a href="#top">Back to top</a><a name="#AFBACAAAAAAADAAAA"></a><h3>TestSuite ResultXmlReaderTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_read_xml</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.018</td></tr></table><a href="#top">Back to top</a><a name="#AFAACAAAAAAADAAAA"></a><h3>TestSuite ResultXmlWeiterTest</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_write_result</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.035</td></tr></table><a href="#top">Back to top</a><a name="#AFAAAAAAAAAAIAAAA"></a><h3>TestSuite RunnerTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_run_tests</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.010</td></tr></table><a href="#top">Back to top</a><a name="#AFAAAAAAAAAAGAAAA"></a><h3>TestSuite RunnerTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_contain_tests_for</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.198</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_recognize_fixture</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.105</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_recognize_inherited_fixture</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.003</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_recognize_test</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.004</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_recognize_testcase</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr></table><a href="#top">Back to top</a><a name="#AFAAAAAAAAAABAAAA"></a><h3>TestSuite RunnerTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_contain_tests_for</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.217</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_identify_test</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.088</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_identify_test_container</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.038</td></tr></table><a href="#top">Back to top</a><a name="#AFAABAAAAAAADAAAA"></a><h3>TestSuite TargetedRunAssemblerTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_group_by_assembly</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.313</td></tr></table><a href="#top">Back to top</a><a name="#AFBAGAAAAAAADAAAA"></a><h3>TestSuite TargetFrameworkLocatorTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_get_framework_version_from_assembly</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.105</td></tr></table><a href="#top">Back to top</a><a name="#AFAAGAAAAAAADAAAA"></a><h3>TestSuite TypeLocatorTests</h3><table border="0" cellpadding="1" cellspacing="1" width="95%"><tr class="TableHeader" valign="top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="85%" colspan="2"><b>Name</b></td><td width="10%"><b>Status</b></td><td width="5%" nowrap="nowrap"><b>Time(s)</b></td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_find_inherited_attributes</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.114</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_find_inherited_attributes_in_methods</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.006</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_find_me</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.001</td></tr><tr valign="top" class="Pass" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><td width="20%" class="method"> Should_find_my_parent</td><td width="65%" style="padding-left:3px" height="9px"><span class="covered" style="width:200px"></span></td><td>Pass</td><td>0.007</td></tr></table><a href="#top">Back to top</a><hr size="1" width="95%" align="left"></hr><a name="envinfo" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"></a><h2 xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">Environment Information</h2><table border="0" cellpadding="5" cellspacing="2" width="95%" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts"><tr class="TableHeader"><td>Property</td><td>Value</td></tr><tr><td>NAnt Location</td><td>file:///C:/Users/ack/src/AutoTest.Net/lib/Nant/NAnt.Core.DLL</td></tr><tr><td>NAnt Version</td><td>0.86.3412.0</td></tr><tr><td>Buildfile</td><td>file:///C:/Users/ack/src/AutoTest.Net/build/analyzers/nunit.test.step</td></tr><tr><td>Base Directory</td><td>C:\Users\ack\src\AutoTest.Net\build\analyzers</td></tr><tr><td>Operating System</td><td></td></tr><tr><td>.NET CLR Version</td><td></td></tr></table><a href="#top" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:nunit2report="urn:my-scripts">Back to top</a></body></HTML>

@@ -11,6 +11,7 @@ namespace AutoTest.Core.Caching.Projects
     {
         public IEnumerable<string> GetAllBinaryReferences(string projectFile)
         {
+            DebugLog.Debug.WriteDebug("Getting binary references for " + projectFile);
             var references = new List<string>();
             scanDocumentFor(projectFile,
                 (XmlReader reader, XmlPath path) => {
@@ -22,6 +23,7 @@ namespace AutoTest.Core.Caching.Projects
 
         public IEnumerable<string> GetAllProjectReferences(string file)
         {
+            DebugLog.Debug.WriteDebug("Getting project references for " + file);
             var references = new List<string>();
             scanDocumentFor(file,
                 (XmlReader reader, XmlPath path) =>

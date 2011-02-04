@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>MoMA Scan Results</title>
+<link rel="stylesheet" type="text/css" href="Media/moma.css" />
+<script type="text/ecmascript" src="Media/moma.js"></script>
+</head>
+<body>
+    <div class='header'>
+        <div class='headertext'>MoMA Scan Results</div>
+    </div>
+    <div class='wrapper'>
+    <div class='legend'>
+      <div>
+        Scan Date: 04.02.2011 22:50:11<br/>
+        MoMA Definitions: Mono 2.6<br/><br/>
+        For descriptions of issues, see <a href='http://www.mono-project.com/MoMA_-_Issue_Descriptions'>MoMA Issue Descriptions</a>.
+      </div>
+    </div>
+    <table class='results-table'>
+      <thead>
+        <tr>
+          <th scope='col'></th>
+          <th scope='col'></th>
+          <th scope='col'>Assembly</th>
+          <th scope='col'>Version</th>
+          <th scope='col'>Missing</th>
+          <th scope='col'>Not Implemented</th>
+          <th scope='col'>Todo</th>
+          <th scope='col'>P/Invoke</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>AutoTest.Console.exe</td>
+          <td>0.0.0.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr class='errorrow' onclick='toggle("el2", "img2")'>
+          <td style='width: 10px'><img id='img2' src='Media/plus.png' /></td>
+          <td style='width: 16px'><img src='Media/fail.png' /></td>
+          <td>AutoTest.TestRunner.exe</td>
+          <td>1.0.0.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0</td>
+        </tr>
+        <tr id='el2' class='errorlist' style='display: none'>
+          <td></td>
+          <td colspan='7'>
+            <table cellpadding='2' cellspacing='0' width='100%' class='inner-results'>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>Method with [MonoTodo]</td>
+              <td>Reason</td>
+              </tr>
+              <tr>
+              <td>void Run (Object)</td>
+              <td>void AppDomainSetup.set_LoaderOptimization (LoaderOptimization)</td>
+              <td>In Mono this is controlled by the --share-code flag</td>
+              </tr>
+              <tr>
+              <td>void Run (Object)</td>
+              <td>AppDomain AppDomain.CreateDomain (string, Evidence, AppDomainSetup)</td>
+              <td>Currently it does not allow the setup in the other domain</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>AutoTest.WinForms.exe</td>
+          <td>1.0.0.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr class='errorrow' onclick='toggle("el4", "img4")'>
+          <td style='width: 10px'><img id='img4' src='Media/plus.png' /></td>
+          <td style='width: 16px'><img src='Media/fail.png' /></td>
+          <td>Castle.Core.dll</td>
+          <td>2.5.1.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>4</td>
+          <td>0</td>
+        </tr>
+        <tr id='el4' class='errorlist' style='display: none'>
+          <td></td>
+          <td colspan='7'>
+            <table cellpadding='2' cellspacing='0' width='100%' class='inner-results'>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td colspan='2'>Method that Throws NotImplementedException</td>
+              </tr>
+              <tr>
+              <td>void .ctor ()</td>
+              <td colspan='2'>void ReaderWriterLockSlim..ctor (LockRecursionPolicy)</td>
+              </tr>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>Method with [MonoTodo]</td>
+              <td>Reason</td>
+              </tr>
+              <tr>
+              <td>void WriteSimple (XPathResult, Object, IDictionaryAdapter)</td>
+              <td colspan='2'>void XPathNavigator.SetTypedValue (Object)</td>
+              </tr>
+              <tr>
+              <td>void WriteSimple (XPathResult, Object, IDictionaryAdapter)</td>
+              <td colspan='2'>void XPathNavigator.SetTypedValue (Object)</td>
+              </tr>
+              <tr>
+              <td>void .ctor (string, string, string)</td>
+              <td>bool EventLog.SourceExists (string, string)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void .ctor (string, string, string)</td>
+              <td>void EventLog.CreateEventSource (EventSourceCreationData)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>Castle.Facilities.Logging.dll</td>
+          <td>2.5.1.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>Castle.Services.Logging.log4netIntegration.dll</td>
+          <td>2.5.1.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr class='errorrow' onclick='toggle("el7", "img7")'>
+          <td style='width: 10px'><img id='img7' src='Media/plus.png' /></td>
+          <td style='width: 16px'><img src='Media/fail.png' /></td>
+          <td>Castle.Windsor.dll</td>
+          <td>2.5.1.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+        </tr>
+        <tr id='el7' class='errorlist' style='display: none'>
+          <td></td>
+          <td colspan='7'>
+            <table cellpadding='2' cellspacing='0' width='100%' class='inner-results'>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>Method with [MonoTodo]</td>
+              <td>Reason</td>
+              </tr>
+              <tr>
+              <td>void SetUpRemotingConfiguration ()</td>
+              <td>void RemotingConfiguration.Configure (string, bool)</td>
+              <td>Implement ensureSecurity</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class='errorrow' onclick='toggle("el8", "img8")'>
+          <td style='width: 10px'><img id='img8' src='Media/plus.png' /></td>
+          <td style='width: 16px'><img src='Media/fail.png' /></td>
+          <td>log4net.dll</td>
+          <td>1.2.10.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>6</td>
+          <td>17</td>
+        </tr>
+        <tr id='el8' class='errorlist' style='display: none'>
+          <td></td>
+          <td colspan='7'>
+            <table cellpadding='2' cellspacing='0' width='100%' class='inner-results'>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>Method with [MonoTodo]</td>
+              <td>Reason</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>string EventLog.LogNameFromSourceName (string, string)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>void EventLog.DeleteEventSource (string, string)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>string EventLog.LogNameFromSourceName (string, string)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>string EventLog.LogNameFromSourceName (string, string)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void CreateEventSource (string, string, string)</td>
+              <td>void EventLog.CreateEventSource (EventSourceCreationData)</td>
+              <td>remote machine is not supported</td>
+              </tr>
+              <tr>
+              <td>void Configure (ILoggerRepository, Uri)</td>
+              <td>ICredentials CredentialCache.get_DefaultCredentials ()</td>
+              <td>Need EnvironmentPermission implementation first</td>
+              </tr>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>P/Invoke Method</td>
+              <td>P/Invoke Library</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>IntPtr ColoredConsoleAppender.GetStdHandle (uint)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>IntPtr ColoredConsoleAppender.GetStdHandle (uint)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>bool ColoredConsoleAppender.GetConsoleScreenBufferInfo (IntPtr, ColoredConsoleAppender/CONSOLE_SCREEN_BUFFER_INFO&)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>bool ColoredConsoleAppender.SetConsoleTextAttribute (IntPtr, UInt16)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>bool ColoredConsoleAppender.SetConsoleTextAttribute (IntPtr, UInt16)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>int ColoredConsoleAppender.GetConsoleOutputCP ()</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>void ActivateOptions ()</td>
+              <td>void LocalSyslogAppender.openlog (IntPtr, int, LocalSyslogAppender/SyslogFacility)</td>
+              <td>libc</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>void LocalSyslogAppender.syslog (int, string, string)</td>
+              <td>libc</td>
+              </tr>
+              <tr>
+              <td>void OnClose ()</td>
+              <td>void LocalSyslogAppender.closelog ()</td>
+              <td>libc</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>int NetSendAppender.NetMessageBufferSend (string, string, string, string, int)</td>
+              <td>netapi32.dll</td>
+              </tr>
+              <tr>
+              <td>void Append (LoggingEvent)</td>
+              <td>void OutputDebugStringAppender.OutputDebugString (string)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>string GetErrorMessage (int)</td>
+              <td>int NativeError.FormatMessage (int, IntPtr&, int, int, String&, int, IntPtr)</td>
+              <td>Kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>WindowsIdentity LogonUser (string, string, string)</td>
+              <td>bool WindowsSecurityContext.LogonUser (string, string, string, int, int, IntPtr&)</td>
+              <td>advapi32.dll</td>
+              </tr>
+              <tr>
+              <td>WindowsIdentity LogonUser (string, string, string)</td>
+              <td>bool WindowsSecurityContext.DuplicateToken (IntPtr, int, IntPtr&)</td>
+              <td>advapi32.dll</td>
+              </tr>
+              <tr>
+              <td>WindowsIdentity LogonUser (string, string, string)</td>
+              <td>bool WindowsSecurityContext.CloseHandle (IntPtr)</td>
+              <td>kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>WindowsIdentity LogonUser (string, string, string)</td>
+              <td>bool WindowsSecurityContext.CloseHandle (IntPtr)</td>
+              <td>kernel32.dll</td>
+              </tr>
+              <tr>
+              <td>WindowsIdentity LogonUser (string, string, string)</td>
+              <td>bool WindowsSecurityContext.CloseHandle (IntPtr)</td>
+              <td>kernel32.dll</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>Mono.Cecil.dll</td>
+          <td>0.9.4.0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td style='width: 10px'></td>
+          <td style='width: 16px'><img src='Media/pass.png' /></td>
+          <td>xunit.dll</td>
+          <td>1.6.1.1521</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr class='errorrow' onclick='toggle("el11", "img11")'>
+          <td style='width: 10px'><img id='img11' src='Media/plus.png' /></td>
+          <td style='width: 16px'><img src='Media/fail.png' /></td>
+          <td>xunit.runner.utility.dll</td>
+          <td>1.6.1.1521</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+        </tr>
+        <tr id='el11' class='errorlist' style='display: none'>
+          <td></td>
+          <td colspan='7'>
+            <table cellpadding='2' cellspacing='0' width='100%' class='inner-results'>
+              <tr class='inner-header'>
+              <td>Calling Method</td>
+              <td>Method with [MonoTodo]</td>
+              <td>Reason</td>
+              </tr>
+              <tr>
+              <td>AppDomain CreateAppDomain (string, string, bool)</td>
+              <td>AppDomain AppDomain.CreateDomain (string, Evidence, AppDomainSetup)</td>
+              <td>Currently it does not allow the setup in the other domain</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class='tabletotal'>
+          <td></td>
+          <td></td>
+          <td>Totals</td>
+          <td></td>
+          <td>0</td>
+          <td>1</td>
+          <td>14</td>
+          <td>17</td>
+        </tr>
+      </tfoot>
+    </table>
+</div>
+</body>
+</html>
