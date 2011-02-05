@@ -48,11 +48,11 @@ namespace AutoTest.TestRunners.NUnit
                     _results.Add(result);
                     break;
 
-                case ResultState.Inconclusive:
                 case ResultState.Success:
                     _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
                     break;
 
+                case ResultState.Inconclusive:
                 case ResultState.Ignored:
                 case ResultState.Skipped:
                 case ResultState.NotRunnable:

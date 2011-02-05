@@ -15,10 +15,12 @@ namespace AutoTest.TestRunners
     {
         private List<TestResult> _results = new List<TestResult>();
 
-        public IEnumerable<TestResult> Run(Plugin plugin, RunSettings settings)
+        public IEnumerable<TestResult> Run(Plugin plugin, string id, RunSettings settings)
         {
             var runner = getRunner(plugin);
             if (runner == null)
+                return _results;
+            if (!runner.Identifier.ToLower().Equals(id.ToLower()))
                 return _results;
             if (!runner.ContainsTestsFor(settings.Assembly.Assembly))
                 return _results;
