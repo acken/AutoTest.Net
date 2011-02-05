@@ -9,8 +9,9 @@ using Castle.Core.Logging;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
-using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
+using AutoTest.Core.FileSystem;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -18,31 +19,26 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;
-		private IResolveAssemblyReferences _referenceResolver;
+		private IAssemblyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IFileSystemService fsService)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyReader assemblyReader, IFileSystemService fsService)
         {
             _bus = bus;
             _configuration = configuration;
-			_referenceResolver = referenceResolver;
+			_assemblyReader = assemblyReader;
             _fsService = fsService;
         }
 
         #region ITestRunner Members
 
-        public bool CanHandleTestFor(Project project)
-        {
-            return new ProjectReferenceParser()
-                .GetAllBinaryReferences(project.Key)
-                .Where(x => x.ToLower().StartsWith("nunit.framework"))
-                .Count() > 0;
-        }
-
         public bool CanHandleTestFor(string assembly)
 		{
-			var references = _referenceResolver.GetReferences(assembly);
-			return references.Contains("nunit.framework");
+            var framework = _assemblyReader.GetTargetFramework(assembly);
+            if (!_fsService.FileExists(_configuration.NunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+                return false;
+
+            return _assemblyReader.GetReferences(assembly).Contains("nunit.framework");
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)

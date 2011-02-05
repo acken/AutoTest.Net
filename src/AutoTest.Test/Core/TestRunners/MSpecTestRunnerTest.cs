@@ -12,6 +12,7 @@ using NUnit.Framework;
 
 using Rhino.Mocks;
 using System.IO;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -22,12 +23,12 @@ namespace AutoTest.Test.Core.TestRunners
         public void SetUp()
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _referenceResolver = MockRepository.GenerateMock<IResolveAssemblyReferences>();
+            _assemblyReader = MockRepository.GenerateMock<IAssemblyReader>();
             _fileSystem = MockRepository.GenerateStub<IFileSystemService>();
             _externalProcess = MockRepository.GenerateStub<IExternalProcess>();
             _commandLineBuilder = MockRepository.GenerateStub<IMSpecCommandLineBuilder>();
 
-            _runner = new MSpecTestRunner(_referenceResolver,
+            _runner = new MSpecTestRunner(_assemblyReader,
                                           _configuration,
                                           _fileSystem,
                                           _externalProcess,
@@ -36,7 +37,7 @@ namespace AutoTest.Test.Core.TestRunners
 
         MSpecTestRunner _runner;
         IConfiguration _configuration;
-        IResolveAssemblyReferences _referenceResolver;
+        IAssemblyReader _assemblyReader;
         IFileSystemService _fileSystem;
         IExternalProcess _externalProcess;
         IMSpecCommandLineBuilder _commandLineBuilder;
@@ -77,7 +78,9 @@ namespace AutoTest.Test.Core.TestRunners
         public void Should_check_for_mspec_test_framework_reference()
         {
             var assembly = String.Empty;
-            _referenceResolver.Stub(r => r.GetReferences(assembly)).Return(new[] { "machine.specifications" });
+            _fileSystem.Stub(f => f.FileExists(assembly)).IgnoreArguments().Return(true);
+            _assemblyReader.Stub(a => a.GetTargetFramework(assembly)).Return(new Version());
+            _assemblyReader.Stub(r => r.GetReferences(assembly)).Return(new[] { "machine.specifications" });
 
             var handles = _runner.CanHandleTestFor(assembly);
 
@@ -109,30 +112,6 @@ namespace AutoTest.Test.Core.TestRunners
 
             _fileSystem.AssertWasCalled(x => x.FileExists("c:\\runner 1.exe"));
             _fileSystem.AssertWasCalled(x => x.FileExists("c:\\runner 2.exe"));
-        }
-
-        [Test]
-        public void Should_handle_projects_referencing_mspec()
-        {
-            var projectFile = string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar);
-            _configuration.Stub(c => c.MSpecTestRunner("3.5")).Return("testRunner.exe");
-            _fileSystem.Stub(x => x.FileExists("testRunner.exe")).Return(true);
-            var document = new ProjectDocument(ProjectType.CSharp);
-            document.SetFramework("3.5");
-
-            var handles = _runner.CanHandleTestFor(new Project(projectFile, document));
-
-            handles.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_not_handle_projects_not_referencing_mspec()
-        {
-            var document = new ProjectDocument(ProjectType.CSharp);
-
-            var handles = _runner.CanHandleTestFor(new Project("someProject", document));
-
-            handles.ShouldBeFalse();
         }
 
         [Test]

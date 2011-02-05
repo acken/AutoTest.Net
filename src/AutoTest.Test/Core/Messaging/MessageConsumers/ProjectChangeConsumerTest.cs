@@ -118,11 +118,12 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         {
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
+            var info = new TestRunInfo(_project, "someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
-            _testRunner.Stub(t => t.CanHandleTestFor(_project)).Return(true);
+            _testRunner.Stub(t => t.CanHandleTestFor(info.Assembly)).IgnoreArguments().Return(true);
             var result = new TestRunResults[] { new TestRunResults("", "", false, TestRunner.NUnit, new TestResult[] { }) };
-            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { info })).IgnoreArguments()
                 .Return(result);
             _removedTestLocator.Stub(r => r.SetRemovedTestsAsPassed(null, null)).IgnoreArguments().Return(result[0]);
 
@@ -137,10 +138,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		{
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
+            var info = new TestRunInfo(_project, "someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
-            _testRunner.Stub(t => t.CanHandleTestFor(_project)).Return(true);
-            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+            _testRunner.Stub(t => t.CanHandleTestFor(info.Assembly)).Return(true);
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { info })).IgnoreArguments()
                 .Return(new TestRunResults[] { new TestRunResults("", "", false, TestRunner.NUnit, new TestResult[] { }) });
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).IgnoreArguments().Return(true);
 
@@ -155,10 +157,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         {
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
+            var info = new TestRunInfo(_project, "someProject.dll");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
-            _testRunner.Stub(t => t.CanHandleTestFor(_project)).Return(true);
-            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+            _testRunner.Stub(t => t.CanHandleTestFor(info.Assembly)).Return(true);
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { info })).IgnoreArguments()
                 .Return(new TestRunResults[] { new TestRunResults("", "", false, TestRunner.NUnit, new TestResult[] { }) });
             _testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).IgnoreArguments().Return(true);
 
@@ -171,16 +174,19 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void Should_rerun_test_if_pre_processor_says_so()
 		{
+            _runInfo.ShouldNotBuild();
             _project.Value.SetOutputPath("");
             _project.Value.SetAssemblyName("someProject.dll");
+            var info = new TestRunInfo(_project, "");
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return("invalid_to_not_run_builds.exe");
             var result = new TestRunResults[] { new TestRunResults("", "", false, TestRunner.NUnit, new TestResult[] { }) };
-            _testRunner.Stub(t => t.CanHandleTestFor(_project)).Return(true);
-            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { new TestRunInfo(_project, "") })).IgnoreArguments()
+            _testRunner.Stub(t => t.CanHandleTestFor(info.Assembly)).IgnoreArguments().Return(true);
+            _testRunner.Stub(t => t.RunTests(new TestRunInfo[] { info })).IgnoreArguments()
                 .Return(result);
 			_runInfo.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
             _removedTestLocator.Stub(r => r.SetRemovedTestsAsPassed(null, null)).IgnoreArguments().Return(result[0]);
+            _testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).IgnoreArguments().Return(false);
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));

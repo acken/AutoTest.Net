@@ -10,10 +10,10 @@ namespace AutoTest.TestRunners.Shared.Targeting
     class TargetedRunAssembler
     {
         private RunOptions _options;
-        private IAssemblyParser _locator;
+        private IAssemblyReader _locator;
         private List<TargetedRun> _runs;
 
-        public TargetedRunAssembler(RunOptions options, IAssemblyParser locator)
+        public TargetedRunAssembler(RunOptions options, IAssemblyReader locator)
         {
             _options = options;
             _locator = locator;

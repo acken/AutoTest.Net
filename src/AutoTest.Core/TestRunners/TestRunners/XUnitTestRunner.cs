@@ -10,6 +10,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -17,31 +18,26 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;
-		private IResolveAssemblyReferences _referenceResolver;
+        private IAssemblyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public XUnitTestRunner(IMessageBus bus, IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IFileSystemService fsService)
+        public XUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyReader referenceResolver, IFileSystemService fsService)
         {
             _bus = bus;
             _configuration = configuration;
-			_referenceResolver = referenceResolver;
+			_assemblyReader = referenceResolver;
             _fsService = fsService;
         }
 
         #region ITestRunner Members
 
-        public bool CanHandleTestFor(Project project)
-        {
-            return new ProjectReferenceParser()
-                .GetAllBinaryReferences(project.Key)
-                .Where(x => x.ToLower().StartsWith("xunit"))
-                .Count() > 0 && _fsService.FileExists(_configuration.XunitTestRunner(project.Value.Framework));
-        }
-
         public bool CanHandleTestFor(string assembly)
 		{
-			var references = _referenceResolver.GetReferences(assembly);
-			return references.Contains("xunit");
+            var framework = _assemblyReader.GetTargetFramework(assembly);
+            if (!_fsService.FileExists(_configuration.XunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+                return false;
+
+            return _assemblyReader.GetReferences(assembly).Contains("xunit");
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)

@@ -11,36 +11,32 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using System.Reflection;
 using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class MSTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
-		private IResolveAssemblyReferences _referenceResolver;
+        private IAssemblyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public MSTestRunner(IConfiguration configuration, IResolveAssemblyReferences referenceResolver, IFileSystemService fsService)
+        public MSTestRunner(IConfiguration configuration, IAssemblyReader referenceResolver, IFileSystemService fsService)
         {
             _configuration = configuration;
-			_referenceResolver = referenceResolver;
+			_assemblyReader = referenceResolver;
             _fsService = fsService;
         }
 
         #region ITestRunner Members
 
-        public bool CanHandleTestFor(Project project)
-        {
-            return new ProjectReferenceParser()
-                .GetAllBinaryReferences(project.Key)
-                .Where(x => x.ToLower().StartsWith("microsoft.visualstudio.qualitytools.unittestframework"))
-                .Count() > 0 && _fsService.FileExists(_configuration.MSTestRunner(project.Value.Framework));
-        }
-
         public bool CanHandleTestFor(string assembly)
 		{
-			var references = _referenceResolver.GetReferences(assembly);
-			return references.Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
+            var framework = _assemblyReader.GetTargetFramework(assembly);
+            if (!_fsService.FileExists(_configuration.NunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+                return false;
+
+            return _assemblyReader.GetReferences(assembly).Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)

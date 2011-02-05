@@ -7,7 +7,7 @@ using AutoTest.TestRunners.Shared.Targeting;
 
 namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
-    public class AssemblyParser : IAssemblyParser
+    public class AssemblyReader : IAssemblyReader
     {
         public Version GetTargetFramework(string assembly)
         {

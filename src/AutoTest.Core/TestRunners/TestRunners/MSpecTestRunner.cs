@@ -7,6 +7,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -26,33 +27,28 @@ namespace AutoTest.Core.TestRunners.TestRunners
         readonly IConfiguration _configuration;
         readonly IExternalProcess _externalProcess;
         readonly IFileSystemService _fileSystem;
-        readonly IResolveAssemblyReferences _referenceResolver;
+        readonly IAssemblyReader _assemblyReader;
 
-        public MSpecTestRunner(IResolveAssemblyReferences referenceResolver,
+        public MSpecTestRunner(IAssemblyReader referenceResolver,
                                IConfiguration configuration,
                                IFileSystemService fileSystem,
                                IExternalProcess externalProcess,
                                IMSpecCommandLineBuilder commandLineBuilder)
         {
-            _referenceResolver = referenceResolver;
+            _assemblyReader = referenceResolver;
             _configuration = configuration;
             _fileSystem = fileSystem;
             _externalProcess = externalProcess;
             _commandLineBuilder = commandLineBuilder;
         }
 
-        public bool CanHandleTestFor(Project project)
-        {
-            return new ProjectReferenceParser()
-                .GetAllBinaryReferences(project.Key)
-                .Where(x => x.ToLower().StartsWith("machine.specifications"))
-                .Count() > 0 && _fileSystem.FileExists(_configuration.MSpecTestRunner(project.Value.Framework));
-        }
-
         public bool CanHandleTestFor(string assembly)
         {
-            var references = _referenceResolver.GetReferences(assembly);
-            return references.Contains("machine.specifications");
+            var framework = _assemblyReader.GetTargetFramework(assembly);
+            if (!_fileSystem.FileExists(_configuration.NunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+                return false;
+
+            return _assemblyReader.GetReferences(assembly).Contains("machine.specifications");
         }
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)

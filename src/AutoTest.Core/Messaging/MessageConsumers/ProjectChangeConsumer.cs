@@ -163,14 +163,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				foreach (var file in projectList)
 	            {
 					var project = file.Project;
-					
 					if (hasInvalidAssembly(file))
 						continue;
-	            	var assembly = file.Assembly;
-					
+	            	var assembly = file.Assembly;	
 					if (_testAssemblyValidator.ShouldNotTestAssembly(assembly))
 					    continue;
-                    if (runner.CanHandleTestFor(project))
+                    if (runner.CanHandleTestFor(assembly))
                     {
                         runInfos.Add(file.CloneToTestRunInfo());
                         _bus.Publish(new RunInformationMessage(InformationType.TestRun, project.Key, assembly, runner.GetType()));

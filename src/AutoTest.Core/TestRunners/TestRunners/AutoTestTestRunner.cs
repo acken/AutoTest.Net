@@ -14,17 +14,18 @@ using System.Diagnostics;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     class AutoTestTestRunner : ITestRunner
     {
-        private IResolveAssemblyReferences _referenceResolver;
+        private IAssemblyReader _assemblyReader;
         private IConfiguration _configuration;
 
-        public AutoTestTestRunner(IResolveAssemblyReferences referenceResolver, IConfiguration configuration)
+        public AutoTestTestRunner(IAssemblyReader referenceResolver, IConfiguration configuration)
         {
-            _referenceResolver = referenceResolver;
+            _assemblyReader = referenceResolver;
             _configuration = configuration;
         }
 

@@ -12,7 +12,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
     {
         public string Get(string testAssembly)
         {
-            var locator = new AssemblyParser();
+            var locator = new AssemblyReader();
             return Get(locator.GetPlatform(testAssembly), locator.GetTargetFramework(testAssembly));
         }
 

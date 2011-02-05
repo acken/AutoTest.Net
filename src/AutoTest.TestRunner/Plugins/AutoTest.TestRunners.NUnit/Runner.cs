@@ -38,7 +38,7 @@ namespace AutoTest.TestRunners.NUnit
 
         public bool ContainsTestsFor(string assembly)
         {
-            var parser = new AssemblyParser();
+            var parser = new AssemblyReader();
             return parser.GetReferences(assembly).Contains("nunit.framework");
         }
 

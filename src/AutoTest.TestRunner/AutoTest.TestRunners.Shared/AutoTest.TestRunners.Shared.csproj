@@ -74,10 +74,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyAnalysis\IAssemblyParser.cs" />
+    <Compile Include="AssemblyAnalysis\IAssemblyReader.cs" />
     <Compile Include="AssemblyAnalysis\SimpleType.cs" />
     <Compile Include="AssemblyAnalysis\SimpleTypeLocator.cs" />
-    <Compile Include="AssemblyAnalysis\AssemblyParser.cs" />
+    <Compile Include="AssemblyAnalysis\AssemblyReader.cs" />
     <Compile Include="Errors\ErrorHandler.cs" />
     <Compile Include="IAutoTestNetTestRunner.cs" />
     <Compile Include="ITestRunProcess.cs" />

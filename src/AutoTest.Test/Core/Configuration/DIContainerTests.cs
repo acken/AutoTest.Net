@@ -17,6 +17,7 @@ using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
 using AutoTest.Core;
 using AutoTest.Core.Caching.Crawlers;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -257,13 +258,6 @@ namespace AutoTest.Test.Core.Configuration
         }
 		
 		[Test]
-		public void Should_register_assembly_resolver()
-		{
-			var resolver = _locator.Locate<IResolveAssemblyReferences>();
-			resolver.ShouldBeOfType<IResolveAssemblyReferences>();
-		}
-		
-		[Test]
 		public void Should_register_assembly_change_consumer()
 		{
 			var consumer = _locator.Locate<IConsumerOf<AssemblyChangeMessage>>();
@@ -379,6 +373,13 @@ namespace AutoTest.Test.Core.Configuration
             var watcher1 = _locator.Locate<IDirectoryWatcher>();
             var watcher2 = _locator.Locate<IDirectoryWatcher>();
             watcher1.ShouldBeTheSameAs(watcher2);
+        }
+
+        [Test]
+        public void Should_register_assembly_reader()
+        {
+            var reader = _locator.Locate<IAssemblyReader>();
+            reader.ShouldBeTheSameAs(reader);
         }
     }
 }

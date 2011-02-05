@@ -3,37 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using AutoTest.Core.DebugLog;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 namespace AutoTest.Core.FileSystem
 {
-	public class AssemblyParser : IResolveAssemblyReferences, IRetrieveAssemblyIdentifiers
-	{
-		#region IResolveAssemblyReferences implementation
-		public string[] GetReferences(string assembly)
-		{
-			try
-			{
-				var ad = Mono.Cecil.AssemblyDefinition.ReadAssembly(assembly);
-				var references = ad.MainModule.AssemblyReferences;
-				var names = new List<string>();
-				foreach (var reference in references)
-					names.Add(reference.Name);
-				return names.ToArray();
-			}
-			catch
-			{
-				Debug.WriteError("Could not load assemblies for {0}", assembly);
-			}
-			return new string[] { };
-		}
-		#endregion
-		
+	public class AssemblyParser : IRetrieveAssemblyIdentifiers
+	{	
 		public int GetAssemblyIdentifier(string assembly)
 		{
 			var fileInfo = new FileInfo(assembly);
 			var builder = new StringBuilder();
 			builder.Append(fileInfo.Length.ToString());
 			builder.Append("|");
-			foreach (var reference in GetReferences(assembly))
+			foreach (var reference in new AssemblyReader().GetReferences(assembly))
 				builder.Append(reference);
 			return builder.ToString().GetHashCode();
 		}

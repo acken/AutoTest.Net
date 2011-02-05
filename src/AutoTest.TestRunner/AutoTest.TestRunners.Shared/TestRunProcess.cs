@@ -13,7 +13,7 @@ namespace AutoTest.TestRunners.Shared
     public class TestRunProcess : AutoTest.TestRunners.Shared.ITestRunProcess
     {
         private static List<TestResult> _results = new List<TestResult>();
-        private IAssemblyParser _locator;
+        private IAssemblyReader _locator;
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
 
@@ -27,12 +27,12 @@ namespace AutoTest.TestRunners.Shared
 
         public TestRunProcess()
         {
-            _locator = new AssemblyParser();
+            _locator = new AssemblyReader();
         }
 
         public TestRunProcess(ITestRunProcessFeedback feedback)
         {
-            _locator = new AssemblyParser();
+            _locator = new AssemblyReader();
             _feedback = feedback;
         }
 

@@ -23,6 +23,7 @@ using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
 using System.IO;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.Configuration
 {
@@ -73,7 +74,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IMSpecCommandLineBuilder>().ImplementedBy<MSpecCommandLineBuilder>())
                 .Register(Component.For<IGenerateBuildList>().ImplementedBy<BuildListGenerator>())
                 .Register(Component.For<IMergeRunResults>().Forward<IRunResultCache>().ImplementedBy<RunResultCache>())
-				.Register(Component.For<IResolveAssemblyReferences>().Forward<IRetrieveAssemblyIdentifiers>().ImplementedBy<AssemblyParser>())
+				.Register(Component.For<IRetrieveAssemblyIdentifiers>().ImplementedBy<AssemblyParser>())
 				.Register(Component.For<IConsumerOf<AssemblyChangeMessage>>().ImplementedBy<AssemblyChangeConsumer>())
 				.Register(Component.For<IDetermineIfAssemblyShouldBeTested>().ImplementedBy<TestRunValidator>())
 				.Register(Component.For<IOptimizeBuildConfiguration>().ImplementedBy<BuildOptimizer>())
@@ -84,6 +85,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ILocateRemovedTests>().ImplementedBy<RemovedTestsLocator>())
                 .Register(Component.For<ISolutionChangeConsumer>().ImplementedBy<SolutionChangeConsumer>())
                 .Register(Component.For<ISolutionParser>().ImplementedBy<SolutionCrawler>())
+                .Register(Component.For<IAssemblyReader>().ImplementedBy<AssemblyReader>())
                 .Register(Component.For<ApplicatonLauncher>())
                 .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton);
 
