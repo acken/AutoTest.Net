@@ -28,7 +28,9 @@ namespace AutoTest.Test.Core.TestRunners
 				{ 
 					new TestRunInfo(new Project("project1", null), string.Format("/home/ack/backup/WorkWin7/src/DotNET/Temp/SomeProjectUsingXUnit/bin/Debug/SomeProjectUsingXUnit.dll", Path.DirectorySeparatorChar))
 				};
-			_parser.Parse(File.ReadAllText("TestResources/NUnit/XUnitOutput.txt"), sources, false);
+            var text = File.ReadAllText("TestResources/NUnit/XUnitOutput.txt");
+            text = text.Replace("\r\n", "").Replace("\n", "");
+			_parser.Parse(text, sources, false);
         }
 
         [Test]
@@ -49,7 +51,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _parser.Result[0].All.Length.ShouldEqual(3);
             _parser.Result[0].Failed.Length.ShouldEqual(1);
-            _parser.Result[0].Failed[0].Message.ShouldEqual(string.Format("Assert.Equal() Failure{0}Expected: 4{0}Actual:   3", Environment.NewLine));
+            _parser.Result[0].Failed[0].Message.ShouldEqual("Assert.Equal() FailureExpected: 4Actual:   3");
             _parser.Result[0].Failed[0].StackTrace.Length.ShouldEqual(3);
         }
 		

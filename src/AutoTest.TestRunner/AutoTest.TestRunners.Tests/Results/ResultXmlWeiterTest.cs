@@ -41,7 +41,10 @@ namespace AutoTest.TestRunners.Tests.Results
             var writer = new ResultsXmlWriter(result);
             writer.Write(file);
 
-            Assert.That(File.ReadAllText(file), Is.EqualTo(File.ReadAllText(getPath("Results.xml"))));
+            var original = File.ReadAllText(file).Replace("\r\n", "\n");
+            var generated = File.ReadAllText(getPath("Results.xml")).Replace("\r\n", "\n");
+
+            Assert.That(original, Is.EqualTo(generated));
         }
 
         private string getPath(string relativePath)

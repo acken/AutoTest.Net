@@ -12,6 +12,20 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Test.Core.Configuration
 {
+    class TestConfigLocator : ILocateWriteLocation
+    {
+        public string GetLogfile()
+        {
+            return "";
+        }
+
+        public string GetConfigurationFile()
+        {
+            var path = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, "AutoTest.ForTests.config");
+        }
+    }
+
     [TestFixture]
     public class ConfigTest
     {
@@ -24,7 +38,7 @@ namespace AutoTest.Test.Core.Configuration
         {
 			_overridConfig = Path.GetTempFileName();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _config = new Config(_bus, new DefaultConfigurationLocator());
+            _config = new Config(_bus, new TestConfigLocator());
         }
 		
 		[TearDown]

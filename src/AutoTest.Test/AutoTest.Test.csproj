@@ -191,7 +191,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AutoTest.config">
+    <None Include="AutoTest.ForTests.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestResources\NUnit\multipleAssemblies.txt">

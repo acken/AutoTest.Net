@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Caching;
+using System.IO;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -17,9 +18,15 @@ namespace AutoTest.Test.Core.Configuration
             var container = new DIContainer();
             container.Configure();
             var configuration = container.Services.Locate<IConfiguration>();
-            container.InitializeCache(configuration.WatchDirectores[0]);
+            container.InitializeCache(getWatchDirectory());
             var cache = container.Services.Locate<ICache>();
             cache.Count.ShouldEqual(3);
+        }
+
+        private string getWatchDirectory()
+        {
+            var path = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(path, "TestResources");
         }
     }
 }
