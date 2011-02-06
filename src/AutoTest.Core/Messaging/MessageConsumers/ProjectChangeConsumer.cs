@@ -63,8 +63,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 Debug.WriteDebug("Starting project change run");
                 var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
                 var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
-                list = preProcessBuildRun(list);
-                if (!buildAll(list, runReport))
+                if (!buildAll(preProcessBuildRun(list), runReport))
                     return runReport;
                 markAllAsBuilt(list);
                 testAll(list, runReport);
@@ -150,8 +149,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
-            projectList = preProcessTestRun(projectList);
-            runPreProcessedTestRun(projectList, runReport);
+            runPreProcessedTestRun(preProcessTestRun(projectList), runReport);
 		}
 		
 		private void runPreProcessedTestRun(RunInfo[] projectList, RunReport runReport)

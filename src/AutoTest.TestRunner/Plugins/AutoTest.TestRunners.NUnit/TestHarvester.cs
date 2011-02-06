@@ -43,20 +43,20 @@ namespace AutoTest.TestRunners.NUnit
                 case ResultState.Error:
                 case ResultState.Failure:
                 case ResultState.Cancelled:
-                    var result = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
+                    var result = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
                     result.AddStackLines(getStackLines(testResult).ToArray());
                     _results.Add(result);
                     break;
 
                 case ResultState.Success:
-                    _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
+                    _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
                     break;
 
                 case ResultState.Inconclusive:
                 case ResultState.Ignored:
                 case ResultState.Skipped:
                 case ResultState.NotRunnable:
-                    var ignoreResult = new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Ignored, testResult.Message);
+                    var ignoreResult = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Ignored, testResult.Message);
                     ignoreResult.AddStackLines(getStackLines(testResult).ToArray());
                     _results.Add(ignoreResult);
                     break;
@@ -108,7 +108,7 @@ namespace AutoTest.TestRunners.NUnit
 
         public void UnhandledException(Exception exception)
         {
-            _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("nunit", currentAssembly, "", 0, "Unhandled exception", TestRunners.Shared.Results.TestState.Panic, exception.ToString()));
+            _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, "", 0, "Unhandled exception", TestRunners.Shared.Results.TestState.Panic, exception.ToString()));
         }
 
         public void TestOutput(TestOutput output)

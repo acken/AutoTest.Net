@@ -23,7 +23,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpC717.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp1A4B.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp", "--silent" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
