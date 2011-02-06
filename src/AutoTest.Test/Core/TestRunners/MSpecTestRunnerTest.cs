@@ -80,7 +80,7 @@ namespace AutoTest.Test.Core.TestRunners
             var assembly = String.Empty;
             _fileSystem.Stub(f => f.FileExists(assembly)).IgnoreArguments().Return(true);
             _assemblyReader.Stub(a => a.GetTargetFramework(assembly)).Return(new Version());
-            _assemblyReader.Stub(r => r.GetReferences(assembly)).Return(new[] { "machine.specifications" });
+            _assemblyReader.Stub(r => r.GetReferences(assembly)).Return(new[] { "Machine.Specifications" });
 
             var handles = _runner.CanHandleTestFor(assembly);
 

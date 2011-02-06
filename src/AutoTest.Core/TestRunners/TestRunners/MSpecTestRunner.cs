@@ -48,7 +48,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!_fileSystem.FileExists(_configuration.NunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
                 return false;
 
-            return _assemblyReader.GetReferences(assembly).Contains("machine.specifications");
+            return _assemblyReader.GetReferences(assembly).Contains("Machine.Specifications");
         }
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
