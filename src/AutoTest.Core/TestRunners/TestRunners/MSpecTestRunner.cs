@@ -45,7 +45,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public bool CanHandleTestFor(string assembly)
         {
             var framework = _assemblyReader.GetTargetFramework(assembly);
-            if (!_fileSystem.FileExists(_configuration.NunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
+            var file = _configuration.MSpecTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor));
+            if (!_fileSystem.FileExists(file))
                 return false;
 
             return _assemblyReader.GetReferences(assembly).Contains("Machine.Specifications");
