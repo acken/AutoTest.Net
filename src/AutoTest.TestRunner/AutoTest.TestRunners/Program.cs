@@ -23,7 +23,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp1A4B.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp", "--silent" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB595.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -88,10 +88,21 @@ namespace AutoTest.TestRunners
 
         static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            AddResults(ErrorHandler.GetError(_currentRunner, args.ExceptionObject.ToString()));
+            var message = getException((Exception)args.ExceptionObject);
+            var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test", TestState.Panic, message);
+            AddResults(result);
             var writer = new ResultsXmlWriter(_results);
             writer.Write(_arguments.OutputFile);
-            Environment.Exit(-1);
+            if (args.IsTerminating)
+                Environment.Exit(-1);
+        }
+
+        private static string getException(Exception ex)
+        {
+            var text = ex.ToString();
+            if (ex.InnerException != null)
+                text += getException(ex.InnerException);
+            return text;
         }
 
         private static void printUseage()
