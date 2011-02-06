@@ -123,14 +123,13 @@ namespace AutoTest.Core.FileSystem
         {
             if (_paused)
                 return;
-            //Debug.RawFileChangeDetected(e.FullPath, e.ChangeType);
             addToBuffer(new ChangedFile(e.FullPath));
         }
 
         void WatcherErrorHandler(object sender, ErrorEventArgs e)
         {
-            Debug.WriteError("FileSystemWatcher failed to handle changes");
-            Debug.WriteException(e.GetException());
+            Debug.WriteDebug("FileSystemWatcher failed to handle changes");
+            Debug.WriteDebug(e.GetException().ToString());
         }
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)
