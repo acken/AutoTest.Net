@@ -27,7 +27,7 @@ namespace AutoTest.Test.Core.Caching.Crawlers
             var crawler = new SolutionCrawler(fsService, bus, cache);
             crawler.Crawl("SomeInvalidSolutionFile.sln");
             
-            bus.AssertWasCalled(b => b.Publish<ErrorMessage>(null), b => b.IgnoreArguments());
+            bus.AssertWasCalled(b => b.Publish<InformationMessage>(null), b => b.IgnoreArguments());
         }
 
         [Test]
