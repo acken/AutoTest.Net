@@ -17,7 +17,6 @@ namespace AutoTest.Core.Caching.Projects
         private string _outputPath;
         private string _framework;
         private string _vsVersion;
-        private List<Type> _containsTestsFor = new List<Type>();
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
 		private bool _requiresRebuild = false;

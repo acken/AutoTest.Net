@@ -20,12 +20,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 {
     class AutoTestTestRunner : ITestRunner
     {
-        private IAssemblyReader _assemblyReader;
         private IConfiguration _configuration;
 
-        public AutoTestTestRunner(IAssemblyReader referenceResolver, IConfiguration configuration)
+        public AutoTestTestRunner(IConfiguration configuration)
         {
-            _assemblyReader = referenceResolver;
             _configuration = configuration;
         }
 
