@@ -25,20 +25,29 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		#region IConsumerOf[AssemblyChangeMessage] implementation
 		public void Consume (AssemblyChangeMessage message)
 		{
-			informParticipants(message);
-			var runReport = new RunReport();
-            var runInfos = getRunInfos(message);
-            preProcess(runInfos);
-			foreach (var runner in _testRunners)
-                runTest(runner, runInfos, runReport);
-			_bus.Publish(new RunFinishedMessage(runReport));
+            var runReport = new RunReport();
+            try
+            {
+			    informParticipants(message);
+                var runInfos = getRunInfos(message);
+                runInfos = preProcess(runInfos);
+			    foreach (var runner in _testRunners)
+                    runTest(runner, runInfos, runReport);
+            }
+            catch (Exception ex)
+            {
+                var result = new TestRunResults("", "", false, TestRunner.Any, new TestResult[] { new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Net internal error", ex.ToString()) });
+                _bus.Publish(new TestRunMessage(result));
+            }
+            _bus.Publish(new RunFinishedMessage(runReport));
 		}
 		#endregion
 
-        private void preProcess(RunInfo[] runInfos)
+        private RunInfo[] preProcess(RunInfo[] runInfos)
         {
             foreach (var preProcessor in _preProcessors)
                 runInfos = preProcessor.PreProcess(runInfos);
+            return runInfos;
         }
 		private RunInfo[] getRunInfos(AssemblyChangeMessage message)
 
@@ -68,16 +77,32 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 					return;
                 if (runner.CanHandleTestFor(runInfo.Assembly))
                 {
-                    var testRunInfo = new TestRunInfo(null, runInfo.Assembly);
-                    testRunInfo.AddTestsToRun(runInfo.GetTests());
-                    testRunInfos.Add(testRunInfo);
+                    testRunInfos.Add(runInfo.CloneToTestRunInfo());
+                    _bus.Publish(new RunInformationMessage(InformationType.TestRun, "", runInfo.Assembly, runner.GetType()));
                 }
 			}
             if (testRunInfos.Count == 0)
 				return;
 			var results = runner.RunTests(testRunInfos.ToArray());
 			mergeReport(results, report, testRunInfos.ToArray());
+            reRunTests(runner, report, testRunInfos);
 		}
+
+        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos)
+        {
+            var rerunInfos = new List<TestRunInfo>();
+            foreach (var info in testRunInfos)
+            {
+                if (info.RerunAllTestWhenFinishedForAny())
+                    rerunInfos.Add(new TestRunInfo(info.Project, info.Assembly));
+            }
+            if (rerunInfos.Count > 0)
+            {
+                Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
+                var results = runner.RunTests(testRunInfos.ToArray());
+                mergeReport(results, report, testRunInfos.ToArray());
+            }
+        }
 		
 		private void mergeReport(TestRunResults[] results, RunReport report, TestRunInfo[] runInfos)
 		{

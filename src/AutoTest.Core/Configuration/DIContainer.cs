@@ -87,6 +87,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ISolutionParser>().ImplementedBy<SolutionCrawler>())
                 .Register(Component.For<IAssemblyReader>().ImplementedBy<AssemblyReader>())
                 .Register(Component.For<ApplicatonLauncher>())
+                .Register(Component.For<ICustomIgnoreProvider>().ImplementedBy<NullIgnoreProvider>())
                 .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton);
 
             if (defaultConfigurationLocator == null)

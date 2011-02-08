@@ -102,9 +102,8 @@ namespace AutoTest.Core.FileSystem
 		private void mergeLocalConfig(string path)
 		{
 			var file = Path.Combine(path, "AutoTest.config");
-			if (!File.Exists(file))
-				return;
-			_bus.Publish(new InformationMessage("Loading local config file"));
+			if (File.Exists(file))
+				_bus.Publish(new InformationMessage("Loading local config file"));
 			_configuration.Reload(file);
 		}
 

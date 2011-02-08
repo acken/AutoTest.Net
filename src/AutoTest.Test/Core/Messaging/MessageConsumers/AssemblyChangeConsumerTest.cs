@@ -35,8 +35,9 @@ namespace AutoTest.Test
 		[Test]
 		public void Should_run_tests()
 		{
-			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).Return(false);
+			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).Return(false);
 			_testRunner.Stub(t => t.CanHandleTestFor("")).IgnoreArguments().Return(true);
+            _preProcessor.Stub(p => p.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { new RunInfo(new AutoTest.Core.Caching.Projects.Project("", null)) }); 
 			var message = new AssemblyChangeMessage();
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);

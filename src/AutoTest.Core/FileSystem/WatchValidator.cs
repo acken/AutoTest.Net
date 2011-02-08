@@ -12,11 +12,13 @@ namespace AutoTest.Core.FileSystem
     class WatchValidator : IWatchValidator
     {
 		private IConfiguration _configuration;
+        private ICustomIgnoreProvider[] _ignoreProviders;
 		private string[] _defaultIgnores = new string[12];
 
-		public WatchValidator(IConfiguration configuration)
+        public WatchValidator(IConfiguration configuration, ICustomIgnoreProvider[] ignoreProviders)
 		{
 			_configuration = configuration;
+            _ignoreProviders = ignoreProviders;
 			_defaultIgnores[0] = "bin/Debug";
 			_defaultIgnores[1] = "bin/Release";
 			_defaultIgnores[2] = "bin/AutoTest.Net";
@@ -33,11 +35,29 @@ namespace AutoTest.Core.FileSystem
 		
         public bool ShouldPublish(string filePath)
         {
-			if (!_configuration.ShouldUseIgnoreLists)
-				return true;
-			filePath = filePath.Replace("\\", "/");
-			if (match(filePath, _defaultIgnores))
-				return false;
+			if (_configuration.ShouldUseBinaryChangeIgnoreLists)
+                return useBinaryChangeList(filePath);
+            return useDefaultIgnoreList(filePath);
+        }
+
+        private bool useBinaryChangeList(string filePath)
+        {
+            int i = 9;
+            if (!filePath.ToLower().EndsWith(".dll") && !filePath.ToLower().EndsWith(".exe"))
+                return false;
+            if (filePath.ToLower().EndsWith(".vshost.exe"))
+                return false;
+            foreach (var provider in _ignoreProviders)
+                if (!provider.ShouldPublish(filePath))
+                    return false;
+            return true;
+        }
+
+        private bool useDefaultIgnoreList(string filePath)
+        {
+            filePath = filePath.Replace("\\", "/");
+            if (match(filePath, _defaultIgnores))
+                return false;
             if (matchCustomOutputPath(filePath))
                 return false;
             if (_configuration.CustomOutputPath != null && _configuration.CustomOutputPath.Length > 0)
@@ -46,8 +66,11 @@ namespace AutoTest.Core.FileSystem
                 if (match(filePath, new string[] { pattern }))
                     return false;
             }
-			if (match(filePath, _configuration.WatchIgnoreList))
-				return false;
+            if (match(filePath, _configuration.WatchIgnoreList))
+                return false;
+            foreach (var provider in _ignoreProviders)
+                if (!provider.ShouldPublish(filePath))
+                    return false;
             return true;
         }
 		

@@ -33,7 +33,7 @@ namespace AutoTest.Core.Configuration
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
 		public string[] WatchIgnoreList { get; private set; }
-		public bool ShouldUseIgnoreLists { get { return _buildExecutables.Count > 0; } }
+		public bool ShouldUseBinaryChangeIgnoreLists { get { return _buildExecutables.Count == 0; } }
 		public int FileChangeBatchDelay { get; private set; }
 		public string[] TestAssembliesToIgnore { get; private set; }
 		public string[] TestCategoriesToIgnore { get; private set; }
@@ -50,6 +50,7 @@ namespace AutoTest.Core.Configuration
 			_defaultConfigLocator = defaultConfigLocator;
 			var core = getConfiguration();
             tryToConfigure(core);
+            WatchIgnoreList = new string[] {};
         }
 
         public void Reload(string localConfiguration)
@@ -61,10 +62,10 @@ namespace AutoTest.Core.Configuration
             if (File.Exists(localConfiguration))
             {
                 Merge(localConfiguration);
-                SetBuildProvider();
-                AnnounceTrackerType();
                 BuildIgnoreList(Path.GetDirectoryName(localConfiguration));
             }
+            SetBuildProvider();
+            AnnounceTrackerType();
         }
 
         public void BuildIgnoreList(string path)
@@ -94,6 +95,7 @@ namespace AutoTest.Core.Configuration
 			{
 				FileChangeBatchDelay = 2000;
 				_bus.SetBuildProvider("NoBuild");
+                CustomOutputPath = Path.Combine("bin", "Debug");
 			}
 		}
 		

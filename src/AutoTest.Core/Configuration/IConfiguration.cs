@@ -24,7 +24,7 @@ namespace AutoTest.Core.Configuration
 		bool NotifyOnRunCompleted { get; }
 		string GrowlNotify { get; }
 		string[] WatchIgnoreList { get; }
-		bool ShouldUseIgnoreLists { get; }
+		bool ShouldUseBinaryChangeIgnoreLists { get; }
 		int FileChangeBatchDelay { get; }
 		string[] TestAssembliesToIgnore { get; }
 		string[] TestCategoriesToIgnore { get; }
