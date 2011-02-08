@@ -67,9 +67,6 @@ namespace AutoTest.Core.FileSystem
             }
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
 			mergeLocalConfig(path);
-			_configuration.SetBuildProvider();
-			_configuration.AnnounceTrackerType();
-			buildIgnoreList(path);
 			initializeTimer();
 			setupPreProcessors();
 			initializeWatchPath(path);
@@ -108,15 +105,7 @@ namespace AutoTest.Core.FileSystem
 			if (!File.Exists(file))
 				return;
 			_bus.Publish(new InformationMessage("Loading local config file"));
-			_configuration.Merge(file);
-		}
-		
-		private void buildIgnoreList(string path)
-		{
-			_configuration.BuildIgnoreListFromPath(path);
-			var list = _validator.GetIgnorePatterns();
-			if (list.Length > 0)
-				_bus.Publish(new InformationMessage(string.Format("Ignoring \"{0}\"", list)));
+			_configuration.Reload(file);
 		}
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)

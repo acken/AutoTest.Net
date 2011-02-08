@@ -101,15 +101,9 @@ namespace AutoTest.Test.Core
         }
 		
 		[Test]
-		public void Should_rebuild_ignore_list_from_watch_directory()
+		public void Should_reload_configuration_with_local_config()
 		{
-			_configuration.AssertWasCalled(c => c.BuildIgnoreListFromPath(_watchDirectory));
-		}
-		
-		[Test]
-		public void Should_load_local_config_file()
-		{
-			_configuration.AssertWasCalled(c => c.Merge(_localConfig));
+			_configuration.AssertWasCalled(c => c.Reload(Path.Combine(_watchDirectory, "AutoTest.config")));
 		}
 
         [Test]

@@ -58,8 +58,31 @@ namespace AutoTest.Core.Configuration
             tryToConfigure(core);
             if (localConfiguration == null)
                 return;
-            if (!File.Exists(localConfiguration))
+            if (File.Exists(localConfiguration))
+            {
                 Merge(localConfiguration);
+                SetBuildProvider();
+                AnnounceTrackerType();
+                BuildIgnoreList(Path.GetDirectoryName(localConfiguration));
+            }
+        }
+
+        public void BuildIgnoreList(string path)
+        {
+            BuildIgnoreListFromPath(path);
+            var list = getIgnorePatterns();
+            if (list.Length > 0)
+                _bus.Publish(new InformationMessage(string.Format("Ignoring \"{0}\"", list)));
+        }
+
+        private string getIgnorePatterns()
+        {
+            var list = "";
+            foreach (var pattern in WatchIgnoreList)
+                list += (list.Length == 0 ? "" : "|") + pattern;
+            if (CustomOutputPath != null && CustomOutputPath.Length > 0)
+                list += (list.Length == 0 ? "" : "|") + CustomOutputPath.Replace('\\', '/');
+            return list;
         }
 		
 		public void SetBuildProvider()

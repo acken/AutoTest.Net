@@ -40,6 +40,9 @@ namespace AutoTest.Core.Configuration
 		void SetBuildProvider();
 		void AnnounceTrackerType();
 		void Merge(string configuratoinFile);
+        void BuildIgnoreList(string path);
+
+        void Reload(string localConfiguration);
 
         void SetWatchPath(string watchFolder);
     }
