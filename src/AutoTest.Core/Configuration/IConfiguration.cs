@@ -41,6 +41,7 @@ namespace AutoTest.Core.Configuration
 		void AnnounceTrackerType();
 		void Merge(string configuratoinFile);
         void BuildIgnoreList(string path);
+        void SetCustomOutputPath(string path);
 
         void Reload(string localConfiguration);
 

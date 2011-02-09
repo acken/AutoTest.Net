@@ -106,6 +106,11 @@ namespace AutoTest.Core.Configuration
 				trackerType = "assembly tracking";
 			_bus.Publish(new InformationMessage(string.Format("Tracker type: {0}", trackerType)));
 		}
+
+        public void SetCustomOutputPath(string path)
+        {
+            CustomOutputPath = path;
+        }
 		
 		public void Merge(string configuratoinFile)
 		{
