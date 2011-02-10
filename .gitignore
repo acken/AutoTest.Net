@@ -25,3 +25,4 @@ openlocal.bat
 Debug/
 Release/
 AutoTest.config
+AutoTest.config.old
