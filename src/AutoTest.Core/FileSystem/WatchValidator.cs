@@ -42,7 +42,6 @@ namespace AutoTest.Core.FileSystem
 
         private bool useBinaryChangeList(string filePath)
         {
-            int i = 9;
             if (!filePath.ToLower().EndsWith(".dll") && !filePath.ToLower().EndsWith(".exe"))
                 return false;
             if (filePath.ToLower().EndsWith(".vshost.exe"))

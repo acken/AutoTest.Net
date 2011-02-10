@@ -88,12 +88,13 @@ namespace AutoTest.Core.Configuration
 		
 		public void SetBuildProvider()
 		{
+            fkj
 			if (_buildExecutables == null)
 				return;
 			
 			if (_buildExecutables.Count == 0)
 			{
-				FileChangeBatchDelay = 2000;
+				FileChangeBatchDelay = 1000;
 				_bus.SetBuildProvider("NoBuild");
                 CustomOutputPath = Path.Combine("bin", "Debug");
 			}
