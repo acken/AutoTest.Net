@@ -88,7 +88,6 @@ namespace AutoTest.Core.Configuration
 		
 		public void SetBuildProvider()
 		{
-            fkj
 			if (_buildExecutables == null)
 				return;
 			
@@ -102,7 +101,7 @@ namespace AutoTest.Core.Configuration
 		
 		public void AnnounceTrackerType()
 		{
-			var trackerType = "file change tracking";;
+			var trackerType = "file change tracking";
 			if (_buildExecutables.Count == 0)
 				trackerType = "assembly tracking";
 			_bus.Publish(new InformationMessage(string.Format("Tracker type: {0}", trackerType)));

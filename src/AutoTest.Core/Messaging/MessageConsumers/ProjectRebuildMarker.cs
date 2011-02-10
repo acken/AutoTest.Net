@@ -2,6 +2,7 @@ using System;
 using AutoTest.Messages;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.DebugLog;
 namespace AutoTest.Core
 {
 	class ProjectRebuildMarker : IMarkProjectsForRebuild
@@ -29,11 +30,13 @@ namespace AutoTest.Core
 				var project = _cache.Get<Project>(file.FullName);
                 if (project == null)
                 {
+                    Debug.WriteDebug("Adding and marking project for rebuild " + file.FullName);
                     _cache.Add<Project>(file.FullName);
                     project = _cache.Get<Project>(file.FullName);
                 }
                 else
                 {
+                    Debug.WriteDebug("Reloading and marking project for rebuild " + file.FullName);
                     _cache.Reload<Project>(file.FullName);
                     project = _cache.Get<Project>(file.FullName);
                 }
