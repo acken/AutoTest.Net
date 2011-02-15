@@ -24,7 +24,7 @@
 	<!-- the line to goto. These will be filled in by the application when executing -->
 	<!-- the statement -->
 	<CodeEditor>
-	<Executable>C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe</Executable>
+	<Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
 	<Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
 	</CodeEditor>
 	
