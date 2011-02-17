@@ -8,6 +8,7 @@ using AutoTest.TestRunners.Shared.Options;
 using System.Reflection;
 using System.IO;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.MSTest
 {
@@ -19,19 +20,28 @@ namespace AutoTest.TestRunners.MSTest
         {
         }
 
-        public bool IsTest(string assembly, string type)
+        public bool IsTest(string assembly, string member)
         {
-            return false;
+            var locator = new SimpleTypeLocator(assembly, member);
+            var method = locator.Locate();
+            if (method.Category != TypeCategory.Method)
+                return false;
+            return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod");
         }
 
-        public bool ContainsTestsFor(string assembly, string type)
+        public bool ContainsTestsFor(string assembly, string member)
         {
-            return false;
+            var locator = new SimpleTypeLocator(assembly, member);
+            var cls = locator.Locate();
+            if (cls.Category != TypeCategory.Class)
+                return false;
+            return cls.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestClass");
         }
 
         public bool ContainsTestsFor(string assembly)
         {
-            return false;
+            var parser = new AssemblyReader();
+            return parser.GetReferences(assembly).Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
         }
 
         public bool Handles(string identifier)
@@ -69,7 +79,7 @@ namespace AutoTest.TestRunners.MSTest
             //CreateAndAddCommand(executor, commandFactoryType, "/testlist", SelectedTestListName);
 
             //var mstest = Activator.CreateInstance(executableDir, "Microsoft.VisualStudio.TestTools.CommandLine.Executor");
-            return null;
+            return new TestResult[] {};
         }
     }
 }
