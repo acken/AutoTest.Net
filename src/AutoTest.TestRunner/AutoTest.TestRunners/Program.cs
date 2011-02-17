@@ -18,7 +18,6 @@ namespace AutoTest.TestRunners
     {
         private static Arguments _arguments;
         private static List<TestResult> _results = new List<TestResult>();
-        private static string _currentRunner = "";
         
         static void Main(string[] args)
         {
