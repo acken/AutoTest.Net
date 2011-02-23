@@ -50,7 +50,7 @@ namespace AutoTest.TestRunners
                 ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories)));
+                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray())));
             }
             catch (Exception ex)
             {

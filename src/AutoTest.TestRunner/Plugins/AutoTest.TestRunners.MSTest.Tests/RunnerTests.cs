@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using AutoTest.TestRunners.Shared.Options;
+using System.IO;
 
 namespace AutoTest.TestRunners.MSTest.Tests
 {
@@ -10,12 +12,96 @@ namespace AutoTest.TestRunners.MSTest.Tests
     public class RunnerTests
     {
         [Test]
-        public void Should_run_tests()
+        public void Should_run_all_tests()
         {
-            //if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
-            //    return;
-            //var runner = new Runner();
-            //runner.Run(null);
+            var settings = new RunSettings(new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll")), new string[] {});
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(10));
+        }
+
+        [Test]
+        public void Should_run_single_passing_test()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Passing_test");
+            var settings = new RunSettings(assembly, new string[] { });
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(1));
+            var test = result.ElementAt(0);
+            Assert.That(test.Runner, Is.EqualTo("MSTest"));
+            Assert.That(test.Assembly, Is.EqualTo(assemblyPath));
+            Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Passed));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Passing_test"));
+        }
+
+        [Test]
+        public void Should_run_single_failing_test()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Failing_test");
+            var settings = new RunSettings(assembly, new string[] { });
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(1));
+            var test = result.ElementAt(0);
+            Assert.That(test.Runner, Is.EqualTo("MSTest"));
+            Assert.That(test.Assembly, Is.EqualTo(assemblyPath));
+            Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Failed));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Failing_test"));
+        }
+
+        [Test]
+        public void Should_run_single_inconclusive_test()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Inconclusive_test");
+            var settings = new RunSettings(assembly, new string[] { });
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(1));
+            var test = result.ElementAt(0);
+            Assert.That(test.Runner, Is.EqualTo("MSTest"));
+            Assert.That(test.Assembly, Is.EqualTo(assemblyPath));
+            Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Ignored));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Inconclusive_test"));
+            Assert.That(test.DurationInMilliseconds, Is.GreaterThan(0));
+        }
+
+        [Test]
+        public void Should_run_full_fixture()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddMember("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture2");
+            var settings = new RunSettings(assembly, new string[] { });
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(2));
+            var test = result.ElementAt(0);
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture2"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture2.Another_passing_test"));
+
+            Assert.That(result.ElementAt(1).TestFixture, Is.EqualTo("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture2"));
+        }
+
+        [Test]
+        public void Should_run_test_for_namespace()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddNamespace("AutoTest.TestRunners.MSTest.Tests.TestResource.SomeNamespace");
+            var settings = new RunSettings(assembly, new string[] { });
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(4));
         }
     }
 }

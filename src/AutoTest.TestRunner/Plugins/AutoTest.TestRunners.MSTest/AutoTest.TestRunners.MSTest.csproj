@@ -63,6 +63,9 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="celer.Core">
+      <HintPath>..\..\..\..\lib\celer\celer.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -72,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Executor.cs" />
+    <Compile Include="Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Extensions\MethodInfoExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="MSTestLocator.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

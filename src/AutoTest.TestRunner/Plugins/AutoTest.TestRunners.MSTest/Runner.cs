@@ -9,11 +9,16 @@ using System.Reflection;
 using System.IO;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
-
+using celer.Core.TestRunners;
+using AutoTest.TestRunners.MSTest.Extensions;
+using System.Diagnostics;
+                                  
 namespace AutoTest.TestRunners.MSTest
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        private List<TestResult> _results;
+
         public string Identifier { get { return "MSTest"; } }
 
         public void SetLogger(ILogger logger)
@@ -51,35 +56,88 @@ namespace AutoTest.TestRunners.MSTest
 
         public IEnumerable<TestResult> Run(RunSettings settings)
         {
-            //var cmd = new Executor();
-            //var result = cmd.Execute();
-            //if (result == false)
-            //    throw new Exception("failed");
+            _results = new List<TestResult>();
+            var tests = getTests(settings);
+            var fixtures = tests.GroupBy(test => test.DeclaringType);
+            foreach (var fixture in fixtures)
+                runTests(settings, fixture);
+            return _results;
+        }
 
-            //string executableDir = @"C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.QualityTools.CommandLine.dll";
-            //string executableDir = @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.QualityTools.CommandLine\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.QualityTools.CommandLine.dll";
-            //var asm = Assembly.LoadFrom(executableDir);
-            //var asm = Assembly.Load("Microsoft.VisualStudio.QualityTools.CommandLine, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-            //var asm = Assembly.Load("Microsoft.VisualStudio.QualityTools.CommandLine.dll");
-            //throw new Exception("meh");
-            //var cmdLine = asm.GetType("Microsoft.VisualStudio.TestTools.CommandLine.Executor");
-            //var mstest = Activator.CreateInstance(cmdLine);
+        private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
+        {
+            try
+            {
+                using (var runner = new MSTestTestRunner(fixture.Key))
+                {
+                    fixture.Select(test => runner.Run(test)).ToList().ForEach(x => _results.Add(getResult(settings, fixture, x)));
+                }
+            }
+            catch (Exception ex)
+            {
+                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, 0, "", TestState.Failed, "There was an error in class initialize or cleanup" + Environment.NewLine + getException(ex)));
+            }
+        }
 
-            
+        private TestResult getResult(RunSettings settings, IGrouping<Type, MethodInfo> fixture, celer.Core.RunResult x)
+        {
+            return new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, x.MillisecondsSpent, fixture.Key.FullName + "." + x.Test.Name, getState(x), getMessage(x));
+        }
 
-            // Register commands with the executor to set command-line arguments.
-            //Type commandFactoryType =
-            //    commandLineAssembly.GetType("Microsoft.VisualStudio.TestTools.CommandLine.CommandFactory");
-            //CreateAndAddCommand(executor, commandFactoryType, "/nologo", null);
-            //CreateAndAddCommand(executor, commandFactoryType, "/noisolation", null);
-            //CreateAndAddCommand(executor, commandFactoryType, "/testmetadata", testMetadataPath);
-            //CreateAndAddCommand(executor, commandFactoryType, "/resultsfile", testResultsPath);
-            //CreateAndAddCommand(executor, commandFactoryType, "/runconfig", runConfigPath);
-            //CreateAndAddCommand(executor, commandFactoryType, "/searchpathroot", searchPathRoot);
-            //CreateAndAddCommand(executor, commandFactoryType, "/testlist", SelectedTestListName);
+        private string getMessage(celer.Core.RunResult x)
+        {
+            if (x.Exception == null)
+                return "";
+            return getException(x.Exception);
+        }
 
-            //var mstest = Activator.CreateInstance(executableDir, "Microsoft.VisualStudio.TestTools.CommandLine.Executor");
-            return new TestResult[] {};
+        private TestState getState(celer.Core.RunResult x)
+        {
+            if (!x.WasRun)
+                return TestState.Ignored;
+            if (x.Passed)
+                return TestState.Passed;
+            else
+                return TestState.Failed;
+        }
+
+        private IEnumerable<MethodInfo> getTests(RunSettings settings)
+        {
+            try
+            {
+                var assembly = Assembly.LoadFrom(settings.Assembly.Assembly);
+                if (settings.Assembly.Tests.Count() > 0 || settings.Assembly.Members.Count() > 0 || settings.Assembly.Namespaces.Count() > 0)
+                    return getTestSelection(assembly, settings);
+                else
+                    return getAllTests(assembly, settings);
+            }
+            catch (Exception ex)
+            {
+                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, "", 0, "Error while preparing runner", TestState.Panic, getException(ex)));
+                return null;
+            }
+        }
+
+        private IEnumerable<MethodInfo> getTestSelection(Assembly assembly, RunSettings settings)
+        {
+            var tests = new List<MethodInfo>();
+            assembly.GetFixtures().ForEach(fixture => tests.AddRange(fixture.GetTestsMatching(settings)));
+            return tests;
+        }
+
+        private IEnumerable<MethodInfo> getAllTests(Assembly assembly, RunSettings settings)
+        {
+            var tests = new List<MethodInfo>();
+            assembly.GetFixtures().ForEach(fixture => tests.AddRange(fixture.GetTests(settings.IgnoreCategories)));
+            return tests;
+        }
+
+        private string getException(Exception ex)
+        {
+            var error = "";
+            if (ex.InnerException != null)
+                error = Environment.NewLine + getException(ex.InnerException);
+            return ex.ToString() + error;
         }
     }
 }
