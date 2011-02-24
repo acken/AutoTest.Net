@@ -31,7 +31,7 @@ namespace AutoTest.TestRunners.MSTest
             var method = locator.Locate();
             if (method.Category != TypeCategory.Method)
                 return false;
-            return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod");
+            return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -40,7 +40,7 @@ namespace AutoTest.TestRunners.MSTest
             var cls = locator.Locate();
             if (cls.Category != TypeCategory.Class)
                 return false;
-            return cls.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestClass");
+            return cls.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute");
         }
 
         public bool ContainsTestsFor(string assembly)
