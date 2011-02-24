@@ -75,20 +75,30 @@ namespace AutoTest.TestRunners.MSTest
             }
             catch (Exception ex)
             {
-                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, 0, "", TestState.Failed, "There was an error in class initialize or cleanup" + Environment.NewLine + getException(ex)));
+                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, 0, "", TestState.Failed, "There was an error in class initialize or cleanup: " + Environment.NewLine + ex.Message));
+                _results[_results.Count - 1].AddStackLines(getStackLines(ex));
             }
+        }
+
+        private StackLine[] getStackLines(Exception ex)
+        {
+            if (ex == null)
+                return new StackLine[] { };
+            return ex.StackTrace.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(x => new StackLine(x)).ToArray();
         }
 
         private TestResult getResult(RunSettings settings, IGrouping<Type, MethodInfo> fixture, celer.Core.RunResult x)
         {
-            return new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, x.MillisecondsSpent, fixture.Key.FullName + "." + x.Test.Name, getState(x), getMessage(x));
+            var result = new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, x.MillisecondsSpent, fixture.Key.FullName + "." + x.Test.Name, getState(x), getMessage(x));
+            result.AddStackLines(getStackLines(x.Exception));
+            return result;
         }
 
         private string getMessage(celer.Core.RunResult x)
         {
             if (x.Exception == null)
                 return "";
-            return getException(x.Exception);
+            return x.Exception.Message;
         }
 
         private TestState getState(celer.Core.RunResult x)
@@ -113,7 +123,8 @@ namespace AutoTest.TestRunners.MSTest
             }
             catch (Exception ex)
             {
-                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, "", 0, "Error while preparing runner", TestState.Panic, getException(ex)));
+                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, "", 0, "Error while preparing runner", TestState.Panic, ex.Message));
+                _results[_results.Count - 1].AddStackLines(getStackLines(ex));
                 return null;
             }
         }
