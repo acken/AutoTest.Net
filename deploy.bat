@@ -44,11 +44,11 @@ copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunner
 copy %BINARYDIR%\AutoTest.TestRunners.NUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.NUnit.dll
 copy %BINARYDIR%\AutoTest.TestRunners.XUnit.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.XUnit.dll
 copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\AutoTest.TestRunners.MSTest.dll
-copy %BINARYDIR%\nunit.core.dll %DEPLOYDIR%\nunit.core.dll
-copy %BINARYDIR%\nunit.core.interfaces.dll %DEPLOYDIR%\nunit.core.interfaces.dll
-copy %BINARYDIR%\nunit.util.dll %DEPLOYDIR%\nunit.util.dll
-copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\xunit.runner.utility.dll
-copy %BINARYDIR%\celer.Core.dll %DEPLOYDIR%\celer.Core.dll
+copy %BINARYDIR%\nunit.core.dll %DEPLOYDIR%\TestRunners\nunit.core.dll
+copy %BINARYDIR%\nunit.core.interfaces.dll %DEPLOYDIR%\TestRunners\nunit.core.interfaces.dll
+copy %BINARYDIR%\nunit.util.dll %DEPLOYDIR%\TestRunners\nunit.util.dll
+copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\TestRunners\xunit.runner.utility.dll
+copy %BINARYDIR%\celer.Core.dll %DEPLOYDIR%\TestRunners\celer.Core.dll
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll

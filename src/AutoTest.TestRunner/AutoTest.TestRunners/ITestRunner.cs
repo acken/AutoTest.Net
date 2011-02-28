@@ -11,6 +11,7 @@ namespace AutoTest.TestRunners
 {
     interface ITestRunner
     {
+        void SetupResolver();
         IEnumerable<TestResult> Run(Plugin plugin, string id, RunSettings settings);
     }
 }

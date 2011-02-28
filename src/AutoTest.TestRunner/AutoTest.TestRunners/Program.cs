@@ -22,7 +22,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp1709.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpEF7D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             writeHeader();
@@ -74,7 +74,7 @@ namespace AutoTest.TestRunners
                 try
                 {
                     var result = new List<TestResult>();
-                    result.Add(ErrorHandler.GetError(ex));
+                    result.Add(ErrorHandler.GetError("Init", ex));
                     var writer = new ResultsXmlWriter(result);
                     writer.Write(_arguments.OutputFile);
                 }
@@ -85,7 +85,7 @@ namespace AutoTest.TestRunners
             }
         }
 
-        static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
             var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test", TestState.Panic, message);

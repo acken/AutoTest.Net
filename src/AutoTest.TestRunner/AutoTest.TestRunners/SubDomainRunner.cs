@@ -7,10 +7,12 @@ using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Errors;
 using System.Threading;
 using System.IO;
+using System.Reflection;
+using Mono.Cecil;
 
 namespace AutoTest.TestRunners
 {
-    class SubDomainRunner
+    class SubDomainRunner : MarshalByRefObject
     {
         private Plugin _plugin;
         private string _id;
@@ -36,7 +38,7 @@ namespace AutoTest.TestRunners
                 // Construct and initialize settings for a second AppDomain.
                 AppDomainSetup domainSetup = new AppDomainSetup()
                 {
-                    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                    ApplicationBase = Path.GetDirectoryName(_assembly.Assembly),
                     ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
                     ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
                     LoaderOptimization = LoaderOptimization.MultiDomainHost
@@ -47,14 +49,17 @@ namespace AutoTest.TestRunners
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
-                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+
+                // Prepare assemblies
+                runtime.SetupResolver();
 
                 // start the runtime.  call will marshal into the child runtime appdomain
                 Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray())));
             }
             catch (Exception ex)
             {
-                Program.AddResults(ErrorHandler.GetError(ex));
+                Program.AddResults(ErrorHandler.GetError("Run", ex));
             }
             finally
             {

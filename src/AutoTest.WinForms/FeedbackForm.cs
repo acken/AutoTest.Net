@@ -242,7 +242,7 @@ namespace AutoTest.WinForms
         private string formatTestResult(TestItem item)
         {
             var test = item.Value;
-            return string.Format("{0} -> {1}", test.Status, test.Name);
+            return string.Format("{0} -> ({2}) {1}", test.Status, test.Name, test.Runner);
         }
 
         private void runFeedbackList_SelectedIndexChanged(object sender, EventArgs e)

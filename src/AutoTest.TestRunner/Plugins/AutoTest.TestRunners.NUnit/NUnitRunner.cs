@@ -40,7 +40,6 @@ namespace AutoTest.TestRunners.NUnit
         private IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> runTests(Options options, TestPackage package, TestRunner testRunner)
         {
             testRunner.Load(package);
-
             if (testRunner.Test == null)
             {
                 testRunner.Unload();
