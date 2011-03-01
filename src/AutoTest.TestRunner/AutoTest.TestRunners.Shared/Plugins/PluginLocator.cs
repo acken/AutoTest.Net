@@ -74,7 +74,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 try
                 {
                     Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-                    var files = Directory.GetFiles(_path);
+                    var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                         plugins.AddRange(getPlugins(file));
                 }

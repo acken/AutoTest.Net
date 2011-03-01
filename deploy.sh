@@ -11,17 +11,18 @@ RESOURCES="./src/Resources"
 if [ ! -d $DEPLOYDIR ]; then
 {
 	mkdir $DEPLOYDIR
-	mkdir $DEPLOYDIR/Icons
-	mkdir $DEPLOYDIR/TestRunners
 }
 else
 {
 	rm -rf $DEPLOYDIR/*
-	mkdir $DEPLOYDIR/Icons
-	mkdir $DEPLOYDIR/TestRunners
 }
 fi
 
+mkdir $DEPLOYDIR/Icons
+mkdir $DEPLOYDIR/TestRunners
+mkdir $DEPLOYDIR/TestRunners/NUnit
+mkdir $DEPLOYDIR/TestRunners/XUnit
+mkdir $DEPLOYDIR/TestRunners/MSTest
 
 cp $BINARYDIR/AutoTest.Messages.dll $DEPLOYDIR/AutoTest.Messages.dll
 cp $BINARYDIR/AutoTest.Core.dll $DEPLOYDIR/AutoTest.Core.dll
@@ -38,14 +39,17 @@ cp $BINARYDIRx86/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.x86.exe
 cp $BINARYDIRx86/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.x86.v4.0.exe
 cp $BINARYDIRx86/AutoTest.TestRunner.exe.config $DEPLOYDIR/AutoTest.TestRunner.x86.v4.0.exe.config
 cp $BINARYDIR/AutoTest.TestRunners.Shared.dll $DEPLOYDIR/AutoTest.TestRunners.Shared.dll
-cp $BINARYDIR/AutoTest.TestRunners.NUnit.dll $DEPLOYDIR/TestRunners/AutoTest.TestRunners.NUnit.dll
-cp $BINARYDIR/AutoTest.TestRunners.XUnit.dll $DEPLOYDIR/TestRunners/AutoTest.TestRunners.XUnit.dll
-cp $BINARYDIR/AutoTest.TestRunners.MSTest.dll $DEPLOYDIR/TestRunners/AutoTest.TestRunners.MSTest.dll
-cp $BINARYDIR/nunit.core.dll $DEPLOYDIR/TestRunners/nunit.core.dll
-cp $BINARYDIR/nunit.core.interfaces.dll $DEPLOYDIR/TestRunners/nunit.core.interfaces.dll
-cp $BINARYDIR/nunit.util.dll $DEPLOYDIR/TestRunners/nunit.util.dll
-cp $BINARYDIR/xunit.runner.utility.dll $DEPLOYDIR/TestRunners/xunit.runner.utility.dll
-cp $BINARYDIR/celer.Core.dll $DEPLOYDIR/TestRunners/celer.Core.dll
+
+cp $BINARYDIR/AutoTest.TestRunners.NUnit.dll $DEPLOYDIR/TestRunners/NUnit/AutoTest.TestRunners.NUnit.dll
+cp $BINARYDIR/nunit.core.dll $DEPLOYDIR/TestRunners/NUnit/nunit.core.dll
+cp $BINARYDIR/nunit.core.interfaces.dll $DEPLOYDIR/TestRunners/NUnit/nunit.core.interfaces.dll
+cp $BINARYDIR/nunit.util.dll $DEPLOYDIR/TestRunners/NUnit/nunit.util.dll
+
+cp $BINARYDIR/AutoTest.TestRunners.XUnit.dll $DEPLOYDIR/TestRunners/XUnit/AutoTest.TestRunners.XUnit.dll
+cp $BINARYDIR/xunit.runner.utility.dll $DEPLOYDIR/TestRunners/XUnit/xunit.runner.utility.dll
+
+cp $BINARYDIR/AutoTest.TestRunners.MSTest.dll $DEPLOYDIR/TestRunners/MSTest/AutoTest.TestRunners.MSTest.dll
+cp $BINARYDIR/celer.Core.dll $DEPLOYDIR/TestRunners/MSTest/celer.Core.dll
 
 cp $BINARYDIR/Castle.Core.dll $DEPLOYDIR/Castle.Core.dll
 cp $BINARYDIR/Castle.Facilities.Logging.dll $DEPLOYDIR/Castle.Facilities.Logging.dll
