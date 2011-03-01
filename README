@@ -40,9 +40,15 @@ ignore posibility in the configuration file. To figure out what files are being
 generated turn on logging and check the debug.log file.
 
 Build from source
-To build the whole thing from source just clone or fork the repository. When done
-go in and run build and deploy scripts (biuld.sh/build.bat and deploy.sh/deploy.bat
-depending on whether you are on Windows(bat) or something else(sh)). After running
-build and deploy scripts you will find the built binaries under the ReleaseBinaries
-folder.
+To build the whole thing from source just clone or fork the repository. If you want
+to build AutoTest.Net with Microsoft .Net instead fo mono go to the Settings folder.
+In there you will find the UppercuT.config and UppercuTx86.config files. Locate this
+line (<property name="microsoft.framework" value="mono-3.5" overwrite="false" />) in
+both files and switch from mono-3.5 to net-3.5.
+
+When done go in and run build and deploy scripts (biuld.sh/build.bat and 
+deploy.sh/deploy.bat depending on whether you are on Windows(bat) or something else(sh)).
+After running build and deploy scripts you will find the built binaries under the 
+ReleaseBinaries folder.
+
 PS! For building on mono you need 2.8 or later and it uses Git's core.autocrlf=true
