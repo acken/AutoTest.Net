@@ -131,7 +131,7 @@ namespace AutoTest.TestRunners.MSTest
         {
             var message = ex.Message;
             if (ex.InnerException != null)
-                message += Environment.NewLine + getMessage(ex);
+                message += Environment.NewLine + getMessage(ex.InnerException);
             return message;
         }
 
