@@ -11,10 +11,13 @@ namespace AutoTest.TestRunners.MSTest
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        private ILogger _logger;
+
         public string Identifier { get { return "MSTest"; } }
 
         public void SetLogger(ILogger logger)
         {
+            _logger = logger;
         }
 
         public bool IsTest(string assembly, string member)
@@ -48,7 +51,7 @@ namespace AutoTest.TestRunners.MSTest
 
         public IEnumerable<TestResult> Run(RunSettings settings)
         {
-            return new CelerRunner().Run(settings);
+            return new CelerRunner(_logger).Run(settings);
         }
     }
 }

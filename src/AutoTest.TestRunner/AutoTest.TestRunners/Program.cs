@@ -11,6 +11,7 @@ using System.Runtime.Remoting;
 using AutoTest.TestRunners.Shared.Errors;
 using System.Reflection;
 using System.Threading;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners
 {
@@ -25,6 +26,8 @@ namespace AutoTest.TestRunners
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpEF7D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
+            if (_arguments.Logging)
+                Logger.SetLogger(new ConsoleLogger());
             writeHeader();
             if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
             {
@@ -106,7 +109,7 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent]");
+            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent] [--logging]");
             Write("");
             Write("Options format");
             Write("<=====================================================>");
@@ -149,7 +152,7 @@ namespace AutoTest.TestRunners
                     foreach (var assembly in run.Assemblies)
                     {
                         WriteNow("Running tests for " + assembly.Assembly);
-                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly);
+                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging);
                         if (_arguments.RunInParallel)
                         {
                             var handle = new ManualResetEvent(false);

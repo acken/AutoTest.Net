@@ -9,6 +9,7 @@ using System.Threading;
 using System.IO;
 using System.Reflection;
 using Mono.Cecil;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners
 {
@@ -18,13 +19,15 @@ namespace AutoTest.TestRunners
         private string _id;
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
+        private bool _shouldLog = false;
 
-        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly)
+        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog)
         {
             _plugin = plugin;
             _id = id;
             _categories = categories;
             _assembly = assembly;
+            _shouldLog = shouldLog;
         }
 
         public void Run(object waitHandle)
@@ -45,6 +48,7 @@ namespace AutoTest.TestRunners
                 };
 
                 // Create the child AppDomain used for the service tool at runtime.
+                Logger.Write("Starting sub domain");
                 childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
 
                 // Create an instance of the runtime in the second AppDomain. 
@@ -52,7 +56,8 @@ namespace AutoTest.TestRunners
                 ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
 
                 // Prepare assemblies
-                runtime.SetupResolver();
+                Logger.Write("Preparing resolver");
+                runtime.SetupResolver(_shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
                 Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray())));

@@ -10,6 +10,7 @@ using AutoTest.TestRunners.MSTest.Extensions;
 using System.Threading;
 using celer.Core.TestRunners;
 using System.IO;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.MSTest
 {
@@ -17,6 +18,12 @@ namespace AutoTest.TestRunners.MSTest
     {
         private string Identifier = "MSTest";
         private List<TestResult> _results;
+        private ILogger _logger;
+
+        public CelerRunner(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public IEnumerable<TestResult> Run(RunSettings settings)
         {
@@ -31,9 +38,11 @@ namespace AutoTest.TestRunners.MSTest
         private void run(object runSettings)
         {
             var settings = (RunSettings)runSettings;
+           
             var tests = getTests(settings);
             if (tests == null)
                 return;
+            _logger.Write("Found {0} tests", tests.Count());
             var fixtures = tests.GroupBy(test => test.DeclaringType);
             foreach (var fixture in fixtures)
                 runTests(settings, fixture);
@@ -41,17 +50,18 @@ namespace AutoTest.TestRunners.MSTest
 
         private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
         {
+            var list = fixture.ToList();
             try
             {
+                _logger.Write("Running fixture {0}", fixture.Key);
                 using (var runner = new MSTestTestRunner(fixture.Key))
                 {
-                    fixture.Select(test => runner.Run(test)).ToList().ForEach(x => _results.Add(getResult(settings, fixture, x)));
+                    list.Select(test => runner.Run(test)).ToList().ForEach(x => _results.Add(getResult(settings, fixture, x)));
                 }
             }
             catch (Exception ex)
             {
-                _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, fixture.Key.FullName, 0, "", TestState.Failed, "There was an error in class initialize or cleanup: " + Environment.NewLine + ex.Message));
-                _results[_results.Count - 1].AddStackLines(getStackLines(ex));
+                list.ForEach(test => _results.Add(getResult(settings, fixture, new celer.Core.RunResult(test, false, false, ex, 0))));
             }
         }
 

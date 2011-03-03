@@ -10,6 +10,7 @@ using AutoTest.TestRunners.Shared.Errors;
 using System.IO;
 using System.Reflection;
 using Mono.Cecil;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners
 {
@@ -19,8 +20,10 @@ namespace AutoTest.TestRunners
         private List<string> _directories = new List<string>();
         private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
 
-        public void SetupResolver()
+        public void SetupResolver(bool startLogger)
         {
+            if (startLogger)
+                Logger.SetLogger(new ConsoleLogger());
             _directories.Add(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
@@ -29,15 +32,19 @@ namespace AutoTest.TestRunners
         {
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
+            Logger.Write("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
             var runner = getRunner(plugin);
             try
             {
                 if (runner == null)
                     return _results;
+                Logger.Write("Matching plugin identifier ({0}) to test identifier ({1})", runner.Identifier, id);
                 if (!runner.Identifier.ToLower().Equals(id.ToLower()))
                     return _results;
+                Logger.Write("Checking whether assembly contains tests for {0}", id);
                 if (!runner.ContainsTestsFor(settings.Assembly.Assembly))
                     return _results;
+                Logger.Write("Starting test run");
                 return runner.Run(settings);
             }
             catch

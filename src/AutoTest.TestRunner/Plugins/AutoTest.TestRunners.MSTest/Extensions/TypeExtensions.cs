@@ -11,6 +11,8 @@ namespace AutoTest.TestRunners.MSTest.Extensions
     {
         public static bool IsTestFixture(this Type type)
         {
+            if (type.GetCustomAttributes(true).Any(x => x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute")))
+                return false;
             return type.GetCustomAttributes(true).Any(x => x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute"));
         }
 

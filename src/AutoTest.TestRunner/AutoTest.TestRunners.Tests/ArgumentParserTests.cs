@@ -41,5 +41,13 @@ namespace AutoTest.TestRunners.Tests
             var arguments = parser.Parse();
             Assert.That(arguments.Silent, Is.True);
         }
+
+        [Test]
+        public void Should_parse_logging()
+        {
+            var parser = new ArgumentParser(new string[] { "--logging" });
+            var arguments = parser.Parse();
+            Assert.That(arguments.Logging, Is.True);
+        }
     }
 }

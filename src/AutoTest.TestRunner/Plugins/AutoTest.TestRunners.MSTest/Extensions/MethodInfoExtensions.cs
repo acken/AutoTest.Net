@@ -19,6 +19,8 @@ namespace AutoTest.TestRunners.MSTest.Extensions
                 return false;
             if (ignoreCategories.Length == 0)
                 return true;;
+            if (method.GetCustomAttributes(true).Any(x => isIgnoreAttribute(x)))
+                return false;
             var categories = method.GetCustomAttributes(true)
                 .Where(x => isTestCategoryAttribute(x))
                 .Select(x => getTestCategories(x)).ToList();
@@ -35,6 +37,11 @@ namespace AutoTest.TestRunners.MSTest.Extensions
         private static bool isTestCategoryAttribute(object x)
         {
             return x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute");
+        }
+
+        private static bool isIgnoreAttribute(object x)
+        {
+            return x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute");
         }
 
         private static bool doesNotContainIgnoreCategory(string[] x, string[] ignoreCategories)

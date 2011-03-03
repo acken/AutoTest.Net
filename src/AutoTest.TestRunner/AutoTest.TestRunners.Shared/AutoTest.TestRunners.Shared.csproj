@@ -82,7 +82,9 @@
     <Compile Include="IAutoTestNetTestRunner.cs" />
     <Compile Include="ITestRunProcess.cs" />
     <Compile Include="ITestRunProcessFeedback.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Options\OptionsXmlReader.cs" />
     <Compile Include="Options\OptionsXmlWriter.cs" />

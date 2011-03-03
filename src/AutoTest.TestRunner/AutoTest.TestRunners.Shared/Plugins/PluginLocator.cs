@@ -35,7 +35,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 {
                     var asm = System.Reflection.Assembly.LoadFrom(Assembly);
                     var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
-                    runner.SetLogger(new NullLogger());
+                    runner.SetLogger(Logger.Instance);
                     return runner;
                 }
                 catch
