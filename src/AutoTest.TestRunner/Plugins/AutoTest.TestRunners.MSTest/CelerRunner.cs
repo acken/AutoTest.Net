@@ -44,8 +44,21 @@ namespace AutoTest.TestRunners.MSTest
                 return;
             _logger.Write("Found {0} tests", tests.Count());
             var fixtures = tests.GroupBy(test => test.DeclaringType);
-            foreach (var fixture in fixtures)
-                runTests(settings, fixture);
+            var currentPath = Environment.CurrentDirectory;
+            try
+            {
+                Environment.CurrentDirectory = Path.GetDirectoryName(settings.Assembly.Assembly);
+                foreach (var fixture in fixtures)
+                    runTests(settings, fixture);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                Environment.CurrentDirectory = currentPath;
+            }
         }
 
         private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
