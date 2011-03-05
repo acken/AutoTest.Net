@@ -7,22 +7,27 @@ using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Errors;
 using System.Threading;
 using System.IO;
+using System.Reflection;
+using Mono.Cecil;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners
 {
-    class SubDomainRunner
+    class SubDomainRunner : MarshalByRefObject
     {
         private Plugin _plugin;
         private string _id;
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
+        private bool _shouldLog = false;
 
-        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly)
+        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog)
         {
             _plugin = plugin;
             _id = id;
             _categories = categories;
             _assembly = assembly;
+            _shouldLog = shouldLog;
         }
 
         public void Run(object waitHandle)
@@ -36,25 +41,30 @@ namespace AutoTest.TestRunners
                 // Construct and initialize settings for a second AppDomain.
                 AppDomainSetup domainSetup = new AppDomainSetup()
                 {
-                    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                    ApplicationBase = Path.GetDirectoryName(_assembly.Assembly),
                     ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
                     ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
                     LoaderOptimization = LoaderOptimization.MultiDomainHost
                 };
 
                 // Create the child AppDomain used for the service tool at runtime.
+                Logger.Write("Starting sub domain");
                 childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
-                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+
+                // Prepare assemblies
+                Logger.Write("Preparing resolver");
+                runtime.SetupResolver(_shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories)));
+                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray())));
             }
             catch (Exception ex)
             {
-                Program.AddResults(ErrorHandler.GetError(ex));
+                Program.AddResults(ErrorHandler.GetError("Run", ex));
             }
             finally
             {

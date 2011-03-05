@@ -18,6 +18,7 @@ namespace AutoTest.TestRunners.Shared
         private ITestRunProcessFeedback _feedback;
         private TargetedRun _targetedRun;
         private bool _runInParallel = false;
+        private bool _startSuspended = false;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
@@ -28,6 +29,12 @@ namespace AutoTest.TestRunners.Shared
         public TestProcess RunParallel()
         {
             _runInParallel = true;
+            return this;
+        }
+
+        public TestProcess StartSuspended()
+        {
+            _startSuspended = true;
             return this;
         }
 
@@ -44,6 +51,8 @@ namespace AutoTest.TestRunners.Shared
             var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", input, output);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
+            if (_startSuspended)
+                arguments += " --startsuspended";
             if (_feedback != null)
                 _feedback.ProcessStart(executable + " " + arguments);
             var proc = new Process();
@@ -57,8 +66,6 @@ namespace AutoTest.TestRunners.Shared
             var consoleOutput = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit();
             var results = getResults(output);
-            if (consoleOutput.Length > 0)
-                results.Add(ErrorHandler.GetError(consoleOutput));
             TestRunProcess.AddResults(results);
         }
 

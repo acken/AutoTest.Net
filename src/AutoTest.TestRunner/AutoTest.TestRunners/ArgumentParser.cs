@@ -12,6 +12,7 @@ namespace AutoTest.TestRunners
         public bool StartSuspended { get; set; }
         public bool Silent { get; set; }
         public bool RunInParallel { get; set; }
+        public bool Logging { get; set; }
     }
 
     class ArgumentParser
@@ -44,6 +45,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.Silent = true;
             if (iAm(argument, "--run_assemblies_parallel"))
                 _parsedArgument.RunInParallel = true;
+            if (iAm(argument, "--logging"))
+                _parsedArgument.Logging = true;
         }
 
         private bool iAm(string argument, string parameterName)

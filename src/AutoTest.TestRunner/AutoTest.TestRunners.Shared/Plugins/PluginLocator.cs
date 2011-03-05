@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
+using Mono.Cecil;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -23,16 +24,24 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public IAutoTestNetTestRunner New()
         {
-            try
+            var hitPaths = new string[]
+                                {
+                                    Path.GetDirectoryName(Assembly),
+                                    Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
+                                };
+            using (var resolver = new AssemblyResolver(hitPaths))
             {
-                var asm = System.Reflection.Assembly.LoadFrom(Assembly);
-                var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
-                runner.SetLogger(new NullLogger());
-                return runner;
-            }
-            catch
-            {
-                return null;
+                try
+                {
+                    var asm = System.Reflection.Assembly.LoadFrom(Assembly);
+                    var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
+                    runner.SetLogger(Logger.Instance);
+                    return runner;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
     }
@@ -54,17 +63,25 @@ namespace AutoTest.TestRunners.Shared.Plugins
         public IEnumerable<Plugin> Locate()
         {
             var plugins = new List<Plugin>();
-            var currentDirectory = Environment.CurrentDirectory;
-            try
+            var hitPaths = new string[]
+                                {
+                                    _path,
+                                    Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
+                                };
+            using (var resolver = new AssemblyResolver(hitPaths))
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-                var files = Directory.GetFiles(_path);
-                foreach (var file in files)
-                    plugins.AddRange(getPlugins(file));
-            }
-            finally
-            {
-                Environment.CurrentDirectory = currentDirectory;
+                var currentDirectory = Environment.CurrentDirectory;
+                try
+                {
+                    Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                    var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
+                    foreach (var file in files)
+                        plugins.AddRange(getPlugins(file));
+                }
+                finally
+                {
+                    Environment.CurrentDirectory = currentDirectory;
+                }
             }
             return plugins;
         }
@@ -96,12 +113,69 @@ namespace AutoTest.TestRunners.Shared.Plugins
         {
             try
             {
-                return Assembly.LoadFile(file);
+                return Assembly.LoadFrom(file);
             }
             catch
             {
                 return null;
             }
+        }
+    }
+
+    public class AssemblyResolver : IDisposable
+    {
+        private List<string> _directories = new List<string>();
+        private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
+
+        public AssemblyResolver(string[] hintPaths)
+        {
+            _directories.AddRange(hintPaths);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+        }
+
+        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (_assemblyCache.ContainsKey(args.Name))
+            {
+                if (_assemblyCache[args.Name] == "NotFound")
+                    return null;
+                else
+                    return System.Reflection.Assembly.LoadFrom(_assemblyCache[args.Name]);
+            }
+            foreach (var directory in _directories)
+            {
+                var file = Directory.GetFiles(directory).Where(f => isMissingAssembly(args, f)).Select(x => x).FirstOrDefault();
+                if (file == null)
+                    continue;
+                return System.Reflection.Assembly.LoadFrom(file);
+            }
+            _assemblyCache.Add(args.Name, "NotFound");
+            return null;
+        }
+
+        private bool isMissingAssembly(ResolveEventArgs args, string f)
+        {
+            try
+            {
+                if (_assemblyCache.ContainsValue(f))
+                    return false;
+                var assembly = AssemblyDefinition.ReadAssembly(f);
+                if (!_assemblyCache.ContainsKey(assembly.FullName))
+                    _assemblyCache.Add(assembly.FullName, f);
+                return assembly.FullName.Equals(args.Name);
+            }
+            catch
+            {
+                var key = "invalid signature for " + Path.GetFileName(f);
+                if (!_assemblyCache.ContainsKey(key))
+                    _assemblyCache.Add(key, f);
+                return false;
+            }
+        }
+
+        public void Dispose()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
     }
 }

@@ -15,10 +15,6 @@
 	<!-- Machine.Specifications test runner. (Optional) -->
 	<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>
 	
-	<!-- MSTest test runner. (Optional) -->
-	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>
-	
 	<!-- Code editor configuration. You can specify a code editor to open files in. (Optional) -->
 	<!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
 	<!-- the line to goto. These will be filled in by the application when executing -->
@@ -57,6 +53,10 @@
 	<!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->
 	<!--<XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>-->
+	
+	<!-- MSTest test runner. (Optional) -->
+	<!-- Has support for the framework attribute like NUnit test runner config -->
+	<!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
 	
 	<!-- Wildcard expressions for excluding test assemblies (Optional)-->
 	<!--<ShouldIgnoreTestAssembly>-->

@@ -9,9 +9,9 @@ namespace AutoTest.TestRunners.Shared.Options
     public class RunSettings
     {
         public AssemblyOptions Assembly { get; private set; }
-        public IEnumerable<string> IgnoreCategories { get; private set; }
+        public string[] IgnoreCategories { get; private set; }
 
-        public RunSettings(AssemblyOptions assembly, IEnumerable<string> ignoreCategories)
+        public RunSettings(AssemblyOptions assembly, string[] ignoreCategories)
         {
             Assembly = assembly;
             IgnoreCategories = ignoreCategories;

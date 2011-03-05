@@ -83,7 +83,7 @@ namespace AutoTest.Core.Notifiers
             {
                 var thread = new Thread(connect);
                 thread.Start();
-                var timeout = DateTime.Now.AddSeconds(1);
+                var timeout = DateTime.Now.AddSeconds(2);
                 while (DateTime.Now < timeout)
                 {
                     Thread.Sleep(10);
@@ -92,7 +92,8 @@ namespace AutoTest.Core.Notifiers
                     if (thread.ThreadState == ThreadState.Stopped)
                         break;
                 }
-                thread.Abort();
+                if (DateTime.Now > timeout)
+                    thread.Abort();
                 if (_sock == null)
                     return false;
 

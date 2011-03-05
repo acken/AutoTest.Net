@@ -11,6 +11,10 @@ namespace AutoTest.TestRunners.Shared.Logging
         {
         }
 
+        public void Write(string message, params object[] args)
+        {
+        }
+
         public void Write(Exception ex)
         {
         }
