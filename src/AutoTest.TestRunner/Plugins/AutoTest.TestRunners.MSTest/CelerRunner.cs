@@ -38,16 +38,16 @@ namespace AutoTest.TestRunners.MSTest
         private void run(object runSettings)
         {
             var settings = (RunSettings)runSettings;
-           
-            var tests = getTests(settings);
-            if (tests == null)
-                return;
-            _logger.Write("Found {0} tests", tests.Count());
-            var fixtures = tests.GroupBy(test => test.DeclaringType);
+
             var currentPath = Environment.CurrentDirectory;
             try
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName(settings.Assembly.Assembly);
+                var tests = getTests(settings);
+                if (tests == null)
+                    return;
+                _logger.Write("Found {0} tests", tests.Count());
+                var fixtures = tests.GroupBy(test => test.DeclaringType);
                 foreach (var fixture in fixtures)
                     runTests(settings, fixture);
             }
