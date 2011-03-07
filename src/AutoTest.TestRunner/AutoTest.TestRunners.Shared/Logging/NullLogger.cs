@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.TestRunners.Shared.Logging
 {
-    class NullLogger : ILogger
+    public class NullLogger : ILogger
     {
         public void Write(string message)
         {
