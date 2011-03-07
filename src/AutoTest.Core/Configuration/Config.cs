@@ -42,6 +42,8 @@ namespace AutoTest.Core.Configuration
         public bool WhenWatchingSolutionBuildSolution { get; private set; }
         public bool UseAutoTestTestRunner { get; private set; }
 
+        public string IgnoreFile { get { return _ignoreFile; } }
+
         public bool ShouldBuildSolution { get { return File.Exists(WatchPath) && WhenWatchingSolutionBuildSolution; } }
 		
         public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)

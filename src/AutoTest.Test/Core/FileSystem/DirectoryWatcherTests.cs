@@ -28,6 +28,7 @@ namespace AutoTest.Test.Core
             _messageBus = MockRepository.GenerateMock<IMessageBus>();
             _validator = MockRepository.GenerateMock<IWatchValidator>();
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
+            _configuration.Stub(x => x.IgnoreFile).Return("");
 			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
@@ -66,6 +67,7 @@ namespace AutoTest.Test.Core
 			var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
 			var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
 			validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
@@ -112,6 +114,7 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
@@ -133,6 +136,7 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
@@ -155,6 +159,7 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);

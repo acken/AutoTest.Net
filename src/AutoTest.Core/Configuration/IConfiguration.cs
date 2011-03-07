@@ -33,6 +33,8 @@ namespace AutoTest.Core.Configuration
         bool WhenWatchingSolutionBuildSolution { get; }
         bool UseAutoTestTestRunner { get; }
 
+        string IgnoreFile { get; }
+
         bool ShouldBuildSolution { get; }
 
         void ValidateSettings();

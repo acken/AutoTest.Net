@@ -21,6 +21,7 @@ namespace AutoTest.Core.FileSystem
 		private IConfiguration _configuration;
 		private string _watchPath = "";
         private bool _paused = true;
+        private string _ignorePath = "";
 
         public bool IsPaused { get { return _paused; } }
 
@@ -90,6 +91,9 @@ namespace AutoTest.Core.FileSystem
 				_watchPath = Path.GetDirectoryName(path);
 			else
 				_watchPath = path;
+            _ignorePath = Path.GetDirectoryName(new PathParser(_configuration.IgnoreFile).ToAbsolute(_watchPath));
+            if (!Directory.Exists(_ignorePath) || _configuration.IgnoreFile.Trim().Length == 0)
+                _ignorePath = _watchPath;
 		}
 		
 		private void initializeTimer()
@@ -155,8 +159,8 @@ namespace AutoTest.Core.FileSystem
 		
 		private string getRelativePath(string path)
 		{
-			if (path.StartsWith(_watchPath))
-				return path.Substring(_watchPath.Length, path.Length - _watchPath.Length);
+			if (path.StartsWith(_ignorePath))
+                return path.Substring(_ignorePath.Length, path.Length - _ignorePath.Length);
 			return path;
 		}
 
