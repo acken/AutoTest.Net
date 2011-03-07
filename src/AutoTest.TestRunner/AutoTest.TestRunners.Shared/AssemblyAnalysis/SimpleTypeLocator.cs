@@ -63,11 +63,24 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             return new SimpleType(
                 TypeCategory.Class,
                 type.FullName,
+                null,
+                type.IsPublic,
                 getTypeAttributes(type),
                 type.Methods.Select(x => new SimpleType(
                     TypeCategory.Method,
-                    type.FullName + "." + x.Name,
+                    type.FullName + "." + x.Name, 
+                    x.MethodReturnType.ReturnType.FullName,
+                    x.IsPublic,
                     getAttributes(x.CustomAttributes),
+                    new SimpleType[] { },
+                    new SimpleType[] { })),
+                type.Fields.Select(x => new SimpleType(
+                    TypeCategory.Field,
+                    type.FullName + "." + x.Name,
+                    x.FieldType.FullName,
+                    x.IsPublic,
+                    getAttributes(x.CustomAttributes),
+                    new SimpleType[] { },
                     new SimpleType[] { })));
         }
 
@@ -109,7 +122,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             {
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(_type))
-                    return new SimpleType(TypeCategory.Method, fullName, getAttributes(method.CustomAttributes), new SimpleType[] { });
+                    return new SimpleType(TypeCategory.Method, fullName, method.MethodReturnType.ReturnType.FullName, method.IsPublic, getAttributes(method.CustomAttributes), new SimpleType[] { }, new SimpleType[] { });
             }
             return null;
         }

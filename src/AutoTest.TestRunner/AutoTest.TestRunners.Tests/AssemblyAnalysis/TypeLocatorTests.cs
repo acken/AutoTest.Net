@@ -12,6 +12,8 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
     [TestFixture]
     public class TypeLocatorTests : BaseClass
     {
+        int _someField;
+
         [Test]
         public void Should_find_me()
         {
@@ -20,7 +22,10 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.That(method.Category, Is.EqualTo(TypeCategory.Method));
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me", method.Fullname);
             Assert.AreEqual("NUnit.Framework.TestAttribute", method.Attributes.ElementAt(0));
+            Assert.AreEqual("System.Void", method.TypeName);
             Assert.AreEqual(0, method.Methods.Count());
+            Assert.AreEqual(0, method.Fields.Count());
+            Assert.AreEqual(true, method.IsPublic);
         }
 
         [Test]
@@ -31,7 +36,11 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.That(cls.Category, Is.EqualTo(TypeCategory.Class));
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
+            Assert.AreEqual(null, cls.TypeName);
             Assert.AreEqual(5, cls.Methods.Count());
+            Assert.AreEqual(1, cls.Fields.Count());
+            Assert.AreEqual("System.Int32", cls.Fields.First().TypeName);
+            Assert.AreEqual(true, cls.IsPublic);
         }
 
         [Test]
