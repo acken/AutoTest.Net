@@ -11,6 +11,7 @@ namespace AutoTest.TestRunners.MSpec.Tests.TestResource
     public class When_specifiying_the_most_simple_context
     {
         It should_detect_the_context;
+        int not_an_It_field;
     }
     
     class When_specifiying_a_private_context

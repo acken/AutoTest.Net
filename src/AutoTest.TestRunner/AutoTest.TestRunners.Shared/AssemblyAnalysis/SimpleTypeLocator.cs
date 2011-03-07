@@ -54,6 +54,9 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                 result = locateSimpleType(type.Methods, type.FullName);
                 if (result != null)
                     return result;
+                result = locateSimpleType(type.Fields, type.FullName);
+                if (result != null)
+                    return result;
             }
             return null;
         }
@@ -123,6 +126,17 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(_type))
                     return new SimpleType(TypeCategory.Method, fullName, method.MethodReturnType.ReturnType.FullName, method.IsPublic, getAttributes(method.CustomAttributes), new SimpleType[] { }, new SimpleType[] { });
+            }
+            return null;
+        }
+
+        private SimpleType locateSimpleType(Collection<FieldDefinition> fields, string typeFullname)
+        {
+            foreach (var field in fields)
+            {
+                var fullName = typeFullname + "." + field.Name;
+                if (fullName.Equals(_type))
+                    return new SimpleType(TypeCategory.Field, fullName, field.FieldType.FullName, field.IsPublic, getAttributes(field.CustomAttributes), new SimpleType[] { }, new SimpleType[] { });
             }
             return null;
         }

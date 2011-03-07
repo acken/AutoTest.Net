@@ -26,7 +26,23 @@ namespace AutoTest.TestRunners.MSpec
 
         public bool IsTest(string assembly, string member)
         {
-            throw new NotImplementedException();
+            var locator = new SimpleTypeLocator(assembly, member);
+            var field = locator.Locate();
+
+            if (field.Category != TypeCategory.Field)
+            {
+                _logger.Write("{0} is not a field and therefore not a specification",
+                              field.Fullname);
+                return false;
+            }
+
+            var isSpecification = field.TypeName.Equals("Machine.Specifications.It");
+
+            _logger.Write("{0} is{1} a field of type It",
+                          field.Fullname,
+                          isSpecification ? "" : " not");
+
+            return isSpecification;
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -36,7 +52,7 @@ namespace AutoTest.TestRunners.MSpec
 
             if (!clazz.IsPublic)
             {
-                _logger.Write("{0} is not public and therefore not a specification container",
+                _logger.Write("{0} is not public and therefore not a context",
                               clazz.Fullname);
 
                 return false;

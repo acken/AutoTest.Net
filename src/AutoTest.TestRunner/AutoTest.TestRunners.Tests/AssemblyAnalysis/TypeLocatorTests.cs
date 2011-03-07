@@ -37,7 +37,7 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
             Assert.AreEqual(null, cls.TypeName);
-            Assert.AreEqual(5, cls.Methods.Count());
+            Assert.AreEqual(6, cls.Methods.Count());
             Assert.AreEqual(1, cls.Fields.Count());
             Assert.AreEqual("System.Int32", cls.Fields.First().TypeName);
             Assert.AreEqual(true, cls.IsPublic);
@@ -59,6 +59,19 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             var cls = locator.Locate();
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh", cls.Fullname);
             Assert.AreEqual(3, cls.Attributes.Count());
+        }
+
+        [Test]
+        public void Should_find_a_field()
+        {
+            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, "AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests._someField");
+            var field = locator.Locate();
+            Assert.That(field.Category, Is.EqualTo(TypeCategory.Field));
+            Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests._someField", field.Fullname);
+            Assert.AreEqual("System.Int32", field.TypeName);
+            Assert.AreEqual(0, field.Methods.Count());
+            Assert.AreEqual(0, field.Fields.Count());
+            Assert.AreEqual(false, field.IsPublic);
         }
     }
     
