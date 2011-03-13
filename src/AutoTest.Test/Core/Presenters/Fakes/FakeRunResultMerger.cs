@@ -42,6 +42,10 @@ namespace AutoTest.Test.Core.Presenters.Fakes
             return null;
         }
 
+        public void Clear()
+        {
+        }
+
         #endregion
     }
 }

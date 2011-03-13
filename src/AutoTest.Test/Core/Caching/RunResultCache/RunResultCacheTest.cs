@@ -350,6 +350,23 @@ namespace AutoTest.Test.Core.Caching
         }
 
         [Test]
+        public void Should_clear_cache_when_issuing_clear()
+        {
+            var results = new BuildRunResults("another project");
+            results.AddError(new BuildMessage() { File = "some files", ErrorMessage = "some error messages" });
+            results.AddWarning(new BuildMessage() { File = "some file", ErrorMessage = "some error message" });
+            _runResultCache.Merge(results);
+            _runResultCache.Merge(new TestRunResults("project", "assembly", false, TestRunner.NUnit, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Ignored, "Test name", "Message", new IStackLine[] { }) }));
+            _runResultCache.Merge(new TestRunResults("project", "assembly", true, TestRunner.NUnit, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { new StackLineMessage("method", "file", 10) }) }));
+
+            _runResultCache.Clear();
+            _runResultCache.Errors.Length.ShouldEqual(0);
+            _runResultCache.Warnings.Length.ShouldEqual(0);
+            _runResultCache.Failed.Length.ShouldEqual(0);
+            _runResultCache.Ignored.Length.ShouldEqual(0);
+        }
+
+        [Test]
         [ExpectedException(typeof(Exception))]
         public void Should_fail_is_cache_is_not_setup_to_support_deltas()
         {

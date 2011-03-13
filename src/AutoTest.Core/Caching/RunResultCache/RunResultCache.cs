@@ -76,6 +76,14 @@ namespace AutoTest.Core.Caching.RunResultCache
             }
         }
 
+        public void Clear()
+        {
+            _errors.Clear();
+            _warnings.Clear();
+            _failed.Clear();
+            _ignored.Clear();
+        }
+
         private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results)
         {
             var itemsToRemove = new List<BuildItem>();
