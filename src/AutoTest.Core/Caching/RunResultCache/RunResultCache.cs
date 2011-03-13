@@ -82,6 +82,8 @@ namespace AutoTest.Core.Caching.RunResultCache
             _warnings.Clear();
             _failed.Clear();
             _ignored.Clear();
+            if (_deltasSupported)
+                PopDeltas();
         }
 
         private void mergeBuildList(List<BuildItem> list, string key, BuildMessage[] results)

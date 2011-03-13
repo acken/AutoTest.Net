@@ -8,7 +8,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {
-    interface IMergeRunResults
+    public interface IMergeRunResults
     {
         void Merge(BuildRunResults results);
         void Merge(TestRunResults results);
