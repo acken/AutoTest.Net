@@ -290,7 +290,13 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.StartPaused.ShouldBeTrue();
         }
-		
+
+        [Test]
+        public void Should_use_lowest_common_denominator_path()
+        {
+            _config.UseLowestCommonDenominatorAsWatchPath.ShouldBeFalse();
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

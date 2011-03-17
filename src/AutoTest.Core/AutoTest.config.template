@@ -101,4 +101,9 @@
 	<!-- Makes the file change watcher start in paused state -->
 	<!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
 	<!--<StartPaused>true</StartPaused>-->
+  
+  <!-- Adjust watch path to nearest common path (Optional) -->
+  <!-- Wether to adjust watch path to the lowest common path used by all projects -->
+  <!-- included in a solution -->
+  <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
 </configuration>

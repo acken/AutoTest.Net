@@ -32,6 +32,7 @@ namespace AutoTest.Core.Configuration
 		bool RerunFailedTestsFirst { get; }
         bool WhenWatchingSolutionBuildSolution { get; }
         bool UseAutoTestTestRunner { get; }
+        bool UseLowestCommonDenominatorAsWatchPath { get; }
 
         string IgnoreFile { get; }
 

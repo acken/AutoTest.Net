@@ -42,6 +42,7 @@ namespace AutoTest.Core.Configuration
 		public ConfigItem<bool> RerunFailedTestsFirst { get; private set; }
         public ConfigItem<bool> WhenWatchingSolutionBuildSolution { get; private set; }
         public ConfigItem<bool> UseAutoTestTestRunner { get; private set; }
+        public ConfigItem<bool> UseLowestCommonDenominatorAsWatchPath { get; private set; }
 
         public CoreSection()
         {
@@ -65,6 +66,7 @@ namespace AutoTest.Core.Configuration
 			RerunFailedTestsFirst = new ConfigItem<bool>(false);
             WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(true);
             UseAutoTestTestRunner = new ConfigItem<bool>(true);
+            UseLowestCommonDenominatorAsWatchPath = new ConfigItem<bool>(true);
         }
 
         public void Read(string configFile)
@@ -91,6 +93,7 @@ namespace AutoTest.Core.Configuration
 			RerunFailedTestsFirst = getBoolItem("configuration/RerunFailedTestsFirst", false);
             WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", true);
             UseAutoTestTestRunner = getBoolItem("configuration/UseAutoTestTestRunner", true);
+            UseLowestCommonDenominatorAsWatchPath = getBoolItem("configuration/UseLowestCommonDenominatorAsWatchPath", true);
         }
 		
 		private bool tryLoadXml(string configFile)

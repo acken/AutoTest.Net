@@ -41,6 +41,7 @@ namespace AutoTest.Core.Configuration
 		public bool RerunFailedTestsFirst { get; private set; }
         public bool WhenWatchingSolutionBuildSolution { get; private set; }
         public bool UseAutoTestTestRunner { get; private set; }
+        public bool UseLowestCommonDenominatorAsWatchPath { get; private set; }
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
@@ -149,6 +150,8 @@ namespace AutoTest.Core.Configuration
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
             if (core.UseAutoTestTestRunner.WasReadFromConfig)
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
+            if (core.UseLowestCommonDenominatorAsWatchPath.WasReadFromConfig)
+                UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
 		}
 		
 		private void tryToConfigure(CoreSection core)
@@ -175,6 +178,7 @@ namespace AutoTest.Core.Configuration
 				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
+                UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
             }
             catch (Exception ex)
             {

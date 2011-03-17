@@ -381,5 +381,11 @@ namespace AutoTest.Test.Core.Configuration
             var reader = _locator.Locate<IAssemblyReader>();
             reader.ShouldBeTheSameAs(reader);
         }
+
+        [Test]
+        public void Should_register_watch_path_locator()
+        {
+            Assert.That(_locator.Locate<IWatchPathLocator>(), Is.InstanceOf<IWatchPathLocator>());
+        }
     }
 }
