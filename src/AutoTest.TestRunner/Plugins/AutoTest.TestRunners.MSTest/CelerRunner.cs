@@ -32,6 +32,10 @@ namespace AutoTest.TestRunners.MSTest
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start(settings);
             thread.Join();
+            // Long shot for fixing the app domain unload issues
+            thread.Abort();
+            thread = null;
+            GC.Collect();
             return _results;
         }
 
