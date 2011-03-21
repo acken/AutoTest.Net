@@ -71,11 +71,25 @@ namespace AutoTest.TestRunners
             }
             finally
             {
-                if (childDomain != null)
-                    AppDomain.Unload(childDomain);
+                unloadDomain(childDomain);
                 if (handle != null)
                     handle.Set();
                 Program.WriteNow("Finished running tests for " + _assembly.Assembly);
+            }
+        }
+
+        private static void unloadDomain(AppDomain childDomain)
+        {
+            if (childDomain != null)
+            {
+                try
+                {
+                    AppDomain.Unload(childDomain);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(ex);
+                }
             }
         }
     }
