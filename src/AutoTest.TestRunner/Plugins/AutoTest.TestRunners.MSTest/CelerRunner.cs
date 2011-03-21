@@ -8,9 +8,9 @@ using Mono.Cecil;
 using System.Reflection;
 using AutoTest.TestRunners.MSTest.Extensions;
 using System.Threading;
-using celer.Core.TestRunners;
 using System.IO;
 using AutoTest.TestRunners.Shared.Logging;
+using celer.Core;
 
 namespace AutoTest.TestRunners.MSTest
 {
@@ -67,19 +67,10 @@ namespace AutoTest.TestRunners.MSTest
 
         private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
         {
-            var list = fixture.ToList();
-            try
-            {
-                _logger.Write("Running fixture {0}", fixture.Key);
-                using (var runner = new MSTestTestRunner(fixture.Key))
-                {
-                    list.Select(test => runner.Run(test)).ToList().ForEach(x => _results.Add(getResult(settings, fixture, x)));
-                }
-            }
-            catch (Exception ex)
-            {
-                list.ForEach(test => _results.Add(getResult(settings, fixture, new celer.Core.RunResult(test, false, false, ex, 0))));
-            }
+            _logger.Write("Running fixture {0}", fixture.Key);
+            new MSTestTestFixture(fixture.Key)
+                .Run(fixture.ToList()).ToList()
+                .ForEach(result => _results.Add(getResult(settings, fixture, result)));
         }
 
         private StackLine[] getStackLines(Exception ex)

@@ -244,7 +244,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, RunReport runReport)
         {
-            var results = testRunner.RunTests(runInfos);
+            var results = runTests(testRunner, runInfos);
             var modifiedResults = new List<TestRunResults>();
 			foreach (var result in results)
 			{
@@ -260,6 +260,18 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 modifiedResults.Add(modified);
 			}
 			informPreProcessor(modifiedResults.ToArray());
+        }
+
+        private static TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos)
+        {
+            try
+            {
+                return testRunner.RunTests(runInfos);
+            }
+            catch (Exception ex)
+            {
+                return new TestRunResults[] { new TestRunResults("", testRunner.GetType().ToString(), false, TestRunner.Any, new TestResult[] { new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Net internal error", ex.ToString()) }) };
+            }
         }
 		
         private void informPreProcessor(TestRunResults[] results)
