@@ -44,6 +44,8 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> UseAutoTestTestRunner { get; private set; }
         public ConfigItem<bool> UseLowestCommonDenominatorAsWatchPath { get; private set; }
 
+        public List<KeyValuePair<string, string>> Keys { get; private set; }
+
         public CoreSection()
         {
             StartPaused = new ConfigItem<bool>(false);
@@ -67,6 +69,7 @@ namespace AutoTest.Core.Configuration
             WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(true);
             UseAutoTestTestRunner = new ConfigItem<bool>(true);
             UseLowestCommonDenominatorAsWatchPath = new ConfigItem<bool>(true);
+            Keys = new List<KeyValuePair<string, string>>();
         }
 
         public void Read(string configFile)
@@ -94,6 +97,7 @@ namespace AutoTest.Core.Configuration
             WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", true);
             UseAutoTestTestRunner = getBoolItem("configuration/UseAutoTestTestRunner", true);
             UseLowestCommonDenominatorAsWatchPath = getBoolItem("configuration/UseLowestCommonDenominatorAsWatchPath", true);
+            Keys = getAllKeys("configuration/*");
         }
 		
 		private bool tryLoadXml(string configFile)
@@ -254,6 +258,14 @@ namespace AutoTest.Core.Configuration
 			if (shouldExcludeFromConfig(mainNode))
 				item.Exclude();
             return item;
+        }
+
+        private List<KeyValuePair<string, string>> getAllKeys(string p)
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            foreach (XmlNode node in _xml.SelectNodes(p))
+                list.Add(new KeyValuePair<string, string>(node.Name, node.InnerXml));
+            return list;
         }
     }
 }
