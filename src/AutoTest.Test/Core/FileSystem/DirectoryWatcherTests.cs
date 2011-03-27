@@ -21,6 +21,7 @@ namespace AutoTest.Test.Core
         private IWatchValidator _validator;
 		private IConfiguration _configuration;
         private DirectoryWatcher _watcher;
+        private IWatchPathLocator _pathLocator;
 
         [SetUp]
         public void SetUp()
@@ -28,12 +29,15 @@ namespace AutoTest.Test.Core
             _messageBus = MockRepository.GenerateMock<IMessageBus>();
             _validator = MockRepository.GenerateMock<IWatchValidator>();
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
+            _pathLocator = MockRepository.GenerateMock<IWatchPathLocator>();
+            _configuration.Stub(x => x.IgnoreFile).Return("");
 			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             _file = Path.GetFullPath("watcher_test.txt");
             _directory = Path.GetFullPath("mytestfolder");
 			_watchDirectory = Path.GetDirectoryName(_file);
+            _pathLocator.Stub(x => x.Locate(_watchDirectory)).Return(_watchDirectory);
 			_localConfig = Path.Combine(_watchDirectory, "AutoTest.config");
 			File.WriteAllText(_localConfig, "<configuration></configuration>");
             _watcher.Watch(_watchDirectory);
@@ -55,7 +59,7 @@ namespace AutoTest.Test.Core
             var bus = MockRepository.GenerateMock<IMessageBus>();
 			var config = MockRepository.GenerateMock<IConfiguration>();
 			config.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(bus, null, config, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            var watcher = new DirectoryWatcher(bus, null, config, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             watcher.Watch("");
             bus.AssertWasNotCalled(m => m.Publish<InformationMessage>(null), m => m.IgnoreArguments());
         }
@@ -66,9 +70,10 @@ namespace AutoTest.Test.Core
 			var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
 			var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
 			validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             var file = Path.GetFullPath("watcher_test_changes_once.txt");
 			var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -112,10 +117,11 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             var file = Path.GetFullPath("not_detection_when_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -133,10 +139,11 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             var file = Path.GetFullPath("not_detection_when_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -155,11 +162,12 @@ namespace AutoTest.Test.Core
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
             var validator = MockRepository.GenerateMock<IWatchValidator>();
             var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             configuration.Stub(c => c.StartPaused).Return(true);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>());
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator);
             var file = Path.GetFullPath("start_as_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);

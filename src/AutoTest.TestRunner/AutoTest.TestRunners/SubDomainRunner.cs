@@ -38,11 +38,14 @@ namespace AutoTest.TestRunners
             AppDomain childDomain = null;
             try
             {
+                var configFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+                if (File.Exists(_assembly.Assembly + ".config"))
+                    configFile = _assembly.Assembly + ".config";
                 // Construct and initialize settings for a second AppDomain.
                 AppDomainSetup domainSetup = new AppDomainSetup()
                 {
                     ApplicationBase = Path.GetDirectoryName(_assembly.Assembly),
-                    ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
+                    ConfigurationFile = configFile,
                     ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
                     LoaderOptimization = LoaderOptimization.MultiDomainHost
                 };
@@ -68,11 +71,25 @@ namespace AutoTest.TestRunners
             }
             finally
             {
-                if (childDomain != null)
-                    AppDomain.Unload(childDomain);
+                unloadDomain(childDomain);
                 if (handle != null)
                     handle.Set();
                 Program.WriteNow("Finished running tests for " + _assembly.Assembly);
+            }
+        }
+
+        private static void unloadDomain(AppDomain childDomain)
+        {
+            if (childDomain != null)
+            {
+                try
+                {
+                    AppDomain.Unload(childDomain);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(ex);
+                }
             }
         }
     }

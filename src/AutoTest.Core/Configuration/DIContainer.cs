@@ -88,7 +88,8 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IAssemblyReader>().ImplementedBy<AssemblyReader>())
                 .Register(Component.For<ApplicatonLauncher>())
                 .Register(Component.For<ICustomIgnoreProvider>().ImplementedBy<NullIgnoreProvider>())
-                .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton);
+                .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton)
+                .Register(Component.For<IWatchPathLocator>().ImplementedBy<WatchPathLocator>());
 
             if (defaultConfigurationLocator == null)
                 defaultConfigurationLocator = new DefaultConfigurationLocator();

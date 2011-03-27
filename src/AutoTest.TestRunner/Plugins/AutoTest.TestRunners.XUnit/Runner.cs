@@ -22,6 +22,8 @@ namespace AutoTest.TestRunners.XUnit
         {
             var locator = new SimpleTypeLocator(assembly, member);
             var method = locator.Locate();
+            if (method == null)
+                return false;
             if (method.Category != TypeCategory.Method)
                 return false;
             return method.Attributes.Contains("Xunit.FactAttribute");
@@ -31,6 +33,8 @@ namespace AutoTest.TestRunners.XUnit
         {
             var locator = new SimpleTypeLocator(assembly, member);
             var cls = locator.Locate();
+            if (cls == null)
+                return false;
             if (cls.Category != TypeCategory.Class)
                 return false;
             return cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;

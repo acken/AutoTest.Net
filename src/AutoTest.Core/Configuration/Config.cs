@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using AutoTest.Core.Messaging;
 using System.Collections.Generic;
 using AutoTest.Core.Caching.Projects;
@@ -16,6 +17,7 @@ namespace AutoTest.Core.Configuration
         private IMessageBus _bus;
 		private ILocateWriteLocation _defaultConfigLocator;
 		private string _ignoreFile;
+        private List<KeyValuePair<string, string>> _keys = new List<KeyValuePair<string,string>>();
 		
         private string[] _watchDirectories;
         private List<KeyValuePair<string, string>> _buildExecutables = new List<KeyValuePair<string, string>>();
@@ -41,6 +43,9 @@ namespace AutoTest.Core.Configuration
 		public bool RerunFailedTestsFirst { get; private set; }
         public bool WhenWatchingSolutionBuildSolution { get; private set; }
         public bool UseAutoTestTestRunner { get; private set; }
+        public bool UseLowestCommonDenominatorAsWatchPath { get; private set; }
+
+        public string IgnoreFile { get { return _ignoreFile; } }
 
         public bool ShouldBuildSolution { get { return File.Exists(WatchPath) && WhenWatchingSolutionBuildSolution; } }
 		
@@ -84,6 +89,11 @@ namespace AutoTest.Core.Configuration
             if (CustomOutputPath != null && CustomOutputPath.Length > 0)
                 list += (list.Length == 0 ? "" : "|") + CustomOutputPath.Replace('\\', '/');
             return list;
+        }
+
+        public string AllSettings(string key)
+        {
+            return _keys.Where(x => x.Key.Equals(key)).Select(x => x.Value).FirstOrDefault();
         }
 		
 		public void SetBuildProvider()
@@ -147,7 +157,16 @@ namespace AutoTest.Core.Configuration
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
             if (core.UseAutoTestTestRunner.WasReadFromConfig)
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
+            if (core.UseLowestCommonDenominatorAsWatchPath.WasReadFromConfig)
+                UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
+            core.Keys.ForEach(x => mergeKey(x));
 		}
+
+        private void mergeKey(KeyValuePair<string, string> x)
+        {
+            _keys.RemoveAll(k => k.Key.Equals(x.Key));
+            _keys.Add(x);
+        }
 		
 		private void tryToConfigure(CoreSection core)
         {
@@ -173,6 +192,8 @@ namespace AutoTest.Core.Configuration
 				RerunFailedTestsFirst = core.RerunFailedTestsFirst.Value;
                 WhenWatchingSolutionBuildSolution = core.WhenWatchingSolutionBuildSolution.Value;
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
+                UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
+                _keys = core.Keys;
             }
             catch (Exception ex)
             {

@@ -32,12 +32,16 @@ namespace AutoTest.Core.Configuration
 		bool RerunFailedTestsFirst { get; }
         bool WhenWatchingSolutionBuildSolution { get; }
         bool UseAutoTestTestRunner { get; }
+        bool UseLowestCommonDenominatorAsWatchPath { get; }
+
+        string IgnoreFile { get; }
 
         bool ShouldBuildSolution { get; }
 
         void ValidateSettings();
 		void BuildIgnoreListFromPath(string watchPath);
 		void SetBuildProvider();
+        string AllSettings(string key);
 		void AnnounceTrackerType();
 		void Merge(string configuratoinFile);
         void BuildIgnoreList(string path);

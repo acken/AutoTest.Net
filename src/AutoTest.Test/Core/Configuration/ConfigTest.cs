@@ -290,7 +290,28 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.StartPaused.ShouldBeTrue();
         }
-		
+
+        [Test]
+        public void Should_use_lowest_common_denominator_path()
+        {
+            _config.UseLowestCommonDenominatorAsWatchPath.ShouldBeFalse();
+        }
+
+        [Test]
+        public void Should_read_key_store_of_all_settings()
+        {
+            _config.AllSettings("SomCustomStuff").ShouldEqual("content");
+        }
+
+        [Test]
+        public void Should_merge_key_store_of_all_settings()
+        {
+            createMergeFile();
+            _config.Merge(_overridConfig);
+            _config.AllSettings("SomCustomStuff").ShouldEqual("modified content");
+            _config.AllSettings("AnotherSetting").ShouldEqual("something");
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))
@@ -311,6 +332,8 @@ namespace AutoTest.Test.Core.Configuration
 					writer.WriteLine("</ShouldIgnoreTestAssembly>");
 					writer.WriteLine(string.Format("<IgnoreFile>{0}</IgnoreFile>", file));
 					writer.WriteLine("<changedetectiondelay>800</changedetectiondelay>");
+                    writer.WriteLine("<SomCustomStuff>modified content</SomCustomStuff>");
+                    writer.WriteLine("<AnotherSetting>something</AnotherSetting>");
 				writer.WriteLine("</configuration>");
 			}
 		}

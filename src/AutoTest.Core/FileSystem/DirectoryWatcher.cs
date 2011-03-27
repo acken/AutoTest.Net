@@ -13,6 +13,7 @@ namespace AutoTest.Core.FileSystem
         private readonly IMessageBus _bus;
         private readonly FileSystemWatcher _watcher;
 		private IHandleDelayedConfiguration _delayedConfigurer;
+        private IWatchPathLocator _watchPathLocator;
         private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
         private List<ChangedFile> _buffer = new List<ChangedFile>();
@@ -21,15 +22,18 @@ namespace AutoTest.Core.FileSystem
 		private IConfiguration _configuration;
 		private string _watchPath = "";
         private bool _paused = true;
+        private string _ignorePath = "";
+        private bool _isWatchingSolution = false;
 
         public bool IsPaused { get { return _paused; } }
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator)
         {
             _bus = bus;
             _validator = validator;
 			_configuration = configuration;
 			_delayedConfigurer = delayedConfigurer;
+            _watchPathLocator = watchPathLocator;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
@@ -58,24 +62,33 @@ namespace AutoTest.Core.FileSystem
 
         public void Watch(string path)
         {
-            if (File.Exists(path))
+            _isWatchingSolution = File.Exists(path);
+            if (_isWatchingSolution)
                 path = Path.GetDirectoryName(path);
             if (!Directory.Exists(path))
             {
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
             }
-            _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
 			mergeLocalConfig(path);
 			initializeTimer();
 			setupPreProcessors();
 			initializeWatchPath(path);
-            _watcher.Path = path;
+            setWatchPath(path);
             _watcher.EnableRaisingEvents = true;
             if (_configuration.StartPaused)
                 Pause();
             else
                 Resume();
+        }
+
+        private void setWatchPath(string path)
+        {
+            if (_isWatchingSolution && _configuration.UseLowestCommonDenominatorAsWatchPath)
+                path = _watchPathLocator.Locate(path);
+            Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
+            _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
+            _watcher.Path = path;
         }
 		
 		private void setupPreProcessors()
@@ -90,6 +103,9 @@ namespace AutoTest.Core.FileSystem
 				_watchPath = Path.GetDirectoryName(path);
 			else
 				_watchPath = path;
+            _ignorePath = Path.GetDirectoryName(new PathParser(_configuration.IgnoreFile).ToAbsolute(_watchPath));
+            if (!Directory.Exists(_ignorePath) || _configuration.IgnoreFile.Trim().Length == 0)
+                _ignorePath = _watchPath;
 		}
 		
 		private void initializeTimer()
@@ -155,8 +171,8 @@ namespace AutoTest.Core.FileSystem
 		
 		private string getRelativePath(string path)
 		{
-			if (path.StartsWith(_watchPath))
-				return path.Substring(_watchPath.Length, path.Length - _watchPath.Length);
+			if (path.StartsWith(_ignorePath))
+                return path.Substring(_ignorePath.Length, path.Length - _ignorePath.Length);
 			return path;
 		}
 
