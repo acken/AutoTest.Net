@@ -52,12 +52,13 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return false;
         }
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Func<bool> abortWhen)
         {
             var options = generateOptions(runInfos);
             if (options == null)
                 return new TestRunResults[] { };
-            var runner = new TestRunProcess(new AutoTestRunnerFeedback());
+            var runner = new TestRunProcess(new AutoTestRunnerFeedback())
+                .AbortWhen(abortWhen);
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();
         }

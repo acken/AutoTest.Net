@@ -97,8 +97,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_build_locator()
         {
-            var buildLocator = _locator.Locate<IBlockingConsumerOf<ProjectChangeMessage>>();
-            buildLocator.ShouldBeOfType<IBlockingConsumerOf<ProjectChangeMessage>>();
+            var buildLocator = _locator.Locate<IOverridingConsumer<ProjectChangeMessage>>();
+            buildLocator.ShouldBeOfType<IOverridingConsumer<ProjectChangeMessage>>();
         }
 
         [Test]

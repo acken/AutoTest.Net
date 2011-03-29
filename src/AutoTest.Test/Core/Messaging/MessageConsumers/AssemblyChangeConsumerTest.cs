@@ -29,7 +29,7 @@ namespace AutoTest.Test
             _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
 
             _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors, _removedTestLocator);
-			_testRunner.Stub(r => r.RunTests(null)).IgnoreArguments().Return(new TestRunResults[] {});
+			_testRunner.Stub(r => r.RunTests(null, null)).IgnoreArguments().Return(new TestRunResults[] {});
         }
 		
 		[Test]
@@ -42,7 +42,7 @@ namespace AutoTest.Test
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasCalled(t => t.RunTests(null), t => t.IgnoreArguments());
+			_testRunner.AssertWasCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
 		}
 
         [Test]
@@ -66,7 +66,7 @@ namespace AutoTest.Test
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasNotCalled(t => t.RunTests(null), t => t.IgnoreArguments());
+			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
 		}
 		
 		[Test]
@@ -78,7 +78,7 @@ namespace AutoTest.Test
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasNotCalled(t => t.RunTests(null), t => t.IgnoreArguments());
+			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
 		}
 	}
 }

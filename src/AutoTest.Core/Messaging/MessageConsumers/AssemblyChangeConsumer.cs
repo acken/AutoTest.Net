@@ -83,7 +83,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
             if (testRunInfos.Count == 0)
 				return;
-			var results = runner.RunTests(testRunInfos.ToArray());
+            var results = runner.RunTests(testRunInfos.ToArray(), () => { return false; });
 			mergeReport(results, report, testRunInfos.ToArray());
             reRunTests(runner, report, testRunInfos);
 		}
@@ -99,7 +99,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (rerunInfos.Count > 0)
             {
                 Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                var results = runner.RunTests(testRunInfos.ToArray());
+                var results = runner.RunTests(testRunInfos.ToArray(), () => { return false; });
                 mergeReport(results, report, testRunInfos.ToArray());
             }
         }

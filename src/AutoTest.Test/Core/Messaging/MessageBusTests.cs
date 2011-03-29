@@ -36,7 +36,8 @@ namespace AutoTest.Test.Core.Messaging
                 .Register(Component.For<IConsumerOf<StringMessage>>().ImplementedBy<Listener>())
                 .Register(Component.For<IConsumerOf<StringMessage>>().Forward<IConsumerOf<IntMessage>>().ImplementedBy<BigListener>())
                 .Register(Component.For<IBlockingConsumerOf<BlockingMessage>>().ImplementedBy<BlockingConsumer>())
-                .Register(Component.For<IBlockingConsumerOf<BlockingMessage2>>().ImplementedBy<BlockingConsumer2>());
+                .Register(Component.For<IBlockingConsumerOf<BlockingMessage2>>().ImplementedBy<BlockingConsumer2>())
+                .Register(Component.For<IOverridingConsumer<StringMessage>>().ImplementedBy<OverridingConsumer>().LifeStyle.Singleton);
 
             _bus = _container.Services.Locate<IMessageBus>();
             _threadException = "";
@@ -206,6 +207,26 @@ namespace AutoTest.Test.Core.Messaging
             _bus.Publish(message);
             waitForAsyncCall();
             consumer.RunInformationMessageEventCalled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_publish_to_overriding_consumers()
+        {
+            var consumer = (OverridingConsumer)_container.Container.Resolve<IOverridingConsumer<StringMessage>>();
+            _bus.Publish(new StringMessage());
+            waitForAsyncCall();
+            consumer.ConsumedMessage();
+        }
+
+        [Test]
+        public void Should_terminate_already_running_consumer_when_publishing_new_message_to_overriding_consumers()
+        {
+            var consumer = (OverridingConsumer)_container.Container.Resolve<IOverridingConsumer<StringMessage>>();
+            consumer.SetIsRunning(true);
+            _bus.Publish(new StringMessage());
+            waitForAsyncCall();
+            consumer.ConsumedMessage();
+            consumer.WasTerminated();
         }
 
         private void waitForAsyncCall()

@@ -3,6 +3,7 @@ using System.Threading;
 using AutoTest.Messages;
 using System.IO;
 using System;
+using NUnit.Framework;
 
 namespace AutoTest.Test.TestObjects
 {
@@ -130,5 +131,44 @@ namespace AutoTest.Test.TestObjects
         }
 
         #endregion
+    }
+
+    internal class OverridingConsumer : IOverridingConsumer<StringMessage>
+    {
+        private StringMessage _message = null;
+        private bool _wasTerminated = false;
+
+        private bool _isRunning = false;
+        public OverridingConsumer SetIsRunning(bool isRunning)
+        {
+            _isRunning = isRunning;
+            return this;
+        }
+
+        public bool IsRunning
+        {
+            get { return _isRunning; }
+        }
+
+        public void Consume(StringMessage message)
+        {
+            _message = message;
+            Thread.Sleep(100);
+        }
+
+        public void Terminate()
+        {
+            _wasTerminated = true;
+        }
+
+        public void ConsumedMessage()
+        {
+            Assert.IsNotNull(_message);
+        }
+
+        public void WasTerminated()
+        {
+            Assert.IsTrue(_wasTerminated);
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace AutoTest.TestRunners.Shared
         private TargetedRun _targetedRun;
         private bool _runInParallel = false;
         private bool _startSuspended = false;
+        private Func<bool> _abortWhen = null;
+        private Process _proc = null;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
@@ -35,6 +37,12 @@ namespace AutoTest.TestRunners.Shared
         public TestProcess StartSuspended()
         {
             _startSuspended = true;
+            return this;
+        }
+
+        public TestProcess AbortWhen(Func<bool> abortWhen)
+        {
+            _abortWhen = abortWhen;
             return this;
         }
 
@@ -55,18 +63,45 @@ namespace AutoTest.TestRunners.Shared
                 arguments += " --startsuspended";
             if (_feedback != null)
                 _feedback.ProcessStart(executable + " " + arguments);
-            var proc = new Process();
-            proc.StartInfo = new ProcessStartInfo(executable, arguments);
-            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(executable);
-            proc.Start();
-            var consoleOutput = proc.StandardOutput.ReadToEnd();
-            proc.WaitForExit();
+            _proc = new Process();
+            _proc.StartInfo = new ProcessStartInfo(executable, arguments);
+            _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            _proc.StartInfo.RedirectStandardOutput = true;
+            _proc.StartInfo.UseShellExecute = false;
+            _proc.StartInfo.CreateNoWindow = true;
+            _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(executable);
+            _proc.Start();
+            new System.Threading.Thread(listenForAborts).Start();
+            var consoleOutput = _proc.StandardOutput.ReadToEnd();
+            _proc.WaitForExit();
+            if (aborted())
+                return;
             var results = getResults(output);
             TestRunProcess.AddResults(results);
+        }
+
+        private bool aborted()
+        {
+            if (_abortWhen == null)
+                return false;
+            return _abortWhen.Invoke();
+        }
+
+        private void listenForAborts()
+        {
+            if (_abortWhen == null)
+                return;
+            if (_proc == null)
+                return;
+            while (!_proc.HasExited)
+            {
+                if (_abortWhen.Invoke())
+                {
+                    _proc.Kill();
+                    return;
+                }
+                System.Threading.Thread.Sleep(10);
+            }
         }
 
         private List<TestResult> getResults(string output)

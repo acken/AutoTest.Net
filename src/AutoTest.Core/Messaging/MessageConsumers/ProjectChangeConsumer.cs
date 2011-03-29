@@ -13,11 +13,14 @@ using AutoTest.Core.TestRunners.TestRunners;
 using Castle.Core.Logging;
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
+using System.Threading;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class ProjectChangeConsumer : IBlockingConsumerOf<ProjectChangeMessage>
+    class ProjectChangeConsumer : IOverridingConsumer<ProjectChangeMessage>
     {
+        private bool _isRunning = false;
+        private bool _exit = false;
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
         private IConfiguration _configuration;
@@ -28,6 +31,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IPreProcessBuildruns[] _preBuildProcessors;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
+
+        public bool IsRunning { get { return _isRunning; } }
 
         public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator, IPreProcessBuildruns[] preBuildProcessors)
         {
@@ -47,12 +52,25 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public void Consume(ProjectChangeMessage message)
         {
+            _isRunning = true;
             var now = DateTime.Now;
             Debug.ConsumingProjectChangeMessage(message);
             _bus.Publish(new RunStartedMessage(message.Files));
             var runReport = execute(message);
             runReport.SetTimeSpent(DateTime.Now.Subtract(now));
             _bus.Publish(new RunFinishedMessage(runReport));
+            _exit = false;
+            _isRunning = false;
+        }
+
+        public void Terminate()
+        {
+            if (!_isRunning)
+                return;
+            Debug.WriteDebug("Initiating termination of current run");
+            _exit = true;
+            while (_isRunning)
+                Thread.Sleep(10);
         }
 
         private RunReport execute(ProjectChangeMessage message)
@@ -64,6 +82,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
                 var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
                 if (!buildAll(preProcessBuildRun(list), runReport))
+                    return runReport;
+                if (_exit)
                     return runReport;
                 markAllAsBuilt(list);
                 testAll(list, runReport);
@@ -138,7 +158,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             {
                 _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchPath, "", typeof(MSBuildRunner)));
 
-                var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable);
+                var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
                 var succeeded = buildReport.ErrorCount == 0;
                 runReport.AddBuild(_configuration.WatchPath, buildReport.TimeSpent, succeeded);
                 _bus.Publish(new BuildRunMessage(buildReport));
@@ -233,7 +253,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private bool buildProject(Project project, RunReport report)
         {
-            var buildReport = _buildRunner.RunBuild(project, _configuration.BuildExecutable(project.Value));
+            var buildReport = _buildRunner.RunBuild(project, _configuration.BuildExecutable(project.Value), () => { return _exit; });
             var succeeded = buildReport.ErrorCount == 0;
             report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);
             _bus.Publish(new BuildRunMessage(buildReport));
@@ -262,11 +282,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			informPreProcessor(modifiedResults.ToArray());
         }
 
-        private static TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos)
+        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos)
         {
             try
             {
-                return testRunner.RunTests(runInfos);
+                return testRunner.RunTests(runInfos, () => { return _exit; });
             }
             catch (Exception ex)
             {

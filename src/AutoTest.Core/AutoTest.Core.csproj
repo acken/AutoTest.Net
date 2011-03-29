@@ -114,6 +114,7 @@
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BlockedMessage.cs" />
     <Compile Include="Messaging\IBlockingConsumerOf.cs" />
+    <Compile Include="Messaging\IOverridingConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\BuildListGenerator.cs" />
     <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />

@@ -40,8 +40,6 @@ namespace AutoTest.Core
                     _cache.Reload<Project>(file.FullName);
                     project = _cache.Get<Project>(file.FullName);
                 }
-                // Remove this for now. I think this was the result of some chicken blood
-				//project.Value.RebuildOnNextRun();
 				return true;
 			}
 			return false;

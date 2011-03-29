@@ -20,7 +20,7 @@ namespace AutoTest.Core.BuildRunners
 			_configuration = configuration;
         }
 
-        public BuildRunResults RunBuild(string solution, bool rebuild, string buildExecutable)
+        public BuildRunResults RunBuild(string solution, bool rebuild, string buildExecutable, Func<bool> abortIfTrue)
         {
             var outdir = string.Format("bin{0}AutoTest.Net{0}", Path.DirectorySeparatorChar);
             if (_configuration.CustomOutputPath.Length > 0)
@@ -30,20 +30,20 @@ namespace AutoTest.Core.BuildRunners
             var arguments = string.Format("\"{0}\" /property:OutDir={1}", solution, outdir);
             if (rebuild)
                 arguments += " /target:rebuild";
-            return runBuild(buildExecutable, arguments, solution);
+            return runBuild(buildExecutable, arguments, solution, abortIfTrue);
         }
 
-        public BuildRunResults RunBuild(Project project, string buildExecutable)
+        public BuildRunResults RunBuild(Project project, string buildExecutable, Func<bool> abortIfTrue)
         {
 			var properties = buildProperties(project);
             var arguments = string.Format("\"{0}\"", project.Key) + properties;
 			if (project.Value.RequiresRebuild)
 				arguments += " /target:rebuild";
             var target = project.Key;
-            return runBuild(buildExecutable, arguments, target);
+            return runBuild(buildExecutable, arguments, target, abortIfTrue);
         }
 
-        private static BuildRunResults runBuild(string buildExecutable, string arguments, string target)
+        private static BuildRunResults runBuild(string buildExecutable, string arguments, string target, Func<bool> abortIfTrue)
         {
             var timer = Stopwatch.StartNew();
             DebugLog.Debug.WriteInfo("Running build: {0} {1}", buildExecutable, arguments);
@@ -59,7 +59,14 @@ namespace AutoTest.Core.BuildRunners
             var buildResults = new BuildRunResults(target);
             var lines = new List<string>();
             while ((line = process.StandardOutput.ReadLine()) != null)
+            {
+                if (abortIfTrue.Invoke())
+                {
+                    AutoTest.Core.DebugLog.Debug.WriteDebug("Aborting build run");
+                    return new BuildRunResults(target);
+                }
                 lines.Add(line);
+            }
             process.WaitForExit();
             timer.Stop();
             var parser = new MSBuildOutputParser(buildResults, lines.ToArray());
