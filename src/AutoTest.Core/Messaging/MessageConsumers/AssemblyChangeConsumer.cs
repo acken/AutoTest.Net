@@ -31,7 +31,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		#region IConsumerOf[AssemblyChangeMessage] implementation
 		public void Consume (AssemblyChangeMessage message)
 		{
-            int i = 4;
             _isRunning = true;
             var runReport = new RunReport();
             try

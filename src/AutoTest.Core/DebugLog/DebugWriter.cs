@@ -52,7 +52,11 @@ namespace AutoTest.Core.DebugLog
             {
                 using (var writer = getWriter(_logFile))
                 {
-                    writer.WriteLine(text);
+                    writer.WriteLine(string.Format("{0}:{1}:{2}.{3} - {4}",
+                        DateTime.Now.Hour.ToString().PadLeft(2, '0'),
+                        DateTime.Now.Minute.ToString().PadLeft(2, '0'),
+                        DateTime.Now.Second.ToString().PadLeft(2, '0'),
+                        DateTime.Now.Millisecond.ToString().PadLeft(3, '0'), text));
                 }
                 if ((new FileInfo(_logFile)).Length > 1024000)
                 {
