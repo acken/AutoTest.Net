@@ -3,15 +3,21 @@ using AutoTest.Core.TestRunners;
 using System.Collections.Generic;
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
+using System.Threading;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-	public class AssemblyChangeConsumer : IConsumerOf<AssemblyChangeMessage>
+	public class AssemblyChangeConsumer : IOverridingConsumer<AssemblyChangeMessage>
 	{
 		private ITestRunner[] _testRunners;
 		private IMessageBus _bus;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
+        private bool _isRunning = false;
+        private bool _exit = false;
+        private List<RunInfo> _abortedTestRuns = new List<RunInfo>();
+
+        public bool IsRunning { get { return _isRunning; } }
 
         public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
 		{
@@ -25,14 +31,25 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		#region IConsumerOf[AssemblyChangeMessage] implementation
 		public void Consume (AssemblyChangeMessage message)
 		{
+            int i = 4;
+            _isRunning = true;
             var runReport = new RunReport();
             try
             {
 			    informParticipants(message);
                 var runInfos = getRunInfos(message);
                 runInfos = preProcess(runInfos);
-			    foreach (var runner in _testRunners)
+                runInfos = new TestRunInfoMerger(runInfos).MergeWith(_abortedTestRuns).ToArray();
+                foreach (var runner in _testRunners)
+                {
                     runTest(runner, runInfos, runReport);
+                    if (_exit)
+                    {
+                        _abortedTestRuns.Clear();
+                        _abortedTestRuns.AddRange(runInfos);
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -40,7 +57,22 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 _bus.Publish(new TestRunMessage(result));
             }
             _bus.Publish(new RunFinishedMessage(runReport));
+            if (!_exit)
+                _abortedTestRuns.Clear();
+            _exit = false;
+            _isRunning = false;
 		}
+
+        public void Terminate()
+        {
+            if (!_isRunning)
+                return;
+            Debug.WriteDebug("Initiating termination of current run");
+            _exit = true;
+            while (_isRunning)
+                Thread.Sleep(10);
+        }
+
 		#endregion
 
         private RunInfo[] preProcess(RunInfo[] runInfos)
@@ -83,7 +115,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
             if (testRunInfos.Count == 0)
 				return;
-            var results = runner.RunTests(testRunInfos.ToArray(), () => { return false; });
+            var results = runner.RunTests(testRunInfos.ToArray(), () => { return _exit; });
+            if (_exit)
+                return;
 			mergeReport(results, report, testRunInfos.ToArray());
             reRunTests(runner, report, testRunInfos);
 		}
@@ -99,7 +133,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (rerunInfos.Count > 0)
             {
                 Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                var results = runner.RunTests(testRunInfos.ToArray(), () => { return false; });
+                var results = runner.RunTests(testRunInfos.ToArray(), () => { return _exit; });
                 mergeReport(results, report, testRunInfos.ToArray());
             }
         }

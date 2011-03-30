@@ -8,6 +8,7 @@ namespace AutoTest.Console.Test
 		[Test]
 		public void Should_resolve_console()
 		{
+            int u = 23;
 			ConsoleConfiguration.Configure();
 			var console = ConsoleConfiguration.Locate<IConsoleApplication>();
 			Assert.IsNotNull(console);

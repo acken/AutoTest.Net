@@ -31,6 +31,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IPreProcessBuildruns[] _preBuildProcessors;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
+        private List<RunInfo> _abortedBuilds = new List<RunInfo>();
+        private List<RunInfo> _abortedTestRuns = new List<RunInfo>();
 
         public bool IsRunning { get { return _isRunning; } }
 
@@ -79,12 +81,17 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             try
             {
                 Debug.WriteDebug("Starting project change run");
-                var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
-                var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
-                if (!buildAll(preProcessBuildRun(list), runReport))
+                var list = getPrioritizedList(message);
+                if (!buildAll(list, runReport))
                     return runReport;
                 if (_exit)
+                {
+                    _abortedBuilds.Clear();
+                    _abortedBuilds.AddRange(list);
                     return runReport;
+                }
+                else
+                    _abortedBuilds.Clear();
                 markAllAsBuilt(list);
                 testAll(list, runReport);
             }
@@ -94,6 +101,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 _bus.Publish(new TestRunMessage(result));
             }
             return runReport;
+        }
+
+        private RunInfo[] getPrioritizedList(ProjectChangeMessage message)
+        {
+            var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
+            var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
+            list = preProcessBuildRun(list);
+            list = mergeWithAbortedBuilds(list);
+            return list;
+        }
+
+        private RunInfo[] mergeWithAbortedBuilds(RunInfo[] list)
+        {
+            return new RunInfoMerger(list).MergeWith(_abortedBuilds).ToArray();
         }
 
         private RunInfo[] preProcessBuildRun(RunInfo[] runInfos)
@@ -169,7 +190,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
-            runPreProcessedTestRun(preProcessTestRun(projectList), runReport);
+             projectList = preProcessTestRun(projectList);
+            projectList = new TestRunInfoMerger(projectList).MergeWith(_abortedTestRuns).ToArray();
+            runPreProcessedTestRun(projectList, runReport);
 		}
 		
 		private void runPreProcessedTestRun(RunInfo[] projectList, RunReport runReport)
@@ -196,6 +219,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				{
                     Debug.WriteDebug("Running tests for runner " + runner.GetType().ToString());
 					runTests(runner, runInfos.ToArray(), runReport);
+                    if (_exit)
+                    {
+                        _abortedTestRuns.Clear();
+                        _abortedTestRuns.AddRange(projectList);
+                        return;
+                    }
 					
 					var rerunInfos = new List<TestRunInfo>();
 					foreach (var info in runInfos)
@@ -207,10 +236,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     {
                         Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
                         runTests(runner, rerunInfos.ToArray(), runReport);
+                        if (_exit)
+                        {
+                            _abortedTestRuns.Clear();
+                            _abortedTestRuns.AddRange(projectList);
+                            return;
+                        }
                     }
 				}
-				
 			}
+            _abortedTestRuns.Clear();
 		}
 
         private RunInfo[] preProcessTestRun(RunInfo[] runInfos)
