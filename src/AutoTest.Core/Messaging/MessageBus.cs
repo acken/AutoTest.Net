@@ -108,7 +108,25 @@ namespace AutoTest.Core.Messaging
             foreach (var instance in consumers)
                 instance.Consume(message);
 
+            consumeByOveriddenConsumers<T>(message);
+
             publishWithheldMessages<T>();
+        }
+
+        private void consumeByOveriddenConsumers<T>(T message)
+        {
+            var overrideConsumers = locateOverrideConsumers<T>();
+            foreach (var consumer in overrideConsumers)
+            {
+                if (consumer.IsRunning)
+                    consumer.Terminate();
+                consumer.Consume(message);
+            }
+        }
+
+        private IOverridingConsumer<T>[] locateOverrideConsumers<T>()
+        {
+            return _services.LocateAll<IOverridingConsumer<T>>();
         }
 		
 		private IConsumerOf<T>[] locateConsumers<T>()

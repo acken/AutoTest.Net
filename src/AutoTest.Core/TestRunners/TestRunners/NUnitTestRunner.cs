@@ -41,7 +41,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return _assemblyReader.GetReferences(assembly).Contains("nunit.framework");
 		}
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Func<bool> abortWhen)
         {
 			var results = new List<TestRunResults>();
 			// Get a list of the various nunit executables specified pr. framework version

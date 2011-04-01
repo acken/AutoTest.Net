@@ -16,6 +16,7 @@ namespace AutoTest.TestRunners.Shared
         private IAssemblyReader _locator;
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
+        private Func<bool> _abortWhen = null;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -42,6 +43,12 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 
+        public TestRunProcess AbortWhen(Func<bool> abortWhen)
+        {
+            _abortWhen = abortWhen;
+            return this;
+        }
+
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {
             _results = new List<TestResult>();
@@ -52,6 +59,7 @@ namespace AutoTest.TestRunners.Shared
                 var process = new TestProcess(target, _feedback);
                 if (_runInParallel)
                     process.RunParallel();
+                process.AbortWhen(_abortWhen);
                 var thread = new Thread(new ThreadStart(process.Start));
                 thread.Start();
                 workers.Add(thread);

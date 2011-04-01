@@ -52,7 +52,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return _assemblyReader.GetReferences(assembly).Contains("Machine.Specifications");
         }
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Func<bool> abortWhen)
         {
             return runInfos
                 .GroupBy(x => x.Project == null ? String.Empty : x.Project.Value.Framework)

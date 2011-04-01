@@ -97,8 +97,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_build_locator()
         {
-            var buildLocator = _locator.Locate<IBlockingConsumerOf<ProjectChangeMessage>>();
-            buildLocator.ShouldBeOfType<IBlockingConsumerOf<ProjectChangeMessage>>();
+            var buildLocator = _locator.Locate<IOverridingConsumer<ProjectChangeMessage>>();
+            buildLocator.ShouldBeOfType<IOverridingConsumer<ProjectChangeMessage>>();
         }
 
         [Test]
@@ -260,8 +260,8 @@ namespace AutoTest.Test.Core.Configuration
 		[Test]
 		public void Should_register_assembly_change_consumer()
 		{
-			var consumer = _locator.Locate<IConsumerOf<AssemblyChangeMessage>>();
-			consumer.ShouldBeOfType<IConsumerOf<AssemblyChangeMessage>>();
+			var consumer = _locator.Locate<IOverridingConsumer<AssemblyChangeMessage>>();
+            consumer.ShouldBeOfType<IOverridingConsumer<AssemblyChangeMessage>>();
 		}
 		
 		[Test]

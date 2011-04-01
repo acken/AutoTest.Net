@@ -114,6 +114,7 @@
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BlockedMessage.cs" />
     <Compile Include="Messaging\IBlockingConsumerOf.cs" />
+    <Compile Include="Messaging\IOverridingConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\BuildListGenerator.cs" />
     <Compile Include="Messaging\MessageConsumers\IGenerateBuildList.cs" />
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
@@ -149,7 +150,9 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Messaging\MessageConsumers\RemovedTestsLocator.cs" />
+    <Compile Include="Messaging\MessageConsumers\RunInfoMerger.cs" />
     <Compile Include="Messaging\MessageConsumers\SolutionChangeConsumer.cs" />
+    <Compile Include="Messaging\MessageConsumers\TestRunInfoMerger.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
     <Compile Include="Notifiers\SnarlNotifier.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />
