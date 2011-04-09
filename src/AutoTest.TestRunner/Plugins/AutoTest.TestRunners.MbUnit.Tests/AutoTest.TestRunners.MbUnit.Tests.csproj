@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanDetectTests.cs" />
+    <Compile Include="CanRunTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRunnerScenario.cs" />
   </ItemGroup>

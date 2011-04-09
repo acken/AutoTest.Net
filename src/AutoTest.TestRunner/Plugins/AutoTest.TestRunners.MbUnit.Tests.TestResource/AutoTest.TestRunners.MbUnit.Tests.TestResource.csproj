@@ -31,8 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MbUnit.Framework">
-      <HintPath>..\..\..\..\..\..\bin\GallioBundle-3.2.750.0\bin\MbUnit2\MbUnit.Framework.dll</HintPath>
+    <Reference Include="Gallio">
+      <HintPath>..\..\..\..\lib\Gallio\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit">
+      <HintPath>..\..\..\..\lib\MbUnit\MbUnit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnotherClassContainingTests.cs" />
+    <Compile Include="AnotherNamespace\TestsInAnotherNamespace.cs" />
     <Compile Include="ClassContainingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
