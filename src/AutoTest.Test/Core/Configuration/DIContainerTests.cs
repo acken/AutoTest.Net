@@ -153,8 +153,8 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_application_launcher()
         {
-            var launcher = _locator.Locate<ApplicatonLauncher>();
-            launcher.ShouldBeOfType<ApplicatonLauncher>();
+            var launcher = _locator.Locate<IApplicatonLauncher>();
+            launcher.ShouldBeOfType<IApplicatonLauncher>();
         }
 
         [Test]

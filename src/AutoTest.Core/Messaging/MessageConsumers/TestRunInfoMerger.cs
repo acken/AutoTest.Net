@@ -23,7 +23,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private void mergeExisting(List<RunInfo> list)
         {
-            var tests = new List<KeyValuePair<RunInfo, TestToRun>>();
             addNewEntries(list, (info) => { return info.GetTests().ToList(); }, (info, test) => { info.AddTestsToRun(new TestToRun[] { test }); });
             addNewEntries(list, (info) => { return info.GetMembers().ToList(); }, (info, member) => { info.AddMembersToRun(new TestToRun[] { member }); });
             addNewEntries(list, (info) => { return info.GetNamespaces().ToList(); }, (info, ns) => { info.AddNamespacesToRun(new TestToRun[] { ns }); });

@@ -153,6 +153,15 @@ namespace AutoTest.Test
 			output.Files[0].Extension.ShouldEqual(file.Extension);
 		}
 		
+		[Test]
+		public void Should_serialize_file_external_command_message()
+		{
+			var message = new ExternalCommandMessage("a sender", "a command");
+			var output = serializeDeserialize<ExternalCommandMessage>(message);
+			output.Sender.ShouldEqual("a sender");
+			output.Command.ShouldEqual("a command");
+		}
+		
 		private T serializeDeserialize<T>(T message)
 		{
 			using (var memStream = new MemoryStream())

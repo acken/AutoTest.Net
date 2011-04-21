@@ -85,6 +85,7 @@
     <Compile Include="StackLineMessage.cs" />
     <Compile Include="LinkParser.cs" />
     <Compile Include="Link.cs" />
+    <Compile Include="ExternalCommandMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

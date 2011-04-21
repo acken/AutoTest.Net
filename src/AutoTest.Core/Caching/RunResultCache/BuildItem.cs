@@ -68,7 +68,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         public void HandleLink(string link)
         {
             var file = getFilePath();
-            var launcher = BootStrapper.Services.Locate<ApplicatonLauncher>();
+            var launcher = BootStrapper.Services.Locate<IApplicatonLauncher>();
             launcher.LaunchEditor(file, Value.LineNumber, Value.LinePosition);
         }
 

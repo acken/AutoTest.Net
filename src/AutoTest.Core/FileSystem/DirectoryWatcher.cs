@@ -5,6 +5,7 @@ using System.IO;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Configuration;
 using AutoTest.Messages;
+using AutoTest.Core.Launchers;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -14,6 +15,7 @@ namespace AutoTest.Core.FileSystem
         private readonly FileSystemWatcher _watcher;
 		private IHandleDelayedConfiguration _delayedConfigurer;
         private IWatchPathLocator _watchPathLocator;
+		private IApplicatonLauncher _launcer;
         private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
         private List<ChangedFile> _buffer = new List<ChangedFile>();
@@ -27,13 +29,14 @@ namespace AutoTest.Core.FileSystem
 
         public bool IsPaused { get { return _paused; } }
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer)
         {
             _bus = bus;
             _validator = validator;
 			_configuration = configuration;
 			_delayedConfigurer = delayedConfigurer;
             _watchPathLocator = watchPathLocator;
+			_launcer = launcer;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
@@ -89,6 +92,7 @@ namespace AutoTest.Core.FileSystem
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
             _watcher.Path = path;
+			_launcer.Initialize(path);
         }
 		
 		private void setupPreProcessors()
