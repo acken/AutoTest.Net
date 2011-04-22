@@ -19,6 +19,7 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Notifiers;
 using AutoTest.Messages;
+using AutoTest.Core.Launchers;
 
 namespace AutoTest.WinForms
 {
@@ -191,6 +192,19 @@ namespace AutoTest.WinForms
             }
             _syncContext.Post(m => setRunInProgressFeedback(m.ToString()), text);
         }
+		
+		public void RecievingExternalCommandMessage(ExternalCommandMessage message)
+		{
+			if (message.Sender == "EditorEngine")
+			{
+				var msg = EditorEngineMessage.New(message.Command);
+				if (msg.Command == "keypress" && msg.Arguments.Count == 1 && msg.Arguments[0].ToLower() == "ctrl+shift+j")
+				{
+					this.BringToFront();
+					runFeedbackList.Select();
+				}
+			}
+		}
 
         #endregion
 
@@ -318,7 +332,8 @@ namespace AutoTest.WinForms
 			// If we do not set focus away from this linklabel on click
 			// mono will cause the app to die the next time we click the
 			// listview after a new run.
-			runFeedbackList.Focus();
+			runFeedbackList.Select();
+			SendToBack();
         }
 
         private void buttonInformation_Click(object sender, EventArgs e)

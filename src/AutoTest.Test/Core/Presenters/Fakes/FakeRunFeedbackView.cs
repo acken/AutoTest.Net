@@ -16,6 +16,7 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         private BuildRunMessage _buildRunMessage = null;
         private TestRunMessage _testRunMessage = null;
         private RunInformationMessage _runInformationMessage = null;
+		private ExternalCommandMessage _externalCommandMessage = null;
 
         public FileChangeMessage FileChangeMessage { get { return _fileChangeMessage; } }
         public RunStartedMessage RunStartedMessage { get { return _runStartedMessage; } }
@@ -23,6 +24,7 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public BuildRunMessage BuildRunMessage { get { return _buildRunMessage; } }
         public TestRunMessage TestRunMessage { get { return _testRunMessage; } }
         public RunInformationMessage RunInformationMessage { get { return _runInformationMessage; } }
+		public ExternalCommandMessage ExternalCommandMessage { get { return _externalCommandMessage; } }
 
         #region IRunFeedbackView Members
 
@@ -55,6 +57,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         {
             _runInformationMessage = message;
         }
+		
+		public void RecievingExternalCommandMessage(ExternalCommandMessage message)
+		{
+			_externalCommandMessage = message;
+		}
 
         #endregion
     }

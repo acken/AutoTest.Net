@@ -2,7 +2,7 @@ using System;
 using System.IO;
 namespace AutoTest.Messages
 {
-	public class ExternalCommandMessage : ICustomBinarySerializable
+	public class ExternalCommandMessage : IMessage, ICustomBinarySerializable
 	{
 		public string Sender { get; private set; }
 		public string Command { get; private set; }

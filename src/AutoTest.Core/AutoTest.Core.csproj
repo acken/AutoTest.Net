@@ -209,6 +209,7 @@
     <Compile Include="Launchers\SocketClient.cs" />
     <Compile Include="Launchers\Instance.cs" />
     <Compile Include="Launchers\IApplicatonLauncher.cs" />
+    <Compile Include="Launchers\EditorEngineMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
