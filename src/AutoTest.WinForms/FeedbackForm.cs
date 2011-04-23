@@ -200,7 +200,7 @@ namespace AutoTest.WinForms
 				var msg = EditorEngineMessage.New(message.Command);
 				if (msg.Command == "keypress" && msg.Arguments.Count == 1 && msg.Arguments[0].ToLower() == "ctrl+shift+j")
 				{
-					this.BringToFront();
+					Activate();
 					runFeedbackList.Select();
 				}
 			}
