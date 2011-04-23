@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-namespace AutoTest.Core.Launchers
+namespace AutoTest.Messages
 {
 	public class EditorEngineMessage
 	{

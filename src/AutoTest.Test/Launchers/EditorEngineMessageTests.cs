@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using AutoTest.Core.Launchers;
+using AutoTest.Messages;
 namespace AutoTest.Test.Launchers
 {
 	[TestFixture]
