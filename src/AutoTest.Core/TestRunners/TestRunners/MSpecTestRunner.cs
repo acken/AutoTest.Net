@@ -108,7 +108,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 {
                     return ErrorsFor(run.RunInfos,
                                      string.Format("Machine.Specifications runner failed with exit code {0} " +
-                                                   "- did you try to use mspec.exe (for CLR 2) with a .NET 4.0 project?",
+                                                   "- did you try to use mspec.exe (for CLR 2) with a .NET 4.0 project? Please configure mspec.exe (AnyCPU, CLR 2), mspec-x86.exe (x86, CLR 2), mspec-clr4.exe (AnyCPU, CLR 4) or mspec-x86-clr4.exe (x86, CLR 4).",
                                                    exitCode));
                 }
 
