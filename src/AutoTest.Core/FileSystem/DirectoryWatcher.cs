@@ -73,10 +73,10 @@ namespace AutoTest.Core.FileSystem
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
             }
+			initializeWatchPath(path);
 			mergeLocalConfig(path);
 			initializeTimer();
 			setupPreProcessors();
-			initializeWatchPath(path);
             setWatchPath(path);
             _watcher.EnableRaisingEvents = true;
             if (_configuration.StartPaused)
@@ -104,9 +104,10 @@ namespace AutoTest.Core.FileSystem
 		private void initializeWatchPath(string path)
 		{
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-				_watchPath = Path.GetDirectoryName(path);
+				_watchPath = path.Substring(0, path.Length - 1);
 			else
 				_watchPath = path;
+			_configuration.SetWatchPath(_watchPath);
             _ignorePath = Path.GetDirectoryName(new PathParser(_configuration.IgnoreFile).ToAbsolute(_watchPath));
             if (!Directory.Exists(_ignorePath) || _configuration.IgnoreFile.Trim().Length == 0)
                 _ignorePath = _watchPath;

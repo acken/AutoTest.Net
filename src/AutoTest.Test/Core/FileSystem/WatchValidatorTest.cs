@@ -117,6 +117,33 @@ namespace AutoTest.Test.Core.FileSystem
                 .ShouldPublish(getInfo("asomething{0}bin{0}AutoTest.Net{0}somefile.mm.dll"))
                 .ShouldBeFalse();
         }
+		
+		[Test]
+        public void Should_invalidate_swp()
+        {
+            _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
+            _validator
+                .ShouldPublish(getInfo("asomething{0}somefile.swp"))
+                .ShouldBeFalse();
+        }
+		
+		[Test]
+        public void Should_invalidate_swx()
+        {
+            _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
+			_validator
+                .ShouldPublish(getInfo("asomething{0}somefile.swx"))
+                .ShouldBeFalse();
+		}
+		
+		[Test]
+        public void Should_invalidate_endswith_tilde()
+        {
+            _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
+			_validator
+                .ShouldPublish(getInfo("asomething{0}MyFile.cs~"))
+                .ShouldBeFalse();
+		}
 
         [Test]
         public void Should_invalidate_monos_filelistabsolute_file()

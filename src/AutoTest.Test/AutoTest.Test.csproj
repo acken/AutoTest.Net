@@ -175,6 +175,7 @@
     <Compile Include="Core\FileSystem\AssemblyParserTest.cs" />
     <Compile Include="Core\Messaging\MessageConsumers\ProjectRebuildMarkerTest.cs" />
     <Compile Include="Launchers\EditorEngineMessageTests.cs" />
+    <Compile Include="Core\FileSystem\PathParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
