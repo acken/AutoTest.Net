@@ -18,6 +18,16 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
+	public class RunLog
+	{
+		public string GetLocation()
+		{
+			var dir = Path.GetTempPath();
+			var filename = string.Format("mm_output_{0}.log", Process.GetCurrentProcess().Id);
+			return Path.Combine(dir, filename);
+		}
+	}
+	
     class AutoTestTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
@@ -58,6 +68,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (options == null)
                 return new TestRunResults[] { };
             var runner = new TestRunProcess(new AutoTestRunnerFeedback())
+				.ActivateProfilingFor(new RunLog().GetLocation())
                 .AbortWhen(abortWhen);
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();

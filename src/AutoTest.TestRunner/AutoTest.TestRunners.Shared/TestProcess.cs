@@ -19,6 +19,8 @@ namespace AutoTest.TestRunners.Shared
         private TargetedRun _targetedRun;
         private bool _runInParallel = false;
         private bool _startSuspended = false;
+		private bool _activateProfiling = false;
+		private string _profilerLogFile = null;
         private Func<bool> _abortWhen = null;
         private Process _proc = null;
 
@@ -45,7 +47,14 @@ namespace AutoTest.TestRunners.Shared
             _abortWhen = abortWhen;
             return this;
         }
-
+		
+		public TestProcess ActivateProfilingFor(string logFileName)
+		{
+			_profilerLogFile = logFileName;
+			_activateProfiling = true;
+			return this;
+		}
+		 
         public void Start()
         {
             var executable = getExecutable();
@@ -70,9 +79,18 @@ namespace AutoTest.TestRunners.Shared
             _proc.StartInfo.UseShellExecute = false;
             _proc.StartInfo.CreateNoWindow = true;
             _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(executable);
+			if (_activateProfiling)
+			{
+				if (_targetedRun.Platform == Platform.AnyCPU)
+                	_proc.StartInfo.EnvironmentVariables.Add("Cor_Profiler", "{5D789D88-EEE7-46C4-909F-E39D5606544D}");
+				else
+                	_proc.StartInfo.EnvironmentVariables.Add("Cor_Profiler", "{36C8D782-F697-45C4-856A-92D05C061A39}");
+                _proc.StartInfo.EnvironmentVariables.Add("Cor_Enable_Profiling", "1");
+                _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_LogFilename", _profilerLogFile);
+			}
             _proc.Start();
             new System.Threading.Thread(listenForAborts).Start();
-            var consoleOutput = _proc.StandardOutput.ReadToEnd();
+            _proc.StandardOutput.ReadToEnd();
             _proc.WaitForExit();
             if (aborted())
                 return;

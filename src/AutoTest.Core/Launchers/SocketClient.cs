@@ -44,7 +44,10 @@ namespace AutoTest.Core
         private void Connect(int port, int retryCount)
         {
             if (retryCount >= 5)
+			{
+				IsConnected = false;
                 return;
+			}
 			try {
 	            var client = new TcpClient();
 	            client.Connect("127.0.0.1", port);
