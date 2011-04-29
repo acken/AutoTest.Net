@@ -62,13 +62,12 @@ namespace AutoTest.Core.Configuration
         {
             var core = getConfiguration();
             tryToConfigure(core);
-            if (localConfiguration == null)
-                return;
-            if (File.Exists(localConfiguration))
-            {
-                Merge(localConfiguration);
-                BuildIgnoreList(Path.GetDirectoryName(localConfiguration));
-            }
+            if (localConfiguration != null)
+			{
+	            if (File.Exists(localConfiguration))
+	                Merge(localConfiguration);
+			}
+			BuildIgnoreList(WatchPath);
             SetBuildProvider();
             AnnounceTrackerType();
         }
@@ -304,6 +303,7 @@ namespace AutoTest.Core.Configuration
 		{
             var file = new PathParser(_ignoreFile).ToAbsolute(watchPath);
 			
+			Debug.WriteDebug("Using ignore file {0}", file);
 			if (File.Exists(file))
 				WatchIgnoreList = getLineArrayFromFile(file, watchPath);
 			else

@@ -4,22 +4,36 @@ using System.Text;
 using System.Diagnostics;
 using AutoTest.Core.Configuration;
 using System.IO;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.Launchers
 {
-    public class ApplicatonLauncher
+    public class ApplicatonLauncher : IApplicatonLauncher
     {
         private IConfiguration _configuration;
+		private IMessageBus _bus;
+		private EditorEngineLauncher _editorEngine;
+		private string _path = null;
 
-        public ApplicatonLauncher(IConfiguration configuration)
+        public ApplicatonLauncher(IConfiguration configuration, IMessageBus bus)
         {
             _configuration = configuration;
+			_bus = bus;
+			_editorEngine = new EditorEngineLauncher(_bus);
         }
+		
+		public void Initialize(string path)
+		{
+			_path = path;
+			_editorEngine.Connect(_path);
+		}
 
         public void LaunchEditor(string file, int lineNumber, int column)
         {
             if (isMonoDevelop())
 				LaunchMonoDevelop(file, lineNumber, column);
+			else if (isEditorEngine())
+				_editorEngine.GoTo(file, lineNumber, column);
 			else
 				LaunchExecutable(file, lineNumber, column);
         }
@@ -28,6 +42,12 @@ namespace AutoTest.Core.Launchers
 		{
 			var executable = _configuration.CodeEditor.Executable.ToLower();
 			return executable.EndsWith("monodevelop") || executable.EndsWith("monodevelop.exe");
+		}
+		
+		private bool isEditorEngine()
+		{
+			var executable = _configuration.CodeEditor.Executable.ToLower();
+			return executable.EndsWith("editorengine") || executable.EndsWith("editorengine.exe");
 		}
 		
 		private void LaunchMonoDevelop(string file, int lineNumber, int column)

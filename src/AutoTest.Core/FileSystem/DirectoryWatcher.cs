@@ -5,6 +5,7 @@ using System.IO;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Configuration;
 using AutoTest.Messages;
+using AutoTest.Core.Launchers;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -14,6 +15,7 @@ namespace AutoTest.Core.FileSystem
         private readonly FileSystemWatcher _watcher;
 		private IHandleDelayedConfiguration _delayedConfigurer;
         private IWatchPathLocator _watchPathLocator;
+		private IApplicatonLauncher _launcer;
         private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
         private List<ChangedFile> _buffer = new List<ChangedFile>();
@@ -27,13 +29,14 @@ namespace AutoTest.Core.FileSystem
 
         public bool IsPaused { get { return _paused; } }
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer)
         {
             _bus = bus;
             _validator = validator;
 			_configuration = configuration;
 			_delayedConfigurer = delayedConfigurer;
             _watchPathLocator = watchPathLocator;
+			_launcer = launcer;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
@@ -70,10 +73,10 @@ namespace AutoTest.Core.FileSystem
                 _bus.Publish(new ErrorMessage(string.Format("Invalid watch directory \"{0}\".", path)));
                 return;
             }
+			initializeWatchPath(path);
 			mergeLocalConfig(path);
 			initializeTimer();
 			setupPreProcessors();
-			initializeWatchPath(path);
             setWatchPath(path);
             _watcher.EnableRaisingEvents = true;
             if (_configuration.StartPaused)
@@ -89,6 +92,7 @@ namespace AutoTest.Core.FileSystem
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
             _watcher.Path = path;
+			_launcer.Initialize(path);
         }
 		
 		private void setupPreProcessors()
@@ -100,9 +104,10 @@ namespace AutoTest.Core.FileSystem
 		private void initializeWatchPath(string path)
 		{
 			if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-				_watchPath = Path.GetDirectoryName(path);
+				_watchPath = path.Substring(0, path.Length - 1);
 			else
 				_watchPath = path;
+			_configuration.SetWatchPath(_watchPath);
             _ignorePath = Path.GetDirectoryName(new PathParser(_configuration.IgnoreFile).ToAbsolute(_watchPath));
             if (!Directory.Exists(_ignorePath) || _configuration.IgnoreFile.Trim().Length == 0)
                 _ignorePath = _watchPath;

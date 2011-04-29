@@ -90,6 +90,15 @@ namespace AutoTest.Test.Core.Presenters
             waitForAsyncCall();
             _view.RunInformationMessage.ShouldBeTheSameAs(message);
         }
+		
+		[Test]
+        public void Should_subscribe_to_run_external_command_messages()
+        {
+            var message = new ExternalCommandMessage("sender", "command");
+            _bus.Publish(message);
+            waitForAsyncCall();
+            _view.ExternalCommandMessage.ShouldBeTheSameAs(message);
+        }
 
         private void waitForAsyncCall()
         {

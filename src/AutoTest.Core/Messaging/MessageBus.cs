@@ -23,6 +23,7 @@ namespace AutoTest.Core.Messaging
         public event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         public event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         public event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
+		public event EventHandler<ExternalCommandArgs> OnExternalCommand;
 
         public MessageBus(IServiceLocator services)
         {
@@ -203,6 +204,12 @@ namespace AutoTest.Core.Messaging
             {
                 if (OnRunInformationMessage != null)
                     OnRunInformationMessage(this, new RunInformationMessageEventArgs((RunInformationMessage)(IMessage)message));
+                handled = true;
+            }
+			else if (typeof(T) == typeof(ExternalCommandMessage))
+            {
+                if (OnExternalCommand != null)
+                    OnExternalCommand(this, new ExternalCommandArgs((ExternalCommandMessage)(IMessage)message));
                 handled = true;
             }
             return handled;

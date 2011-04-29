@@ -93,6 +93,16 @@ namespace AutoTest.Core.Messaging
             Message = message;
         }
     }
+	
+	public class ExternalCommandArgs : EventArgs
+    {
+        public ExternalCommandMessage Message { get; private set; }
+
+        public ExternalCommandArgs(ExternalCommandMessage message)
+        {
+            Message = message;
+        }
+    }
 
     public interface IMessageBus
     {
@@ -105,6 +115,7 @@ namespace AutoTest.Core.Messaging
         event EventHandler<TestRunMessageEventArgs> OnTestRunMessage;
         event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
+		event EventHandler<ExternalCommandArgs> OnExternalCommand;
         void Publish<T>(T message);
 		
 		void SetBuildProvider(string buildProvider);

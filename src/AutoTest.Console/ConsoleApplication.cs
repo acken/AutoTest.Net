@@ -147,6 +147,11 @@ namespace AutoTest.Console
         {
             
         }
+		
+		public void RecievingExternalCommandMessage(ExternalCommandMessage message)
+		{
+			
+		}
 
         #endregion
 		

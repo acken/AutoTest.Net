@@ -26,6 +26,7 @@ namespace AutoTest.Core.Presenters
                 _bus.OnBuildMessage +=new EventHandler<BuildMessageEventArgs>(_bus_OnBuildMessage);
                 _bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(_bus_OnTestRunMessage);
                 _bus.OnRunInformationMessage += new EventHandler<RunInformationMessageEventArgs>(_bus_OnRunInformationMessage);
+				_bus.OnExternalCommand += new EventHandler<ExternalCommandArgs>(_bus_OnExternalCommandMessage);
             }
         }
 
@@ -72,6 +73,12 @@ namespace AutoTest.Core.Presenters
             Debug.PresenterRecievedRunInformationMessage();
             _view.RecievingRunInformationMessage(e.Message);
         }
+		
+		void _bus_OnExternalCommandMessage(object sender, ExternalCommandArgs e)
+		{
+			Debug.WriteDetail("Presenter received external command message");
+			_view.RecievingExternalCommandMessage(e.Message);
+		}
 
         #region IDisposable Members
 
@@ -81,6 +88,7 @@ namespace AutoTest.Core.Presenters
             _bus.OnRunFinishedMessage -= _bus_OnRunFinishedMessage;
             _bus.OnBuildMessage -= _bus_OnBuildMessage;
             _bus.OnTestRunMessage -= _bus_OnTestRunMessage;
+			_bus.OnExternalCommand -= _bus_OnExternalCommandMessage;
         }
 
         #endregion

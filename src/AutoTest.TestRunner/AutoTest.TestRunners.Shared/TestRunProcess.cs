@@ -17,6 +17,8 @@ namespace AutoTest.TestRunners.Shared
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
+		private bool _activateProfiling = false;
+		private string _profilerLogFile = null;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -48,6 +50,13 @@ namespace AutoTest.TestRunners.Shared
             _abortWhen = abortWhen;
             return this;
         }
+		
+		public TestRunProcess ActivateProfilingFor(string logFileName)
+		{
+			_profilerLogFile = logFileName;
+			_activateProfiling = true;
+			return this;
+		}
 
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {
@@ -59,6 +68,8 @@ namespace AutoTest.TestRunners.Shared
                 var process = new TestProcess(target, _feedback);
                 if (_runInParallel)
                     process.RunParallel();
+				if (_activateProfiling)
+					process.ActivateProfilingFor(_profilerLogFile);
                 process.AbortWhen(_abortWhen);
                 var thread = new Thread(new ThreadStart(process.Start));
                 thread.Start();

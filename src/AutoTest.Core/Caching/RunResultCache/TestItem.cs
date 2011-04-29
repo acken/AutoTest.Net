@@ -79,7 +79,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             var file = link.Substring(0, link.IndexOf(":line"));
             var lineNumber = getLineNumber(link);
-            var launcher = BootStrapper.Services.Locate<ApplicatonLauncher>();
+            var launcher = BootStrapper.Services.Locate<IApplicatonLauncher>();
             launcher.LaunchEditor(file, lineNumber, 0);
         }
 
