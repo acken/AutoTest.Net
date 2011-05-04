@@ -151,7 +151,7 @@ namespace AutoTest.TestRunners
                 {
                     foreach (var assembly in run.Assemblies)
                     {
-                        WriteNow("Running tests for " + assembly.Assembly);
+                        WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
                         var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging);
                         if (_arguments.RunInParallel)
                         {

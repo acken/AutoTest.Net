@@ -39,7 +39,7 @@ namespace AutoTest.TestRunners
                 if (runner == null)
                     return _results;
                 Logger.Write("Matching plugin identifier ({0}) to test identifier ({1})", runner.Identifier, id);
-                if (!runner.Identifier.ToLower().Equals(id.ToLower()))
+                if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
                     return _results;
                 Logger.Write("Checking whether assembly contains tests for {0}", id);
                 if (!runner.ContainsTestsFor(settings.Assembly.Assembly))
