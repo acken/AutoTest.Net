@@ -1,16 +1,23 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
+using Debug = AutoTest.Core.DebugLog.Debug;
+
 namespace AutoTest.Core.TestRunners.TestRunners
 {
     public interface IExternalProcess
     {
-        void CreateAndWaitForExit(string executable, string arguments);
+        int CreateAndWaitForExit(string executable, string arguments);
+    }
+
+    internal enum ExitCode
+    {
+        Success = 0
     }
 
     internal class HiddenExternalProcess : IExternalProcess
     {
-        public void CreateAndWaitForExit(string executable, string arguments)
+        public int CreateAndWaitForExit(string executable, string arguments)
         {
             var process = new Process
                           {
@@ -23,16 +30,17 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                               CreateNoWindow = true
                                           }
                           };
-            DebugLog.Debug.WriteDebug(string.Format("Launching: {0} {1}", executable, arguments));
+            Debug.WriteDebug(string.Format("Launching: {0} {1}", executable, arguments));
             process.Start();
 
-            WaitForExit(process);
+            return WaitForExit(process);
         }
 
-        static void WaitForExit(Process process)
+        static int WaitForExit(Process process)
         {
             process.StandardOutput.ReadToEnd();
             process.WaitForExit();
+            return process.ExitCode;
         }
     }
 }

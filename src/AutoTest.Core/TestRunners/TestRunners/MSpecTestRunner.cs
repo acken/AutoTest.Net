@@ -78,10 +78,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 return Enumerable.Empty<TestRunResults>();
             }
 
-            return ErrorsFor(run.RunInfos);
+            return ErrorsFor(run.RunInfos, String.Format("Machine.Specifications runner executable could not be found: {0}", run.RunnerExe));
         }
 
-        static IEnumerable<TestRunResults> ErrorsFor(IEnumerable<TestRunInfo> runInfo)
+        static IEnumerable<TestRunResults> ErrorsFor(IEnumerable<TestRunInfo> runInfo, string message)
         {
             return runInfo
                 .Select(x => new
@@ -93,7 +93,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                                 x.Assembly,
                                                 false,
                                                 TestRunner.MSpec,
-                                                new TestResult[] { }));
+                                                new[] { TestResult.Fail(message) }));
         }
 
         IEnumerable<TestRunResults> RunTestsForFramework(Run run)
@@ -103,7 +103,14 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var runnerExe = run.RunnerExe;
                 var arguments = _commandLineBuilder.Build(run);
 
-                _externalProcess.CreateAndWaitForExit(runnerExe, arguments);
+                var exitCode = _externalProcess.CreateAndWaitForExit(runnerExe, arguments);
+                if (exitCode != (int) ExitCode.Success)
+                {
+                    return ErrorsFor(run.RunInfos,
+                                     string.Format("Machine.Specifications runner failed with exit code {0} " +
+                                                   "- did you try to use mspec.exe (for CLR 2) with a .NET 4.0 project? Please configure mspec.exe (AnyCPU, CLR 2), mspec-x86.exe (x86, CLR 2), mspec-clr4.exe (AnyCPU, CLR 4) or mspec-x86-clr4.exe (x86, CLR 4).",
+                                                   exitCode));
+                }
 
                 return run.HarvestResults().ToList();
             }
