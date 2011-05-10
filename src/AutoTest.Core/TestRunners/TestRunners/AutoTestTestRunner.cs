@@ -87,7 +87,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 										var reference = x;
 										if (x.IndexOf(",") != -1)
 											reference = x.Substring(0, x.IndexOf(","));
-										if (!reference.Contains(reference))
+										if (!references.Contains(reference))
 											references.Add(reference);
 									  }));
 			references.ForEach(x => list += x + ", ");
