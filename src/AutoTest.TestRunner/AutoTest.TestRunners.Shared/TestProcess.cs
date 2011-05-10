@@ -87,6 +87,9 @@ namespace AutoTest.TestRunners.Shared
                 	_proc.StartInfo.EnvironmentVariables.Add("Cor_Profiler", "{36C8D782-F697-45C4-856A-92D05C061A39}");
                 _proc.StartInfo.EnvironmentVariables.Add("Cor_Enable_Profiling", "1");
                 _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_LogFilename", _profilerLogFile);
+				
+				//_proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", "nunit, log4net");
+                _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Runtime", string.Format(".NET{0}", _targetedRun.TargetFramework.Major));
 			}
             _proc.Start();
             new System.Threading.Thread(listenForAborts).Start();
