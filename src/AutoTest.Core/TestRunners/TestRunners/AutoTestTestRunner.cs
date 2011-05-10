@@ -91,10 +91,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 											references.Add(reference);
 									  }));
 			references.ForEach(x => list += x + ", ");
+            DebugLog.Debug.WriteDebug("Excluding binary references: " + list);
 			if (list.Length == 0)
 				return null;
 			list = list.Substring(0, list.Length - 2);
-			DebugLog.Debug.WriteDebug("Excluding binary references: " + list);
 			return list;
 		}
 
