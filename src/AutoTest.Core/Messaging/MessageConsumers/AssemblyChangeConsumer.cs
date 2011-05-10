@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
 using System.Threading;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
+using System.Linq;
+using AutoTest.Core.Configuration;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
 	public class AssemblyChangeConsumer : IOverridingConsumer<AssemblyChangeMessage>
@@ -13,19 +17,23 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
+		private ICache _cache;
+		private IConfiguration _config;
         private bool _isRunning = false;
         private bool _exit = false;
         private List<RunInfo> _abortedTestRuns = new List<RunInfo>();
 
         public bool IsRunning { get { return _isRunning; } }
 
-        public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
+        public AssemblyChangeConsumer(ITestRunner[] testRunners, IMessageBus bus, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator, ICache cache, IConfiguration config)
 		{
 			_testRunners = testRunners;
 			_bus = bus;
 			_testAssemblyValidator = testAssemblyValidator;
             _preProcessors = preProcessors;
             _removedTestLocator = removedTestLocator;
+			_cache = cache;
+			_config = config;
 		}
 		
 		#region IConsumerOf[AssemblyChangeMessage] implementation
@@ -81,12 +89,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return runInfos;
         }
 		private RunInfo[] getRunInfos(AssemblyChangeMessage message)
-
         {
+			var projects = _cache.GetAll<Project>();
             var runInfos = new List<RunInfo>();
             foreach (var file in message.Files)
             {
-                var runInfo = new RunInfo(null);
+				var project = projects.Where(x => x.GetAssembly(_config.CustomOutputPath).Equals(file.FullName)).FirstOrDefault();
+                var runInfo = new RunInfo(project);
                 runInfo.SetAssembly(file.FullName);
                 runInfos.Add(runInfo);
             }

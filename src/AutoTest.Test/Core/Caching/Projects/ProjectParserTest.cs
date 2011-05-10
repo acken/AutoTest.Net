@@ -124,6 +124,23 @@ namespace AutoTest.Test.Core.Caching.Projects
             var document = _parser.Parse(getCSharpNoAnyCPUProject(), null);
             document.Platform.ShouldEqual("x86");
         }
+		
+		[Test]
+        public void Should_find_binary_reference()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.BinaryReferences.Length.ShouldEqual(10);
+            document.BinaryReferences[0].ShouldEqual("nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL");
+			document.BinaryReferences[1].ShouldEqual("xunit, Version=1.5.0.1479, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL");
+			document.BinaryReferences[2].ShouldEqual("Machine.Specifications");
+			document.BinaryReferences[3].ShouldEqual("Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL");
+			document.BinaryReferences[4].ShouldEqual("System");
+			document.BinaryReferences[5].ShouldEqual("System.Core");
+			document.BinaryReferences[6].ShouldEqual("System.Xml.Linq");
+			document.BinaryReferences[7].ShouldEqual("System.Data.DataSetExtensions");
+			document.BinaryReferences[8].ShouldEqual("System.Data");
+			document.BinaryReferences[9].ShouldEqual("System.Xml");
+        }
 
         private string getCSharpProject()
         {

@@ -17,6 +17,8 @@ namespace AutoTest.Core.Caching.Projects
         private const string VB_PROJECT_EXTENTION = ".vbproj";
         private const string PROJECT_REFERENCE_START = "<ProjectReference Include=\"";
         private const string PROJECT_REFERENCE_END = "\">";
+		private const string BINARY_REFERENCE_START = "<Reference Include=\"";
+        private const string BINARY_REFERENCE_END = "\"";
         private const string CONFIGURATION_START = "<Configuration Condition";
         private const string CONFIGURATION_START_CONTENT_STARTS_HERE = "\">";
         private const string CONFIGURATION_END = "</Configuration>";
@@ -51,6 +53,7 @@ namespace AutoTest.Core.Caching.Projects
             setOutputPath(newDocument);
             setFrameworkVersion(newDocument);
             setProductVersion(newDocument);
+			setBinaryReferences(newDocument);
             setReferences(newDocument);
             setReferencedBy(newDocument, existingDocument);
             return newDocument;
@@ -141,6 +144,18 @@ namespace AutoTest.Core.Caching.Projects
                     continue;
                 document.AddReference(reference);
             }
+        }
+		
+		private void setBinaryReferences(ProjectDocument document)
+        {
+            var regExp = new Regex(string.Format("{0}.*?{1}", BINARY_REFERENCE_START, BINARY_REFERENCE_END));
+            var matches = regExp.Matches(_fileContent);
+            for (int i = 0; i < matches.Count; i++)
+			{
+				var patternLength = BINARY_REFERENCE_START.Length + BINARY_REFERENCE_END.Length;
+				var reference = matches[i].Value;
+                document.AddBinaryReference(reference.Substring(BINARY_REFERENCE_START.Length, reference.Length - patternLength));
+			}
         }
 
         private string[] getNodes(string start, string end)

@@ -19,6 +19,7 @@ namespace AutoTest.Core.Caching.Projects
         private string _vsVersion;
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
+		private List<string> _binaryReferences = new List<string>();
 		private bool _requiresRebuild = false;
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
@@ -31,6 +32,7 @@ namespace AutoTest.Core.Caching.Projects
         public string ProductVersion { get { return _vsVersion; } }
         public string[] References { get { return _references.ToArray(); } }
         public string[] ReferencedBy { get { return _referencedBy.ToArray(); } }
+		public string[] BinaryReferences { get { return _binaryReferences.ToArray(); } }
 		public bool RequiresRebuild { get { return _requiresRebuild; } }
 
         public ProjectDocument(ProjectType type)
@@ -67,6 +69,16 @@ namespace AutoTest.Core.Caching.Projects
         {
             _referencedBy.Remove(reference);
         }
+		
+		public void AddBinaryReference(string reference)
+		{
+			_binaryReferences.Add(reference);
+		}
+		
+		public void RemoveBinaryReference(string reference)
+		{
+			_binaryReferences.Remove(reference);
+		}
 
         public void HasBeenReadFromFile()
         {

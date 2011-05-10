@@ -6,6 +6,9 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using Rhino.Mocks;
 using AutoTest.Messages;
+using AutoTest.Core.Caching;
+using AutoTest.Core.Configuration;
+using AutoTest.Core.Caching.Projects;
 namespace AutoTest.Test
 {
 	[TestFixture]
@@ -17,6 +20,8 @@ namespace AutoTest.Test
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
         private IPreProcessTestruns _preProcessor;
         private ILocateRemovedTests _removedTestLocator;
+		private ICache _cache;
+		private IConfiguration _config;
 
         [SetUp]
         public void SetUp()
@@ -27,8 +32,11 @@ namespace AutoTest.Test
             _preProcessor = MockRepository.GenerateMock<IPreProcessTestruns>();
             var preProcessors = new IPreProcessTestruns[] { _preProcessor };
             _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
+			_cache = MockRepository.GenerateMock<ICache>();
+			_config = MockRepository.GenerateMock<IConfiguration>();
+			_cache.Stub(x => x.GetAll<Project>()).Return(new Project[] {});
 
-            _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors, _removedTestLocator);
+            _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors, _removedTestLocator, _cache, _config);
 			_testRunner.Stub(r => r.RunTests(null, null)).IgnoreArguments().Return(new TestRunResults[] {});
         }
 		

@@ -69,10 +69,34 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 return new TestRunResults[] { };
             var runner = new TestRunProcess(new AutoTestRunnerFeedback())
 				.ActivateProfilingFor(new RunLog().GetLocation())
+				.ExcludeFromProcessing(getBinaryReferences(runInfos))
                 .AbortWhen(abortWhen);
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();
         }
+		
+		private string getBinaryReferences(TestRunInfo[] runInfos)
+		{
+			var references = new List<string>();
+			var list = "";
+			runInfos
+				.Where(x => x.Project != null).Select(x => x.Project.Value).ToList()
+				.ForEach(proj => proj.BinaryReferences.ToList()
+					         .ForEach(x =>
+					                  {
+										var reference = x;
+										if (x.IndexOf(",") != -1)
+											reference = x.Substring(0, x.IndexOf(","));
+										if (!reference.Contains(reference))
+											references.Add(reference);
+									  }));
+			references.ForEach(x => list += x + ", ");
+			if (list.Length == 0)
+				return null;
+			list = list.Substring(0, list.Length - 2);
+			DebugLog.Debug.WriteDebug("Excluding binary references: " + list);
+			return list;
+		}
 
         private TestRunResults[] getResults(IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> tests, TestRunInfo[] runInfos)
         {
