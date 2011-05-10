@@ -96,7 +96,9 @@ namespace AutoTest.TestRunners.Shared
                 _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_LogFilename", _profilerLogFile);
 				
 				if (_profileExcludes != null)
-					_proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", _profileExcludes);
+					_proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", "AutoTest.TestRunners, " + _profileExcludes);
+                else
+                    _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", "AutoTest.TestRunners");
                 _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Runtime", string.Format(".NET{0}", _targetedRun.TargetFramework.Major));
 			}
             _proc.Start();
