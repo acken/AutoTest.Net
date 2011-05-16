@@ -27,7 +27,7 @@ namespace AutoTest.Core.BuildRunners
                 outdir = _configuration.CustomOutputPath;
             if (outdir.Substring(outdir.Length - 1, 1) != Path.DirectorySeparatorChar.ToString())
                 outdir += Path.DirectorySeparatorChar;
-            var arguments = string.Format("\"{0}\" /property:OutDir={1}", solution, outdir);
+            var arguments = string.Format("\"{0}\" /property:OutDir={1};IntermediateOutputPath={2}", solution, outdir, Path.Combine(outdir, "_tmpIntermediateAT") + Path.DirectorySeparatorChar);
             if (rebuild)
                 arguments += " /target:rebuild";
             return runBuild(buildExecutable, arguments, solution, abortIfTrue);
@@ -85,7 +85,8 @@ namespace AutoTest.Core.BuildRunners
 				if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
 					overriddenPlatform = ",Platform=AnyCPU";
 			}
-			return " /property:OutDir=" + outputDir + overriddenPlatform;
+            var imoutputDir = Path.Combine(outputDir, "_tmpIntermediateAT") + Path.DirectorySeparatorChar;
+			return " /property:OutDir=" + outputDir + ";IntermediateOutputPath=" + imoutputDir + overriddenPlatform;
 		}
 
         private string getOutputDir(Project project)
