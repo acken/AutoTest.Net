@@ -98,20 +98,6 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
-        public void Should_set_configuration()
-        {
-            _document.SetConfiguration("Debug");
-            _document.BuildConfiguration.ShouldEqual("Debug");
-        }
-
-        [Test]
-        public void Should_set_Platform()
-        {
-            _document.SetPlatform("AnyCPU");
-            _document.Platform.ShouldEqual("AnyCPU");
-        }
-
-        [Test]
         public void Should_set_outputpath()
         {
             _document.SetOutputPath("output path");

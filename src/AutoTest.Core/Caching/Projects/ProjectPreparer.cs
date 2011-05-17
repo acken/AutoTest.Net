@@ -34,6 +34,7 @@ namespace AutoTest.Core.Caching.Projects
             if (document == null)
                 return null;
             setupDependingProjects(record.Key, document);
+            cacheProjectFiles(record.Key, document.Files);
             return new Project(record.Key, document);
         }
 
@@ -63,6 +64,12 @@ namespace AutoTest.Core.Caching.Projects
                 if (!project.Value.IsReferencedBy(key))
                     project.Value.AddReferencedBy(key);
             }
+        }
+
+        private void cacheProjectFiles(string p, ProjectFile[] projectFiles)
+        {
+            _cache.InvalidateProjectFiles(p);
+            _cache.Add(projectFiles);
         }
 
         private Project createProject(string reference)

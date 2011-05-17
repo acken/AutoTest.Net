@@ -12,27 +12,25 @@ namespace AutoTest.Core.Caching.Projects
         private bool _isReadFromFile = false;
         private ProjectType _type;
         private string _assemblyname;
-        private string _buildConfiguration;
-        private string _platform;
         private string _outputPath;
         private string _framework;
         private string _vsVersion;
         private List<string> _references = new List<string>();
         private List<string> _referencedBy = new List<string>();
 		private List<string> _binaryReferences = new List<string>();
+        private List<ProjectFile> _files = new List<ProjectFile>();
 		private bool _requiresRebuild = false;
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
         public ProjectType Type { get { return _type; } }
         public string AssemblyName { get { return _assemblyname; } }
-        public string BuildConfiguration { get { return _buildConfiguration; } }
-        public string Platform { get { return _platform; } }
         public string OutputPath { get { return _outputPath; } }
         public string Framework { get { return _framework; } }
         public string ProductVersion { get { return _vsVersion; } }
         public string[] References { get { return _references.ToArray(); } }
         public string[] ReferencedBy { get { return _referencedBy.ToArray(); } }
 		public string[] BinaryReferences { get { return _binaryReferences.ToArray(); } }
+        public ProjectFile[] Files { get { return _files.ToArray(); } }
 		public bool RequiresRebuild { get { return _requiresRebuild; } }
 
         public ProjectDocument(ProjectType type)
@@ -80,6 +78,11 @@ namespace AutoTest.Core.Caching.Projects
 			_binaryReferences.Remove(reference);
 		}
 
+        public void AddFile(ProjectFile file)
+        {
+            _files.Add(file);
+        }
+
         public void HasBeenReadFromFile()
         {
             _isReadFromFile = true;
@@ -98,16 +101,6 @@ namespace AutoTest.Core.Caching.Projects
         public void SetAssemblyName(string assemblyName)
         {
             _assemblyname = assemblyName;
-        }
-
-        public void SetConfiguration(string configuration)
-        {
-            _buildConfiguration = configuration;
-        }
-
-        public void SetPlatform(string platform)
-        {
-            _platform = platform;
         }
 
         public void SetOutputPath(string outputPath)

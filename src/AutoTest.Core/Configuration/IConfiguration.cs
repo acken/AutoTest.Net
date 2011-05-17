@@ -33,6 +33,7 @@ namespace AutoTest.Core.Configuration
         bool WhenWatchingSolutionBuildSolution { get; }
         bool UseAutoTestTestRunner { get; }
         bool UseLowestCommonDenominatorAsWatchPath { get; }
+        bool WatchAllFiles { get; }
 
         string IgnoreFile { get; }
 

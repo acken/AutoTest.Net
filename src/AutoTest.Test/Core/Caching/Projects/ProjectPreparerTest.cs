@@ -6,6 +6,7 @@ using NUnit.Framework;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using System.IO;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {
@@ -16,13 +17,14 @@ namespace AutoTest.Test.Core.Caching.Projects
         private FakeCache _cache;
         private FakeProjectParser _parser;
         private string _testProject;
+        private ProjectDocument _parsedDocument;
 
         [SetUp]
         public void SetUp()
         {
-            var document = new ProjectDocument(ProjectType.CSharp);
-            document.AddReference("ReferencedProject");
-            _parser = new FakeProjectParser(new ProjectDocument[] { document });
+            _parsedDocument = new ProjectDocument(ProjectType.CSharp);
+            _parsedDocument.AddReference("ReferencedProject");
+            _parser = new FakeProjectParser(new ProjectDocument[] { _parsedDocument });
             _cache = new FakeCache();
             _preparer = new ProjectPreparer(_parser, _cache);
             _testProject = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar));
@@ -78,6 +80,28 @@ namespace AutoTest.Test.Core.Caching.Projects
             _parser.ThrowExceptionOnParse();
             var project = _preparer.Prepare(record);
             project.ShouldBeNull();
+        }
+
+        [Test]
+        public void Should_add_files()
+        {
+            _parsedDocument.AddFile(new ProjectFile("File1", FileType.Compile, "someproject"));
+            var record = new Project("someproject", _parsedDocument);
+            _cache.WhenGeting("ReferencedProject").Return(new Project("", new ProjectDocument(ProjectType.CSharp)));
+            var project = _preparer.Prepare(record);
+            _cache.GetAllProjectFiles().Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_invalidate_files()
+        {
+            _parsedDocument.AddFile(new ProjectFile("File1", FileType.Compile, "someproject"));
+            _cache.Add(new ProjectFile[] { new ProjectFile("File2", FileType.Compile, "someproject") });
+            var record = new Project("someproject", _parsedDocument);
+            _cache.WhenGeting("ReferencedProject").Return(new Project("", new ProjectDocument(ProjectType.CSharp)));
+            _preparer.Prepare(record);
+            _cache.GetAllProjectFiles().Length.ShouldEqual(1);
+            _cache.GetAllProjectFiles()[0].File.ShouldEqual("File1");
         }
     }
 }

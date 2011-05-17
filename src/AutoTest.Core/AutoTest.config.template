@@ -93,7 +93,12 @@
 	<!-- The time in milliseconds that AuotTest.NET will wait between finding changes -->
 	<!-- and running build and tests -->
 	<!--<changedetectiondelay>200</changedetectiondelay>-->
-	
+
+  <!-- Watch all files in watch directories (Optional) -->
+  <!-- By default AutoTest.Net only looks for changes to files belonging to watched projects -->
+  <!-- With this setting it will look for changes to all files in watched folders -->
+  <!--<WatchAllFiles>true</WatchAllFiles>-->
+  
 	<!-- Custom output folder (Optional) -->
 	<!-- Custom folder to use as as build output folder -->
 	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -251,6 +251,7 @@
     </Content>
     <Content Include="TestResources\VS2008\CSharpNUnitTestProject.csproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="TestResources\VS2008\NUnitTestProjectVisualBasic.vbproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -281,7 +282,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Launchers\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

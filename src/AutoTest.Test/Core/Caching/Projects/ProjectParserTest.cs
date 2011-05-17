@@ -7,6 +7,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using AutoTest.Core.FileSystem;
 using System.IO;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core.Caching.Projects
 {
@@ -69,26 +70,6 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
-        public void Should_set_build_configuration()
-        {
-            var document = _parser.Parse(getCSharpProject(), null);
-            document.BuildConfiguration.ShouldEqual("Debug");
-
-            document = _parser.Parse(getVisualBasicProject(), null);
-            document.BuildConfiguration.ShouldEqual("Debug");
-        }
-
-        [Test]
-        public void Should_set_build_platform()
-        {
-            var document = _parser.Parse(getCSharpProject(), null);
-            document.Platform.ShouldEqual("AnyCPU");
-
-            document = _parser.Parse(getVisualBasicProject(), null);
-            document.Platform.ShouldEqual("AnyCPU");
-        }
-
-        [Test]
         public void Should_force_output_path_to_out_own_custom()
         {
             var document = _parser.Parse(getCSharpProject(), null);
@@ -119,13 +100,6 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 		
 		[Test]
-        public void Should_set_build_platform_to_x86()
-        {
-            var document = _parser.Parse(getCSharpNoAnyCPUProject(), null);
-            document.Platform.ShouldEqual("x86");
-        }
-		
-		[Test]
         public void Should_find_binary_reference()
         {
             var document = _parser.Parse(getCSharpProject(), null);
@@ -140,6 +114,19 @@ namespace AutoTest.Test.Core.Caching.Projects
 			document.BinaryReferences[7].ShouldEqual("System.Data.DataSetExtensions");
 			document.BinaryReferences[8].ShouldEqual("System.Data");
 			document.BinaryReferences[9].ShouldEqual("System.Xml");
+        }
+
+        [Test]
+        public void Should_read_files()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.Files[0].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Class1.cs", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
+            document.Files[0].Type.ShouldEqual(FileType.Compile);
+            document.Files[1].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Properties{0}AssemblyInfo.cs", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
+            document.Files[2].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}UI{0}VersionedConfigOption.resx", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
+            document.Files[2].Type.ShouldEqual(FileType.Resource);
+            document.Files[3].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Resources{0}MM_shaded.bmp", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
+            document.Files[3].Type.ShouldEqual(FileType.None);
         }
 
         private string getCSharpProject()

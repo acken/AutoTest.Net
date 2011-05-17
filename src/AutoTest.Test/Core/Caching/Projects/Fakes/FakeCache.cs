@@ -14,7 +14,28 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
         private Project _projectToGet = null;
         private List<string> _addedFields = new List<string>();
 		private bool _throwErrorOnAdd = false;
-		
+        private List<ProjectFile> _files = new List<ProjectFile>();
+
+        public void Add(IEnumerable<ProjectFile> file)
+        {
+            _files.AddRange(file);
+        }
+
+        public void InvalidateProjectFiles(string project)
+        {
+            _files.RemoveAll(x => x.Project.Equals(project));
+        }
+
+        public ProjectFile[] GetAllProjectFiles()
+        {
+            return _files.ToArray();
+        }
+
+        public bool IsProjectFile(string file)
+        {
+            return false;
+        }
+
 		public void ShouldThrowErrorOnAdd()
 		{
 			_throwErrorOnAdd = true;

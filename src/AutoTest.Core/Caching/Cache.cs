@@ -12,12 +12,38 @@ namespace AutoTest.Core.Caching
     {
         private IServiceLocator _services;
         private List<IRecord> _records = new List<IRecord>();
+        private List<ProjectFile> _files = new List<ProjectFile>();
 
         public int Count { get { return _records.Count; } }
 
         public Cache(IServiceLocator services)
         {
             _services = services;
+        }
+
+        public void Add(IEnumerable<ProjectFile> files)
+        {
+            _files.AddRange(files);
+        }
+
+        public void InvalidateProjectFiles(string project)
+        {
+            _files.RemoveAll(x => x.Project.Equals(project));
+        }
+
+        public ProjectFile GeProjectFile(string file)
+        {
+            return _files.FirstOrDefault(x => x.File.Equals(file));
+        }
+
+        public ProjectFile[] GetAllProjectFiles()
+        {
+            return _files.ToArray();
+        }
+
+        public bool IsProjectFile(string file)
+        {
+            return _files.Exists(c => c.File.Equals(file));
         }
 
         public void Add<T>(string key) where T : IRecord

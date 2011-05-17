@@ -111,5 +111,36 @@ namespace AutoTest.Test.Core.Caching
             _parser.ThrowExceptionOnParse();
             _cache.Add<Project>(_testProject);
         }
+
+        [Test]
+        public void Should_add_and_get_files()
+        {
+            var files = new List<ProjectFile>();
+            files.Add(new ProjectFile("File1", FileType.Resource, "Project1"));
+            files.Add(new ProjectFile("File2", FileType.None, "Project1"));
+            _cache.Add(files);
+            _cache.GetAllProjectFiles().Length.ShouldEqual(2);
+        }
+
+        [Test]
+        public void Should_invalidate_project_files()
+        {
+            var files = new List<ProjectFile>();
+            files.Add(new ProjectFile("File1", FileType.Resource, "Project1"));
+            files.Add(new ProjectFile("File2", FileType.None, "Project1"));
+            _cache.Add(files);
+            _cache.InvalidateProjectFiles("Project1");
+            _cache.GetAllProjectFiles().Length.ShouldEqual(0);
+        }
+        
+        [Test]
+        public void Should_add_validate_project_file()
+        {
+            var files = new List<ProjectFile>();
+            files.Add(new ProjectFile("File1", FileType.Resource, "Project1"));
+            _cache.Add(files);
+            _cache.IsProjectFile("File1").ShouldBeTrue();
+            _cache.IsProjectFile("File2").ShouldBeFalse();
+        }
     }
 }

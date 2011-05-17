@@ -61,6 +61,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\VersionedConfigOption.resx">
+      <DependentUpon>VersionedConfigOption.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MM_shaded.bmp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\CSharpClassLibrary\CSharpClassLibrary.csproj">
       <Project>{E21DA0A9-AD6F-423A-87CA-5D0409CF206D}</Project>
       <Name>CSharpClassLibrary</Name>

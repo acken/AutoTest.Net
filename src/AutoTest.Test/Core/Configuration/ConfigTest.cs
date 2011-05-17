@@ -312,6 +312,12 @@ namespace AutoTest.Test.Core.Configuration
             _config.AllSettings("AnotherSetting").ShouldEqual("something");
         }
 
+        [Test]
+        public void Should_get_watch_all_strategy()
+        {
+            _config.WatchAllFiles.ShouldBeTrue();
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

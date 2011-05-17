@@ -80,11 +80,12 @@ namespace AutoTest.Core.BuildRunners
 			var outputDir = getOutputDir(project);
 			string overriddenPlatform = "";
 			// Only override platform for winodws. It's flawed on other platforms
-			if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
-					overriddenPlatform = ",Platform=AnyCPU";
-			}
+            // I don't think we need this anymore. Anyhow it's just lucky guesses anyhow
+            //if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
+            //{
+            //    if (project.Value.Platform == null || project.Value.Platform.Length.Equals(0))
+            //        overriddenPlatform = ",Platform=AnyCPU";
+            //}
             var imoutputDir = Path.Combine(outputDir, "_tmpIntermediateAT") + Path.DirectorySeparatorChar;
 			return " /property:OutDir=" + outputDir + ";IntermediateOutputPath=" + imoutputDir + overriddenPlatform;
 		}

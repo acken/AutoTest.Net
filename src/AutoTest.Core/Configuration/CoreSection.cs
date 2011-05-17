@@ -43,6 +43,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> WhenWatchingSolutionBuildSolution { get; private set; }
         public ConfigItem<bool> UseAutoTestTestRunner { get; private set; }
         public ConfigItem<bool> UseLowestCommonDenominatorAsWatchPath { get; private set; }
+        public ConfigItem<bool> WatchAllFiles { get; private set; }
 
         public List<KeyValuePair<string, string>> Keys { get; private set; }
 
@@ -69,6 +70,7 @@ namespace AutoTest.Core.Configuration
             WhenWatchingSolutionBuildSolution = new ConfigItem<bool>(true);
             UseAutoTestTestRunner = new ConfigItem<bool>(true);
             UseLowestCommonDenominatorAsWatchPath = new ConfigItem<bool>(true);
+            WatchAllFiles = new ConfigItem<bool>(false);
             Keys = new List<KeyValuePair<string, string>>();
         }
 
@@ -97,6 +99,7 @@ namespace AutoTest.Core.Configuration
             WhenWatchingSolutionBuildSolution = getBoolItem("configuration/WhenWatchingSolutionBuildSolution", true);
             UseAutoTestTestRunner = getBoolItem("configuration/UseAutoTestTestRunner", true);
             UseLowestCommonDenominatorAsWatchPath = getBoolItem("configuration/UseLowestCommonDenominatorAsWatchPath", true);
+            WatchAllFiles = getBoolItem("configuration/WatchAllFiles", false);
             Keys = getAllKeys("configuration/*");
         }
 		

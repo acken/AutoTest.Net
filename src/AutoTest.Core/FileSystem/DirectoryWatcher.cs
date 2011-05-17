@@ -6,6 +6,7 @@ using AutoTest.Core.DebugLog;
 using AutoTest.Core.Configuration;
 using AutoTest.Messages;
 using AutoTest.Core.Launchers;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -22,6 +23,7 @@ namespace AutoTest.Core.FileSystem
         private object _padLock = new object();
         private IWatchValidator _validator;
 		private IConfiguration _configuration;
+        private ICache _cache;
 		private string _watchPath = "";
         private bool _paused = true;
         private string _ignorePath = "";
@@ -29,7 +31,7 @@ namespace AutoTest.Core.FileSystem
 
         public bool IsPaused { get { return _paused; } }
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer, ICache cache)
         {
             _bus = bus;
             _validator = validator;
@@ -37,6 +39,7 @@ namespace AutoTest.Core.FileSystem
 			_delayedConfigurer = delayedConfigurer;
             _watchPathLocator = watchPathLocator;
 			_launcer = launcer;
+            _cache = cache;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
@@ -161,6 +164,8 @@ namespace AutoTest.Core.FileSystem
         {
             if (Directory.Exists(file.FullName))
                 return;
+            if (!_configuration.WatchAllFiles && !(isProjectFile(file.FullName) || _cache.IsProjectFile(file.FullName)))
+                return;
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
 
@@ -172,6 +177,12 @@ namespace AutoTest.Core.FileSystem
                     reStartTimer();
                 }
             }
+        }
+
+        private bool isProjectFile(string file)
+        {
+            var extension = Path.GetExtension(file).ToLower();
+            return extension == ".csproj" || extension == ".vbproj";
         }
 		
 		private string getRelativePath(string path)

@@ -8,6 +8,7 @@ using System.IO;
 using AutoTest.Core.Configuration;
 using AutoTest.Messages;
 using AutoTest.Core.Launchers;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core
 {
@@ -24,6 +25,7 @@ namespace AutoTest.Test.Core
         private DirectoryWatcher _watcher;
         private IWatchPathLocator _pathLocator;
 		private IApplicatonLauncher _launcer;
+        private ICache _cahce;
 
         [SetUp]
         public void SetUp()
@@ -33,10 +35,12 @@ namespace AutoTest.Test.Core
             _validator = MockRepository.GenerateMock<IWatchValidator>();
 			_configuration = MockRepository.GenerateMock<IConfiguration>();
             _pathLocator = MockRepository.GenerateMock<IWatchPathLocator>();
+            _cahce = MockRepository.GenerateMock<ICache>();
             _configuration.Stub(x => x.IgnoreFile).Return("");
 			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            _configuration.Stub(c => c.WatchAllFiles).Return(true);
+            _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             _file = Path.GetFullPath("watcher_test.txt");
             _directory = Path.GetFullPath("mytestfolder");
 			_watchDirectory = Path.GetDirectoryName(_file);
@@ -62,7 +66,7 @@ namespace AutoTest.Test.Core
             var bus = MockRepository.GenerateMock<IMessageBus>();
 			var config = MockRepository.GenerateMock<IConfiguration>();
 			config.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(bus, null, config, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            var watcher = new DirectoryWatcher(bus, null, config, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             watcher.Watch("");
             bus.AssertWasNotCalled(m => m.Publish<InformationMessage>(null), m => m.IgnoreArguments());
         }
@@ -74,9 +78,10 @@ namespace AutoTest.Test.Core
             var validator = MockRepository.GenerateMock<IWatchValidator>();
 			var configuration = MockRepository.GenerateMock<IConfiguration>();
             configuration.Stub(x => x.IgnoreFile).Return("");
+            configuration.Stub(c => c.WatchAllFiles).Return(true);
 			validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("watcher_test_changes_once.txt");
 			var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -124,7 +129,7 @@ namespace AutoTest.Test.Core
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("not_detection_when_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -146,7 +151,8 @@ namespace AutoTest.Test.Core
             validator.Stub(v => v.GetIgnorePatterns()).Return("");
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            configuration.Stub(c => c.WatchAllFiles).Return(true);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("not_detection_when_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -170,7 +176,7 @@ namespace AutoTest.Test.Core
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             configuration.Stub(c => c.StartPaused).Return(true);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("start_as_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
@@ -193,11 +199,104 @@ namespace AutoTest.Test.Core
             validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             configuration.Stub(c => c.StartPaused).Return(true);
-            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, launcher);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, launcher, _cahce);
             var watchDirectory = Path.GetDirectoryName(Path.GetFullPath("somefile.txt"));
             watcher.Watch(watchDirectory);
 
             launcher.AssertWasCalled(x => x.Initialize(watchDirectory));
+        }
+
+        [Test]
+        public void Should_only_publish_pusblish_files_listed_in_cache()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("not_detection_when_paused.txt");
+            _cahce.Stub(x => x.IsProjectFile(file)).Return(true);
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
+        }
+
+        [Test]
+        public void Should_always_publish_csharp_project_files()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("some_project_file_for_detection.csproj");
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
+        }
+
+        [Test]
+        public void Should_always_publish_vb_project_files()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("some_project_file_for_detection.vbproj");
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
+        }
+
+        [Test]
+        public void Should_not_publish_pusblish_files_not_listed_in_cache()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("not_detection_when_paused.txt");
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasNotCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
         }
     }
 }
