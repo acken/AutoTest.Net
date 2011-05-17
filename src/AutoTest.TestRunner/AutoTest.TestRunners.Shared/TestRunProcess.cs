@@ -19,7 +19,7 @@ namespace AutoTest.TestRunners.Shared
         private Func<bool> _abortWhen = null;
 		private bool _activateProfiling = false;
 		private string _profilerLogFile = null;
-		private string _profileExcludes = null;
+		private string _profileIncludes = null;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -59,9 +59,9 @@ namespace AutoTest.TestRunners.Shared
 			return this;
 		}
 		
-		public TestRunProcess ExcludeFromProcessing(string excludelist)
+		public TestRunProcess IncludeInProfiling(string includelist)
 		{
-			_profileExcludes = excludelist;
+			_profileIncludes = includelist;
 			return this;
 		}
 
@@ -78,8 +78,8 @@ namespace AutoTest.TestRunners.Shared
 				if (_activateProfiling)
 				{
 					process.ActivateProfilingFor(_profilerLogFile);
-					if (_profileExcludes != null)
-						process.ExcludeFromProcessing(_profileExcludes);
+					if (_profileIncludes != null)
+						process.IncludeForProfiling(_profileIncludes);
 				}
                 process.AbortWhen(_abortWhen);
                 var thread = new Thread(new ThreadStart(process.Start));

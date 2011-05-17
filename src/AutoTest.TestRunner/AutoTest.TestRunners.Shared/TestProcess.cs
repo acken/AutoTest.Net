@@ -21,7 +21,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _startSuspended = false;
 		private bool _activateProfiling = false;
 		private string _profilerLogFile = null;
-		private string _profileExcludes = null;
+		private string _profileIncludes = null;
         private Func<bool> _abortWhen = null;
         private Process _proc = null;
 
@@ -56,9 +56,9 @@ namespace AutoTest.TestRunners.Shared
 			return this;
 		}
 		
-		public TestProcess ExcludeFromProcessing(string excludelist)
+		public TestProcess IncludeForProfiling(string excludelist)
 		{
-			_profileExcludes = excludelist;
+			_profileIncludes = excludelist;
 			return this;
 		}
 		 
@@ -95,10 +95,8 @@ namespace AutoTest.TestRunners.Shared
                 _proc.StartInfo.EnvironmentVariables.Add("Cor_Enable_Profiling", "1");
                 _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_LogFilename", _profilerLogFile);
 				
-				if (_profileExcludes != null)
-					_proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", "AutoTest.TestRunners, " + _profileExcludes);
-                else
-                    _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Excludes", "AutoTest.TestRunners");
+				if (_profileIncludes != null)
+                    _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Includes", _profileIncludes);
                 _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Runtime", string.Format(".NET{0}", _targetedRun.TargetFramework.Major));
 			}
             _proc.Start();
