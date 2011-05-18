@@ -68,6 +68,7 @@ namespace AutoTest.Core.FileSystem
 
         public void Watch(string path)
         {
+            _configuration.SetWatchToken(path);
             _isWatchingSolution = File.Exists(path);
             if (_isWatchingSolution)
                 path = Path.GetDirectoryName(path);

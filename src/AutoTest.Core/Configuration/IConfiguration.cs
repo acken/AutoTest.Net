@@ -9,6 +9,7 @@ namespace AutoTest.Core.Configuration
     public interface IConfiguration
     {
         string WatchPath { get; }
+        string WatchToken { get; }
 
         bool StartPaused { get; }
         string[] WatchDirectores { get; }
@@ -51,5 +52,6 @@ namespace AutoTest.Core.Configuration
         void Reload(string localConfiguration);
 
         void SetWatchPath(string watchFolder);
+        void SetWatchToken(string watchToken);
     }
 }

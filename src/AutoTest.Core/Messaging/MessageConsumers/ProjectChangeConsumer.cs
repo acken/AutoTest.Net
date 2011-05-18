@@ -177,11 +177,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None));
             if (File.Exists(buildExecutable))
             {
-                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchPath, "", typeof(MSBuildRunner)));
+                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchToken, "", typeof(MSBuildRunner)));
 
-                var buildReport = _buildRunner.RunBuild(_configuration.WatchPath, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
+                var buildReport = _buildRunner.RunBuild(_configuration.WatchToken, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
                 var succeeded = buildReport.ErrorCount == 0;
-                runReport.AddBuild(_configuration.WatchPath, buildReport.TimeSpent, succeeded);
+                runReport.AddBuild(_configuration.WatchToken, buildReport.TimeSpent, succeeded);
                 _bus.Publish(new BuildRunMessage(buildReport));
                 return succeeded;
             }

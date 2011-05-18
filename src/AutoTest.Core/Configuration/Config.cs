@@ -29,7 +29,8 @@ namespace AutoTest.Core.Configuration
         private bool _debuggingEnabled;
 
         public bool StartPaused { get; private set; }
-        public string WatchPath { get; private set; }
+        public string WatchPath { get; private set; } // Adjusted watch path (use common denominator)
+        public string WatchToken { get; private set; } // Original watch token
 		
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
@@ -48,7 +49,7 @@ namespace AutoTest.Core.Configuration
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
-        public bool ShouldBuildSolution { get { return File.Exists(WatchPath) && WhenWatchingSolutionBuildSolution; } }
+        public bool ShouldBuildSolution { get { return File.Exists(WatchToken) && WhenWatchingSolutionBuildSolution; } }
 		
         public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)
         {
@@ -423,6 +424,11 @@ namespace AutoTest.Core.Configuration
         public void SetWatchPath(string watchFolder)
         {
             WatchPath = watchFolder;
+        }
+
+        public void SetWatchToken(string watchToken)
+        {
+            WatchToken = watchToken;
         }
 
         private string getVersionedSetting(string version, List<KeyValuePair<string, string>> setting)
