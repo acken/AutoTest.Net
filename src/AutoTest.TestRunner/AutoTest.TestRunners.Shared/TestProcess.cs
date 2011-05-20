@@ -10,6 +10,8 @@ using AutoTest.TestRunners.Shared.Plugins;
 using System.Diagnostics;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Errors;
+using System.Threading;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared
 {
@@ -72,7 +74,9 @@ namespace AutoTest.TestRunners.Shared
 
         private void runProcess(string executable, string input, string output)
         {
-            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent", input, output);
+            var channel = Guid.NewGuid().ToString();
+            var listener = startChannelListener(channel);
+            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", input, output, channel);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
@@ -104,9 +108,29 @@ namespace AutoTest.TestRunners.Shared
             _proc.StandardOutput.ReadToEnd();
             _proc.WaitForExit();
             if (aborted())
+            {
+                listener.Abort();
                 return;
+            }
             var results = getResults(output);
             TestRunProcess.AddResults(results);
+        }
+
+        private Thread startChannelListener(string channel)
+        {
+            var thread = new Thread(
+                (x) => 
+                    { 
+                        new PipeClient()
+                            .Listen(
+                                x.ToString(),
+                                (msg) => 
+                                    { 
+                                        _feedback.TestFinished(new TestResult("", "", "", 0, msg, TestState.Failed, ""));
+                                    });
+                    });
+            thread.Start(channel);
+            return thread;
         }
 
         private bool aborted()

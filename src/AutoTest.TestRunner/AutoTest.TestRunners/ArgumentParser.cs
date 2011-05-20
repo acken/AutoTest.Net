@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace AutoTest.TestRunners
 {
@@ -13,6 +14,7 @@ namespace AutoTest.TestRunners
         public bool Silent { get; set; }
         public bool RunInParallel { get; set; }
         public bool Logging { get; set; }
+        public string Channel { get; set; }
     }
 
     class ArgumentParser
@@ -30,6 +32,8 @@ namespace AutoTest.TestRunners
             _parsedArgument = new Arguments();
             foreach (var argument in _arguments)
                 parse(argument);
+            if (_parsedArgument.Channel == null)
+                _parsedArgument.Channel = getDefaultChannel();
             return _parsedArgument;
         }
 
@@ -47,6 +51,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.RunInParallel = true;
             if (iAm(argument, "--logging"))
                 _parsedArgument.Logging = true;
+            if (iAm(argument, "--channel"))
+                _parsedArgument.Channel = getValue(argument, "--channel=");
         }
 
         private bool iAm(string argument, string parameterName)
@@ -59,6 +65,11 @@ namespace AutoTest.TestRunners
             if (parameterName.Length >= parameter.Length)
                 return "";
             return parameter.Substring(parameterName.Length, parameter.Length - parameterName.Length).Replace("\"", "");
+        }
+
+        private string getDefaultChannel()
+        {
+            return "AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString();
         }
     }
 }

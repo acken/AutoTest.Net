@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using AutoTest.TestRunners.Shared.Logging;
 using celer.Core;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.MSTest
 {
@@ -19,10 +20,13 @@ namespace AutoTest.TestRunners.MSTest
         private string Identifier = "MSTest";
         private List<TestResult> _results;
         private ILogger _logger;
+        private ITestFeedbackProvider _channel;
 
-        public CelerRunner(ILogger logger)
+
+        public CelerRunner(ILogger logger, ITestFeedbackProvider channel)
         {
             _logger = logger;
+            _channel = channel;
         }
 
         public IEnumerable<TestResult> Run(RunSettings settings)
@@ -70,7 +74,12 @@ namespace AutoTest.TestRunners.MSTest
             _logger.Write("Running fixture {0}", fixture.Key);
             new MSTestTestFixture(fixture.Key)
                 .Run(fixture.ToList()).ToList()
-                .ForEach(result => _results.Add(getResult(settings, fixture, result)));
+                .ForEach(result =>
+                    {
+                        var item = getResult(settings, fixture, result);
+                        _results.Add(item);
+                        _channel.TestFinished(item);
+                    });
         }
 
         private StackLine[] getStackLines(Exception ex)

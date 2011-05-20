@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using AutoTest.TestRunners;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace AutoTest.TestRunners.Tests
 {
@@ -48,6 +50,22 @@ namespace AutoTest.TestRunners.Tests
             var parser = new ArgumentParser(new string[] { "--logging" });
             var arguments = parser.Parse();
             Assert.That(arguments.Logging, Is.True);
+        }
+
+        [Test]
+        public void Should_parse_channel()
+        {
+            var parser = new ArgumentParser(new string[] { "--channel=\"Some Channel\"" });
+            var arguments = parser.Parse();
+            Assert.That(arguments.Channel, Is.EqualTo("Some Channel"));
+        }
+
+        [Test]
+        public void Should_get_default_channel()
+        {
+            var parser = new ArgumentParser(new string[] { "--silent" });
+            var arguments = parser.Parse();
+            Assert.That(arguments.Channel, Is.EqualTo("AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString()));
         }
     }
 }

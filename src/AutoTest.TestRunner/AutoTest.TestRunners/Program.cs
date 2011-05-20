@@ -12,6 +12,7 @@ using AutoTest.TestRunners.Shared.Errors;
 using System.Reflection;
 using System.Threading;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners
 {
@@ -60,6 +61,7 @@ namespace AutoTest.TestRunners
         private static void tryRunTests()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledExceptionHandler;
+            var junction = new PipeJunction(_arguments.Channel);
             try
             {
                 var parser = new OptionsXmlReader(_arguments.InputFile);
@@ -67,7 +69,7 @@ namespace AutoTest.TestRunners
                 if (!parser.IsValid)
                     return;
 
-                run(parser);
+                run(parser, junction);
 
                 var writer = new ResultsXmlWriter(_results);
                 writer.Write(_arguments.OutputFile);
@@ -85,6 +87,10 @@ namespace AutoTest.TestRunners
                 {
                     Console.WriteLine(ex.ToString());
                 }
+            }
+            finally
+            {
+                junction = null;
             }
         }
 
@@ -142,7 +148,7 @@ namespace AutoTest.TestRunners
             Write("</run>");
         }
 
-        private static void run(OptionsXmlReader parser)
+        private static void run(OptionsXmlReader parser, PipeJunction junction)
         {
             var handles = new List<ManualResetEvent>();
             foreach (var plugin in getPlugins(parser))
@@ -152,7 +158,9 @@ namespace AutoTest.TestRunners
                     foreach (var assembly in run.Assemblies)
                     {
                         WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
-                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging);
+                        var pipeName = Guid.NewGuid().ToString();
+                        junction.Combine(pipeName);
+                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging, pipeName);
                         if (_arguments.RunInParallel)
                         {
                             var handle = new ManualResetEvent(false);

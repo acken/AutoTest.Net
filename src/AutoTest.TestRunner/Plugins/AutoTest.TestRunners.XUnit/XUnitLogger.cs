@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.XUnit
 {
@@ -10,6 +11,12 @@ namespace AutoTest.TestRunners.XUnit
     {
         private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<Shared.Results.TestResult>();
         private string _currentAssembly = null;
+        private ITestFeedbackProvider _channel = null;
+
+        public XUnitLogger(ITestFeedbackProvider channel)
+        {
+            _channel = channel;
+        }
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
 
@@ -28,18 +35,24 @@ namespace AutoTest.TestRunners.XUnit
 
         public bool ClassFailed(string className, string exceptionType, string message, string stackTrace)
         {
-            _results.Add(getResult(0, Shared.Results.TestState.Panic, className, message, stackTrace));
+            var result = getResult(0, Shared.Results.TestState.Panic, className, message, stackTrace);
+            _results.Add(result);
+            _channel.TestFinished(result);
             return true;
         }
 
         public void ExceptionThrown(string assemblyFilename, Exception exception)
         {
-            _results.Add(getResult(0, Shared.Results.TestState.Panic, "Internal XUnit error", exception.ToString()));
+            var result = getResult(0, Shared.Results.TestState.Panic, "Internal XUnit error", exception.ToString());
+            _results.Add(result);
+            _channel.TestFinished(result);
         }
 
         public void TestFailed(string name, string type, string method, double duration, string output, string exceptionType, string message, string stackTrace)
         {
-            _results.Add(getResult(duration, Shared.Results.TestState.Failed, name, message, stackTrace));
+            var result = getResult(duration, Shared.Results.TestState.Failed, name, message, stackTrace);
+            _results.Add(result);
+            _channel.TestFinished(result);
         }
 
         public bool TestFinished(string name, string type, string method)
@@ -49,12 +62,16 @@ namespace AutoTest.TestRunners.XUnit
 
         public void TestPassed(string name, string type, string method, double duration, string output)
         {
-            _results.Add(getResult(duration, Shared.Results.TestState.Passed, name, output));
+            var result = getResult(duration, Shared.Results.TestState.Passed, name, output);
+            _results.Add(result);
+            _channel.TestFinished(result);
         }
 
         public void TestSkipped(string name, string type, string method, string reason)
         {
-            _results.Add(getResult(0, Shared.Results.TestState.Ignored, name, reason));
+            var result = getResult(0, Shared.Results.TestState.Ignored, name, reason);
+            _results.Add(result);
+            _channel.TestFinished(result);
         }
 
         public bool TestStart(string name, string type, string method)

@@ -7,6 +7,7 @@ using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
 using Mono.Cecil;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -36,6 +37,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                     var asm = System.Reflection.Assembly.LoadFrom(Assembly);
                     var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
                     runner.SetLogger(Logger.Instance);
+                    runner.SetLiveFeedbackChannel(new NullTestFeedbackProvider());
                     return runner;
                 }
                 catch

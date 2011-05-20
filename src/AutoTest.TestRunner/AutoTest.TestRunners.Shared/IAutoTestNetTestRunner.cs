@@ -5,6 +5,7 @@ using System.Text;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared
 {
@@ -13,6 +14,7 @@ namespace AutoTest.TestRunners.Shared
         string Identifier { get; }
 
         void SetLogger(ILogger logger);
+        void SetLiveFeedbackChannel(ITestFeedbackProvider channel);
 
         bool IsTest(string assembly, string member);
         bool ContainsTestsFor(string assembly, string member);

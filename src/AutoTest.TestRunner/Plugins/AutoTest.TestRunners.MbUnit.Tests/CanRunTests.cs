@@ -13,14 +13,14 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_nothing_is_specified_it_should_run_all_test()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             Assert.That(_runner.Run(settings).Count(), Is.EqualTo(5));
         }
 
         [Test]
         public void and_a_test_is_specified_it_should_only_run_specified_tests()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddTest("AutoTest.TestRunners.MbUnitTests.Tests.TestResource.ClassContainingTests.A_passing_test");
             settings.Assembly.AddTest("AutoTest.TestRunners.MbUnitTests.Tests.TestResource.ClassContainingTests.A_failing_test");
             Assert.That(_runner.Run(settings).Count(), Is.EqualTo(2));
@@ -29,7 +29,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_a_member_is_specified_it_should_only_run_tests_contained_by_these_members()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddMember("AutoTest.TestRunners.MbUnit.Tests.TestResource.AnotherClassContainingTests");
             Assert.That(_runner.Run(settings).Count(), Is.EqualTo(1));
         }
@@ -37,7 +37,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_a_namespace_is_specified_it_should_only_run_tests_contained_by_these_namespaces()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddNamespace("AutoTest.TestRunners.MbUnit.Tests.TestResource.AnotherNamespace");
             Assert.That(_runner.Run(settings).Count(), Is.EqualTo(1));
             Assert.That(_runner.Run(settings).ElementAt(0).TestName,
@@ -48,7 +48,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         public void and_a_namespace_is_specified_it_should_only_run_tests_contained_by_these_namespaces_and_all_sub_namespaces()
         {
             // Note that the namespaces varies between MbUnit.Tests and MbUnitTests.Tests
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddNamespace("AutoTest.TestRunners.MbUnit.Tests.TestResource");
             Assert.That(_runner.Run(settings).Count(), Is.EqualTo(2));
         }
@@ -56,7 +56,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_it_passes_it_should_return_passing_result()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddTest("AutoTest.TestRunners.MbUnitTests.Tests.TestResource.ClassContainingTests.A_passing_test");
             var result = _runner.Run(settings);
             
@@ -72,7 +72,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_it_fails_it_should_return_failed_result()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddTest("AutoTest.TestRunners.MbUnitTests.Tests.TestResource.ClassContainingTests.A_failing_test");
             var result = _runner.Run(settings);
 
@@ -89,7 +89,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests
         [Test]
         public void and_its_inconclusive_it_should_return_ignored_result()
         {
-            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { });
+            var settings = new RunSettings(new AssemblyOptions(getAssembly()), new string[] { }, Guid.NewGuid().ToString());
             settings.Assembly.AddTest("AutoTest.TestRunners.MbUnitTests.Tests.TestResource.ClassContainingTests.An_inconclusive_test");
             var result = _runner.Run(settings);
 

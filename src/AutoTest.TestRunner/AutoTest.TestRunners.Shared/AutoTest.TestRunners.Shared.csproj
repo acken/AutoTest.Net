@@ -78,6 +78,11 @@
     <Compile Include="AssemblyAnalysis\SimpleType.cs" />
     <Compile Include="AssemblyAnalysis\SimpleTypeLocator.cs" />
     <Compile Include="AssemblyAnalysis\AssemblyReader.cs" />
+    <Compile Include="Communication\PipeClient.cs" />
+    <Compile Include="Communication\PipeJunction.cs" />
+    <Compile Include="Communication\PipeServer.cs" />
+    <Compile Include="Communication\StreamString.cs" />
+    <Compile Include="Communication\TestFeedbackProvider.cs" />
     <Compile Include="Errors\ErrorHandler.cs" />
     <Compile Include="IAutoTestNetTestRunner.cs" />
     <Compile Include="ITestRunProcess.cs" />

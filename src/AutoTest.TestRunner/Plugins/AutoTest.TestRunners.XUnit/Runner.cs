@@ -7,15 +7,23 @@ using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.XUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        private ITestFeedbackProvider _channel = null;
+
         public string Identifier { get { return "XUnit"; } }
 
         public void SetLogger(ILogger logger)
         {
+        }
+
+        public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
+        {
+            _channel = channel;
         }
 
         public bool IsTest(string assembly, string member)
@@ -54,7 +62,7 @@ namespace AutoTest.TestRunners.XUnit
         public IEnumerable<TestResult> Run(RunSettings settings)
         {
             var runner = new XUnitRunner();
-            return runner.Run(settings);
+            return runner.Run(settings, _channel);
         }
     }
 }

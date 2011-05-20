@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Core;
 using System.Collections;
 using NUnit.Util;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.NUnit
 {
@@ -12,11 +13,13 @@ namespace AutoTest.TestRunners.NUnit
     {
         private string currentAssembly = "Run started was never called";
         private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<AutoTest.TestRunners.Shared.Results.TestResult>();
+        private ITestFeedbackProvider _channel;
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
 
-        public TestHarvester()
+        public TestHarvester(ITestFeedbackProvider channel)
         {
+            _channel = channel;
         }
 
         public void RunStarted(string name, int testCount)
@@ -43,13 +46,16 @@ namespace AutoTest.TestRunners.NUnit
                 case ResultState.Error:
                 case ResultState.Failure:
                 case ResultState.Cancelled:
-                    var result = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
-                    result.AddStackLines(getStackLines(testResult).ToArray());
-                    _results.Add(result);
+                    var failure = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Failed, testResult.Message);
+                    failure.AddStackLines(getStackLines(testResult).ToArray());
+                    _results.Add(failure);
+                    _channel.TestFinished(failure);
                     break;
 
                 case ResultState.Success:
-                    _results.Add(new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message));
+                    var success = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Passed, testResult.Message);
+                    _results.Add(success);
+                    _channel.TestFinished(success);
                     break;
 
                 case ResultState.Inconclusive:
@@ -59,6 +65,7 @@ namespace AutoTest.TestRunners.NUnit
                     var ignoreResult = new AutoTest.TestRunners.Shared.Results.TestResult("NUnit", currentAssembly, getFixture(testResult.Test.TestName.FullName), testResult.Time * 1000, testResult.Test.TestName.FullName, TestRunners.Shared.Results.TestState.Ignored, testResult.Message);
                     ignoreResult.AddStackLines(getStackLines(testResult).ToArray());
                     _results.Add(ignoreResult);
+                    _channel.TestFinished(ignoreResult);
                     break;
             }
         }

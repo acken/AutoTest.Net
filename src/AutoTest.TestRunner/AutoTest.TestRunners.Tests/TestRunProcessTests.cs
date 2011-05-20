@@ -50,5 +50,9 @@ namespace AutoTest.TestRunners.Tests
                 }
             }
         }
+
+        public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
+        {
+        }
     }
 }

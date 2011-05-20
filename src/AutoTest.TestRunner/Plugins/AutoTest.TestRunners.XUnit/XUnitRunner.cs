@@ -5,14 +5,15 @@ using System.Text;
 using AutoTest.TestRunners.Shared.Options;
 using Xunit;
 using System.Reflection;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.XUnit
 {
     class XUnitRunner
     {
-        public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings)
+        public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings, ITestFeedbackProvider channel)
         {
-            var logger = new XUnitLogger();
+            var logger = new XUnitLogger(channel);
             XunitProject project = new XunitProject();
 
             var runner = settings.Assembly;

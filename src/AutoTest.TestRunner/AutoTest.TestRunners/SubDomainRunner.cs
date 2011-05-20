@@ -20,14 +20,16 @@ namespace AutoTest.TestRunners
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
         private bool _shouldLog = false;
+        private string _pipeName;
 
-        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog)
+        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog, string pipeName)
         {
             _plugin = plugin;
             _id = id;
             _categories = categories;
             _assembly = assembly;
             _shouldLog = shouldLog;
+            _pipeName = pipeName;
         }
 
         public void Run(object waitHandle)
@@ -63,7 +65,7 @@ namespace AutoTest.TestRunners
                 runtime.SetupResolver(_shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray())));
+                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray(), _pipeName)));
             }
             catch (Exception ex)
             {

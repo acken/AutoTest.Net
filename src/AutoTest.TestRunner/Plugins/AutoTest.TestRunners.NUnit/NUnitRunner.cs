@@ -10,11 +10,19 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using AutoTest.TestRunners.Shared.Errors;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.NUnit
 {
     class NUnitRunner
     {
+        private ITestFeedbackProvider _channel;
+
+        public NUnitRunner(ITestFeedbackProvider channel)
+        {
+            _channel = channel;
+        }
+
         public void Initialize()
         {
             SettingsService settingsService = new SettingsService();
@@ -46,7 +54,7 @@ namespace AutoTest.TestRunners.NUnit
                 return new AutoTest.TestRunners.Shared.Results.TestResult[] { ErrorHandler.GetError("NUnit", "Unable to locate fixture") };
             }
 
-            var harvester = new TestHarvester();
+            var harvester = new TestHarvester(_channel);
             var testFilter = getTestFilter(options);
             string savedDirectory = Environment.CurrentDirectory;
             var result = run(testRunner, harvester, testFilter, savedDirectory);

@@ -18,6 +18,7 @@ using Gallio.Model.Messages.Execution;
 using Gallio.Runtime.ProgressMonitoring;
 using Gallio.Model.Schema;
 using Gallio.Model.Messages.Exploration;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.MbUnit
 {
@@ -27,6 +28,7 @@ namespace AutoTest.TestRunners.MbUnit
         private static Gallio.Runtime.Logging.ILogger _logger = null;
         private static ITestDriver _testDriver;
         private ILogger _internalLogger;
+        private ITestFeedbackProvider _channel = null;
 
         public Runner()
         {
@@ -70,6 +72,11 @@ namespace AutoTest.TestRunners.MbUnit
         public void SetLogger(ILogger logger)
         {
             _internalLogger = logger;
+        }
+
+        public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
+        {
+            _channel = channel;
         }
 
         public bool IsTest(string assembly, string member)
@@ -159,14 +166,16 @@ namespace AutoTest.TestRunners.MbUnit
                     if (test == null)
                         return;
                     var fixture = string.Format("{0}.{1}", test.CodeReference.NamespaceName, steps.First(x => x.Id.Equals(test.ParentId)).Name);
-                    testResults.Add(new AutoTest.TestRunners.Shared.Results.TestResult(
+                    var result = new AutoTest.TestRunners.Shared.Results.TestResult(
                         "MbUnit",
                         settings.Assembly.Assembly,
                         fixture,
                         message.Result.Duration.TotalMilliseconds,
                         string.Format("{0}.{1}", fixture, test.Name),
                         convertState(message.Result.Outcome.Status),
-                        message.Result.Outcome.DisplayName));
+                        message.Result.Outcome.DisplayName);
+                    testResults.Add(result);
+                    _channel.TestFinished(result);
                 });
 
             // Provide a progress monitor.

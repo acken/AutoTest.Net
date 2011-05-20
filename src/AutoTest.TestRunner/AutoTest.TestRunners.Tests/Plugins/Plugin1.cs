@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Tests.Plugins
 {
@@ -12,6 +13,10 @@ namespace AutoTest.TestRunners.Tests.Plugins
         public string Identifier { get { return ""; } }
 
         public void SetLogger(ILogger logger)
+        {
+        }
+
+        public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
         {
         }
 
