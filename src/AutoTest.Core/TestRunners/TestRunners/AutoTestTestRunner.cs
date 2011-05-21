@@ -216,7 +216,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
         {
-            DebugLog.Debug.WriteInfo("Test finished: " + result.TestName);
+            //DebugLog.Debug.WriteInfo("Test finished: " + result.TestName);
         }
     }
 }
