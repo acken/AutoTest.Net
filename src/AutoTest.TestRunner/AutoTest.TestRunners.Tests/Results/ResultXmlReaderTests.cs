@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using AutoTest.TestRunners.Shared.Results;
+using System.IO;
 
 namespace AutoTest.TestRunners.Tests.Results
 {
@@ -37,6 +38,19 @@ namespace AutoTest.TestRunners.Tests.Results
             Assert.That(results.ElementAt(4).TestFixture, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2"));
             Assert.That(results.ElementAt(4).TestName, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again"));
             Assert.That(results.ElementAt(4).StackLines.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_parse_from_xml_string()
+        {
+            var xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><results><runner id=\"NUnit\"><assembly name=\"C:\\Users\\ack\\src\\Fohjin\\Fohjin.DDD.Example\\Test.Fohjin.DDD\\bin\\AutoTest.Net\\Test.Fohjin.DDD.dll\"><fixture name=\"Test.Fohjin.DDD.Bus.When_a_single_command_gets_published_to_the_bus_containing_an_sinlge_command_handler\"><test state=\"Passed\" name=\"Test.Fohjin.DDD.Bus.When_a_single_command_gets_published_to_the_bus_containing_an_sinlge_command_handler.Then_the_execute_method_on_the_returned_command_handler_is_invoked_with_the_provided_command\" duration=\"39,945\"><message><![CDATA[]]></message></test></fixture></assembly></runner></results>";
+            using (var writer = new StringReader(xml))
+            {
+                var results = new ResultXmlReader(writer).Read();
+                Assert.That(results.Count(), Is.EqualTo(1));
+                var result = results.ElementAt(0);
+                Assert.That(result.TestName, Is.EqualTo("Test.Fohjin.DDD.Bus.When_a_single_command_gets_published_to_the_bus_containing_an_sinlge_command_handler.Then_the_execute_method_on_the_returned_command_handler_is_invoked_with_the_provided_command"));
+            }
         }
     }
 }

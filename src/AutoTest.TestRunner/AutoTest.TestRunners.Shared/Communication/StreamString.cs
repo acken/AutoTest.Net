@@ -29,9 +29,9 @@ namespace AutoTest.TestRunners.Shared.Communication
 
                 return streamEncoding.GetString(inBuffer);
             }
-            catch
+            catch (Exception ex)
             {
-                return "";
+                return ex.ToString();
             }
         }
 

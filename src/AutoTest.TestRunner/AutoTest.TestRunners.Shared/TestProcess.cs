@@ -125,8 +125,10 @@ namespace AutoTest.TestRunners.Shared
                             .Listen(
                                 x.ToString(),
                                 (msg) => 
-                                    { 
-                                        _feedback.TestFinished(new TestResult("", "", "", 0, msg, TestState.Failed, ""));
+                                    {
+                                        if (msg == "")
+                                            return;
+                                        _feedback.TestFinished(TestResult.FromXml(msg));
                                     });
                     });
             thread.Start(channel);

@@ -11,7 +11,9 @@ namespace AutoTest.TestRunners.Shared.Results
 {
     public class ResultXmlReader
     {
-        private string _file;
+        private string _file = null;
+        private TextReader _xml = null;
+        private string _readerContent = null;
         private List<TestResult> _results;
 
         private string _currentRunner = "";
@@ -19,6 +21,12 @@ namespace AutoTest.TestRunners.Shared.Results
         private string _currentFixture = "";
         private TestResult _currentTest;
         private StackLine _currentStackLine;
+
+        public ResultXmlReader(TextReader xml)
+        {
+            _xml = xml;
+            _readerContent = xml.ReadToEnd();
+        }
 
         public ResultXmlReader(string file)
         {
@@ -30,10 +38,17 @@ namespace AutoTest.TestRunners.Shared.Results
             _results = new List<TestResult>();
             try
             {
-                using (var reader = new XmlTextReader(_file))
+                bool read = true;
+                using (var reader = getReader())
                 {
-                    while (reader.Read())
+                    while (true)
                     {
+                        if (read)
+                            reader.Read();
+                        if (reader.EOF)
+                            break;
+                        read = true;
+
                         if (reader.Name.Equals("runner"))
                             getRunner(reader);
                         else if (reader.Name.Equals("assembly"))
@@ -43,23 +58,45 @@ namespace AutoTest.TestRunners.Shared.Results
                         else if (reader.Name.Equals("test"))
                             getTest(reader);
                         else if (reader.Name.Equals("message") && reader.NodeType != XmlNodeType.EndElement)
+                        {
                             _currentTest.Message = reader.ReadElementContentAsString();
+                            read = false;
+                        }
                         else if (reader.Name.Equals("line"))
                             getStackLine(reader);
                         else if (reader.Name.Equals("method") && reader.NodeType != XmlNodeType.EndElement)
+                        {
                             _currentStackLine.Method = reader.ReadElementContentAsString();
+                            read = false;
+                        }
                         else if (reader.Name.Equals("file") && reader.NodeType != XmlNodeType.EndElement)
+                        {
                             readFile(reader);
+                            read = false;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 _results = new List<TestResult>();
-                _results.Add(ErrorHandler.GetError("Invalid result file" + Environment.NewLine + File.ReadAllText(_file)));
+                if (_file != null)
+                    _results.Add(ErrorHandler.GetError("Invalid result file" + Environment.NewLine + File.ReadAllText(_file)));
+                else
+                    _results.Add(ErrorHandler.GetError("Invalid result stream " + Environment.NewLine + _readerContent));
                 _results.Add(ErrorHandler.GetError(ex));
             }
+            if (_results.Count == 0)
+                _results.Add(new TestResult("", "", "", 0, _readerContent, TestState.Failed, ""));
             return _results;
+        }
+
+        private XmlTextReader getReader()
+        {
+            if (_xml == null)
+                return new XmlTextReader(_file);
+            else
+                return new XmlTextReader(new StringReader(_readerContent));
         }
 
         private void readFile(XmlTextReader reader)

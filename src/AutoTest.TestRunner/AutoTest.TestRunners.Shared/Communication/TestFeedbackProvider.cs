@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.TestRunners.Shared.Results;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -29,7 +30,18 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         public void TestFinished(TestResult result)
         {
-            _channel.Send(result.TestName);
+            if (result == null)
+            {
+                Logger.Write("Testresult was null");
+                return;
+            }
+            var xml = result.ToXml();
+            if (xml == null)
+            {
+                Logger.Write("Could not generate xml from " + result.TestName);
+                return;
+            }
+            _channel.Send(xml);
         }
     }
 }

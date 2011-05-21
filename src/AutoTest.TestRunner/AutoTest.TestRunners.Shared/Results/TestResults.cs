@@ -61,6 +61,18 @@ namespace AutoTest.TestRunners.Shared.Results
             _stackLines.AddRange(lines);
         }
 
+        public string ToXml()
+        {
+            return new ResultsXmlWriter(new TestResult[] { this }).GetXml();
+        }
+
+        public static TestResult FromXml(string xml)
+        {
+            using (var stream = new StringReader(xml))
+            {
+                return new ResultXmlReader(stream).Read().FirstOrDefault();
+            }
+        }
     }
 
     [Serializable]

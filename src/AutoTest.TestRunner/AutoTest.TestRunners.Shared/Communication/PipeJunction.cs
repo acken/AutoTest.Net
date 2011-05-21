@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.IO.Pipes;
 using System.Threading;
+using System.IO;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
     public class PipeJunction
     {
+        private UnicodeEncoding _encoding = new UnicodeEncoding();
         private List<Thread> _pipes = new List<Thread>();
-        private Stack<string> _messages = new Stack<string>();
+        private Stack<byte[]> _messages = new Stack<byte[]>();
 
         public PipeJunction(string pipeName)
         {
@@ -31,7 +33,7 @@ namespace AutoTest.TestRunners.Shared.Communication
             new PipeClient().Listen(state.ToString(), (x) => { queue(x); });
         }
 
-        private void queue(string item)
+        private void queue(byte[] item)
         {
             _messages.Push(item);
         }
@@ -51,7 +53,11 @@ namespace AutoTest.TestRunners.Shared.Communication
                             Thread.Sleep(100);
                             continue;
                         }
-                        new StreamString(server).WriteString(_messages.Pop());
+                        var bytes = _messages.Pop();
+                        var buffer = new byte[bytes.Length + 1];
+                        Array.Copy(bytes, buffer, bytes.Length);
+                        buffer[buffer.Length - 1] = 0;
+                        server.Write(buffer, 0, buffer.Length);
                     }
                 }
             }

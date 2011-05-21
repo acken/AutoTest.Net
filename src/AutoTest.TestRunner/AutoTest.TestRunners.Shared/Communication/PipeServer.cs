@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO.Pipes;
+using System.IO;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -12,6 +13,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         private string _name;
         private NamedPipeServerStream _server = null;
         private bool _exit = false;
+        private Stack<string> _unsentMessages = new Stack<string>();
 
         public PipeServer(string name)
         {
@@ -22,9 +24,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         public void Send(string message)
         {
-            if (_server == null)
-                return;
-            new StreamString(_server).WriteString(message);
+            _unsentMessages.Push(message);
         }
 
         private void run(object state)
@@ -35,17 +35,27 @@ namespace AutoTest.TestRunners.Shared.Communication
                 _server.WaitForConnection();
                 while (_server.IsConnected)
                 {
-                    if (_exit)
-                    {
-                        new StreamString(_server).WriteString("<<exiting>>");
+                    if (_exit && _unsentMessages.Count == 0)
                         break;
-                    }
+                    while (_unsentMessages.Count > 0)
+                        send(_unsentMessages.Pop());
                     Thread.Sleep(15);
                 }
             }
             catch
             {
             }
+        }
+
+        private void send(string message)
+        {
+            var bytes = Encoding.UTF8.GetBytes(message);
+            var base64Str = Convert.ToBase64String(bytes);
+            var base64 = Encoding.UTF8.GetBytes(base64Str);
+            var buffer = new byte[base64.Length + 1];
+            Array.Copy(base64, buffer, base64.Length);
+            buffer[buffer.Length - 1] = 0;
+            _server.Write(buffer, 0, buffer.Length);
         }
 
         public void Dispose()
