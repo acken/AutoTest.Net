@@ -121,7 +121,7 @@ namespace AutoTest.Test
 		[Test]
 		public void Should_serialize_test_run_message()
 		{
-			var testResults = new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }) };
+			var testResults = new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }, 34) };
             var results = new TestRunResults("project 1", "assembly", false, TestRunner.NUnit, testResults);
 			results.SetTimeSpent(new TimeSpan(12345));
 			var message = new TestRunMessage(results);
@@ -138,6 +138,7 @@ namespace AutoTest.Test
 			output.Results.All[0].StackTrace[0].Method.ShouldEqual("method name");
 			output.Results.All[0].StackTrace[0].File.ShouldEqual("file");
 			output.Results.All[0].StackTrace[0].LineNumber.ShouldEqual(13);
+            output.Results.All[0].TimeSpent.TotalMilliseconds.ShouldEqual(34);
 		}
 		
 		[Test]
@@ -161,6 +162,27 @@ namespace AutoTest.Test
 			output.Sender.ShouldEqual("a sender");
 			output.Command.ShouldEqual("a command");
 		}
+
+        [Test]
+        public void Should_serialize_live_status_message()
+        {
+            var message = new LiveTestStatusMessage("assembly1", 10, 5, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) }, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) });
+            var output = serializeDeserialize<LiveTestStatusMessage>(message);
+            output.CurrentAssembly.ShouldEqual("assembly1");
+            output.TotalNumberOfTests.ShouldEqual(10);
+            output.TestsCompleted.ShouldEqual(5);
+            output.FailedTests.Length.ShouldEqual(1);
+            output.FailedButNowPassingTests.Length.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Should_serialize_live_status()
+        {
+            var message = new LiveTestStatus("assembly1", new TestResult(TestRunner.Any, TestRunStatus.Failed, "Test1"));
+            var output = serializeDeserialize<LiveTestStatus>(message);
+            output.Assembly.ShouldEqual("assembly1");
+            output.Test.Name.ShouldEqual("Test1");
+        }
 		
 		private T serializeDeserialize<T>(T message)
 		{

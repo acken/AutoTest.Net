@@ -206,12 +206,67 @@ namespace AutoTest.WinForms
 			}
 		}
 
+        public void RecievingLiveTestStatusMessage(LiveTestStatusMessage message)
+        {
+            _syncContext.Post(m => addLiveFeedback((LiveTestStatusMessage)m), message);
+        }
+
         #endregion
+
+        private void addLiveFeedback(LiveTestStatusMessage liveStatus)
+        {
+            if (!_running)
+                return;
+            SuspendLayout();
+            setRunInProgressFeedback(string.Format("testing {0} ({1} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted));
+
+            foreach (var test in liveStatus.FailedButNowPassingTests)
+            {
+                var testItem = new TestItem(test.Assembly, "", test.Test);
+                foreach (ListViewItem item in runFeedbackList.Items)
+                {
+                    if (!item.Tag.GetType().Equals(typeof(TestItem)))
+                        continue;
+                    var itm = (TestItem)item.Tag;
+                    if (itm.IsTheSameTestAs(testItem))
+                    {
+                        item.Remove();
+                        break;
+                    }
+                }
+            }
+
+            IItem selected = null;
+            if (runFeedbackList.SelectedItems.Count == 1)
+                selected = (IItem)runFeedbackList.SelectedItems[0].Tag;
+            foreach (var test in liveStatus.FailedTests)
+            {
+                var testItem = new TestItem(test.Assembly, "", test.Test);
+                ListViewItem toRemove = null;
+                foreach (ListViewItem item in runFeedbackList.Items)
+                {
+                    if (!item.Tag.GetType().Equals(typeof(TestItem)))
+                        continue;
+                    var itm = (TestItem)item.Tag;
+                    if (itm.IsTheSameTestAs(testItem))
+                    {
+                        toRemove = item;
+                        break;
+                    }
+                }
+                int index = toRemove == null ? -1 : toRemove.Index;
+                addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem, selected, index);
+                if (toRemove != null)
+                    toRemove.Remove();
+            }
+            ResumeLayout();
+        }
 
         private void relistFromCache()
         {
             _isRefreshingFeedback = true;
 
+            SuspendLayout();
             IItem selected = null;
             if (runFeedbackList.SelectedItems.Count == 1)
                 selected = (IItem) runFeedbackList.SelectedItems[0].Tag;
@@ -235,11 +290,21 @@ namespace AutoTest.WinForms
             _isRefreshingFeedback = false;
 
             setInfoFromSelectedItem();
+            ResumeLayout();
         }
 
         private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected)
         {
-            var item = runFeedbackList.Items.Add(type);
+            addFeedbackItem(type, message, colour, tag, selected, -1);
+        }
+
+        private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected, int index)
+        {
+            ListViewItem item;
+            if (index == -1)
+                item = runFeedbackList.Items.Add(type);
+            else
+                item = runFeedbackList.Items.Insert(index, type);
             item.SubItems.Add(message);
             item.ForeColor = colour;
             item.Tag = tag;

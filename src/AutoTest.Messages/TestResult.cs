@@ -13,6 +13,8 @@ namespace AutoTest.Messages
         private IStackLine[] _stackTrace;
         private static readonly TestResult _passResult;
 
+        public TimeSpan TimeSpent = new TimeSpan();
+
         /// <summary>
         /// Factory method to return passed message
         /// </summary>
@@ -56,6 +58,16 @@ namespace AutoTest.Messages
             _name = name;
             _message = message;
             _stackTrace = stackTrace;
+        }
+
+        public TestResult(TestRunner runner, TestRunStatus status, string name, string message, IStackLine[] stackTrace, double milliseconds)
+        {
+            _runner = runner;
+            _status = status;
+            _name = name;
+            _message = message;
+            _stackTrace = stackTrace;
+            TimeSpent = TimeSpan.FromMilliseconds(milliseconds);
         }
 
         static TestResult()
@@ -114,7 +126,8 @@ namespace AutoTest.Messages
 			writer.Write((int) _status);
 			writer.Write((string) _name);
 			writer.Write((string) _message);
-			writer.Write((int) _stackTrace.Length);
+            writer.Write((double)TimeSpent.Ticks);
+            writer.Write((int)_stackTrace.Length);
 			foreach (var line in _stackTrace)
 			{
 				writer.Write((string) line.Method);
@@ -130,6 +143,7 @@ namespace AutoTest.Messages
 			_status = (TestRunStatus) reader.ReadInt32();
 			_name = reader.ReadString();
 			_message = reader.ReadString();
+            TimeSpent = new TimeSpan((long)reader.ReadDouble());
 			var count = reader.ReadInt32();
 			for (int i = 0; i < count; i++)
 			{

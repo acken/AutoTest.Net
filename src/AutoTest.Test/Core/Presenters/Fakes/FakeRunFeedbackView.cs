@@ -25,6 +25,7 @@ namespace AutoTest.Test.Core.Presenters.Fakes
         public TestRunMessage TestRunMessage { get { return _testRunMessage; } }
         public RunInformationMessage RunInformationMessage { get { return _runInformationMessage; } }
 		public ExternalCommandMessage ExternalCommandMessage { get { return _externalCommandMessage; } }
+        public LiveTestStatusMessage LiveTestStatusMessage { get; private set; }
 
         #region IRunFeedbackView Members
 
@@ -62,6 +63,11 @@ namespace AutoTest.Test.Core.Presenters.Fakes
 		{
 			_externalCommandMessage = message;
 		}
+
+        public void RecievingLiveTestStatusMessage(LiveTestStatusMessage message)
+        {
+            LiveTestStatusMessage = message;
+        }
 
         #endregion
     }

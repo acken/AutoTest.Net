@@ -25,8 +25,7 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         public override bool  Equals(object obj)
         {
-            var other = (TestItem) obj;
-            return GetHashCode().Equals(other.GetHashCode());
+            return GetHashCode().Equals(obj.GetHashCode());
         }
 
         public override int GetHashCode()

@@ -16,5 +16,6 @@ namespace AutoTest.Core.Presenters
         void RecievingTestRunMessage(TestRunMessage message);
         void RecievingRunInformationMessage(RunInformationMessage message);
 		void RecievingExternalCommandMessage(ExternalCommandMessage message);
+        void RecievingLiveTestStatusMessage(LiveTestStatusMessage message);
     }
 }

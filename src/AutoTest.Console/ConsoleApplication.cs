@@ -153,6 +153,11 @@ namespace AutoTest.Console
 			
 		}
 
+        public void RecievingLiveTestStatusMessage(LiveTestStatusMessage message)
+        {
+
+        }
+
         #endregion
 		
 		private void runNotification(string msg, RunReport report) {

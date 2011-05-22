@@ -100,6 +100,15 @@ namespace AutoTest.Test.Core.Presenters
             _view.ExternalCommandMessage.ShouldBeTheSameAs(message);
         }
 
+        [Test]
+        public void Should_subscribe_to_live_test_feedback_messages()
+        {
+            var message = new LiveTestStatusMessage("", 0, 0, new LiveTestStatus[] { }, new LiveTestStatus[] { });
+            _bus.Publish(message);
+            waitForAsyncCall();
+            _view.LiveTestStatusMessage.ShouldNotBeTheSameAs(message);
+        }
+
         private void waitForAsyncCall()
         {
             Thread.Sleep(30);

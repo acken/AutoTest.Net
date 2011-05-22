@@ -24,6 +24,7 @@ namespace AutoTest.Core.Messaging
         public event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         public event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
 		public event EventHandler<ExternalCommandArgs> OnExternalCommand;
+        public event EventHandler<LiveTestFeedbackArgs> OnLiveTestFeedback;
 
         public MessageBus(IServiceLocator services)
         {
@@ -210,6 +211,12 @@ namespace AutoTest.Core.Messaging
             {
                 if (OnExternalCommand != null)
                     OnExternalCommand(this, new ExternalCommandArgs((ExternalCommandMessage)(IMessage)message));
+                handled = true;
+            }
+            else if (typeof(T) == typeof(LiveTestStatusMessage))
+            {
+                if (OnLiveTestFeedback != null)
+                    OnLiveTestFeedback(this, new LiveTestFeedbackArgs((LiveTestStatusMessage)(IMessage)message));
                 handled = true;
             }
             return handled;

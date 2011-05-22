@@ -27,6 +27,7 @@ namespace AutoTest.Core.Presenters
                 _bus.OnTestRunMessage += new EventHandler<TestRunMessageEventArgs>(_bus_OnTestRunMessage);
                 _bus.OnRunInformationMessage += new EventHandler<RunInformationMessageEventArgs>(_bus_OnRunInformationMessage);
 				_bus.OnExternalCommand += new EventHandler<ExternalCommandArgs>(_bus_OnExternalCommandMessage);
+                _bus.OnLiveTestFeedback += new EventHandler<LiveTestFeedbackArgs>(_bus_OnLiveTestFeedback);
             }
         }
 
@@ -79,6 +80,12 @@ namespace AutoTest.Core.Presenters
 			Debug.WriteDetail("Presenter received external command message");
 			_view.RecievingExternalCommandMessage(e.Message);
 		}
+
+        void _bus_OnLiveTestFeedback(object sender, LiveTestFeedbackArgs e)
+        {
+            Debug.WriteDetail("Presenter received live test feedback message");
+            _view.RecievingLiveTestStatusMessage(e.Message);
+        }
 
         #region IDisposable Members
 

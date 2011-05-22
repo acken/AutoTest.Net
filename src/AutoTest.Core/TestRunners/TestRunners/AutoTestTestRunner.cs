@@ -16,6 +16,8 @@ using System.Reflection;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
+using AutoTest.Core.Caching.RunResultCache;
+using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
@@ -33,11 +35,15 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IConfiguration _configuration;
         private ICache _cache;
+        private IMessageBus _bus;
+        private IRunResultCache _runCache;
 
-        public AutoTestTestRunner(IConfiguration configuration, ICache cache)
+        public AutoTestTestRunner(IConfiguration configuration, ICache cache, IMessageBus bus, IRunResultCache runCache)
         {
             _configuration = configuration;
             _cache = cache;
+            _bus = bus;
+            _runCache = runCache;
         }
 
         public bool CanHandleTestFor(Project project)
@@ -70,7 +76,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var options = generateOptions(runInfos);
             if (options == null)
                 return new TestRunResults[] { };
-            var runner = new TestRunProcess(new AutoTestRunnerFeedback())
+            var runner = new TestRunProcess(new AutoTestRunnerFeedback(_runCache, _bus))
 				.ActivateProfilingFor(new RunLog().GetLocation())
 				.IncludeInProfiling(getProjectReferences())
                 .AbortWhen(abortWhen);
@@ -121,14 +127,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                         byAssembly.Key,
                                         partial,
                                         runner,
-                                        byAssembly.Select(x => new Messages.TestResult(
-                                            runner,
-                                            getTestState(x.State),
-                                            x.TestName,
-                                            x.Message,
-                                            x.StackLines.Select(y => (IStackLine)new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>()
-                                            )).ToArray()
-                                            );
+                                        byAssembly.Select(x => ConvertResult(x)).ToArray());
                     result.SetTimeSpent(TimeSpan.FromMilliseconds(byAssembly.Sum(x => x.DurationInMilliseconds)));
                     results.Add(result);
                 }
@@ -136,7 +135,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return results.ToArray();
         }
 
-        private TestRunStatus getTestState(TestState testState)
+        public static Messages.TestResult ConvertResult(AutoTest.TestRunners.Shared.Results.TestResult x)
+        {
+            return new Messages.TestResult(TestRunnerConverter.FromString(x.Runner),
+                                            getTestState(x.State),
+                                            x.TestName,
+                                            x.Message,
+                                            x.StackLines.Select(y => (IStackLine)new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>(),
+                                            x.DurationInMilliseconds
+                                            );
+        }
+
+        private static TestRunStatus getTestState(TestState testState)
         {
             switch (testState)
             {
@@ -209,6 +219,20 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
     class AutoTestRunnerFeedback : ITestRunProcessFeedback
     {
+        private IRunResultCache _runCache;
+        private IMessageBus _bus;
+
+        private DateTime _lastSend = DateTime.MinValue;
+        private object _padLock = new object();
+        private string _currentAssembly = "";
+        private int _testCount = 0;
+
+        public AutoTestRunnerFeedback(IRunResultCache cache, IMessageBus bus)
+        {
+            _runCache = cache;
+            _bus = bus;
+        }
+
         public void ProcessStart(string commandline)
         {
             DebugLog.Debug.WriteInfo("Running tests: " + commandline);
@@ -216,7 +240,47 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
         {
-            //DebugLog.Debug.WriteInfo("Test finished: " + result.TestName);
+            lock (_padLock)
+            {
+                _currentAssembly = result.Assembly;
+                _testCount++;
+                if (result.State == TestState.Passed && _runCache.Failed.Count(x => x.Value.Name.Equals(result.TestName)) != 0)
+                {
+                    _bus.Publish(
+                        new LiveTestStatusMessage(
+                            _currentAssembly,
+                            -1,
+                            _testCount,
+                            new LiveTestStatus[] { },
+                            new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) }));
+                    _lastSend = DateTime.Now;
+                    return;
+                }
+                else if (result.State == TestState.Failed)
+                {
+                    _bus.Publish(
+                            new LiveTestStatusMessage(
+                                _currentAssembly,
+                                -1,
+                                _testCount,
+                                new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
+                                new LiveTestStatus[] { }));
+                    _lastSend = DateTime.Now;
+                    return;
+                }
+                else if (DateTime.Now > _lastSend.AddSeconds(1))
+                {
+                    _bus.Publish(
+                            new LiveTestStatusMessage(
+                                _currentAssembly,
+                                -1,
+                                _testCount,
+                                new LiveTestStatus[] { },
+                                new LiveTestStatus[] { }));
+                    _lastSend = DateTime.Now;
+                    return;
+                }
+            }
         }
     }
 }

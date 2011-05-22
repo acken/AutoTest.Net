@@ -104,6 +104,16 @@ namespace AutoTest.Core.Messaging
         }
     }
 
+    public class LiveTestFeedbackArgs : EventArgs
+    {
+        public LiveTestStatusMessage Message { get; private set; }
+
+        public LiveTestFeedbackArgs(LiveTestStatusMessage message)
+        {
+            Message = message;
+        }
+    }
+
     public interface IMessageBus
     {
         event EventHandler<FileChangeMessageEventArgs> OnFileChangeMessage;
@@ -116,6 +126,7 @@ namespace AutoTest.Core.Messaging
         event EventHandler<ErrorMessageEventArgs> OnErrorMessage;
         event EventHandler<RunInformationMessageEventArgs> OnRunInformationMessage;
 		event EventHandler<ExternalCommandArgs> OnExternalCommand;
+        event EventHandler<LiveTestFeedbackArgs> OnLiveTestFeedback;
         void Publish<T>(T message);
 		
 		void SetBuildProvider(string buildProvider);
