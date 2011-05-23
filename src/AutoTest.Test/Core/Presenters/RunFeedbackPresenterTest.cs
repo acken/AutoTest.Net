@@ -106,12 +106,12 @@ namespace AutoTest.Test.Core.Presenters
             var message = new LiveTestStatusMessage("", 0, 0, new LiveTestStatus[] { }, new LiveTestStatus[] { });
             _bus.Publish(message);
             waitForAsyncCall();
-            _view.LiveTestStatusMessage.ShouldNotBeTheSameAs(message);
+            _view.LiveTestStatusMessage.ShouldBeTheSameAs(message);
         }
 
         private void waitForAsyncCall()
         {
-            Thread.Sleep(30);
+            Thread.Sleep(40);
         }
     }
 }

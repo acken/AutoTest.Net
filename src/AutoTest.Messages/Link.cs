@@ -9,7 +9,7 @@ namespace AutoTest.Messages
         public Link(int start, int length)
         {
             Start = start;
-            Length = length;
+            Length = length;            
         }
     }
 }

@@ -25,7 +25,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
         {
             _cache = MockRepository.GenerateMock<IRunResultCache>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-            _feedback = new AutoTestRunnerFeedback(_cache, _bus);
+            _feedback = new AutoTestRunnerFeedback(_cache, _bus, new AutoTest.TestRunners.Shared.Options.RunOptions());
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
             Thread.Sleep(1000);
             _feedback.TestFinished(test);
 
-            _bus.AssertWasCalled(x => x.Publish<LiveTestStatusMessage>(null), x => x.IgnoreArguments().Repeat.Twice());
+            _bus.AssertWasCalled(x => x.Publish<LiveTestStatusMessage>(null), x => x.IgnoreArguments());
         }
     }
 }

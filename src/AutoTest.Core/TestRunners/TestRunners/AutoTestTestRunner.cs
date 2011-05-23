@@ -76,7 +76,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var options = generateOptions(runInfos);
             if (options == null)
                 return new TestRunResults[] { };
-            var runner = new TestRunProcess(new AutoTestRunnerFeedback(_runCache, _bus))
+            var runner = new TestRunProcess(new AutoTestRunnerFeedback(_runCache, _bus, options))
 				.ActivateProfilingFor(new RunLog().GetLocation())
 				.IncludeInProfiling(getProjectReferences())
                 .AbortWhen(abortWhen);
@@ -221,16 +221,29 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IRunResultCache _runCache;
         private IMessageBus _bus;
+        private RunOptions _options;
 
+        private int _totalTestCount = -1;
         private DateTime _lastSend = DateTime.MinValue;
         private object _padLock = new object();
         private string _currentAssembly = "";
         private int _testCount = 0;
 
-        public AutoTestRunnerFeedback(IRunResultCache cache, IMessageBus bus)
+        public AutoTestRunnerFeedback(IRunResultCache cache, IMessageBus bus, RunOptions options)
         {
             _runCache = cache;
             _bus = bus;
+            _options = options;
+            setTotalTestCount();
+        }
+
+        private void setTotalTestCount()
+        {
+            if (_options.TestRuns.Count(x => x.Assemblies.Count(y => (y.Members.Count() > 0 || y.Namespaces.Count() > 0)) > 0) > 0)
+                _totalTestCount = -1;
+            else
+                _totalTestCount = _options.TestRuns.Sum(x => x.Assemblies.Sum(y => y.Tests.Count()));
+
         }
 
         public void ProcessStart(string commandline)
@@ -242,6 +255,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             lock (_padLock)
             {
+                if (_lastSend == DateTime.MinValue)
+                    _lastSend = DateTime.Now;
                 _currentAssembly = result.Assembly;
                 _testCount++;
                 if (result.State == TestState.Passed && _runCache.Failed.Count(x => x.Value.Name.Equals(result.TestName)) != 0)
@@ -249,7 +264,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                         new LiveTestStatusMessage(
                             _currentAssembly,
-                            -1,
+                            _totalTestCount,
                             _testCount,
                             new LiveTestStatus[] { },
                             new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) }));
@@ -261,7 +276,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                             new LiveTestStatusMessage(
                                 _currentAssembly,
-                                -1,
+                                _totalTestCount,
                                 _testCount,
                                 new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
                                 new LiveTestStatus[] { }));
@@ -273,7 +288,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                             new LiveTestStatusMessage(
                                 _currentAssembly,
-                                -1,
+                                _totalTestCount,
                                 _testCount,
                                 new LiveTestStatus[] { },
                                 new LiveTestStatus[] { }));
