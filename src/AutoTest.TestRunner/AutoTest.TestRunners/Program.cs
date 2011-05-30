@@ -46,8 +46,6 @@ namespace AutoTest.TestRunners
                 Write("Test run result:");
                 Write(File.ReadAllText(_arguments.OutputFile));
             }
-            // We do this since NUnit threads some times keep staing in running mode even after finished.
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
 
         private static void writeHeader()
