@@ -8,7 +8,7 @@ namespace AutoTest.Messages
 	{
         private TestRunner _runner;
 		private TestRunStatus _status;
-        private string _name;
+        private string _name = "";
         private string _message = "";
         private IStackLine[] _stackTrace;
         private static readonly TestResult _passResult;
