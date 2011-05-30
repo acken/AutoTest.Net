@@ -88,7 +88,7 @@ namespace AutoTest.Test.Core.Caching.Projects
             _parsedDocument.AddFile(new ProjectFile("File1", FileType.Compile, "someproject"));
             var record = new Project("someproject", _parsedDocument);
             _cache.WhenGeting("ReferencedProject").Return(new Project("", new ProjectDocument(ProjectType.CSharp)));
-            var project = _preparer.Prepare(record);
+            _preparer.Prepare(record);
             _cache.GetAllProjectFiles().Length.ShouldEqual(1);
         }
 

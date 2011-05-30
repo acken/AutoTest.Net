@@ -109,7 +109,7 @@ namespace AutoTest.Core.Caching.Projects
         private void setReferences(ProjectDocument document)
         {
             var references = getNodes("b:Project/b:ItemGroup/b:ProjectReference", "Include")
-                .Select(x => new PathParser(x).ToAbsolute(Path.GetDirectoryName(_projectFile)))
+                .Select(x => new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(Path.GetDirectoryName(_projectFile)))
                 .Where(x => _fsService.FileExists(x)).ToArray();
             document.AddReference(references);
         }
@@ -132,11 +132,11 @@ namespace AutoTest.Core.Caching.Projects
         {
             var projectPath = Path.GetDirectoryName(_projectFile);
             getNodes("b:Project/b:ItemGroup/b:Compile", "Include")
-                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x).ToAbsolute(projectPath), FileType.Compile, _projectFile)));
+                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.Compile, _projectFile)));
             getNodes("b:Project/b:ItemGroup/b:EmbeddedResource", "Include")
-                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x).ToAbsolute(projectPath), FileType.Resource, _projectFile)));
+                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.Resource, _projectFile)));
             getNodes("b:Project/b:ItemGroup/b:None", "Include")
-                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x).ToAbsolute(projectPath), FileType.None, _projectFile)));
+                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.None, _projectFile)));
         }
 
         private List<string> getNodes(string nodeName)
