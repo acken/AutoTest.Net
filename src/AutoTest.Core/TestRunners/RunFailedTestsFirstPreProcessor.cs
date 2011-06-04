@@ -24,7 +24,7 @@ namespace AutoTest.Core.TestRunners
 				info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
                 info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
 			}
-            return new PreProcessedTesRuns(null, details);
+            return new PreProcessedTesRuns(preProcessed.ProcessWrapper, details);
 		}
 
 		public void RunFinished (TestRunResults[] results)

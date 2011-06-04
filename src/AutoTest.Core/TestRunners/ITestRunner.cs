@@ -10,6 +10,6 @@ namespace AutoTest.Core.TestRunners
     public interface ITestRunner
     {
         bool CanHandleTestFor(string assembly);
-        TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen);
+        TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen);
     }
 }

@@ -61,7 +61,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return false;
         }
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform,Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
         {
             var options = generateOptions(runInfos);
             if (options == null)

@@ -18,7 +18,7 @@ namespace AutoTest.TestRunners.Shared
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
-        private Action<Action<ProcessStartInfo>> _processWrapper = null;
+        private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<ProcessStartInfo>> _processWrapper = null;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -50,8 +50,8 @@ namespace AutoTest.TestRunners.Shared
             _abortWhen = abortWhen;
             return this;
         }
-		
-		public TestRunProcess WrapTestProcessWith(Action<Action<ProcessStartInfo>> processWrapper)
+
+        public TestRunProcess WrapTestProcessWith(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<ProcessStartInfo>> processWrapper)
 		{
             _processWrapper = processWrapper;
 			return this;

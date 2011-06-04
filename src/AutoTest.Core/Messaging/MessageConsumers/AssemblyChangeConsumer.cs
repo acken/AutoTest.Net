@@ -131,7 +131,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             reRunTests(runner, report, testRunInfos, preProcessed.ProcessWrapper);
 		}
 
-        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos, Action<Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
+        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
         {
             var rerunInfos = new List<TestRunInfo>();
             foreach (var info in testRunInfos)
