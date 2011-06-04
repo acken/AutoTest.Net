@@ -29,7 +29,7 @@ namespace AutoTest.Test
 			var details = new RunInfo(new Project("project", new ProjectDocument(ProjectType.CSharp)));
 			details.SetAssembly("assembly");
 			
-			_preProcessor.PreProcess(new RunInfo[] { details });
+			_preProcessor.PreProcess(new PreProcessedTesRuns(null, new RunInfo[] { details }));
 			details.GetTests().Length.ShouldEqual(2);
             details.GetTests()[0].Test.ShouldEqual("sometests");
             details.GetTests()[1].Test.ShouldEqual("someignoredtests");

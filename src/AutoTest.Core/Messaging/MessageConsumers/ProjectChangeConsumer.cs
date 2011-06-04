@@ -190,18 +190,18 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
-             projectList = preProcessTestRun(projectList);
-            projectList = new TestRunInfoMerger(projectList).MergeWith(_abortedTestRuns).ToArray();
-            runPreProcessedTestRun(projectList, runReport);
+            var preProcessed = preProcessTestRun(projectList);
+            preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeWith(_abortedTestRuns).ToArray());
+            runPreProcessedTestRun(preProcessed, runReport);
 		}
-		
-		private void runPreProcessedTestRun(RunInfo[] projectList, RunReport runReport)
+
+        private void runPreProcessedTestRun(PreProcessedTesRuns preProcessed, RunReport runReport)
 		{
 			foreach (var runner in _testRunners)
             {
                 Debug.WriteDebug("Preparing runner " + runner.GetType().ToString());
 				var runInfos = new List<TestRunInfo>();
-				foreach (var file in projectList)
+                foreach (var file in preProcessed.RunInfos)
 	            {
 					var project = file.Project;
 					if (hasInvalidAssembly(file))
@@ -218,11 +218,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				if (runInfos.Count > 0)
 				{
                     Debug.WriteDebug("Running tests for runner " + runner.GetType().ToString());
-					runTests(runner, runInfos.ToArray(), runReport);
+					runTests(runner, runInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
                     if (_exit)
                     {
                         _abortedTestRuns.Clear();
-                        _abortedTestRuns.AddRange(projectList);
+                        _abortedTestRuns.AddRange(preProcessed.RunInfos);
                         return;
                     }
 					
@@ -235,11 +235,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     if (rerunInfos.Count > 0)
                     {
                         Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                        runTests(runner, rerunInfos.ToArray(), runReport);
+                        runTests(runner, rerunInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
                         if (_exit)
                         {
                             _abortedTestRuns.Clear();
-                            _abortedTestRuns.AddRange(projectList);
+                            _abortedTestRuns.AddRange(preProcessed.RunInfos);
                             return;
                         }
                     }
@@ -248,11 +248,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _abortedTestRuns.Clear();
 		}
 
-        private RunInfo[] preProcessTestRun(RunInfo[] runInfos)
+        private PreProcessedTesRuns preProcessTestRun(RunInfo[] runInfos)
         {
+            var preProcessed = new PreProcessedTesRuns(null, runInfos);
             foreach (var preProcessor in _preProcessors)
-                runInfos = preProcessor.PreProcess(runInfos);
-            return runInfos;
+                preProcessed = preProcessor.PreProcess(preProcessed);
+            return preProcessed;
         }
 		
 		private bool hasInvalidOutputPath(RunInfo info)
@@ -297,9 +298,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         #endregion
 
-        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, RunReport runReport)
+        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
         {
-            var results = runTests(testRunner, runInfos);
+            var results = runTests(testRunner, runInfos, processWrapper);
             var modifiedResults = new List<TestRunResults>();
 			foreach (var result in results)
 			{
@@ -317,11 +318,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			informPreProcessor(modifiedResults.ToArray());
         }
 
-        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos)
+        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
         {
             try
             {
-                return testRunner.RunTests(runInfos, () => { return _exit; });
+                return testRunner.RunTests(runInfos, processWrapper, () => { return _exit; });
             }
             catch (Exception ex)
             {

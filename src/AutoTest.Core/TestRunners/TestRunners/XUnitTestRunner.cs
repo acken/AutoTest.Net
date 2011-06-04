@@ -40,7 +40,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return _assemblyReader.GetReferences(assembly).Contains("xunit");
 		}
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Func<bool> abortWhen)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
         {
 			var results = new List<TestRunResults>();
 			foreach (var runInfo in runInfos)

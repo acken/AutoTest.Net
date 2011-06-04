@@ -45,15 +45,15 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             {
 			    informParticipants(message);
                 var runInfos = getRunInfos(message);
-                runInfos = preProcess(runInfos);
-                runInfos = new TestRunInfoMerger(runInfos).MergeWith(_abortedTestRuns).ToArray();
+                var preProcessed = preProcess(runInfos);
+                preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeWith(_abortedTestRuns).ToArray());
                 foreach (var runner in _testRunners)
                 {
-                    runTest(runner, runInfos, runReport);
+                    runTest(runner, preProcessed, runReport);
                     if (_exit)
                     {
                         _abortedTestRuns.Clear();
-                        _abortedTestRuns.AddRange(runInfos);
+                        _abortedTestRuns.AddRange(preProcessed.RunInfos);
                         break;
                     }
                 }
@@ -82,11 +82,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
 		#endregion
 
-        private RunInfo[] preProcess(RunInfo[] runInfos)
+        private PreProcessedTesRuns preProcess(RunInfo[] runInfos)
         {
+            var preProcessed = new PreProcessedTesRuns(null, runInfos);
             foreach (var preProcessor in _preProcessors)
-                runInfos = preProcessor.PreProcess(runInfos);
-            return runInfos;
+                preProcessed = preProcessor.PreProcess(preProcessed);
+            return preProcessed;
         }
 		private RunInfo[] getRunInfos(AssemblyChangeMessage message)
         {
@@ -108,10 +109,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _bus.Publish(new RunStartedMessage(message.Files));
 		}
 
-        private void runTest(ITestRunner runner, RunInfo[] runInfos, RunReport report)
+        private void runTest(ITestRunner runner, PreProcessedTesRuns preProcessed, RunReport report)
 		{
 			var testRunInfos = new List<TestRunInfo>();
-			foreach (var runInfo in runInfos)
+            foreach (var runInfo in preProcessed.RunInfos)
 			{
 				if (_testAssemblyValidator.ShouldNotTestAssembly(runInfo.Assembly))
 					return;
@@ -123,14 +124,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
             if (testRunInfos.Count == 0)
 				return;
-            var results = runner.RunTests(testRunInfos.ToArray(), () => { return _exit; });
+            var results = runner.RunTests(testRunInfos.ToArray(), preProcessed.ProcessWrapper, () => { return _exit; });
             if (_exit)
                 return;
 			mergeReport(results, report, testRunInfos.ToArray());
-            reRunTests(runner, report, testRunInfos);
+            reRunTests(runner, report, testRunInfos, preProcessed.ProcessWrapper);
 		}
 
-        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos)
+        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
         {
             var rerunInfos = new List<TestRunInfo>();
             foreach (var info in testRunInfos)
@@ -141,7 +142,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (rerunInfos.Count > 0)
             {
                 Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                var results = runner.RunTests(testRunInfos.ToArray(), () => { return _exit; });
+                var results = runner.RunTests(testRunInfos.ToArray(), processWrapper, () => { return _exit; });
                 mergeReport(results, report, testRunInfos.ToArray());
             }
         }

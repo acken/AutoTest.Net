@@ -14,8 +14,9 @@ namespace AutoTest.Core.TestRunners
 			_resultCache = resultCache;
 		}
 
-        public RunInfo[] PreProcess(RunInfo[] details)
+        public PreProcessedTesRuns PreProcess(PreProcessedTesRuns preProcessed)
 		{
+            var details = preProcessed.RunInfos;
 			foreach (var info in details)
 			{
 				info.AddTestsToRun(getTestsFor(info, _resultCache.Failed));
@@ -23,7 +24,7 @@ namespace AutoTest.Core.TestRunners
 				info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
                 info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
 			}
-            return details;
+            return new PreProcessedTesRuns(preProcessed.ProcessWrapper, details);
 		}
 
 		public void RunFinished (TestRunResults[] results)

@@ -37,7 +37,7 @@ namespace AutoTest.Test
 			_cache.Stub(x => x.GetAll<Project>()).Return(new Project[] {});
 
             _consumer = new AssemblyChangeConsumer(new ITestRunner[] { _testRunner }, _bus, _testAssemblyValidator, preProcessors, _removedTestLocator, _cache, _config);
-			_testRunner.Stub(r => r.RunTests(null, null)).IgnoreArguments().Return(new TestRunResults[] {});
+			_testRunner.Stub(r => r.RunTests(null, null, null)).IgnoreArguments().Return(new TestRunResults[] {});
         }
 		
 		[Test]
@@ -45,12 +45,12 @@ namespace AutoTest.Test
 		{
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).Return(false);
 			_testRunner.Stub(t => t.CanHandleTestFor("")).IgnoreArguments().Return(true);
-            _preProcessor.Stub(p => p.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { new RunInfo(new AutoTest.Core.Caching.Projects.Project("", null)) }); 
+            _preProcessor.Stub(p => p.PreProcess(null)).IgnoreArguments().Return(new PreProcessedTesRuns(null, new RunInfo[] { new RunInfo(new AutoTest.Core.Caching.Projects.Project("", null)) })); 
 			var message = new AssemblyChangeMessage();
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
+			_testRunner.AssertWasCalled(t => t.RunTests(null, null, null), t => t.IgnoreArguments());
 		}
 
         [Test]
@@ -74,7 +74,7 @@ namespace AutoTest.Test
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
+			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null, null), t => t.IgnoreArguments());
 		}
 		
 		[Test]
@@ -86,7 +86,7 @@ namespace AutoTest.Test
 			message.AddFile(new ChangedFile());
 			_testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly(null)).IgnoreArguments().Return(true);
 			_consumer.Consume(message);
-			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null), t => t.IgnoreArguments());
+			_testRunner.AssertWasNotCalled(t => t.RunTests(null, null, null), t => t.IgnoreArguments());
 		}
 	}
 }

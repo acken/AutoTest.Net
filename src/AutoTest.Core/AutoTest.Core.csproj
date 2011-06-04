@@ -121,6 +121,7 @@
     <Compile Include="Messaging\MessageConsumers\IPrioritizeProjects.cs" />
     <Compile Include="Messaging\MessageConsumers\ILocateRemovedTests.cs" />
     <Compile Include="Messaging\MessageConsumers\ISolutionChangeConsumer.cs" />
+    <Compile Include="Messaging\MessageConsumers\PreProcessedTesRuns.cs" />
     <Compile Include="Messaging\MessageConsumers\ProjectChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\FileChangeConsumer.cs" />
     <Compile Include="FileSystem\DirectoryWatcher.cs" />
