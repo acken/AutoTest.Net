@@ -7,6 +7,7 @@ using System.Threading;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Targeting;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
+using System.Diagnostics;
 
 namespace AutoTest.TestRunners.Shared
 {
@@ -17,9 +18,7 @@ namespace AutoTest.TestRunners.Shared
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
-		private bool _activateProfiling = false;
-		private string _profilerLogFile = null;
-		private string _profileIncludes = null;
+        private Action<Action<ProcessStartInfo>> _processWrapper = null;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -52,16 +51,9 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 		
-		public TestRunProcess ActivateProfilingFor(string logFileName)
+		public TestRunProcess WrapTestProcessWith(Action<Action<ProcessStartInfo>> processWrapper)
 		{
-			_profilerLogFile = logFileName;
-			_activateProfiling = true;
-			return this;
-		}
-		
-		public TestRunProcess IncludeInProfiling(string includelist)
-		{
-			_profileIncludes = includelist;
+            _processWrapper = processWrapper;
 			return this;
 		}
 
@@ -75,12 +67,8 @@ namespace AutoTest.TestRunners.Shared
                 var process = new TestProcess(target, _feedback);
                 if (_runInParallel)
                     process.RunParallel();
-				if (_activateProfiling)
-				{
-					process.ActivateProfilingFor(_profilerLogFile);
-					if (_profileIncludes != null)
-						process.IncludeForProfiling(_profileIncludes);
-				}
+				if (_processWrapper != null)
+                    process.WrapTestProcessWith(_processWrapper);
                 process.AbortWhen(_abortWhen);
                 var thread = new Thread(new ThreadStart(process.Start));
                 thread.Start();

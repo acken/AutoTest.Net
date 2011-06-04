@@ -21,16 +21,6 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-	public class RunLog
-	{
-		public string GetLocation()
-		{
-			var dir = Path.GetTempPath();
-			var filename = string.Format("mm_output_{0}.log", Process.GetCurrentProcess().Id);
-			return Path.Combine(dir, filename);
-		}
-	}
-	
     class AutoTestTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
@@ -77,28 +67,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (options == null)
                 return new TestRunResults[] { };
             var runner = new TestRunProcess(new AutoTestRunnerFeedback(_runCache, _bus, options))
-				.ActivateProfilingFor(new RunLog().GetLocation())
-				.IncludeInProfiling(getProjectReferences())
+				.WrapTestProcessWith(processWrapper)
                 .AbortWhen(abortWhen);
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();
         }
-		
-		private string getProjectReferences()
-		{
-			var references = new List<string>();
-			var list = "";
-            _cache.GetAll<Project>()
-                .Where(x => x.Value != null).ToList()
-                .ForEach(proj => references.Add(Path.GetFileNameWithoutExtension(proj.Value.AssemblyName)));
-			references.ForEach(x => list += x + ", ");
-            if (list.Length != 0)
-                list = list.Substring(0, list.Length - 2);
-            DebugLog.Debug.WriteDebug("Including in profiling: " + list);
-			if (list.Length == 0)
-				return null;
-			return list;
-		}
 
         private TestRunResults[] getResults(IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> tests, TestRunInfo[] runInfos)
         {

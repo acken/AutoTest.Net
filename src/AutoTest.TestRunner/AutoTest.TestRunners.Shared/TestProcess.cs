@@ -21,11 +21,12 @@ namespace AutoTest.TestRunners.Shared
         private TargetedRun _targetedRun;
         private bool _runInParallel = false;
         private bool _startSuspended = false;
-		private bool _activateProfiling = false;
-		private string _profilerLogFile = null;
-		private string _profileIncludes = null;
         private Func<bool> _abortWhen = null;
+        private Action<Action<ProcessStartInfo>> _processWrapper = null;
         private Process _proc = null;
+        private string _executable;
+        private string _input;
+        private string _output;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
@@ -50,59 +51,49 @@ namespace AutoTest.TestRunners.Shared
             _abortWhen = abortWhen;
             return this;
         }
-		
-		public TestProcess ActivateProfilingFor(string logFileName)
-		{
-			_profilerLogFile = logFileName;
-			_activateProfiling = true;
-			return this;
-		}
-		
-		public TestProcess IncludeForProfiling(string excludelist)
-		{
-			_profileIncludes = excludelist;
-			return this;
-		}
+
+        public TestProcess WrapTestProcessWith(Action<Action<ProcessStartInfo>> processWrapper)
+        {
+            _processWrapper = processWrapper;
+            return this;
+        }
 		 
         public void Start()
         {
-            var executable = getExecutable();
-            var input = createInputFile();
-            var output = Path.GetTempFileName();
-            runProcess(executable, input, output);
+            _executable = getExecutable();
+            _input = createInputFile();
+            _output = Path.GetTempFileName();
+            runProcess();
         }
 
-        private void runProcess(string executable, string input, string output)
+        private void runProcess()
+        {
+            if (_processWrapper == null)
+                run(new ProcessStartInfo());
+            else
+                _processWrapper.Invoke(run);
+        }
+
+        private void run(ProcessStartInfo startInfo)
         {
             var channel = Guid.NewGuid().ToString();
             var listener = startChannelListener(channel);
-            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", input, output, channel);
+            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", _input, _output, channel);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
                 arguments += " --startsuspended";
             if (_feedback != null)
-                _feedback.ProcessStart(executable + " " + arguments);
+                _feedback.ProcessStart(_executable + " " + arguments);
             _proc = new Process();
-            _proc.StartInfo = new ProcessStartInfo(executable, arguments);
+            _proc.StartInfo = startInfo;
+            _proc.StartInfo.FileName = _executable;
+            _proc.StartInfo.Arguments = arguments;
             _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             _proc.StartInfo.RedirectStandardOutput = true;
             _proc.StartInfo.UseShellExecute = false;
             _proc.StartInfo.CreateNoWindow = true;
-            _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(executable);
-			if (_activateProfiling)
-			{
-				if (_targetedRun.Platform == Platform.AnyCPU)
-                	_proc.StartInfo.EnvironmentVariables.Add("Cor_Profiler", "{5D789D88-EEE7-46C4-909F-E39D5606544D}");
-				else
-                	_proc.StartInfo.EnvironmentVariables.Add("Cor_Profiler", "{36C8D782-F697-45C4-856A-92D05C061A39}");
-                _proc.StartInfo.EnvironmentVariables.Add("Cor_Enable_Profiling", "1");
-                _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_LogFilename", _profilerLogFile);
-				
-				if (_profileIncludes != null)
-                    _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Includes", _profileIncludes);
-                _proc.StartInfo.EnvironmentVariables.Add("MMProfiler_Runtime", string.Format(".NET{0}", _targetedRun.TargetFramework.Major));
-			}
+            _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
             _proc.Start();
             new System.Threading.Thread(listenForAborts).Start();
             _proc.StandardOutput.ReadToEnd();
@@ -112,7 +103,7 @@ namespace AutoTest.TestRunners.Shared
                 listener.Abort();
                 return;
             }
-            var results = getResults(output);
+            var results = getResults(_output);
             TestRunProcess.AddResults(results);
         }
 
