@@ -10,7 +10,6 @@ namespace AutoTest.TestRunners.Shared.Communication
 {
     public class PipeJunction
     {
-        private UnicodeEncoding _encoding = new UnicodeEncoding();
         private List<Thread> _pipes = new List<Thread>();
         private Stack<byte[]> _messages = new Stack<byte[]>();
 

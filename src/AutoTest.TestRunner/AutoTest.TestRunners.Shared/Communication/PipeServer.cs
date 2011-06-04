@@ -10,14 +10,12 @@ namespace AutoTest.TestRunners.Shared.Communication
 {
     public class PipeServer : IDisposable
     {
-        private string _name;
         private NamedPipeServerStream _server = null;
         private bool _exit = false;
         private Stack<string> _unsentMessages = new Stack<string>();
 
         public PipeServer(string name)
         {
-            _name = name;
             var thread = new Thread(run);
             thread.Start(name);
         }

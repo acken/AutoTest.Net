@@ -24,14 +24,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
     class AutoTestTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
-        private ICache _cache;
         private IMessageBus _bus;
         private IRunResultCache _runCache;
 
-        public AutoTestTestRunner(IConfiguration configuration, ICache cache, IMessageBus bus, IRunResultCache runCache)
+        public AutoTestTestRunner(IConfiguration configuration, IMessageBus bus, IRunResultCache runCache)
         {
             _configuration = configuration;
-            _cache = cache;
             _bus = bus;
             _runCache = runCache;
         }
