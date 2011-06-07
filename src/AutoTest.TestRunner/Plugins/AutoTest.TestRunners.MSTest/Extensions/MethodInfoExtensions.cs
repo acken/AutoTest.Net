@@ -17,10 +17,10 @@ namespace AutoTest.TestRunners.MSTest.Extensions
         {
             if (!IsTest(method))
                 return false;
-            if (ignoreCategories.Length == 0)
-                return true;;
             if (method.GetCustomAttributes(true).Any(x => isIgnoreAttribute(x)))
                 return false;
+            if (ignoreCategories.Length == 0)
+                return true;;
             var categories = method.GetCustomAttributes(true)
                 .Where(x => isTestCategoryAttribute(x))
                 .Select(x => getTestCategories(x)).ToList();

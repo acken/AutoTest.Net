@@ -36,10 +36,7 @@ namespace AutoTest.TestRunners.MSTest
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start(settings);
             thread.Join();
-            // Long shot for fixing the app domain unload issues
-            thread.Abort();
             thread = null;
-            GC.Collect();
             return _results;
         }
 
@@ -54,7 +51,7 @@ namespace AutoTest.TestRunners.MSTest
                 var tests = getTests(settings);
                 if (tests == null)
                     return;
-                _logger.Write("Found {0} tests", tests.Count());
+                log("Found {0} tests", tests.Count());
                 var fixtures = tests.GroupBy(test => test.DeclaringType);
                 foreach (var fixture in fixtures)
                     runTests(settings, fixture);
@@ -71,7 +68,7 @@ namespace AutoTest.TestRunners.MSTest
 
         private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
         {
-            _logger.Write("Running fixture {0}", fixture.Key);
+            log("Running fixture {0}", fixture.Key);
             new MSTestTestFixture(fixture.Key)
                 .Run(fixture.ToList()).ToList()
                 .ForEach(result =>
@@ -188,6 +185,18 @@ namespace AutoTest.TestRunners.MSTest
             if (ex.InnerException != null)
                 error = Environment.NewLine + getException(ex.InnerException);
             return ex.ToString() + error;
+        }
+
+        private void log(string text, params object[] args)
+        {
+            if (_logger == null) return;
+            _logger.Write(text, args);
+        }
+
+        private void log(Exception ex, params object[] args)
+        {
+            if (_logger == null) return;
+            _logger.Write(ex);
         }
     }
 }

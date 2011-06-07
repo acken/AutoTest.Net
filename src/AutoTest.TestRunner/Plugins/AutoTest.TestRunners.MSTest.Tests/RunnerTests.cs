@@ -14,7 +14,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
         [Test]
         public void Should_run_all_tests()
         {
-            var settings = new RunSettings(new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll")), new string[] {});
+            var settings = new RunSettings(new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll")), new string[] {}, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(10));
@@ -26,7 +26,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
             var assembly = new AssemblyOptions(assemblyPath);
             assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Passing_test");
-            var settings = new RunSettings(assembly, new string[] { });
+            var settings = new RunSettings(assembly, new string[] { }, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -44,7 +44,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
             var assembly = new AssemblyOptions(assemblyPath);
             assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Failing_test");
-            var settings = new RunSettings(assembly, new string[] { });
+            var settings = new RunSettings(assembly, new string[] { }, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -62,7 +62,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
             var assembly = new AssemblyOptions(assemblyPath);
             assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Inconclusive_test");
-            var settings = new RunSettings(assembly, new string[] { });
+            var settings = new RunSettings(assembly, new string[] { }, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -76,12 +76,36 @@ namespace AutoTest.TestRunners.MSTest.Tests
         }
 
         [Test]
+        public void Should_not_run_test_with_ignore_attribute()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture1.Ignore_Attrib_test");
+            var settings = new RunSettings(assembly, new string[] { }, null);
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_not_run_class_with_ignore_attribute()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var assembly = new AssemblyOptions(assemblyPath);
+            assembly.AddTest("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture3.SomeTest");
+            var settings = new RunSettings(assembly, new string[] { }, null);
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
         public void Should_run_full_fixture()
         {
             var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
             var assembly = new AssemblyOptions(assemblyPath);
             assembly.AddMember("AutoTest.TestRunners.MSTest.Tests.TestResource.TestFixture2");
-            var settings = new RunSettings(assembly, new string[] { });
+            var settings = new RunSettings(assembly, new string[] { }, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(2));
@@ -98,7 +122,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
             var assembly = new AssemblyOptions(assemblyPath);
             assembly.AddNamespace("AutoTest.TestRunners.MSTest.Tests.TestResource.SomeNamespace");
-            var settings = new RunSettings(assembly, new string[] { });
+            var settings = new RunSettings(assembly, new string[] { }, null);
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(4));

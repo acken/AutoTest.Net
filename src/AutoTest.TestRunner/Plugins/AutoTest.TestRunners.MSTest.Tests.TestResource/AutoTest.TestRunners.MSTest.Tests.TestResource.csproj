@@ -50,6 +50,7 @@
     <Compile Include="SomeNamespace\AFewTests.cs" />
     <Compile Include="TestFixture1.cs" />
     <Compile Include="TestFixture2.cs" />
+    <Compile Include="TestFixture3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

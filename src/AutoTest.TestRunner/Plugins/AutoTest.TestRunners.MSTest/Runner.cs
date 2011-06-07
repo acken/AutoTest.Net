@@ -13,7 +13,7 @@ namespace AutoTest.TestRunners.MSTest
     public class Runner : IAutoTestNetTestRunner
     {
         private ILogger _logger;
-        private ITestFeedbackProvider _channel = null;
+        private ITestFeedbackProvider _channel = new NullTestFeedbackProvider();
 
         public string Identifier { get { return "MSTest"; } }
 

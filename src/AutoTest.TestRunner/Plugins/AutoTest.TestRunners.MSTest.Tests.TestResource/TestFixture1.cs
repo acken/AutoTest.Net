@@ -33,5 +33,12 @@ namespace AutoTest.TestRunners.MSTest.Tests.TestResource
             Thread.Sleep(10);
             Assert.Inconclusive("test was inconclusive");
         }
+
+        [Ignore]
+        [TestMethod]
+        public void Ignore_Attrib_test()
+        {
+            Assert.Fail();
+        }
     }
 }
