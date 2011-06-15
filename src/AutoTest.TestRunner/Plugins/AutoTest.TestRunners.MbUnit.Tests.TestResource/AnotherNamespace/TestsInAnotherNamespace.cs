@@ -11,7 +11,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests.TestResource.AnotherNamespace
         [Test]
         public void Even_another_test()
         {
-            Assert.AreEqual(3, 3);
+            Console.WriteLine("Not using assert as it fails in mono");
         }
     }
 }

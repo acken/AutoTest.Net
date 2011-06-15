@@ -13,19 +13,20 @@ namespace AutoTest.TestRunners.MbUnitTests.Tests.TestResource
         public void A_passing_test()
         {
             Thread.Sleep(10);
-            Assert.AreEqual(2, 2);
+            Console.WriteLine("Not using assert as it fails in mono");
         }
 
         [Test]
         public void A_failing_test()
         {
-            Assert.AreEqual(2, 3);
+            Console.WriteLine("Not using assert as it fails in mono");
+            throw new Exception("failing test");
         }
 
         [Test]
         public void An_inconclusive_test()
         {
-            Assert.Inconclusive("inconclusive");
+            Assert.Inconclusive();
         }
     }
 }

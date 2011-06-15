@@ -11,7 +11,7 @@ namespace AutoTest.TestRunners.MbUnit.Tests.TestResource
         [Test]
         public void Some_passing_test()
         {
-            Assert.AreEqual(1, 1);
+            Console.WriteLine("Not using assert as it fails in mono");
         }
     }
 }

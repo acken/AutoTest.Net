@@ -19,6 +19,7 @@ using Gallio.Runtime.ProgressMonitoring;
 using Gallio.Model.Schema;
 using Gallio.Model.Messages.Exploration;
 using AutoTest.TestRunners.Shared.Communication;
+using Gallio.Model.Filters;
 
 namespace AutoTest.TestRunners.MbUnit
 {
@@ -29,6 +30,7 @@ namespace AutoTest.TestRunners.MbUnit
         private static ITestDriver _testDriver;
         private ILogger _internalLogger;
         private ITestFeedbackProvider _channel = null;
+        private bool _isInitialized = false;
 
         public Runner()
         {
@@ -38,7 +40,11 @@ namespace AutoTest.TestRunners.MbUnit
             // There are a few things you can tweak here if you need.
             _setup = new Gallio.Runtime.RuntimeSetup();
             //_setup.RuntimePath = @"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin"; // @"C:\Users\ack\bin\Gallio2"; //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); //@"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin";
-            _setup.RuntimePath = @"C:\Users\ack\src\AutoTest.Net\lib\Gallio";
+            var binPath = new BinPathLocator().Locate();
+            _isInitialized = File.Exists(Path.Combine(binPath, "Gallio.dll"));
+            if (!_isInitialized)
+                return;
+            _setup.RuntimePath = binPath; //@"C:\Users\ack\src\AutoTest.Net\lib\Gallio";
 
             // Create a logger.
             // You can use the NullLogger but you will probably want a wrapper around your own ILogger thingy.
@@ -67,7 +73,7 @@ namespace AutoTest.TestRunners.MbUnit
 
         public string Identifier
         {
-            get { throw new NotImplementedException(); }
+            get { return "MbUnit"; }
         }
 
         public void SetLogger(ILogger logger)
@@ -82,6 +88,8 @@ namespace AutoTest.TestRunners.MbUnit
 
         public bool IsTest(string assembly, string member)
         {
+            if (!_isInitialized)
+                return false;
             MemberInfo mem = getTestFromName(assembly, member);
             if (mem == null)
                 return false;
@@ -97,21 +105,27 @@ namespace AutoTest.TestRunners.MbUnit
 
         public bool ContainsTestsFor(string assembly, string member)
         {
+            if (!_isInitialized)
+                return false;
             return getTests(assembly).Exists(x => x.Equals(member));
         }
 
         public bool ContainsTestsFor(string assembly)
         {
+            if (!_isInitialized)
+                return false;
             return getTests(assembly).Count > 0;
         }
 
         public bool Handles(string identifier)
         {
-            return identifier.ToLower().Equals("mbunit");
+            return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings)
         {
+            if (!_isInitialized)
+                return new AutoTest.TestRunners.Shared.Results.TestResult[] { getNotInitializedResult(settings) };
             var tests = settings.Assembly.Tests.ToList();
             var members = settings.Assembly.Members.ToList();
             var namespaces = settings.Assembly.Namespaces.ToList();
@@ -120,79 +134,69 @@ namespace AutoTest.TestRunners.MbUnit
             var steps = new List<TestStepData>();
             var testResults = new List<AutoTest.TestRunners.Shared.Results.TestResult>();
 
-             // Get a test isolation context.  Here we want to run tests in the same AppDomain.
-            var testIsolationProvider = (ITestIsolationProvider) RuntimeAccessor.ServiceLocator.ResolveByComponentId("Gallio.LocalTestIsolationProvider");
+            // Get a test isolation context.  Here we want to run tests in the same AppDomain.
+            var testIsolationProvider = (ITestIsolationProvider)RuntimeAccessor.ServiceLocator.ResolveByComponentId("Gallio.LocalTestIsolationProvider");
             var testIsolationOptions = new TestIsolationOptions();
             ITestIsolationContext testIsolationContext = testIsolationProvider.CreateContext(testIsolationOptions, _logger);
 
-            // Create a test package.
-            // You can set a whole bunch of options here.
             var testPackage = new TestPackage();
             testPackage.AddFile(new FileInfo(settings.Assembly.Assembly));
             testPackage.TestFrameworkFallbackMode = TestFrameworkFallbackMode.Strict;
 
             // Create some test exploration options.  Nothing interesting for you here, probably.
             var testExplorationOptions = new TestExplorationOptions();
-            
-            // Provide a message sink of your own.
-            // Here we are using a message consumer to make it easier but you can implement IMessageSink yourself.
-            // While the tests are running, your message sink will receive messages about the tests.
-            // Exploration messages: http://www.gallio.org/api/html/N_Gallio_Model_Messages_Exploration.htm
-            // Execution messages: http://www.gallio.org/api/html/N_Gallio_Model_Messages_Execution.htm
             var messageSink = new MessageConsumer()
                 .Handle<TestStepStartedMessage>((message) =>
-                    {
-                        steps.Add(message.Step);
-                        if (runAll)
-                            return;
-                        
-                        var test = message.Step;
-                        if (!test.IsTestCase)
-                            return;
-                        if (test.ParentId == null)
-                            return;
-                        if (test.CodeReference.NamespaceName == null)
-                            return;
-
-                        var ns = test.CodeReference.NamespaceName;
-                        var fixture = string.Format("{0}.{1}", test.CodeReference.NamespaceName, steps.First(x => x.Id.Equals(test.ParentId)).Name);
-                        var testName = string.Format("{0}.{1}", fixture, test.Name);
-                        if (namespaces.Exists(x => ns.StartsWith(x)) || members.Exists(x => x.Equals(fixture)) || tests.Exists(x => x.Equals(testName)))
-                            return;
-                        message.Step.IsTestCase = false;
-                    })
+                {
+                    steps.Add(message.Step);
+                })
                 .Handle<TestStepFinishedMessage>(message =>
                 {
                     var test = steps.FirstOrDefault(x => x.Id.Equals(message.StepId) && x.IsTestCase);
                     if (test == null)
                         return;
                     var fixture = string.Format("{0}.{1}", test.CodeReference.NamespaceName, steps.First(x => x.Id.Equals(test.ParentId)).Name);
-                    var result = new AutoTest.TestRunners.Shared.Results.TestResult(
+                    testResults.Add(new AutoTest.TestRunners.Shared.Results.TestResult(
                         "MbUnit",
                         settings.Assembly.Assembly,
                         fixture,
                         message.Result.Duration.TotalMilliseconds,
                         string.Format("{0}.{1}", fixture, test.Name),
                         convertState(message.Result.Outcome.Status),
-                        message.Result.Outcome.DisplayName);
-                    testResults.Add(result);
-                    _channel.TestFinished(result);
+                        message.Result.Outcome.DisplayName));
                 });
 
             // Provide a progress monitor.
             var logProgressMonitorProvider = new LogProgressMonitorProvider(_logger);
-
-            //return Run(testListener, assemblyPath, new AndFilter<ITestDescriptor>(new Filter<ITestDescriptor>[]
-            //{ 
-            //    new NamespaceFilter<ITestDescriptor>(new EqualityFilter<string>(@namespace))
-            //}), facadeOptions);
+            var options = new TestExecutionOptions();
+            options.FilterSet = new Gallio.Model.Filters.FilterSet<ITestDescriptor>(new OrFilter<ITestDescriptor>(getTestFilter(namespaces, members, tests)));
 
             // Run the tests.
-            logProgressMonitorProvider.Run((progressMonitor) => {
-                _testDriver.Run(testIsolationContext, testPackage, testExplorationOptions, new TestExecutionOptions(), messageSink, progressMonitor);
+            logProgressMonitorProvider.Run((progressMonitor) =>
+            {
+                _testDriver.Run(testIsolationContext, testPackage, testExplorationOptions, options, messageSink, progressMonitor);
             });
 
             return testResults;
+        }
+
+        private static List<Filter<ITestDescriptor>> getTestFilter(List<string> ns, List<string> members, List<string> tests)
+        {
+            var list = new List<Filter<ITestDescriptor>>();
+            if (tests.Count() > 0)
+            {
+                list.AddRange(tests.Select(x => new AndFilter<ITestDescriptor>(
+                    new Filter<ITestDescriptor>[]
+                        {
+                            new TypeFilter<ITestDescriptor>(new EqualityFilter<string>(x.Substring(0, x.LastIndexOf('.'))), false),
+                            new MemberFilter<ITestDescriptor>(new EqualityFilter<string>(x.Substring(x.LastIndexOf('.') + 1, x.Length - (x.LastIndexOf('.') + 1))))
+                        })).Cast<Filter<ITestDescriptor>>());
+            }
+            if (members.Count() > 0)
+                list.AddRange(members.Select(x => new TypeFilter<ITestDescriptor>(new EqualityFilter<string>(x), false)).Cast<Filter<ITestDescriptor>>());
+            if (ns.Count() > 0)
+                list.AddRange(ns.Select(x => new NamespaceFilter<ITestDescriptor>(new EqualityFilter<string>(x))).Cast<Filter<ITestDescriptor>>());
+            return list;
         }
 
         private Shared.Results.TestState convertState(TestStatus testStatus)
@@ -212,7 +216,7 @@ namespace AutoTest.TestRunners.MbUnit
 
         private List<Test> getTests(string assembly)
         {
-            var testIsolationProvider = (ITestIsolationProvider) RuntimeAccessor.ServiceLocator.ResolveByComponentId("Gallio.LocalTestIsolationProvider");
+            var testIsolationProvider = (ITestIsolationProvider)RuntimeAccessor.ServiceLocator.ResolveByComponentId("Gallio.LocalTestIsolationProvider");
             var testIsolationOptions = new TestIsolationOptions();
             ITestIsolationContext testIsolationContext = testIsolationProvider.CreateContext(testIsolationOptions, _logger);
 
@@ -239,7 +243,8 @@ namespace AutoTest.TestRunners.MbUnit
 
             var logProgressMonitorProvider = new LogProgressMonitorProvider(_logger);
 
-            logProgressMonitorProvider.Run((progressMonitor) => {
+            logProgressMonitorProvider.Run((progressMonitor) =>
+            {
                 _testDriver.Explore(testIsolationContext, testPackage, testExplorationOptions, messageSink, progressMonitor);
             });
 
@@ -254,6 +259,21 @@ namespace AutoTest.TestRunners.MbUnit
                     .ForEach(t => t.GetMembers().Where(tm => string.Format("{0}.{1}", t.FullName, tm.Name).Equals(member)).ToList()
                         .ForEach(m => members.Add(m))));
             return members.FirstOrDefault();
+        }
+
+        private Shared.Results.TestResult getNotInitializedResult(RunSettings settings)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("MbUnit tests will not be executed until you have set up the reference to your MbUnit path. " + 
+                          "Go to your Plugins directory and find the MbUnit plugin directory. Inside this directory place " +
+                          "a file called mbunit.config with the following content:");
+            sb.AppendLine("");
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
+            sb.AppendLine("<configuration>");
+            sb.AppendLine(@"  <bin_path>Path\To\Your\Gallio\bin\directory</bin_path>");
+            sb.AppendLine("</configuration>");
+
+            return new AutoTest.TestRunners.Shared.Results.TestResult(Identifier, settings.Assembly.Assembly, "", 0, "", Shared.Results.TestState.Panic, sb.ToString());
         }
     }
 }
