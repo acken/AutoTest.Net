@@ -37,7 +37,8 @@ namespace AutoTest.TestRunners.MbUnit
             // Create a runtime setup.
             // There are a few things you can tweak here if you need.
             _setup = new Gallio.Runtime.RuntimeSetup();
-            _setup.RuntimePath = @"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin"; // @"C:\Users\ack\bin\Gallio2"; //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); //@"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin";
+            //_setup.RuntimePath = @"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin"; // @"C:\Users\ack\bin\Gallio2"; //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); //@"C:\Users\ack\bin\GallioBundle-3.2.750.0\bin";
+            _setup.RuntimePath = @"C:\Users\ack\src\AutoTest.Net\lib\Gallio";
 
             // Create a logger.
             // You can use the NullLogger but you will probably want a wrapper around your own ILogger thingy.
