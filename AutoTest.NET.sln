@@ -63,10 +63,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MbUnit", "MbUnit", "{B2F049
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{28B6942F-8E40-46E9-B370-FC9D892F05AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MbUnit.Tests.TestResource", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MbUnit.Tests.TestResource\AutoTest.TestRunners.MbUnit.Tests.TestResource.csproj", "{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MbUnit.Tests", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MbUnit.Tests\AutoTest.TestRunners.MbUnit.Tests.csproj", "{4445CC5F-8C41-43F6-B000-39C9114E0CB3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MbUnit", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MbUnit\AutoTest.TestRunners.MbUnit.csproj", "{EE41D60E-ED22-43F6-B746-630EA6E6FE85}"
 EndProject
 Global
@@ -262,30 +258,6 @@ Global
 		{E648C29A-EF25-44CB-924E-019949ABD6B9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E648C29A-EF25-44CB-924E-019949ABD6B9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E648C29A-EF25-44CB-924E-019949ABD6B9}.Release|x86.ActiveCfg = Release|Any CPU
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|x86.ActiveCfg = Debug|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Debug|x86.Build.0 = Debug|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|Mixed Platforms.Build.0 = Release|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|x86.ActiveCfg = Release|x86
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14}.Release|x86.Build.0 = Release|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|x86.ActiveCfg = Debug|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Debug|x86.Build.0 = Debug|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|Mixed Platforms.Build.0 = Release|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|x86.ActiveCfg = Release|x86
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3}.Release|x86.Build.0 = Release|x86
 		{EE41D60E-ED22-43F6-B746-630EA6E6FE85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE41D60E-ED22-43F6-B746-630EA6E6FE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE41D60E-ED22-43F6-B746-630EA6E6FE85}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -329,8 +301,6 @@ Global
 		{A756C120-9E09-4D1F-BAA8-D0AF982EEA28} = {A0FE44DE-102D-4ACA-A72F-4BE1CF5EE868}
 		{28B6942F-8E40-46E9-B370-FC9D892F05AB} = {B2F049EF-B53D-490D-9FD9-79FE31E43778}
 		{EE41D60E-ED22-43F6-B746-630EA6E6FE85} = {B2F049EF-B53D-490D-9FD9-79FE31E43778}
-		{10001BDE-02E0-40E5-98A2-3FB5DEBAFD14} = {28B6942F-8E40-46E9-B370-FC9D892F05AB}
-		{4445CC5F-8C41-43F6-B000-39C9114E0CB3} = {28B6942F-8E40-46E9-B370-FC9D892F05AB}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\AutoTest.WinForms\AutoTest.WinForms.csproj

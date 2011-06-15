@@ -25,17 +25,17 @@ namespace AutoTest.TestRunners.MbUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
-        private static Gallio.Runtime.RuntimeSetup _setup = null;
-        private static Gallio.Runtime.Logging.ILogger _logger = null;
-        private static ITestDriver _testDriver;
+        private object _gallioLock = new object();
+        private Gallio.Runtime.RuntimeSetup _setup = null;
+        private Gallio.Runtime.Logging.ILogger _logger = null;
+        private ITestDriver _testDriver;
         private ILogger _internalLogger;
         private ITestFeedbackProvider _channel = null;
         private bool _isInitialized = false;
+        private static bool _runtimeInitialized = false;
 
         public Runner()
         {
-            if (_setup != null)
-                return;
             // Create a runtime setup.
             // There are a few things you can tweak here if you need.
             _setup = new Gallio.Runtime.RuntimeSetup();
@@ -52,7 +52,14 @@ namespace AutoTest.TestRunners.MbUnit
 
             // Initialize the runtime.
             // You only do this once.
-            RuntimeBootstrap.Initialize(_setup, _logger);
+            lock (_gallioLock)
+            {
+                if (!_runtimeInitialized)
+                {
+                    RuntimeBootstrap.Initialize(_setup, _logger);
+                    _runtimeInitialized = true;
+                }
+            }
 
             // Create a test framework selector.
             // This is used by Gallio to filter the set of frameworks it will support.
