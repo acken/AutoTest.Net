@@ -18,6 +18,7 @@ namespace AutoTest.Core.Configuration
 		private ILocateWriteLocation _defaultConfigLocator;
 		private string _ignoreFile;
         private List<KeyValuePair<string, string>> _keys = new List<KeyValuePair<string,string>>();
+        private string _overriddenSolution = null;
 		
         private string[] _watchDirectories;
         private List<KeyValuePair<string, string>> _buildExecutables = new List<KeyValuePair<string, string>>();
@@ -31,6 +32,15 @@ namespace AutoTest.Core.Configuration
         public bool StartPaused { get; private set; }
         public string WatchPath { get; private set; } // Adjusted watch path (use common denominator)
         public string WatchToken { get; private set; } // Original watch token
+        public string SolutionToBuild
+        {
+            get
+            {
+                if (_overriddenSolution != null)
+                    return _overriddenSolution;
+                return WatchToken;
+            }
+        }
 		
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
@@ -49,7 +59,7 @@ namespace AutoTest.Core.Configuration
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
-        public bool ShouldBuildSolution { get { return File.Exists(WatchToken) && WhenWatchingSolutionBuildSolution; } }
+        public bool ShouldBuildSolution { get { return File.Exists(SolutionToBuild) && WhenWatchingSolutionBuildSolution; } }
 		
         public Config(IMessageBus bus, ILocateWriteLocation defaultConfigLocator)
         {
@@ -121,6 +131,16 @@ namespace AutoTest.Core.Configuration
         public void SetCustomOutputPath(string path)
         {
             CustomOutputPath = path;
+        }
+
+        public void OverrideSolution(string solution)
+        {
+            _overriddenSolution = solution;
+        }
+
+        public void ResetSolution()
+        {
+            _overriddenSolution = null;
         }
 		
 		public void Merge(string configuratoinFile)

@@ -10,6 +10,10 @@ namespace AutoTest.Core.Configuration
     {
         string WatchPath { get; }
         string WatchToken { get; }
+        string SolutionToBuild { get; }
+
+        void OverrideSolution(string solution);
+        void ResetSolution();
 
         bool StartPaused { get; }
         string[] WatchDirectores { get; }
