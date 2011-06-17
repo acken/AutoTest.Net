@@ -124,6 +124,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return runInfos;
         }
 
+        private RunInfo[] postProcessBuildRuns(RunInfo[] runInfos)
+        {
+            foreach (var preProcessor in _preBuildProcessors)
+                runInfos = preProcessor.PostProcess(runInfos);
+            return runInfos;
+        }
+
         private void markAllAsBuilt(RunInfo[] list)
         {
             foreach (var info in list)
@@ -144,10 +151,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 return true;
 
             Debug.WriteInfo("Running builds");
+            bool result = false;
             if (_configuration.ShouldBuildSolution)
-                return buildSolution(projectList, runReport);
+                result = buildSolution(projectList, runReport);
             else
-                return buildProjects(projectList, runReport);
+                result = buildProjects(projectList, runReport);
+            projectList = postProcessBuildRuns(projectList);
+            return result;
 		}
 
         private bool buildProjects(RunInfo[] projectList, RunReport runReport)
