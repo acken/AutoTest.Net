@@ -9,5 +9,6 @@ namespace AutoTest.Core.BuildRunners
     public interface IPreProcessBuildruns
     {
         RunInfo[] PreProcess(RunInfo[] details);
+        RunInfo[] PostProcess(RunInfo[] details);
     }
 }

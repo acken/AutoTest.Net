@@ -12,5 +12,10 @@ namespace AutoTest.Core.BuildRunners
         {
             return details;
         }
+
+        public RunInfo[] PostProcess(RunInfo[] details)
+        {
+            return details;
+        }
     }
 }
