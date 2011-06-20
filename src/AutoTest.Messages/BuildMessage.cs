@@ -9,6 +9,11 @@ namespace AutoTest.Messages
         public int LinePosition { get; set; }
         public string ErrorMessage { get; set; }
 
+        public void UpdateFile(string file)
+        {
+            File = file;
+        }
+
         public override bool Equals(object obj)
         {
             var other = (BuildMessage)obj;

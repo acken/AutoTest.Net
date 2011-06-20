@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Messages;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -13,7 +14,12 @@ namespace AutoTest.Core.BuildRunners
             return details;
         }
 
-        public RunInfo[] PostProcess(RunInfo[] details)
+        public BuildRunResults PostProcessBuildResults(BuildRunResults runResults)
+        {
+            return runResults;
+        }
+
+        public RunInfo[] PostProcess(RunInfo[] details, ref RunReport runReport)
         {
             return details;
         }

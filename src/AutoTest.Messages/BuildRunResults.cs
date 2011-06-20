@@ -37,6 +37,11 @@ namespace AutoTest.Messages
             _timeSpent = timeSpent;
         }
 
+        public void UpdateProject(string project)
+        {
+            _project = project;
+        }
+
 		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
