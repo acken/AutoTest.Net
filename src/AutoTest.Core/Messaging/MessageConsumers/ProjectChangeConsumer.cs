@@ -323,7 +323,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         #endregion
 
-        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
+        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
         {
             var results = runTests(testRunner, runInfos, processWrapper);
             var modifiedResults = new List<TestRunResults>();
@@ -343,7 +343,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			informPreProcessor(modifiedResults.ToArray());
         }
 
-        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
+        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
         {
             try
             {

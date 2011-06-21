@@ -22,7 +22,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _runInParallel = false;
         private bool _startSuspended = false;
         private Func<bool> _abortWhen = null;
-        private Action<Platform, Action<ProcessStartInfo>> _processWrapper = null;
+        private Action<Platform, Version, Action<ProcessStartInfo>> _processWrapper = null;
         private Process _proc = null;
         private string _executable;
         private string _input;
@@ -52,7 +52,7 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 
-        public TestProcess WrapTestProcessWith(Action<Platform, Action<ProcessStartInfo>> processWrapper)
+        public TestProcess WrapTestProcessWith(Action<Platform, Version, Action<ProcessStartInfo>> processWrapper)
         {
             _processWrapper = processWrapper;
             return this;
@@ -71,7 +71,7 @@ namespace AutoTest.TestRunners.Shared
             if (_processWrapper == null)
                 run(new ProcessStartInfo());
             else
-                _processWrapper.Invoke(_targetedRun.Platform, run);
+                _processWrapper.Invoke(_targetedRun.Platform, _targetedRun.TargetFramework, run);
         }
 
         private void run(ProcessStartInfo startInfo)
