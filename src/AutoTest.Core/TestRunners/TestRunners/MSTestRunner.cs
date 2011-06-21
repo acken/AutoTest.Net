@@ -39,7 +39,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return _assemblyReader.GetReferences(assembly).Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
 		}
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
         {
 			var results = new List<TestRunResults>();
 			foreach (var runInfo in runInfos)
