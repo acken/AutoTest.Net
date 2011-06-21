@@ -87,8 +87,16 @@ namespace AutoTest.TestRunners.Shared
                 _feedback.ProcessStart(_executable + " " + arguments);
             _proc = new Process();
             _proc.StartInfo = startInfo;
-            _proc.StartInfo.FileName = _executable;
-            _proc.StartInfo.Arguments = arguments;
+			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+			{
+				_proc.StartInfo.FileName = "mono";
+				_proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
+			}
+			else
+			{
+            	_proc.StartInfo.FileName = _executable;
+				_proc.StartInfo.Arguments = arguments;
+			}
             _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             _proc.StartInfo.RedirectStandardOutput = true;
             _proc.StartInfo.UseShellExecute = false;

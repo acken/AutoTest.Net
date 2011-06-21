@@ -13,16 +13,20 @@ namespace AutoTest.TestRunners.Shared.Communication
         private NamedPipeServerStream _server = null;
         private bool _exit = false;
         private Stack<string> _unsentMessages = new Stack<string>();
+		private bool _isSupported = Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix;
 
         public PipeServer(string name)
         {
+			if (!_isSupported)
+				return;
             var thread = new Thread(run);
             thread.Start(name);
         }
-
+		
         public void Send(string message)
         {
-            _unsentMessages.Push(message);
+			if (_isSupported)
+            	_unsentMessages.Push(message);
         }
 
         private void run(object state)
@@ -60,11 +64,17 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             if (_server != null)
             {
-                _exit = true;
-                Thread.Sleep(20);
-                if (_server.IsConnected)
-                    _server.Disconnect();
-                _server.Dispose();
+				try
+				{
+	                _exit = true;
+	                Thread.Sleep(20);
+	                if (_server.IsConnected)
+	                	_server.Disconnect();
+					_server.Dispose();
+				}
+				catch
+				{
+				}
             }   
         }
     }
