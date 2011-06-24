@@ -26,6 +26,11 @@ namespace AutoTest.Messages
             setProperties(type, project, assembly, timeSpent, succeeded);
         }
 
+        public void UpdateProject(string project)
+        {
+            _project = project;
+        }
+
         private void setProperties(InformationType type, string project, string assembly, TimeSpan timeSpent, bool succeeded)
         {
             _type = type;

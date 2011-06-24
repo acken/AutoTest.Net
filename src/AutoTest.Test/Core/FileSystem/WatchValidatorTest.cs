@@ -135,6 +135,15 @@ namespace AutoTest.Test.Core.FileSystem
                 .ShouldPublish(getInfo("asomething{0}somefile.swx"))
                 .ShouldBeFalse();
 		}
+
+        [Test]
+        public void Should_invalidate_realtime_build_files()
+        {
+            _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
+            _validator
+                .ShouldPublish(getInfo("asomething{0}something_rltm_build_fl_kdfj.cs"))
+                .ShouldBeFalse();
+        }
 		
 		[Test]
         public void Should_invalidate_endswith_tilde()

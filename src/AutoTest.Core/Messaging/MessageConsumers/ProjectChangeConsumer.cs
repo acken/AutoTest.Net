@@ -124,6 +124,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return runInfos;
         }
 
+        private BuildRunResults postProcessBuildReports(BuildRunResults report)
+        {
+            foreach (var preProcessor in _preBuildProcessors)
+                report = preProcessor.PostProcessBuildResults(report);
+            return report;
+        }
+
+        private RunInfo[] postProcessBuildRuns(RunInfo[] runInfos, ref RunReport runReport)
+        {
+            foreach (var preProcessor in _preBuildProcessors)
+                runInfos = preProcessor.PostProcess(runInfos, ref runReport);
+            return runInfos;
+        }
+
         private void markAllAsBuilt(RunInfo[] list)
         {
             foreach (var info in list)
@@ -144,13 +158,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 return true;
 
             Debug.WriteInfo("Running builds");
+            BuildRunResults results = null;
             if (_configuration.ShouldBuildSolution)
-                return buildSolution(projectList, runReport);
+                results = buildSolution(projectList, runReport);
             else
-                return buildProjects(projectList, runReport);
+                results = buildProjects(projectList, runReport);
+            projectList = postProcessBuildRuns(projectList, ref runReport);
+            return results == null;
 		}
 
-        private bool buildProjects(RunInfo[] projectList, RunReport runReport)
+        private BuildRunResults buildProjects(RunInfo[] projectList, RunReport runReport)
         {
             var indirectlyBuilt = new List<string>();
             foreach (var file in projectList)
@@ -158,8 +175,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (file.ShouldBeBuilt)
                 {
                     Debug.WriteDebug("Set to build project {0}", file.Project.Key);
-                    if (!build(file, runReport))
-                        return false;
+                    var report = build(file, runReport);
+                    if (report != null)
+                        return report;
                 }
                 else
                 {
@@ -169,23 +187,27 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             }
             foreach (var project in indirectlyBuilt)
                 runReport.AddBuild(project, new TimeSpan(0), true);
-            return true;
+            return null;
         }
 
-        private bool buildSolution(RunInfo[] projectList, RunReport runReport)
+        private BuildRunResults buildSolution(RunInfo[] projectList, RunReport runReport)
         {
             var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None));
             if (File.Exists(buildExecutable))
             {
-                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.WatchToken, "", typeof(MSBuildRunner)));
+                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.SolutionToBuild, "", typeof(MSBuildRunner)));
 
-                var buildReport = _buildRunner.RunBuild(_configuration.WatchToken, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
+                var buildReport = _buildRunner.RunBuild(_configuration.SolutionToBuild, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
+                buildReport = postProcessBuildReports(buildReport);
                 var succeeded = buildReport.ErrorCount == 0;
                 runReport.AddBuild(_configuration.WatchToken, buildReport.TimeSpent, succeeded);
                 _bus.Publish(new BuildRunMessage(buildReport));
-                return succeeded;
+                if (succeeded)
+                    return null;
+                else
+                    return buildReport;
             }
-            return false;
+            return null;
         }
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
@@ -271,7 +293,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			return false;
 		}
 
-        private bool build(RunInfo info, RunReport runReport)
+        private BuildRunResults build(RunInfo info, RunReport runReport)
         {
             if (File.Exists(_configuration.BuildExecutable(info.Project.Value)))
             {
@@ -280,25 +302,28 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                                  info.Project.Key,
                                  info.Assembly,
                                  typeof(MSBuildRunner)));
-                if (!buildProject(info.Project, runReport))
-                    return false;
+                return buildProject(info.Project, runReport);
             }
 
-            return true;
+            return null;
         }
 
-        private bool buildProject(Project project, RunReport report)
+        private BuildRunResults buildProject(Project project, RunReport report)
         {
             var buildReport = _buildRunner.RunBuild(project, _configuration.BuildExecutable(project.Value), () => { return _exit; });
+            buildReport = postProcessBuildReports(buildReport);
             var succeeded = buildReport.ErrorCount == 0;
             report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);
             _bus.Publish(new BuildRunMessage(buildReport));
-            return succeeded;
+            if (succeeded)
+                return null;
+            else
+                return buildReport;
         }
 
         #endregion
 
-        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
+        private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
         {
             var results = runTests(testRunner, runInfos, processWrapper);
             var modifiedResults = new List<TestRunResults>();
@@ -318,7 +343,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			informPreProcessor(modifiedResults.ToArray());
         }
 
-        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
+        private TestRunResults[] runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo>> processWrapper)
         {
             try
             {
