@@ -48,7 +48,7 @@ namespace AutoTest.TestRunners
             }
 			
 			// We do this since NUnit threads some times keep staing in running mode even after finished.
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            //System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
 
         private static void writeHeader()
@@ -62,37 +62,36 @@ namespace AutoTest.TestRunners
         private static void tryRunTests()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledExceptionHandler;
-            var junction = new PipeJunction(_arguments.Channel);
-            try
-            {
-                var parser = new OptionsXmlReader(_arguments.InputFile);
-                parser.Parse();
-                if (!parser.IsValid)
-                    return;
-
-                run(parser, junction);
-
-                var writer = new ResultsXmlWriter(_results);
-                writer.Write(_arguments.OutputFile);
-            }
-            catch (Exception ex)
+            using (var junction = new PipeJunction(_arguments.Channel))
             {
                 try
                 {
-                    var result = new List<TestResult>();
-                    result.Add(ErrorHandler.GetError("Init", ex));
-                    var writer = new ResultsXmlWriter(result);
+                    var parser = new OptionsXmlReader(_arguments.InputFile);
+                    parser.Parse();
+                    if (!parser.IsValid)
+                        return;
+
+                    run(parser, junction);
+
+                    var writer = new ResultsXmlWriter(_results);
                     writer.Write(_arguments.OutputFile);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    try
+                    {
+                        var result = new List<TestResult>();
+                        result.Add(ErrorHandler.GetError("Init", ex));
+                        var writer = new ResultsXmlWriter(result);
+                        writer.Write(_arguments.OutputFile);
+                    }
+                    catch
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
             }
-            finally
-            {
-                junction = null;
-            }
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomainUnhandledExceptionHandler;
         }
 
         public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)

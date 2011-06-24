@@ -11,13 +11,14 @@ namespace AutoTest.TestRunners.Shared.Communication
     public class PipeServer : IDisposable
     {
         private NamedPipeServerStream _server = null;
+        private Thread _serverThread = null;
         private bool _exit = false;
         private Stack<string> _unsentMessages = new Stack<string>();
 
         public PipeServer(string name)
         {
-            var thread = new Thread(run);
-            thread.Start(name);
+            _serverThread = new Thread(run);
+            _serverThread.Start(name);
         }
 
         public void Send(string message)
@@ -30,15 +31,15 @@ namespace AutoTest.TestRunners.Shared.Communication
             try
             {
                 _server = new NamedPipeServerStream(state.ToString(), PipeDirection.Out);
-                _server.WaitForConnection();
-                while (_server.IsConnected)
+                while (!_exit)
                 {
-                    if (_exit && _unsentMessages.Count == 0)
-                        break;
-                    while (_unsentMessages.Count > 0)
+                    while (_server.IsConnected && _unsentMessages.Count > 0)
                         send(_unsentMessages.Pop());
                     Thread.Sleep(15);
                 }
+                if (_server.IsConnected)
+                    _server.Disconnect();
+                _server.Dispose();
             }
             catch
             {
@@ -62,10 +63,8 @@ namespace AutoTest.TestRunners.Shared.Communication
             {
                 _exit = true;
                 Thread.Sleep(20);
-                if (_server.IsConnected)
-                    _server.Disconnect();
-                _server.Dispose();
-            }   
+            }
+            _serverThread.Abort();
         }
     }
 }

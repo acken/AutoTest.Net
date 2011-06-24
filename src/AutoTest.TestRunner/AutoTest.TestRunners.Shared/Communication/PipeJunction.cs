@@ -8,10 +8,11 @@ using System.IO;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
-    public class PipeJunction
+    public class PipeJunction : IDisposable
     {
         private List<Thread> _pipes = new List<Thread>();
         private Stack<byte[]> _messages = new Stack<byte[]>();
+        private bool _exit = false;
 
         public PipeJunction(string pipeName)
         {
@@ -44,12 +45,11 @@ namespace AutoTest.TestRunners.Shared.Communication
                 var pipe = state.ToString();
                 using (var server = new NamedPipeServerStream(pipe, PipeDirection.Out))
                 {
-                    server.WaitForConnection();
-                    while (server.IsConnected)
+                    while (!_exit)
                     {
-                        if (_messages.Count == 0)
+                        if (server.IsConnected || _messages.Count == 0)
                         {
-                            Thread.Sleep(100);
+                            Thread.Sleep(15);
                             continue;
                         }
                         var bytes = _messages.Pop();
@@ -58,11 +58,20 @@ namespace AutoTest.TestRunners.Shared.Communication
                         buffer[buffer.Length - 1] = 0;
                         server.Write(buffer, 0, buffer.Length);
                     }
+                    if (server.IsConnected)
+                        server.Disconnect();
                 }
             }
             catch
             {
             }
+        }
+
+        public void Dispose()
+        {
+            _exit = true;
+            Thread.Sleep(20);
+            _pipes.ForEach(x => x.Abort());
         }
     }
 }
