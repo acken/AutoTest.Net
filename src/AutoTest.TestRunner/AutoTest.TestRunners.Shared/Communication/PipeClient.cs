@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             using (var client = new NamedPipeClientStream(".", pipe, PipeDirection.In))
             {
-                client.Connect();
+                client.Connect(2000);
                 while (client.IsConnected)
                 {
                     var str = getString(readMessage(client));

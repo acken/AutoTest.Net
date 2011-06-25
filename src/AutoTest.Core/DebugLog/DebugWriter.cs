@@ -7,7 +7,7 @@ using System.Reflection;
 using AutoTest.Core.Configuration;
 namespace AutoTest.Core.DebugLog
 {
-	public class DebugWriter : IWriteDebugInfo
+    public class DebugWriter : IWriteDebugInfo
 	{
         private IMessageBus _bus;
 		private object _padLock = new object();

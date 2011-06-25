@@ -10,15 +10,20 @@ namespace AutoTest.TestRunners.Shared.Communication
 {
     public class PipeJunction : IDisposable
     {
+        private NamedPipeServerStream _server;
         private List<Thread> _pipes = new List<Thread>();
         private Stack<byte[]> _messages = new Stack<byte[]>();
         private bool _exit = false;
 
         public PipeJunction(string pipeName)
         {
-            var handler = new Thread(startServer);
-            _pipes.Add(handler);
-            handler.Start(pipeName);
+            _server = new NamedPipeServerStream(pipeName, PipeDirection.Out);
+            var connect = new Thread(() => _server.WaitForConnection());
+            _pipes.Add(connect);
+            var server = new Thread(startServer);
+            _pipes.Add(server);
+            connect.Start();
+            server.Start();
         }
 
         public void Combine(string pipe)
@@ -38,29 +43,25 @@ namespace AutoTest.TestRunners.Shared.Communication
             _messages.Push(item);
         }
 
-        private void startServer(object state)
+        private void startServer()
         {
             try
             {
-                var pipe = state.ToString();
-                using (var server = new NamedPipeServerStream(pipe, PipeDirection.Out))
+                while (!_exit)
                 {
-                    while (!_exit)
+                    if (!_server.IsConnected || _messages.Count == 0)
                     {
-                        if (server.IsConnected || _messages.Count == 0)
-                        {
-                            Thread.Sleep(15);
-                            continue;
-                        }
-                        var bytes = _messages.Pop();
-                        var buffer = new byte[bytes.Length + 1];
-                        Array.Copy(bytes, buffer, bytes.Length);
-                        buffer[buffer.Length - 1] = 0;
-                        server.Write(buffer, 0, buffer.Length);
+                        Thread.Sleep(15);
+                        continue;
                     }
-                    if (server.IsConnected)
-                        server.Disconnect();
+                    var bytes = _messages.Pop();
+                    var buffer = new byte[bytes.Length + 1];
+                    Array.Copy(bytes, buffer, bytes.Length);
+                    buffer[buffer.Length - 1] = 0;
+                    _server.Write(buffer, 0, buffer.Length);
                 }
+                if (_server.IsConnected)
+                    _server.Disconnect();
             }
             catch
             {

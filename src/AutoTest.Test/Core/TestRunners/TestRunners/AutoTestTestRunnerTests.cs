@@ -60,7 +60,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
             _feedback.TestFinished(test);
             _feedback.TestFinished(test);
             _feedback.TestFinished(test);
-            Thread.Sleep(1000);
+            Thread.Sleep(1100);
             _feedback.TestFinished(test);
 
             _bus.AssertWasCalled(x => x.Publish<LiveTestStatusMessage>(null), x => x.IgnoreArguments());

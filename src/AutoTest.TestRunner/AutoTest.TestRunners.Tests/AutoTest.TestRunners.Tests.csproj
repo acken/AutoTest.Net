@@ -80,7 +80,10 @@
     <Compile Include="ArgumentParserTests.cs" />
     <Compile Include="AssemblyAnalysis\TargetFrameworkLocatorTests.cs" />
     <Compile Include="AssemblyAnalysis\TypeLocatorTests.cs" />
+    <Compile Include="AsyncFacilities\Timeout.cs" />
     <Compile Include="CmdArguments\OptionsParserTests.cs" />
+    <Compile Include="Communication\When_server_sends_a_message.cs" />
+    <Compile Include="Communication\When_two_servers_sends_messages_through_a_junction.cs" />
     <Compile Include="OptionsXmlWriterTests.cs" />
     <Compile Include="PluginLocatorTests.cs" />
     <Compile Include="Plugins\Plugin1.cs" />

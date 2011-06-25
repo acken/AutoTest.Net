@@ -11,7 +11,7 @@ namespace AutoTest.TestRunners.Shared.Communication
     public class PipeServer : IDisposable
     {
         private NamedPipeServerStream _server = null;
-        private Thread _serverThread = null;
+        private List<Thread> _activeThreads = new List<Thread>();
         private bool _exit = false;
         private Stack<string> _unsentMessages = new Stack<string>();
 		private bool _isSupported = Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix;
@@ -20,8 +20,13 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
 			if (!_isSupported)
 				return;
-            _serverThread = new Thread(run);
-            _serverThread.Start(name);
+            _server = new NamedPipeServerStream(name, PipeDirection.Out);
+            var connect = new Thread(() => _server.WaitForConnection());
+            _activeThreads.Add(connect);
+            var server = new Thread(run);
+            _activeThreads.Add(server);
+            connect.Start();
+            server.Start();
         }
 		
         public void Send(string message)
@@ -30,20 +35,16 @@ namespace AutoTest.TestRunners.Shared.Communication
             	_unsentMessages.Push(message);
         }
 
-        private void run(object state)
+        private void run()
         {
             try
             {
-                _server = new NamedPipeServerStream(state.ToString(), PipeDirection.Out);
                 while (!_exit)
                 {
                     while (_server.IsConnected && _unsentMessages.Count > 0)
                         send(_unsentMessages.Pop());
                     Thread.Sleep(15);
                 }
-                if (_server.IsConnected)
-                    _server.Disconnect();
-                _server.Dispose();
             }
             catch
             {
@@ -63,9 +64,13 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         public void Dispose()
         {
+            if (_server == null)
+                return;
             _exit = true;
             Thread.Sleep(20);
-            _serverThread.Abort();
+            if (_server.IsConnected)
+                _server.Disconnect();
+            _server.Dispose();
         }
     }
 }
