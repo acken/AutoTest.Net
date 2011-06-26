@@ -20,6 +20,8 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
 			if (!_isSupported)
 				return;
+            // The blocking synchronous way of using it is used here because there is a bug in mono
+            // the PipeOptions enum does not have the correct int values compared to ms .net version
             _server = new NamedPipeServerStream(name, PipeDirection.Out);
             var connect = new Thread(() => _server.WaitForConnection());
             _activeThreads.Add(connect);
@@ -45,6 +47,9 @@ namespace AutoTest.TestRunners.Shared.Communication
                         send(_unsentMessages.Pop());
                     Thread.Sleep(15);
                 }
+                if (_server.IsConnected)
+                    _server.Disconnect();
+                _server.Dispose();
             }
             catch
             {
@@ -64,13 +69,10 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         public void Dispose()
         {
-            if (_server == null)
-                return;
             _exit = true;
             Thread.Sleep(20);
-            if (_server.IsConnected)
-                _server.Disconnect();
-            _server.Dispose();
+            // Make sure we kill the waiting threads so the app can quit
+            _activeThreads.ForEach(x => x.Abort());
         }
     }
 }

@@ -17,6 +17,8 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         public PipeJunction(string pipeName)
         {
+            // The blocking synchronous way of using it is used here because there is a bug in mono
+            // the PipeOptions enum does not have the correct int values compared to ms .net version
             _server = new NamedPipeServerStream(pipeName, PipeDirection.Out);
             var connect = new Thread(() => _server.WaitForConnection());
             _pipes.Add(connect);
@@ -72,6 +74,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             _exit = true;
             Thread.Sleep(20);
+            // Make sure we kill the waiting threads so the app can quit
             _pipes.ForEach(x => x.Abort());
         }
     }
