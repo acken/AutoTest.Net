@@ -13,7 +13,7 @@ namespace AutoTest.Core.FileSystem
     {
 		private IConfiguration _configuration;
         private ICustomIgnoreProvider[] _ignoreProviders;
-		private string[] _defaultIgnores = new string[16];
+		private string[] _defaultIgnores = new string[17];
 
         public WatchValidator(IConfiguration configuration, ICustomIgnoreProvider[] ignoreProviders)
 		{
@@ -35,6 +35,7 @@ namespace AutoTest.Core.FileSystem
 			_defaultIgnores[13] = "*.swx";
 			_defaultIgnores[14] = "*~";
             _defaultIgnores[15] = "*_rltm_build_fl_*";
+            _defaultIgnores[16] = "*_mm_cache.bin";
 		}
 		
         public bool ShouldPublish(string filePath)

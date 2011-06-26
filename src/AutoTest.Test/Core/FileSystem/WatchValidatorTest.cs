@@ -117,7 +117,16 @@ namespace AutoTest.Test.Core.FileSystem
                 .ShouldPublish(getInfo("asomething{0}bin{0}AutoTest.Net{0}somefile.mm.dll"))
                 .ShouldBeFalse();
         }
-		
+
+        [Test]
+        public void Should_invalidate_mm_cache_files()
+        {
+            _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
+            _validator
+                .ShouldPublish(getInfo("asomething{0}with{0}somefolder{0}AutoTest.NET_mm_cache.bin"))
+                .ShouldBeFalse();
+        }
+
 		[Test]
         public void Should_invalidate_swp()
         {

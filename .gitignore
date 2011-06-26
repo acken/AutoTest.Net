@@ -26,4 +26,4 @@ Debug/
 Release/
 AutoTest.config
 AutoTest.config.old
-_mm_cache.bin
+*_mm_cache.bin
