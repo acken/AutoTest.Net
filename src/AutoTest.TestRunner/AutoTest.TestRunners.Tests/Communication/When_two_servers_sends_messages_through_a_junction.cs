@@ -11,6 +11,7 @@ namespace AutoTest.TestRunners.Tests.Communication
     [TestFixture]
     public class When_two_servers_sends_messages_through_a_junction
     {
+		[Category("slow")]
         [Test]
         public void client_receives_both_messages()
         {

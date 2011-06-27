@@ -11,6 +11,7 @@ namespace AutoTest.TestRunners.Tests.Communication
     [TestFixture]
     public class When_server_sends_a_message
     {
+		[Category("slow")]
         [Test]
         public void the_client_receives_it()
         {
