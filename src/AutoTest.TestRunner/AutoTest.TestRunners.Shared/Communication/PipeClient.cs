@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO.Pipes;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -16,12 +17,19 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             using (var client = new NamedPipeClientStream(".", pipe, PipeDirection.In))
             {
-                client.Connect(2000);
-                while (client.IsConnected)
+                try
                 {
-                    var str = getString(readMessage(client));
-                    if (str != null)
-                        onRecieve(str);
+                    client.Connect(4000);
+                    while (client.IsConnected)
+                    {
+                        var str = getString(readMessage(client));
+                        if (str != null)
+                            onRecieve(str);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(ex);
                 }
             }
         }
@@ -30,12 +38,19 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             using (var client = new NamedPipeClientStream(".", pipe, PipeDirection.In))
             {
-                client.Connect();
-                while (client.IsConnected)
+                try
                 {
-                    var bytes = readMessage(client);
-                    if (bytes.Length > 0)
-                        onRecieve(bytes);
+                    client.Connect(4000);
+                    while (client.IsConnected)
+                    {
+                        var bytes = readMessage(client);
+                        if (bytes.Length > 0)
+                            onRecieve(bytes);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(ex);
                 }
             }
         }
