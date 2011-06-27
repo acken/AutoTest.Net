@@ -128,7 +128,8 @@ namespace AutoTest.Core.Messaging
 		event EventHandler<ExternalCommandArgs> OnExternalCommand;
         event EventHandler<LiveTestFeedbackArgs> OnLiveTestFeedback;
         void Publish<T>(T message);
-		
+
+        string BuildProvider { get; }
 		void SetBuildProvider(string buildProvider);
     }
 }

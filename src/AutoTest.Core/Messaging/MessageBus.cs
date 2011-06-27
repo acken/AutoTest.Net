@@ -14,6 +14,8 @@ namespace AutoTest.Core.Messaging
         private List<BlockedMessage> _blockedMessages = new List<BlockedMessage>();
 		private string _buildProvider = "MSBuild";
 
+        public string BuildProvider { get { return _buildProvider; } }
+
         public event EventHandler<FileChangeMessageEventArgs> OnFileChangeMessage;
         public event EventHandler<RunStartedMessageEventArgs> OnRunStartedMessage;
         public event EventHandler<RunFinishedMessageEventArgs> OnRunFinishedMessage;
