@@ -118,6 +118,12 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _results.ToList().ForEach(x => Assert.Greater(x.TimeSpent, TimeSpan.Zero));
         }
+
+        [Test]
+        public void Should_find_the_assembly_name()
+        {
+            _results.First().Assembly.ShouldEqual("C:\\Some\\Path\\Machine.Specifications.Example.Random.dll");
+        }
     }
 
     [TestFixture]

@@ -105,7 +105,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 var arguments = _commandLineBuilder.Build(run);
 
                 var exitCode = _externalProcess.CreateAndWaitForExit(runnerExe, arguments);
-                if (exitCode != (int) ExitCode.Success)
+                if (exitCode < (int) ExitCode.Success)
                 {
                     return ErrorsFor(run.RunInfos,
                                      string.Format("Machine.Specifications runner failed with exit code {0} " +
