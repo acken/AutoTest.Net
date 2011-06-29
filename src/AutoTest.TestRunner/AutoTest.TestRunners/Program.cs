@@ -21,6 +21,7 @@ namespace AutoTest.TestRunners
         private static Arguments _arguments;
         private static List<TestResult> _results = new List<TestResult>();
         
+        [STAThread]
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
