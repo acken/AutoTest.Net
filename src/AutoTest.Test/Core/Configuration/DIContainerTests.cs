@@ -387,5 +387,11 @@ namespace AutoTest.Test.Core.Configuration
         {
             Assert.That(_locator.Locate<IWatchPathLocator>(), Is.InstanceOf<IWatchPathLocator>());
         }
+
+        [Test]
+        public void Shoud_register_abort_consumers()
+        {
+            Assert.That(_locator.LocateAll<IConsumerOf<AbortMessage>>().Length, Is.EqualTo(2));
+        }
     }
 }

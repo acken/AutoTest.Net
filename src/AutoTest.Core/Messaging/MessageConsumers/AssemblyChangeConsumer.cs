@@ -10,7 +10,7 @@ using System.Linq;
 using AutoTest.Core.Configuration;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-	public class AssemblyChangeConsumer : IOverridingConsumer<AssemblyChangeMessage>
+	public class AssemblyChangeConsumer : IOverridingConsumer<AssemblyChangeMessage>, IConsumerOf<AbortMessage>
 	{
 		private ITestRunner[] _testRunners;
 		private IMessageBus _bus;
@@ -69,6 +69,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _exit = false;
             _isRunning = false;
 		}
+
+        public void Consume(AbortMessage message)
+        {
+            Terminate();
+        }
 
         public void Terminate()
         {

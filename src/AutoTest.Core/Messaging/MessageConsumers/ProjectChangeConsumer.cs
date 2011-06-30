@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class ProjectChangeConsumer : IOverridingConsumer<ProjectChangeMessage>
+    class ProjectChangeConsumer : IOverridingConsumer<ProjectChangeMessage>, IConsumerOf<AbortMessage>
     {
         private bool _isRunning = false;
         private bool _exit = false;
@@ -63,6 +63,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _bus.Publish(new RunFinishedMessage(runReport));
             _exit = false;
             _isRunning = false;
+        }
+
+        public void Consume(AbortMessage message)
+        {
+            Terminate();
         }
 
         public void Terminate()

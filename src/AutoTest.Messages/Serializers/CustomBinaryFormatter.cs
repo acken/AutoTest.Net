@@ -70,6 +70,7 @@ namespace AutoTest.Messages.Serializers
             Register<ExternalCommandMessage>(18);
             Register<LiveTestStatus>(19);
             Register<LiveTestStatusMessage>(20);
+            Register<AbortMessage>(21);
         }
 
         public void Register<T>(int typeId) where T : ICustomBinarySerializable

@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbortMessage.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BuildMessage.cs" />
     <Compile Include="BuildRunResults.cs" />
