@@ -183,7 +183,15 @@ namespace AutoTest.Test
             output.Assembly.ShouldEqual("assembly1");
             output.Test.Name.ShouldEqual("Test1");
         }
-		
+
+        [Test]
+        public void Should_serializeabort_message()
+        {
+            var message = new AbortMessage("some string");
+            var output = serializeDeserialize(message);
+            output.Reason.ShouldEqual("some string");
+        }
+
 		private T serializeDeserialize<T>(T message)
 		{
 			using (var memStream = new MemoryStream())
