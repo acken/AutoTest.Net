@@ -10,48 +10,64 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
     public class SimpleTypeLocator
     {
-        private string _assembly;
-        private string _type;
+        private AssemblyDefinition _assembly = null;
 
-        public SimpleTypeLocator(string assembly, string type)
+        public SimpleTypeLocator(string assembly)
         {
-            _assembly = assembly;
-            _type = type;
+            if (!File.Exists(assembly))
+                return;
+            _assembly = AssemblyDefinition.ReadAssembly(assembly);
         }
 
-        public SimpleType Locate()
+        public string GetParent(string type)
         {
-            if (!File.Exists(_assembly))
+            var end = type.LastIndexOf('.');
+            if (end == -1)
                 return null;
-            var asm = AssemblyDefinition.ReadAssembly(_assembly);
-            foreach (var module in asm.Modules)
+            return type.Substring(0, end);
+        }
+
+        public SimpleClass LocateClass(string type)
+        {
+            var cls = locate(type);
+            if (cls == null)
+                return null;
+            if (cls.GetType().Equals(typeof(SimpleClass)))
+                return (SimpleClass)cls;
+            return null;
+        }
+
+        public SimpleMethod LocateMethod(string type)
+        {
+            var method = locate(type);
+            if (method == null)
+                return null;
+            if (method.GetType().Equals(typeof(SimpleMethod)))
+                return (SimpleMethod)method;
+            return null;
+        }
+
+        private SimpleType locate(string type)
+        {
+            foreach (var module in _assembly.Modules)
             {
-                var result = locateSimpleType(module.Types);
+                var result = locateSimpleType(module.Types, type);
                 if (result != null)
                     return result;
             }
             return null;
         }
 
-        public SimpleType LocateParent()
-        {
-            var end = _type.LastIndexOf('.');
-            if (end == -1)
-                return null;
-            _type = _type.Substring(0, end);
-            return Locate();
-        }
-
-        private SimpleType locateSimpleType(Collection<TypeDefinition> types)
+        private SimpleType locateSimpleType(Collection<TypeDefinition> types, string typeName)
         {
             foreach (var type in types)
             {
-                if (type.FullName.Equals(_type))
+                if (type.FullName.Equals(typeName))
                     return getType(type);
-                var result = locateSimpleType(type.NestedTypes);
+                var result = locateSimpleType(type.NestedTypes, typeName);
                 if (result != null)
                     return result;
-                result = locateSimpleType(type.Methods, type.FullName);
+                result = locateSimpleMethod(type.Methods, typeName, type.FullName);
                 if (result != null)
                     return result;
             }
@@ -60,15 +76,16 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 
         private SimpleType getType(TypeDefinition type)
         {
-            return new SimpleType(
-                TypeCategory.Class,
+            return new SimpleClass(
                 type.FullName,
                 getTypeAttributes(type),
-                type.Methods.Select(x => new SimpleType(
-                    TypeCategory.Method,
+                type.Fields.Select(x => new SimpleField(
                     type.FullName + "." + x.Name,
                     getAttributes(x.CustomAttributes),
-                    new SimpleType[] { })));
+                    x.FieldType.FullName)),
+                type.Methods.Select(x => new SimpleMethod(
+                    type.FullName + "." + x.Name,
+                    getAttributes(x.CustomAttributes))));
         }
 
         private IEnumerable<string> getTypeAttributes(TypeDefinition type)
@@ -103,13 +120,13 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             addBaseAttributes(attributes, type.BaseType as TypeDefinition);
         }
 
-        private SimpleType locateSimpleType(Collection<MethodDefinition> methods, string typeFullname)
+        private SimpleType locateSimpleMethod(Collection<MethodDefinition> methods, string typeName, string typeFullname)
         {
             foreach (var method in methods)
             {
                 var fullName = typeFullname + "." + method.Name;
-                if (fullName.Equals(_type))
-                    return new SimpleType(TypeCategory.Method, fullName, getAttributes(method.CustomAttributes), new SimpleType[] { });
+                if (fullName.Equals(typeName))
+                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes));
             }
             return null;
         }

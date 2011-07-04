@@ -5,25 +5,47 @@ using System.Text;
 
 namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
-    public enum TypeCategory
+    public class SimpleClass : SimpleType
     {
-        Class,
-        Method
+        public IEnumerable<SimpleField> Fields { get; private set; }
+        public IEnumerable<SimpleMethod> Methods { get; private set; }
+
+        public SimpleClass(string fullname, IEnumerable<string> attributes, IEnumerable<SimpleField> fields, IEnumerable<SimpleMethod> methods)
+            : base(fullname, attributes)
+        {
+            Fields = fields;
+            Methods = methods;
+        }
+    }
+
+    public class SimpleMethod : SimpleType
+    {
+        public SimpleMethod(string fullname, IEnumerable<string> attributes)
+            : base(fullname, attributes)
+        {
+        }
+    }
+
+    public class SimpleField : SimpleType
+    {
+        public string FieldType { get; private set; }
+
+        public SimpleField(string fullname, IEnumerable<string> attributes, string fieldType)
+            : base(fullname, attributes)
+        {
+            FieldType = fieldType;
+        }
     }
 
     public class SimpleType
     {
-        public TypeCategory Category { get; private set; }
-        public IEnumerable<string> Attributes { get; private set; }
         public string Fullname { get; private set; }
-        public IEnumerable<SimpleType> Methods { get; private set; }
+        public IEnumerable<string> Attributes { get; private set; }
 
-        public SimpleType(TypeCategory category, string fullname, IEnumerable<string> attributes, IEnumerable<SimpleType> methods)
+        public SimpleType(string fullname, IEnumerable<string> attributes)
         {
-            Category = category;
             Fullname = fullname;
             Attributes = attributes;
-            Methods = methods;
         }
     }
 }

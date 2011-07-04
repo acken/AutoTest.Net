@@ -11,7 +11,8 @@ namespace AutoTest.Messages
         NUnit = 1,
         MSTest = 2,
         XUnit = 3,
-        MSpec = 4
+        MSpec = 4,
+        MbUnit = 5
     }
 
     public static class TestRunnerConverter

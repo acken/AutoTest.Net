@@ -28,22 +28,18 @@ namespace AutoTest.TestRunners.XUnit
 
         public bool IsTest(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly, member);
-            var method = locator.Locate();
+            var locator = new SimpleTypeLocator(assembly);
+            var method = locator.LocateMethod(member);
             if (method == null)
-                return false;
-            if (method.Category != TypeCategory.Method)
                 return false;
             return method.Attributes.Contains("Xunit.FactAttribute");
         }
 
         public bool ContainsTestsFor(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly, member);
-            var cls = locator.Locate();
+            var locator = new SimpleTypeLocator(assembly);
+            var cls = locator.LocateClass(member);
             if (cls == null)
-                return false;
-            if (cls.Category != TypeCategory.Class)
                 return false;
             return cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
         }

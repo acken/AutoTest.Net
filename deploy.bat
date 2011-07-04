@@ -15,6 +15,8 @@ IF NOT EXIST %DEPLOYDIR% (
   mkdir %DEPLOYDIR%\TestRunners\NUnit
   mkdir %DEPLOYDIR%\TestRunners\XUnit
   mkdir %DEPLOYDIR%\TestRunners\MSTest
+  mkdir %DEPLOYDIR%\TestRunners\MSpec
+  mkdir %DEPLOYDIR%\TestRunners\MbUnit
 ) ELSE (
   IF NOT EXIST %DEPLOYDIR%\Icons (
 	mkdir %DEPLOYDIR%\Icons
@@ -26,6 +28,8 @@ IF NOT EXIST %DEPLOYDIR% (
 	mkdir %DEPLOYDIR%\TestRunners\NUnit
 	mkdir %DEPLOYDIR%\TestRunners\XUnit
 	mkdir %DEPLOYDIR%\TestRunners\MSTest
+	mkdir %DEPLOYDIR%\TestRunners\MSpec
+	mkdir %DEPLOYDIR%\TestRunners\MbUnit
   ) ELSE (
 	IF NOT EXIST %DEPLOYDIR%\TestRunners\NUnit (
 		mkdir %DEPLOYDIR%\TestRunners\NUnit
@@ -41,6 +45,16 @@ IF NOT EXIST %DEPLOYDIR% (
 		mkdir %DEPLOYDIR%\TestRunners\MSTest
 	) ELSE (
 		del %DEPLOYDIR%\TestRunners\MSTest\* /Q
+	)
+	IF NOT EXIST %DEPLOYDIR%\TestRunners\MSpec (
+		mkdir %DEPLOYDIR%\TestRunners\MSpec
+	) ELSE (
+		del %DEPLOYDIR%\TestRunners\MSpec\* /Q
+	)
+	IF NOT EXIST %DEPLOYDIR%\TestRunners\MbUnit (
+		mkdir %DEPLOYDIR%\TestRunners\MbUnit
+	) ELSE (
+		del %DEPLOYDIR%\TestRunners\MbUnit\* /Q
 	)
 	del %DEPLOYDIR%\TestRunners\* /Q
   )
@@ -73,6 +87,17 @@ copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\TestRunners\XUnit\xunit.ru
 
 copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\MSTest\AutoTest.TestRunners.MSTest.dll
 copy %BINARYDIR%\celer.Core.dll %DEPLOYDIR%\TestRunners\MSTest\celer.Core.dll
+
+copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll
+copy %BINARYDIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSTest\Machine.Specifications.dll
+
+copy %BINARYDIR%\AutoTest.TestRunners.MSpec.dll %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll
+copy %BINARYDIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSpec\Machine.Specifications.dll
+
+copy %BINARYDIR%\AutoTest.TestRunners.MbUnit.dll %DEPLOYDIR%\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll
+copy %BINARYDIR%\Gallio.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.dll
+copy %DIR%\lib\Gallio\Gallio.XmlSerializers.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.XmlSerializers.dll
+copy %BINARYDIR%\mbunit.config %DEPLOYDIR%\TestRunners\MbUnit\mbunit.config
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll

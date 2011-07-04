@@ -27,7 +27,7 @@ namespace AutoTest.TestRunners.Shared.Results
         public string TestName { get; set; }
         public TestState State { get; set; }
         public string Message { get; set; }
-        public IEnumerable<StackLine> StackLines { get { return _stackLines; } }
+        public StackLine[] StackLines { get { return _stackLines.ToArray(); } }
 
         public TestResult()
         {
