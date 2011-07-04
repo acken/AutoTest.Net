@@ -54,8 +54,8 @@ cp $BINARYDIR/xunit.runner.utility.dll $DEPLOYDIR/TestRunners/XUnit/xunit.runner
 cp $BINARYDIR/AutoTest.TestRunners.MSTest.dll $DEPLOYDIR/TestRunners/MSTest/AutoTest.TestRunners.MSTest.dll
 cp $BINARYDIR/celer.Core.dll $DEPLOYDIR/TestRunners/MSTest/celer.Core.dll
 
-cp $BINARYDIR\AutoTest.TestRunners.MSpec.dll $DEPLOYDIR/TestRunners/MSpec/AutoTest.TestRunners.MSpec.dll
-cp $BINARYDIR\Machine.Specifications.dll $DEPLOYDIR/TestRunners/MSpec/Machine.Specifications.dll
+cp $BINARYDIR/AutoTest.TestRunners.MSpec.dll $DEPLOYDIR/TestRunners/MSpec/AutoTest.TestRunners.MSpec.dll
+cp $BINARYDIR/Machine.Specifications.dll $DEPLOYDIR/TestRunners/MSpec/Machine.Specifications.dll
 
 cp $BINARYDIR/AutoTest.TestRunners.MbUnit.dll $DEPLOYDIR/TestRunners/MbUnit/AutoTest.TestRunners.MbUnit.dll
 cp $BINARYDIR/Gallio.dll $DEPLOYDIR/TestRunners/MbUnit/Gallio.dll
