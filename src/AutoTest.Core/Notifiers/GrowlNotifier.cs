@@ -23,14 +23,29 @@ namespace AutoTest.Core.Notifiers
 
         public void Notify(string msg, NotificationType type)
         {
-            runNotification(msg, type);
+            try
+            {
+                runNotification(msg, type);
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.WriteError(ex.ToString());
+            }
         }
 
         public bool IsSupported()
         {
-            if (_growl_executable == null)
-                locateGrowlExecutable();
-            return File.Exists(_growl_executable);
+            try
+            {
+                if (_growl_executable == null)
+                    locateGrowlExecutable();
+                return File.Exists(_growl_executable);
+            }
+            catch (Exception ex)
+            {
+                DebugLog.Debug.WriteError(ex.ToString());
+            }
+            return false;
         }
 
         #endregion
