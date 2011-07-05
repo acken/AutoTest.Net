@@ -114,7 +114,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                                             x.Message,
                                             x.StackLines.Select(y => (IStackLine)new StackLineMessage(y.Method, y.File, y.Line)).ToArray<IStackLine>(),
                                             x.DurationInMilliseconds
-                                            );
+                                            ).SetDisplayName(x.TestDisplayName);
         }
 
         private static TestRunStatus getTestState(TestState testState)

@@ -43,7 +43,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 {
                     if (_results.IsPartialTestRun && !wasRun(test))
                         continue;
-                    tests.Add(new TestResult(test.Value.Runner, TestRunStatus.Passed, test.Value.Name));
+                    tests.Add(new TestResult(test.Value.Runner, TestRunStatus.Passed, test.Value.Name, test.Value.Message, test.Value.StackTrace, test.Value.TimeSpent.TotalMilliseconds).SetDisplayName(test.Value.DisplayName));
                     Debug.WriteDebug("Adding deleted test previously failing as passed: " + test.Value.Name);
                 }
             }

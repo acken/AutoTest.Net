@@ -25,6 +25,7 @@ namespace AutoTest.TestRunners.Shared.Results
         public string TestFixture { get; set; }
         public double DurationInMilliseconds { get; set; }
         public string TestName { get; set; }
+        public string TestDisplayName { get; set; }
         public TestState State { get; set; }
         public string Message { get; set; }
         public StackLine[] StackLines { get { return _stackLines.ToArray(); } }
@@ -36,6 +37,7 @@ namespace AutoTest.TestRunners.Shared.Results
             TestFixture = "";
             DurationInMilliseconds = 0;
             TestName = "";
+            TestDisplayName = null;
             State = TestState.Failed;
             Message = "";
         }
@@ -47,6 +49,19 @@ namespace AutoTest.TestRunners.Shared.Results
             TestFixture = fixture;
             DurationInMilliseconds = milliseconds;
             TestName = testName;
+            TestDisplayName = null;
+            State = state;
+            Message = message;
+        }
+
+        public TestResult(string runner, string assembly, string fixture, double milliseconds, string testName, string testDisplayName, TestState state, string message)
+        {
+            Runner = runner;
+            Assembly = assembly;
+            TestFixture = fixture;
+            DurationInMilliseconds = milliseconds;
+            TestName = testName;
+            TestDisplayName = testDisplayName;
             State = state;
             Message = message;
         }

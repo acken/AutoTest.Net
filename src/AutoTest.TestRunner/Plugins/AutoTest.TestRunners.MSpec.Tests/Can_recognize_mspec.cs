@@ -63,6 +63,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
             Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
             Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestDisplayName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers.results_in_4"));
         }
 
         [Test]

@@ -104,7 +104,10 @@ namespace AutoTest.Core.Configuration
 
         public string AllSettings(string key)
         {
-            return _keys.Where(x => x.Key.Equals(key)).Select(x => x.Value).FirstOrDefault();
+            var setting = _keys.Where(x => x.Key.Equals(key)).Select(x => x.Value).FirstOrDefault();
+            if (setting == null)
+                return "";
+            return setting;
         }
 		
 		public void SetBuildProvider()

@@ -23,6 +23,7 @@ namespace AutoTest.TestRunners.Tests.Results
             Assert.That(results.ElementAt(0).TestFixture, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture1"));
             Assert.That(results.ElementAt(0).DurationInMilliseconds, Is.EqualTo(100));
             Assert.That(results.ElementAt(0).TestName, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture1.Should_fail"));
+            Assert.That(results.ElementAt(0).TestDisplayName, Is.Null);
             Assert.That(results.ElementAt(0).StackLines.Count(), Is.EqualTo(1));
             Assert.That(results.ElementAt(0).StackLines.ElementAt(0).File, Is.EqualTo(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Runners.NUnit.Tests.TestResource\Fixture1.cs"));
             Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Line, Is.EqualTo(21));
@@ -37,6 +38,7 @@ namespace AutoTest.TestRunners.Tests.Results
             Assert.That(results.ElementAt(4).State, Is.EqualTo(AutoTest.TestRunners.Shared.Results.TestState.Passed));
             Assert.That(results.ElementAt(4).TestFixture, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2"));
             Assert.That(results.ElementAt(4).TestName, Is.EqualTo("AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again"));
+            Assert.That(results.ElementAt(4).TestDisplayName, Is.EqualTo("Alternative description"));
             Assert.That(results.ElementAt(4).StackLines.Count(), Is.EqualTo(0));
         }
 

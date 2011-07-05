@@ -59,6 +59,7 @@ namespace AutoTest.TestRunners.MSpec
                     specification.ContainingType,
                     DateTime.Now.Subtract(_start).TotalMilliseconds,
                     specification.ContainingType,
+                    specification.ContainingType + "." + specification.FieldName,
                     getState(result.Status),
                     getMessage(result.Exception));
             test.AddStackLines(getStackLines(result.Exception));

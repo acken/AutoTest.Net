@@ -35,7 +35,7 @@ namespace AutoTest.TestRunners.Tests.Results
                 "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2", 20, "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass", Shared.Results.TestState.Passed, ""));
 
             result.Add(new TestResult("nunit", @"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Runners.NUnit.Tests.TestResource\bin\AutoTest.NET\AutoTest.Runners.NUnit.Tests.TestResource.dll",
-                "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2", 250, "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again", Shared.Results.TestState.Passed, ""));
+                "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2", 250, "AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again", "Alternative description", Shared.Results.TestState.Passed, ""));
 
             var file = Path.GetTempFileName();
             var writer = new ResultsXmlWriter(result);

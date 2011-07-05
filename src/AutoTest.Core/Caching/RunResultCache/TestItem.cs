@@ -60,7 +60,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 "Message:{4}{2}{4}" +
                 "Stack trace{4}{3}",
                 Key,
-                Value.Name,
+                Value.DisplayName,
                 Value.Message,
                 stackTrace.ToString(),
 			    Environment.NewLine);

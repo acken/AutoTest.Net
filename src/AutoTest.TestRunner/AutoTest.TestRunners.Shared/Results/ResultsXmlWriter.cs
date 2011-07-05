@@ -59,6 +59,8 @@ namespace AutoTest.TestRunners.Shared.Results
                             writer.WriteStartElement("test");
                             writer.WriteAttributeString("state", test.State.ToString());
                             writer.WriteAttributeString("name", test.TestName);
+                            if (test.TestDisplayName != null)
+                                writer.WriteAttributeString("displayName", test.TestDisplayName);
                             writer.WriteAttributeString("duration", test.DurationInMilliseconds.ToString());
                             writer.WriteStartElement("message");
                             writer.WriteCData(test.Message);

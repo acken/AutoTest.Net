@@ -29,7 +29,7 @@
         <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass" duration="20">
           <message><![CDATA[]]></message>
         </test>
-        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again" duration="250">
+        <test state="Passed" name="AutoTest.Runners.NUnit.Tests.TestResource.Fixture2.Should_also_pass_again" displayName="Alternative description" duration="250">
           <message><![CDATA[]]></message>
         </test>
       </fixture>

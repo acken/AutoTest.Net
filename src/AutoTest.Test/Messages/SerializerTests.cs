@@ -121,7 +121,7 @@ namespace AutoTest.Test
 		[Test]
 		public void Should_serialize_test_run_message()
 		{
-			var testResults = new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }, 34) };
+			var testResults = new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "message", new IStackLine[] { new StackLineMessage("method name", "file", 13) }, 34).SetDisplayName("display name") };
             var results = new TestRunResults("project 1", "assembly", false, TestRunner.NUnit, testResults);
 			results.SetTimeSpent(new TimeSpan(12345));
 			var message = new TestRunMessage(results);
@@ -134,6 +134,7 @@ namespace AutoTest.Test
             output.Results.All[0].Runner.ShouldEqual(TestRunner.NUnit);
 			output.Results.All[0].Status.ShouldEqual(TestRunStatus.Passed);
 			output.Results.All[0].Name.ShouldEqual("Test name");
+            output.Results.All[0].DisplayName.ShouldEqual("display name");
 			output.Results.All[0].Message.ShouldEqual("message");
 			output.Results.All[0].StackTrace[0].Method.ShouldEqual("method name");
 			output.Results.All[0].StackTrace[0].File.ShouldEqual("file");

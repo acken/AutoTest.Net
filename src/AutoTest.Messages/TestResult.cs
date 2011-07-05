@@ -9,6 +9,7 @@ namespace AutoTest.Messages
         private TestRunner _runner;
 		private TestRunStatus _status;
         private string _name = "";
+        private string _displayName = null;
         private string _message = "";
         private IStackLine[] _stackTrace;
         private static readonly TestResult _passResult;
@@ -90,6 +91,16 @@ namespace AutoTest.Messages
             get { return _name; }
         }
 
+        public string DisplayName
+        {
+            get
+            {
+                if (_displayName == null)
+                    return _name;
+                return _displayName;
+            }
+        }
+
         public string Message
         {
             get { return _message; } set { _message = value; }
@@ -98,6 +109,12 @@ namespace AutoTest.Messages
         public IStackLine[] StackTrace
         {
             get { return _stackTrace; } set { _stackTrace = value; }
+        }
+
+        public TestResult SetDisplayName(string name)
+        {
+            _displayName = name;
+            return this;
         }
 
         public override bool Equals(object obj)
@@ -125,6 +142,10 @@ namespace AutoTest.Messages
             writer.Write((int)_runner);
 			writer.Write((int) _status);
 			writer.Write((string) _name);
+            if (_displayName == null)
+                writer.Write("");
+            else
+                writer.Write(_displayName);
 			writer.Write((string) _message);
             writer.Write((double)TimeSpent.Ticks);
             writer.Write((int)_stackTrace.Length);
@@ -142,6 +163,9 @@ namespace AutoTest.Messages
             _runner = (TestRunner)reader.ReadInt32();
 			_status = (TestRunStatus) reader.ReadInt32();
 			_name = reader.ReadString();
+            _displayName = reader.ReadString();
+            if (_displayName == "")
+                _displayName = null;
 			_message = reader.ReadString();
             TimeSpent = new TimeSpan((long)reader.ReadDouble());
 			var count = reader.ReadInt32();
@@ -155,7 +179,7 @@ namespace AutoTest.Messages
 			}
 			_stackTrace = stackTrace.ToArray();
 		}
-		#endregion
+		#endregion        
     }
 }
 

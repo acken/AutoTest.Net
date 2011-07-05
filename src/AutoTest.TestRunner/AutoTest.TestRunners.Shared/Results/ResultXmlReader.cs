@@ -130,6 +130,7 @@ namespace AutoTest.TestRunners.Shared.Results
                 _currentTest.State = getTestState(reader.GetAttribute("state"));
                 _currentTest.DurationInMilliseconds = double.Parse(reader.GetAttribute("duration"));
                 _currentTest.TestName = reader.GetAttribute("name");
+                _currentTest.TestDisplayName = reader.GetAttribute("displayName");
             }
         }
 
