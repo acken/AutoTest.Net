@@ -16,17 +16,21 @@ Features
 		* MSBuild.exe
 		* Mono's xbuild
 	* Supported test runners
-		* AutoTest.TestRunner (Built in runner supporting NUNit and XUnit pr today)
-		* NUnit (Console runner)
-		* XUnit (Console runner)
-		* MSpec (Console runner)
-		* MSTest
+		* AutoTest.TestRunner (Built in runner) supporting:
+			* NUnit
+			* XUnit
+			* MSTest
+			* MSpec
+			* MbUnit
+		* Native Console runner for NUnit
+		* Native Console runner for XUnit
+		* Native Console runner for MSpec
+		* Native Console runner for MSTest
 	* Supports notifications through
 		* notify-send (Linux)
 		* Snarl through it's tcp interface (Windows)
 		* Growl (Mac, Windows)
 	* Supports configurable ignore files using the .gitignore format
-	* Local config files extending the main config
 		* The attribute override="merge" will merge with original
 		* The attribute override="exclude" will remove it all together
 
