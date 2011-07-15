@@ -32,7 +32,8 @@ namespace AutoTest.TestRunners.NUnit
             var method = locator.LocateMethod(member);
             if (method == null)
                 return false;
-            return method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute");
+            return (method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute")) &&
+                !method.IsAbstract;
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -41,7 +42,7 @@ namespace AutoTest.TestRunners.NUnit
             var cls = locator.LocateClass(member);
             if (cls == null)
                 return false;
-            return cls.Attributes.Contains("NUnit.Framework.TestFixtureAttribute");
+            return !cls.IsAbstract && cls.Attributes.Contains("NUnit.Framework.TestFixtureAttribute");
         }
 
         public bool ContainsTestsFor(string assembly)

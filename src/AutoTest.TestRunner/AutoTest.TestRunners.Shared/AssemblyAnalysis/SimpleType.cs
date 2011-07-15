@@ -7,12 +7,14 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
     public class SimpleClass : SimpleType
     {
+        public bool IsAbstract { get; private set; }
         public IEnumerable<SimpleField> Fields { get; private set; }
         public IEnumerable<SimpleMethod> Methods { get; private set; }
 
-        public SimpleClass(string fullname, IEnumerable<string> attributes, IEnumerable<SimpleField> fields, IEnumerable<SimpleMethod> methods)
+        public SimpleClass(string fullname, IEnumerable<string> attributes, IEnumerable<SimpleField> fields, IEnumerable<SimpleMethod> methods, bool isAbstract)
             : base(fullname, attributes)
         {
+            IsAbstract = isAbstract;
             Fields = fields;
             Methods = methods;
         }
@@ -20,9 +22,12 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 
     public class SimpleMethod : SimpleType
     {
-        public SimpleMethod(string fullname, IEnumerable<string> attributes)
+        public bool IsAbstract { get; private set; }
+
+        public SimpleMethod(string fullname, IEnumerable<string> attributes, bool isAbstract)
             : base(fullname, attributes)
         {
+            IsAbstract = isAbstract;
         }
     }
 

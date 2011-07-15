@@ -39,7 +39,8 @@ namespace AutoTest.TestRunners.MSpec
             var fixture = locator.LocateClass(member);
             if (fixture == null)
                 return false;
-            return fixture.Fields.Count(x =>
+            return !fixture.IsAbstract &&
+                fixture.Fields.Count(x =>
                 x.FieldType == "Machine.Specifications.Establish" ||
                 x.FieldType == "Machine.Specifications.It" ||
                 x.FieldType == "Machine.Specifications.Because") > 0;

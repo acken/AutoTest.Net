@@ -32,7 +32,8 @@ namespace AutoTest.TestRunners.XUnit
             var method = locator.LocateMethod(member);
             if (method == null)
                 return false;
-            return method.Attributes.Contains("Xunit.FactAttribute");
+            return method.Attributes.Contains("Xunit.FactAttribute") &&
+                !method.IsAbstract;
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -41,7 +42,7 @@ namespace AutoTest.TestRunners.XUnit
             var cls = locator.LocateClass(member);
             if (cls == null)
                 return false;
-            return cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
+            return !cls.IsAbstract && cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
         }
 
         public bool ContainsTestsFor(string assembly)

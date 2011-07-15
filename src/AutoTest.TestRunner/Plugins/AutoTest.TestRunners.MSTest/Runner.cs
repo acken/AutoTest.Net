@@ -33,7 +33,8 @@ namespace AutoTest.TestRunners.MSTest
             var method = locator.LocateMethod(member);
             if (method == null)
                 return false;
-            return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute");
+            return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute") &&
+                !method.IsAbstract;
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -42,7 +43,7 @@ namespace AutoTest.TestRunners.MSTest
             var cls = locator.LocateClass(member);
             if (cls == null)
                 return false;
-            return cls.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute");
+            return !cls.IsAbstract && cls.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute");
         }
 
         public bool ContainsTestsFor(string assembly)

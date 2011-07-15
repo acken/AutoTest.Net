@@ -85,7 +85,9 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                     x.FieldType.FullName)),
                 type.Methods.Select(x => new SimpleMethod(
                     type.FullName + "." + x.Name,
-                    getAttributes(x.CustomAttributes))));
+                    getAttributes(x.CustomAttributes),
+                    x.IsAbstract)),
+                    type.IsAbstract);
         }
 
         private IEnumerable<string> getTypeAttributes(TypeDefinition type)
@@ -126,7 +128,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             {
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(typeName))
-                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes));
+                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract);
             }
             return null;
         }
