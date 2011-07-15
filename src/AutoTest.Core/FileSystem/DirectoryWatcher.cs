@@ -166,7 +166,10 @@ namespace AutoTest.Core.FileSystem
         {
             if (Directory.Exists(file.FullName))
                 return;
-            if (!_bus.BuildProvider.Equals("NoBuild") && !_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))
+            var fileChangeProdiver = true;
+            if (_bus.BuildProvider != null)
+                fileChangeProdiver = !_bus.BuildProvider.Equals("NoBuild");
+            if (fileChangeProdiver && !_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))
                 return;
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
