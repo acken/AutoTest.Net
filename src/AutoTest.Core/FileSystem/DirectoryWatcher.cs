@@ -92,7 +92,6 @@ namespace AutoTest.Core.FileSystem
 
         private void setWatchPath(string path)
         {
-            int i = 3;
             if (_isWatchingSolution && _configuration.UseLowestCommonDenominatorAsWatchPath)
                 path = _watchPathLocator.Locate(path);
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
@@ -167,7 +166,7 @@ namespace AutoTest.Core.FileSystem
         {
             if (Directory.Exists(file.FullName))
                 return;
-            if (!_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))
+            if (!_bus.BuildProvider.Equals("NoBuild") && !_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))
                 return;
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
