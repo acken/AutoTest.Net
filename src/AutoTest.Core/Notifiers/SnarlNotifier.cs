@@ -40,7 +40,9 @@ namespace AutoTest.Core.Notifiers
                     classType = CLASS_FAIL;
                     break;
             }
-            send(string.Format("type=SNP#?version=1.0#?action=notification#?app={0}#?class={1}#?title={2}#?text={3}#?timeout=5", APP_NAME, classType, MSG_TITLE, msg));
+            var message = string.Format("type=SNP#?version=1.0#?action=notification#?app={0}#?class={1}#?title={2}#?text={3}#?timeout=5", APP_NAME, classType, MSG_TITLE, msg);
+            Debug.WriteDebug("Sending Snarl notification: {0}", message);
+            send(message);
         }
 
         public bool IsSupported()

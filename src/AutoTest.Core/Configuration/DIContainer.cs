@@ -163,13 +163,25 @@ namespace AutoTest.Core.Configuration
 		private void initializeNotifiers()
 		{
             if ((new notify_sendNotifier()).IsSupported())
+            {
+                Debug.WriteDebug("Notify send support found, endabling notify send notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<notify_sendNotifier>());
+            }
             else if ((new SnarlNotifier()).IsSupported())
+            {
+                Debug.WriteDebug("Snarl support found, endabling Snarl notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<SnarlNotifier>());
+            }
             else if ((new GrowlNotifier(null)).IsSupported())
+            {
+                Debug.WriteDebug("Growl support found, endabling Growl notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
+            }
             else
+            {
+                Debug.WriteDebug("No notification support found, disabling notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<NullNotifier>());
+            }
 		}
     }
 }

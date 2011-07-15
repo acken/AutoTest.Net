@@ -85,11 +85,11 @@ namespace AutoTest.Core.Notifiers
 				args = string.Format("--image \"{0}\" --title \"AutoTest.Net\" --message \"{1}\"", icon, msg);
 			else
             	args = string.Format("/t:\"AutoTest.Net\" /i:\"{0}\" \"{1}\"", icon, msg);
+            DebugLog.Debug.WriteDebug("Sending Growl notification: {0} {1}", _growl_executable, args);
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(_growl_executable, args);
             process.StartInfo.CreateNoWindow = true;
             process.Start();
-			process.WaitForExit();
         }
     }
 }
