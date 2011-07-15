@@ -141,18 +141,36 @@ namespace AutoTest.Messages
 		{
             writer.Write((int)_runner);
 			writer.Write((int) _status);
-			writer.Write((string) _name);
+            
+            if (_name == null)
+                writer.Write("");
+            else
+                writer.Write(_name);
+
             if (_displayName == null)
                 writer.Write("");
             else
                 writer.Write(_displayName);
-			writer.Write((string) _message);
+
+            if (_message == null)
+                writer.Write("");
+            else
+			    writer.Write((string) _message);
+
             writer.Write((double)TimeSpent.Ticks);
             writer.Write((int)_stackTrace.Length);
 			foreach (var line in _stackTrace)
 			{
-				writer.Write((string) line.Method);
-				writer.Write((string) line.File);
+                if (line.Method == null)
+                    writer.Write("");
+                else
+				    writer.Write((string) line.Method);
+
+                if (line.File == null)
+                    writer.Write("");
+                else
+				    writer.Write((string) line.File);
+
 				writer.Write((int) line.LineNumber);
 			}
 		}
