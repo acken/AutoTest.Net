@@ -7,6 +7,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Messages;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -165,7 +166,7 @@ namespace AutoTest.Core.FileSystem
         {
             if (Directory.Exists(file.FullName))
                 return;
-            if (!_configuration.WatchAllFiles && !(isProjectFile(file.FullName) || _cache.IsProjectFile(file.FullName)))
+            if (!_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))
                 return;
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
