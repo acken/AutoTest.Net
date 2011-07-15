@@ -35,6 +35,7 @@ namespace AutoTest.TestRunners
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
             Logger.Write("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
             var runner = getRunner(plugin);
+            var currentDirectory = Environment.CurrentDirectory;
             try
             {
                 if (runner == null)
@@ -49,6 +50,9 @@ namespace AutoTest.TestRunners
                         return _results;
                     Logger.Write("Initializing channel");
                     runner.SetLiveFeedbackChannel(new TestFeedbackProvider(server));
+                    var newCurrent = Path.GetDirectoryName(settings.Assembly.Assembly);
+                    Logger.Write("Setting current directory to " + newCurrent);
+                    Environment.CurrentDirectory = newCurrent;
                     Logger.Write("Starting test run");
                     return runner.Run(settings);
                 }
@@ -59,6 +63,7 @@ namespace AutoTest.TestRunners
             }
             finally
             {
+                Environment.CurrentDirectory = currentDirectory;
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
             }
         }
