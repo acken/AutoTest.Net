@@ -9,6 +9,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Messages;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.Caching;
+using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Test.Core
 {
@@ -242,6 +243,7 @@ namespace AutoTest.Test.Core
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("some_project_file_for_detection.csproj");
+            _cahce.Stub(c => c.Get<Project>(file)).Return(new Project("", new ProjectDocument(ProjectType.VisualBasic)));
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
             watcher.Pause();
@@ -251,6 +253,29 @@ namespace AutoTest.Test.Core
             Thread.Sleep(450);
 
             messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
+        }
+
+        [Test]
+        public void Should_never_publish_csharp_project_files_when_not_in_cache()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("some_project_file_for_detection.csproj");
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasNotCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
         }
 
         [Test]
@@ -265,6 +290,7 @@ namespace AutoTest.Test.Core
             configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
             var file = Path.GetFullPath("some_project_file_for_detection.vbproj");
+            _cahce.Stub(c => c.Get<Project>(file)).Return(new Project("", new ProjectDocument(ProjectType.VisualBasic)));
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
             watcher.Pause();

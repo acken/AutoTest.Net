@@ -92,6 +92,7 @@ namespace AutoTest.Core.FileSystem
 
         private void setWatchPath(string path)
         {
+            int i = 3;
             if (_isWatchingSolution && _configuration.UseLowestCommonDenominatorAsWatchPath)
                 path = _watchPathLocator.Locate(path);
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
