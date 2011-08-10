@@ -25,7 +25,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpEF7D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp5F24.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpA3B9.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)
@@ -154,7 +154,8 @@ namespace AutoTest.TestRunners
             var handles = new List<ManualResetEvent>();
             foreach (var plugin in getPlugins(parser))
             {
-                foreach (var run in parser.Options.TestRuns)
+                var instance = plugin.New();
+                foreach (var run in parser.Options.TestRuns.Where(x => instance.Handles(x.ID)))
                 {
                     foreach (var assembly in run.Assemblies)
                     {

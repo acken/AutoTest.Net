@@ -49,6 +49,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
         }
 
         [Test]
+        [Category("slow")]
         public void Should_publish_status_every_second()
         {
             _cache.Stub(x => x.Failed).Return(new TestItem[] { });

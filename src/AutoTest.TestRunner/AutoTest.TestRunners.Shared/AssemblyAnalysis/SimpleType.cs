@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
+    [Serializable]
     public class SimpleClass : SimpleType
     {
         public bool IsAbstract { get; private set; }
@@ -20,6 +21,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         }
     }
 
+    [Serializable]
     public class SimpleMethod : SimpleType
     {
         public bool IsAbstract { get; private set; }
@@ -31,6 +33,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         }
     }
 
+    [Serializable]
     public class SimpleField : SimpleType
     {
         public string FieldType { get; private set; }
@@ -42,6 +45,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         }
     }
 
+    [Serializable]
     public class SimpleType
     {
         public string Fullname { get; private set; }

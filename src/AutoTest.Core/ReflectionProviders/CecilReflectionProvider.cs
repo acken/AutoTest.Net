@@ -10,7 +10,7 @@ using Mono.Collections.Generic;
 
 namespace AutoTest.Core.ReflectionProviders
 {
-    class CecilReflectionProvider : IReflectionProvider
+    public class CecilReflectionProvider : IReflectionProvider
     {
         private AssemblyDefinition _assembly = null;
 

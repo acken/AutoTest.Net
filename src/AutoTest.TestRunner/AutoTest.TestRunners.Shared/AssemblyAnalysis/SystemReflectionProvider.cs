@@ -11,9 +11,92 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
     public class SystemReflectionProvider : IReflectionProvider
     {
-        private Assembly _assembly;
+        private AppDomain _childDomain = null;
+        private ISystemReflectionProvider_Internal _locator;
 
         public SystemReflectionProvider(string assembly)
+        {
+            try
+            {
+                AppDomainSetup domainSetup = new AppDomainSetup()
+                {
+                    ApplicationBase = Path.GetDirectoryName(assembly),
+                    ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
+                    LoaderOptimization = LoaderOptimization.MultiDomainHost
+                };
+                _childDomain = AppDomain.CreateDomain("Type locator app domain", null, domainSetup);
+
+                // Create an instance of the runtime in the second AppDomain. 
+                // A proxy to the object is returned.
+                _locator = (ISystemReflectionProvider_Internal)_childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(SystemReflectionProvider_Internal).FullName);
+                _locator.Load(assembly);
+            }
+            catch (Exception ex)
+            {
+                Logging.Logger.Write(ex);
+            }
+        }
+
+        public string GetName()
+        {
+            return _locator.GetName();
+        }
+
+        public Version GetTargetFramework()
+        {
+            return new Version(_locator.GetTargetFramework());
+        }
+
+        public Platform GetPlatform()
+        {
+            return _locator.GetPlatform();
+        }
+
+        public IEnumerable<string> GetReferences()
+        {
+            return _locator.GetReferences();
+        }
+
+        public string GetParentType(string type)
+        {
+            return _locator.GetParentType(type);
+        }
+
+        public SimpleClass LocateClass(string type)
+        {
+            return _locator.LocateClass(type);
+        }
+
+        public SimpleMethod LocateMethod(string type)
+        {
+            return _locator.LocateMethod(type);
+        }
+
+        public void Dispose()
+        {
+            _locator = null;
+            if (_childDomain != null)
+                AppDomain.Unload(_childDomain);
+        }
+    }
+
+    public interface ISystemReflectionProvider_Internal
+    {
+        void Load(string assembly);
+        string GetName();
+        string GetTargetFramework();
+        Platform GetPlatform();
+        List<string> GetReferences();
+        string GetParentType(string type);
+        SimpleClass LocateClass(string type);
+        SimpleMethod LocateMethod(string type);
+    }
+
+    public class SystemReflectionProvider_Internal : MarshalByRefObject, ISystemReflectionProvider_Internal
+    {
+        private Assembly _assembly;
+
+        public void Load(string assembly)
         {
             if (!File.Exists(assembly))
                 return;
@@ -41,17 +124,17 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             return _assembly.FullName;
         }
 
-        public Version GetTargetFramework()
+        public string GetTargetFramework()
         {
             try
             {
                 var runtime = _assembly.ImageRuntimeVersion.Replace("v", "");
                 var ver = new Version(runtime);
-                return new Version(ver.Major, ver.Minor);
+                return new Version(ver.Major, ver.Minor).ToString();
             }
             catch
             {
-                return new Version();
+                return new Version().ToString();
             }
         }
 
@@ -76,7 +159,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             }
         }
 
-        public IEnumerable<string> GetReferences()
+        public List<string> GetReferences()
         {
             try
             {
@@ -118,11 +201,6 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             if (method.GetType().Equals(typeof(SimpleMethod)))
                 return (SimpleMethod)method;
             return null;
-        }
-
-        public void Dispose()
-        {
-            _assembly = null;
         }
 
         private SimpleType locate(string type)

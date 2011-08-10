@@ -94,13 +94,10 @@ namespace AutoTest.TestRunners
             {
                 if (_assemblyCache.ContainsValue(f))
                     return false;
-                using (var assembly = Reflect.On(f))
-                {
-                    var name = assembly.GetName();
-                    if (!_assemblyCache.ContainsKey(name))
-                        _assemblyCache.Add(name, f);
-                    return name.Equals(args.Name);
-                }
+                var name = Assembly.ReflectionOnlyLoadFrom(f).FullName;
+                if (!_assemblyCache.ContainsKey(name))
+                    _assemblyCache.Add(name, f);
+                return name.Equals(args.Name);
             }
             catch
             {
