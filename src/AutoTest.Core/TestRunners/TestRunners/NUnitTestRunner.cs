@@ -19,10 +19,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;
-		private IAssemblyReader _assemblyReader;
+		private IAssemblyPropertyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyReader assemblyReader, IFileSystemService fsService)
+        public NUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyPropertyReader assemblyReader, IFileSystemService fsService)
         {
             _bus = bus;
             _configuration = configuration;

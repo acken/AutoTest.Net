@@ -1,5 +1,4 @@
 using System;
-
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem;
@@ -7,12 +6,9 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.TestRunners.TestRunners;
 using AutoTest.Messages;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 using System.IO;
-using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -23,7 +19,7 @@ namespace AutoTest.Test.Core.TestRunners
         public void SetUp()
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _assemblyReader = MockRepository.GenerateMock<IAssemblyReader>();
+            _assemblyReader = MockRepository.GenerateMock<AutoTest.TestRunners.Shared.AssemblyAnalysis.IAssemblyPropertyReader>();
             _fileSystem = MockRepository.GenerateStub<IFileSystemService>();
             _externalProcess = MockRepository.GenerateStub<IExternalProcess>();
             _commandLineBuilder = MockRepository.GenerateStub<IMSpecCommandLineBuilder>();
@@ -37,7 +33,7 @@ namespace AutoTest.Test.Core.TestRunners
 
         MSpecTestRunner _runner;
         IConfiguration _configuration;
-        IAssemblyReader _assemblyReader;
+        AutoTest.TestRunners.Shared.AssemblyAnalysis.IAssemblyPropertyReader _assemblyReader;
         IFileSystemService _fileSystem;
         IExternalProcess _externalProcess;
         IMSpecCommandLineBuilder _commandLineBuilder;
@@ -52,7 +48,7 @@ namespace AutoTest.Test.Core.TestRunners
             _configuration
                 .Stub(x => x.MSpecTestRunner("framework 2"))
                 .Return("c:\\runner 2.exe");
-
+            
             _fileSystem
                 .Stub(x => x.FileExists(null))
                 .IgnoreArguments()

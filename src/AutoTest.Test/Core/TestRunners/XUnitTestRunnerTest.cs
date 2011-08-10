@@ -21,7 +21,7 @@ namespace AutoTest.Test.Core.TestRunners
         private XUnitTestRunner _runner;
         private IMessageBus _bus;
         private IConfiguration _configuration;
-        private IAssemblyReader _assemblyReader;
+        private IAssemblyPropertyReader _assemblyReader;
         private IFileSystemService _fsService;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace AutoTest.Test.Core.TestRunners
         {
             _bus = MockRepository.GenerateMock<IMessageBus>();
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _assemblyReader = MockRepository.GenerateMock<IAssemblyReader>();
+            _assemblyReader = MockRepository.GenerateMock<IAssemblyPropertyReader>();
             _fsService = MockRepository.GenerateMock<IFileSystemService>();
             _runner = new XUnitTestRunner(_bus, _configuration, _assemblyReader, _fsService);
         }

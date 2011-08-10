@@ -2,24 +2,79 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using Mono.Cecil;
-using Mono.Collections.Generic;
 using System.IO;
+using AutoTest.TestRunners.Shared.Targeting;
+using Mono.Collections.Generic;
 
-namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
+namespace AutoTest.Core.ReflectionProviders
 {
-    public class SimpleTypeLocator
+    class CecilReflectionProvider : IReflectionProvider
     {
         private AssemblyDefinition _assembly = null;
 
-        public SimpleTypeLocator(string assembly)
+        public CecilReflectionProvider(string assembly)
         {
             if (!File.Exists(assembly))
                 return;
             _assembly = AssemblyDefinition.ReadAssembly(assembly);
         }
 
-        public string GetParent(string type)
+        public string GetName()
+        {
+            return _assembly.FullName;
+        }
+
+        public Version GetTargetFramework()
+        {
+            try
+            {
+                var runtime = _assembly.MainModule.Runtime.ToString().Replace("Net_", "").Replace("_", ".");
+                return new Version(runtime);
+            }
+            catch
+            {
+                return new Version();
+            }
+        }
+
+        public Platform GetPlatform()
+        {
+            try
+            {
+                var architecture = _assembly.MainModule.Architecture;
+                if (architecture == TargetArchitecture.I386)
+                    return Platform.x86;
+                if (architecture == TargetArchitecture.AMD64)
+                    return Platform.AnyCPU;
+                if (architecture == TargetArchitecture.IA64)
+                    return Platform.AnyCPU;
+                return Platform.Unknown;
+            }
+            catch
+            {
+                return Platform.Unknown;
+            }
+        }
+
+        public IEnumerable<string> GetReferences()
+        {
+            try
+            {
+                var references = _assembly.MainModule.AssemblyReferences;
+                var names = new List<string>();
+                foreach (var reference in references)
+                    names.Add(reference.Name);
+                return names;
+            }
+            catch
+            {
+            }
+            return new string[] { };
+        }
+
+        public string GetParentType(string type)
         {
             var end = type.LastIndexOf('.');
             if (end == -1)
@@ -45,6 +100,11 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             if (method.GetType().Equals(typeof(SimpleMethod)))
                 return (SimpleMethod)method;
             return null;
+        }
+
+        public void Dispose()
+        {
+            _assembly = null;
         }
 
         private SimpleType locate(string type)

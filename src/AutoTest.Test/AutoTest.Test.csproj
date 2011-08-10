@@ -134,6 +134,7 @@
     <Compile Include="Core\Presenters\Fakes\FakeRunResultMerger.cs" />
     <Compile Include="Core\Presenters\InformationFeedbackPresenterTest.cs" />
     <Compile Include="Core\Presenters\RunFeedbackPresenterTest.cs" />
+    <Compile Include="Core\ReflectionProviders\CecilReflectionProviderTests.cs" />
     <Compile Include="Core\TestRunners\MSpecCommandLineBuilderTest.cs" />
     <Compile Include="Core\TestRunners\MSpecReportParserTest.cs" />
     <Compile Include="Core\TestRunners\MSpecTestRunnerTest.cs" />

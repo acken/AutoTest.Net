@@ -20,6 +20,7 @@ using Gallio.Model.Schema;
 using Gallio.Model.Messages.Exploration;
 using AutoTest.TestRunners.Shared.Communication;
 using Gallio.Model.Filters;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.MbUnit
 {
@@ -31,6 +32,7 @@ namespace AutoTest.TestRunners.MbUnit
         private ITestDriver _testDriver;
         private ILogger _internalLogger;
         private ITestFeedbackProvider _channel = null;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
         private bool _isInitialized = false;
         private static bool _runtimeInitialized = false;
 
@@ -86,6 +88,11 @@ namespace AutoTest.TestRunners.MbUnit
         public void SetLogger(ILogger logger)
         {
             _internalLogger = logger;
+        }
+
+        public void SetReflectionProvider(Func<string, IReflectionProvider> reflectionProviderFactory)
+        {
+            _reflectionProviderFactory = reflectionProviderFactory;
         }
 
         public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)

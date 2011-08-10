@@ -10,7 +10,6 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using AutoTest.TestRunners.Shared.Results;
 using Machine.Specifications.Runner.Impl;
 using System.Reflection;
-using Mono.Cecil;
 using System.IO;
 
 namespace AutoTest.TestRunners.MSpec
@@ -18,6 +17,7 @@ namespace AutoTest.TestRunners.MSpec
     public class Runner : IAutoTestNetTestRunner
     {
         private ILogger _logger;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
         private ITestFeedbackProvider _feedback;
         private List<TestResult> _results;
 
@@ -28,6 +28,11 @@ namespace AutoTest.TestRunners.MSpec
             _logger = logger;
         }
 
+        public void SetReflectionProvider(Func<string, IReflectionProvider> reflectionProviderFactory)
+        {
+            _reflectionProviderFactory = reflectionProviderFactory;
+        }
+
         public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
         {
             _feedback = channel;
@@ -35,15 +40,17 @@ namespace AutoTest.TestRunners.MSpec
 
         public bool IsTest(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly);
-            var fixture = locator.LocateClass(member);
-            if (fixture == null)
-                return false;
-            return !fixture.IsAbstract &&
-                fixture.Fields.Count(x =>
-                x.FieldType == "Machine.Specifications.Establish" ||
-                x.FieldType == "Machine.Specifications.It" ||
-                x.FieldType == "Machine.Specifications.Because") > 0;
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var fixture = locator.LocateClass(member);
+                if (fixture == null)
+                    return false;
+                return !fixture.IsAbstract &&
+                    fixture.Fields.Count(x =>
+                    x.FieldType == "Machine.Specifications.Establish" ||
+                    x.FieldType == "Machine.Specifications.It" ||
+                    x.FieldType == "Machine.Specifications.Because") > 0;
+            }
         }
 
         public bool ContainsTestsFor(string assembly, string member)
@@ -53,8 +60,10 @@ namespace AutoTest.TestRunners.MSpec
 
         public bool ContainsTestsFor(string assembly)
         {
-            var parser = new AssemblyReader();
-            return parser.GetReferences(assembly).Contains("Machine.Specifications");
+            using (var parser = _reflectionProviderFactory(assembly))
+            {
+                return parser.GetReferences().Contains("Machine.Specifications");
+            }
         }
 
         public bool Handles(string identifier)
@@ -130,8 +139,10 @@ namespace AutoTest.TestRunners.MSpec
 
         private string getAssemblySignature(string assembly)
         {
-            var asm = AssemblyDefinition.ReadAssembly(assembly);
-            return asm.FullName;
+            using (var provider = _reflectionProviderFactory(assembly))
+            {
+                return provider.GetName();
+            }
         }
 
         private string getMessage(Exception ex)

@@ -12,8 +12,10 @@ namespace AutoTest.TestRunners.Shared.Targeting
     {
         public string Get(string testAssembly)
         {
-            var locator = new AssemblyReader();
-            return Get(locator.GetPlatform(testAssembly), locator.GetTargetFramework(testAssembly));
+            using (var locator = Reflect.On(testAssembly))
+            {
+                return Get(locator.GetPlatform(), locator.GetTargetFramework());
+            }
         }
 
         public string Get(Platform platform, Version version)

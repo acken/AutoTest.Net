@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.Tests.Targeting
         [Test]
         public void Should_group_by_assembly()
         {
-            var locator = MockRepository.GenerateMock<IAssemblyReader>();
+            var locator = MockRepository.GenerateMock<IAssemblyPropertyReader>();
             locator.Stub(x => x.GetTargetFramework("Assembly1")).Return(new Version(2, 0));
             locator.Stub(x => x.GetTargetFramework("Assembly2")).Return(new Version(4, 0));
             locator.Stub(x => x.GetTargetFramework("Assembly3")).Return(new Version(2, 0));

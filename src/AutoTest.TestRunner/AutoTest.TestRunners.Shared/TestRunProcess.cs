@@ -14,7 +14,7 @@ namespace AutoTest.TestRunners.Shared
     public class TestRunProcess : AutoTest.TestRunners.Shared.ITestRunProcess
     {
         private static List<TestResult> _results = new List<TestResult>();
-        private IAssemblyReader _locator;
+        private IAssemblyPropertyReader _locator;
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
@@ -30,12 +30,12 @@ namespace AutoTest.TestRunners.Shared
 
         public TestRunProcess()
         {
-            _locator = new AssemblyReader();
+            _locator = new AssemblyPropertyReader();
         }
 
         public TestRunProcess(ITestRunProcessFeedback feedback)
         {
-            _locator = new AssemblyReader();
+            _locator = new AssemblyPropertyReader();
             _feedback = feedback;
         }
 

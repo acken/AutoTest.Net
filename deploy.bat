@@ -88,9 +88,6 @@ copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\TestRunners\XUnit\xunit.ru
 copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\MSTest\AutoTest.TestRunners.MSTest.dll
 copy %BINARYDIR%\celer.Core.dll %DEPLOYDIR%\TestRunners\MSTest\celer.Core.dll
 
-copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll
-copy %BINARYDIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSTest\Machine.Specifications.dll
-
 copy %BINARYDIR%\AutoTest.TestRunners.MSpec.dll %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll
 copy %BINARYDIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSpec\Machine.Specifications.dll
 

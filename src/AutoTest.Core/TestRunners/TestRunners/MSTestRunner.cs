@@ -18,10 +18,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
     class MSTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
-        private IAssemblyReader _assemblyReader;
+        private IAssemblyPropertyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public MSTestRunner(IConfiguration configuration, IAssemblyReader referenceResolver, IFileSystemService fsService)
+        public MSTestRunner(IConfiguration configuration, IAssemblyPropertyReader referenceResolver, IFileSystemService fsService)
         {
             _configuration = configuration;
 			_assemblyReader = referenceResolver;

@@ -8,7 +8,6 @@ using AutoTest.TestRunners.Shared.Errors;
 using System.Threading;
 using System.IO;
 using System.Reflection;
-using Mono.Cecil;
 using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners

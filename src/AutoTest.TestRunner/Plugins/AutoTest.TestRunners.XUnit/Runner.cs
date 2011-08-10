@@ -13,12 +13,18 @@ namespace AutoTest.TestRunners.XUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
         private ITestFeedbackProvider _channel = null;
 
         public string Identifier { get { return "XUnit"; } }
 
         public void SetLogger(ILogger logger)
         {
+        }
+
+        public void SetReflectionProvider(Func<string, IReflectionProvider> reflectionProviderFactory)
+        {
+            _reflectionProviderFactory = reflectionProviderFactory;
         }
 
         public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
@@ -28,27 +34,33 @@ namespace AutoTest.TestRunners.XUnit
 
         public bool IsTest(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly);
-            var method = locator.LocateMethod(member);
-            if (method == null)
-                return false;
-            return method.Attributes.Contains("Xunit.FactAttribute") &&
-                !method.IsAbstract;
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var method = locator.LocateMethod(member);
+                if (method == null)
+                    return false;
+                return method.Attributes.Contains("Xunit.FactAttribute") &&
+                    !method.IsAbstract;
+            }
         }
 
         public bool ContainsTestsFor(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly);
-            var cls = locator.LocateClass(member);
-            if (cls == null)
-                return false;
-            return !cls.IsAbstract && cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var cls = locator.LocateClass(member);
+                if (cls == null)
+                    return false;
+                return !cls.IsAbstract && cls.Methods.Where(x => x.Attributes.Contains("Xunit.FactAttribute")).Count() > 0;
+            }
         }
 
         public bool ContainsTestsFor(string assembly)
         {
-            var parser = new AssemblyReader();
-            return parser.GetReferences(assembly).Contains("xunit");
+            using (var parser = _reflectionProviderFactory(assembly))
+            {
+                return parser.GetReferences().Contains("xunit");
+            }
         }
 
         public bool Handles(string identifier)

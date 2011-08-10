@@ -35,9 +35,6 @@
     <Reference Include="Machine.Specifications">
       <HintPath>..\..\..\..\lib\MSpec\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\..\lib\Cecil\Mono.Cecil.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -14,11 +14,17 @@ namespace AutoTest.TestRunners.NUnit
     public class Runner : IAutoTestNetTestRunner
     {
         private ITestFeedbackProvider _channel = null;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
 
         public string Identifier { get { return "NUnit"; } }
 
         public void SetLogger(ILogger logger)
         {
+        }
+
+        public void SetReflectionProvider(Func<string, IReflectionProvider> reflectionProviderFactory)
+        {
+            _reflectionProviderFactory = reflectionProviderFactory;
         }
 
         public void SetLiveFeedbackChannel(ITestFeedbackProvider channel)
@@ -28,27 +34,33 @@ namespace AutoTest.TestRunners.NUnit
 
         public bool IsTest(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly);
-            var method = locator.LocateMethod(member);
-            if (method == null)
-                return false;
-            return (method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute")) &&
-                !method.IsAbstract;
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var method = locator.LocateMethod(member);
+                if (method == null)
+                    return false;
+                return (method.Attributes.Contains("NUnit.Framework.TestAttribute") || method.Attributes.Contains("NUnit.Framework.TestCaseAttribute")) &&
+                    !method.IsAbstract;
+            }
         }
 
         public bool ContainsTestsFor(string assembly, string member)
         {
-            var locator = new SimpleTypeLocator(assembly);
-            var cls = locator.LocateClass(member);
-            if (cls == null)
-                return false;
-            return !cls.IsAbstract && cls.Attributes.Contains("NUnit.Framework.TestFixtureAttribute");
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var cls = locator.LocateClass(member);
+                if (cls == null)
+                    return false;
+                return !cls.IsAbstract && cls.Attributes.Contains("NUnit.Framework.TestFixtureAttribute");
+            }
         }
 
         public bool ContainsTestsFor(string assembly)
         {
-            var parser = new AssemblyReader();
-            return parser.GetReferences(assembly).Contains("nunit.framework");
+            using (var parser = _reflectionProviderFactory(assembly))
+            {
+                return parser.GetReferences().Contains("nunit.framework");
+            }
         }
 
         public bool Handles(string identifier)

@@ -14,8 +14,11 @@ namespace AutoTest.Core.FileSystem
 			var builder = new StringBuilder();
 			builder.Append(fileInfo.Length.ToString());
 			builder.Append("|");
-			foreach (var reference in new AssemblyReader().GetReferences(assembly))
-				builder.Append(reference);
+            using (var reader = Reflect.On(assembly))
+            {
+                foreach (var reference in reader.GetReferences())
+                    builder.Append(reference);
+            }
 			return builder.ToString().GetHashCode();
 		}
 	}

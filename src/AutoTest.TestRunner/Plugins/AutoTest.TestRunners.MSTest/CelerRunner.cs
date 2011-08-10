@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Options;
-using Mono.Cecil;
 using System.Reflection;
 using AutoTest.TestRunners.MSTest.Extensions;
 using System.Threading;
@@ -12,6 +11,7 @@ using System.IO;
 using AutoTest.TestRunners.Shared.Logging;
 using celer.Core;
 using AutoTest.TestRunners.Shared.Communication;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.MSTest
 {
@@ -20,12 +20,14 @@ namespace AutoTest.TestRunners.MSTest
         private string Identifier = "MSTest";
         private List<TestResult> _results;
         private ILogger _logger;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory;
         private ITestFeedbackProvider _channel;
 
 
-        public CelerRunner(ILogger logger, ITestFeedbackProvider channel)
+        public CelerRunner(ILogger logger, Func<string, IReflectionProvider> reflectionProviderFactory, ITestFeedbackProvider channel)
         {
             _logger = logger;
+            _reflectionProviderFactory = reflectionProviderFactory;
             _channel = channel;
         }
 
@@ -161,8 +163,10 @@ namespace AutoTest.TestRunners.MSTest
 
         private string getAssemblySignature(string assembly)
         {
-            var asm = AssemblyDefinition.ReadAssembly(assembly);
-            return asm.FullName;
+            using (var provider = _reflectionProviderFactory(assembly))
+            {
+                return provider.GetName();
+            }
         }
 
         private IEnumerable<MethodInfo> getTestSelection(Assembly assembly, RunSettings settings)

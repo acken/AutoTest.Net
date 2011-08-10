@@ -69,15 +69,13 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Mono.Cecil, Version=0.9.4.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
-      <HintPath>..\..\..\lib\Cecil\Mono.Cecil.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyAnalysis\IAssemblyReader.cs" />
+    <Compile Include="AssemblyAnalysis\AssemblyPropertyReader.cs" />
+    <Compile Include="AssemblyAnalysis\IReflectionProvider.cs" />
+    <Compile Include="AssemblyAnalysis\Reflect.cs" />
     <Compile Include="AssemblyAnalysis\SimpleType.cs" />
-    <Compile Include="AssemblyAnalysis\SimpleTypeLocator.cs" />
-    <Compile Include="AssemblyAnalysis\AssemblyReader.cs" />
+    <Compile Include="AssemblyAnalysis\SystemReflectionProvider.cs" />
     <Compile Include="Communication\PipeClient.cs" />
     <Compile Include="Communication\PipeJunction.cs" />
     <Compile Include="Communication\PipeServer.cs" />

@@ -378,7 +378,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Should_register_assembly_reader()
         {
-            var reader = _locator.Locate<IAssemblyReader>();
+            var reader = _locator.Locate<IAssemblyPropertyReader>();
             reader.ShouldBeTheSameAs(reader);
         }
 

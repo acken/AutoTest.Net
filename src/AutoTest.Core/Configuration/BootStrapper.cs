@@ -13,6 +13,8 @@ using AutoTest.Core.FileSystem.ProjectLocators;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Presenters;
 using AutoTest.Core.DebugLog;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
+using AutoTest.Core.ReflectionProviders;
 
 namespace AutoTest.Core.Configuration
 {
@@ -41,6 +43,7 @@ namespace AutoTest.Core.Configuration
 			var configuration = _container.Services.Locate<IConfiguration>();
             if (configuration.DebuggingEnabled)
                 enableLogging();
+            UseCecilForReflectionWithAutoTestTestRunner();
 			Debug.InitialConfigurationFinished();
         }
 
@@ -73,6 +76,11 @@ namespace AutoTest.Core.Configuration
             Debug.ShutingDownContainer();
             _container.Dispose();
             _container = new DIContainer();
+        }
+
+        private static void UseCecilForReflectionWithAutoTestTestRunner()
+        {
+            Reflect.ScratchThat_InsteadUseThisAwesome((assembly) => { return new CecilReflectionProvider(assembly); });
         }
 		
 		private static void enableLogging()

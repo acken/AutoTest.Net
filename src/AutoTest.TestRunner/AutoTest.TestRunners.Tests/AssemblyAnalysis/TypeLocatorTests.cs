@@ -15,7 +15,7 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
         [Test]
         public void Should_find_me()
         {
-            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new SystemReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var method = locator.LocateMethod("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me");
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me", method.Fullname);
             Assert.AreEqual("NUnit.Framework.TestAttribute", method.Attributes.ElementAt(0));
@@ -24,29 +24,29 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
         [Test]
         public void Should_find_my_parent()
         {
-            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            var cls = locator.LocateClass(locator.GetParent("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me"));
+            var locator = new SystemReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var cls = locator.LocateClass(locator.GetParentType("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me"));
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
-            Assert.AreEqual(5, cls.Methods.Count());
+            Assert.AreEqual(9, cls.Methods.Count());
         }
 
         [Test]
         public void Should_find_inherited_attributes()
         {
-            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new SystemReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var cls = locator.LocateClass("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests");
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
-            Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.MyAttribute", cls.Attributes.ElementAt(1));
+            Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.MyAttribute", cls.Attributes.ElementAt(3));
         }
 
         [Test]
         public void Should_find_inherited_attributes_in_methods()
         {
-            var locator = new SimpleTypeLocator(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new SystemReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var method = locator.LocateMethod("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh");
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh", method.Fullname);
-            Assert.AreEqual(3, method.Attributes.Count());
+            Assert.AreEqual(4, method.Attributes.Count());
         }
     }
     

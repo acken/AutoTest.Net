@@ -5,6 +5,7 @@ using System.Text;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Communication;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.Tests.Plugins
 {
@@ -13,6 +14,10 @@ namespace AutoTest.TestRunners.Tests.Plugins
         public string Identifier { get { return ""; } }
 
         public void SetLogger(ILogger logger)
+        {
+        }
+
+        public void SetReflectionProvider(Func<string, IReflectionProvider> reflectionProviderFactory)
         {
         }
 

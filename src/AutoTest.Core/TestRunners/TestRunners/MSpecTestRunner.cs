@@ -28,9 +28,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
         readonly IConfiguration _configuration;
         readonly IExternalProcess _externalProcess;
         readonly IFileSystemService _fileSystem;
-        readonly IAssemblyReader _assemblyReader;
+        readonly IAssemblyPropertyReader _assemblyReader;
 
-        public MSpecTestRunner(IAssemblyReader referenceResolver,
+        public MSpecTestRunner(IAssemblyPropertyReader referenceResolver,
                                IConfiguration configuration,
                                IFileSystemService fileSystem,
                                IExternalProcess externalProcess,

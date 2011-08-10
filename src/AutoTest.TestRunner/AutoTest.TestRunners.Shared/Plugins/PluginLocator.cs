@@ -6,8 +6,8 @@ using System.IO;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
-using Mono.Cecil;
 using AutoTest.TestRunners.Shared.Communication;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.Shared.Plugins
 {
@@ -37,6 +37,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                     var asm = System.Reflection.Assembly.LoadFrom(Assembly);
                     var runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
                     runner.SetLogger(Logger.Instance);
+                    runner.SetReflectionProvider((assembly) => { return Reflect.On(assembly); });
                     runner.SetLiveFeedbackChannel(new NullTestFeedbackProvider());
                     return runner;
                 }
@@ -161,10 +162,13 @@ namespace AutoTest.TestRunners.Shared.Plugins
             {
                 if (_assemblyCache.ContainsValue(f))
                     return false;
-                var assembly = AssemblyDefinition.ReadAssembly(f);
-                if (!_assemblyCache.ContainsKey(assembly.FullName))
-                    _assemblyCache.Add(assembly.FullName, f);
-                return assembly.FullName.Equals(args.Name);
+                using (var assembly = Reflect.On(f))
+                {
+                    var name = assembly.GetName();
+                    if (!_assemblyCache.ContainsKey(name))
+                        _assemblyCache.Add(name, f);
+                    return name.Equals(args.Name);
+                }
             }
             catch
             {

@@ -85,7 +85,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ILocateRemovedTests>().ImplementedBy<RemovedTestsLocator>())
                 .Register(Component.For<ISolutionChangeConsumer>().ImplementedBy<SolutionChangeConsumer>())
                 .Register(Component.For<ISolutionParser>().ImplementedBy<SolutionCrawler>())
-                .Register(Component.For<IAssemblyReader>().ImplementedBy<AssemblyReader>())
+                .Register(Component.For<IAssemblyPropertyReader>().ImplementedBy<AssemblyPropertyReader>())
                 .Register(Component.For<IApplicatonLauncher>().ImplementedBy<ApplicatonLauncher>().LifeStyle.Singleton)
                 .Register(Component.For<ICustomIgnoreProvider>().ImplementedBy<NullIgnoreProvider>())
                 .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton)

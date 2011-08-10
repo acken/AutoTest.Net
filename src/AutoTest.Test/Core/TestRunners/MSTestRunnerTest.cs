@@ -20,14 +20,14 @@ namespace AutoTest.Test.Core.TestRunners
     {
         private MSTestRunner _runner;
         private IConfiguration _configuration;
-        private IAssemblyReader _assemblyReader;
+        private IAssemblyPropertyReader _assemblyReader;
         private IFileSystemService _fsService;
 
         [SetUp]
         public void SetUp()
         {
             _configuration = MockRepository.GenerateMock<IConfiguration>();
-            _assemblyReader = MockRepository.GenerateMock<IAssemblyReader>();
+            _assemblyReader = MockRepository.GenerateMock<IAssemblyPropertyReader>();
             _fsService = MockRepository.GenerateMock<IFileSystemService>();
             _runner = new MSTestRunner(_configuration, _assemblyReader, _fsService);
         }

@@ -18,10 +18,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;
-        private IAssemblyReader _assemblyReader;
+        private IAssemblyPropertyReader _assemblyReader;
         private IFileSystemService _fsService;
 
-        public XUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyReader referenceResolver, IFileSystemService fsService)
+        public XUnitTestRunner(IMessageBus bus, IConfiguration configuration, IAssemblyPropertyReader referenceResolver, IFileSystemService fsService)
         {
             _bus = bus;
             _configuration = configuration;
