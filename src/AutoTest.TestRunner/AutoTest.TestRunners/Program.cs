@@ -25,7 +25,7 @@ namespace AutoTest.TestRunners
         static void Main(string[] args)
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpA3B9.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)
@@ -155,8 +155,11 @@ namespace AutoTest.TestRunners
             foreach (var plugin in getPlugins(parser))
             {
                 var instance = plugin.New();
-                foreach (var run in parser.Options.TestRuns.Where(x => instance.Handles(x.ID)))
+                foreach (var currentRuns in parser.Options.TestRuns.Where(x => x.ID.ToLower().Equals("any") || instance.Handles(x.ID)))
                 {
+                    var run = getTestRunsFor(instance, currentRuns);
+                    if (run == null)
+                        continue;
                     foreach (var assembly in run.Assemblies)
                     {
                         WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
@@ -176,6 +179,39 @@ namespace AutoTest.TestRunners
             }
             if (_arguments.RunInParallel)
                 WaitHandle.WaitAll(handles.ToArray());
+        }
+
+        private static RunnerOptions getTestRunsFor(IAutoTestNetTestRunner instance, RunnerOptions run)
+        {
+            if (run.ID.ToLower() != "any")
+                return run;
+
+            var newRun = new RunnerOptions(run.ID);
+            newRun.AddCategories(run.Categories.ToArray());
+            foreach (var asm in run.Assemblies)
+            {
+                if (!instance.ContainsTestsFor(asm.Assembly))
+                    continue;
+                var assembly = new AssemblyOptions(asm.Assembly);
+                assembly.AddNamespaces(asm.Namespaces.Where(x => instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
+                assembly.AddMembers(asm.Members.Where(x => instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
+                assembly.AddTests(asm.Tests.Where(x => instance.IsTest(asm.Assembly, x)).ToArray());
+                if (hasNoTests(asm) || hasTests(assembly))
+                    newRun.AddAssembly(assembly);
+            }
+            if (newRun.Assemblies.Count() == 0)
+                return null;
+            return newRun;
+        }
+
+        private static bool hasTests(AssemblyOptions asm)
+        {
+            return asm.Namespaces.Count() != 0 || asm.Members.Count() != 0 || asm.Tests.Count() != 0;
+        }
+
+        private static bool hasNoTests(AssemblyOptions asm)
+        {
+            return asm.Namespaces.Count() == 0 && asm.Members.Count() == 0 && asm.Tests.Count() == 0;
         }
 
         public static void AddResults(IEnumerable<TestResult> results)

@@ -67,7 +67,7 @@ namespace AutoTest.TestRunners.MSTest
 
         public bool Handles(string identifier)
         {
-            return identifier.ToLower().Equals(identifier.ToLower());
+            return Identifier.ToLower().Equals(identifier.ToLower());
         }
 
         public IEnumerable<TestResult> Run(RunSettings settings)
