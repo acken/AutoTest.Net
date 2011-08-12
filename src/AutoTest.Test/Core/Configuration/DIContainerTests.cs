@@ -133,7 +133,7 @@ namespace AutoTest.Test.Core.Configuration
         public void Should_register_project_locators()
         {
             var locators = _locator.LocateAll<ILocateProjects>();
-            locators.Length.ShouldEqual(2);
+            locators.Length.ShouldEqual(3);
         }
 
         [Test]

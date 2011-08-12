@@ -57,6 +57,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IWatchValidator>().ImplementedBy<WatchValidator>())
                 .Register(Component.For<ILocateProjects>().ImplementedBy<CSharpLocator>())
                 .Register(Component.For<ILocateProjects>().ImplementedBy<VisualBasicLocator>())
+                .Register(Component.For<ILocateProjects>().ImplementedBy<FSharpLocator>())
                 .Register(Component.For<IInformationFeedbackPresenter>().ImplementedBy<InformationFeedbackPresenter>())
                 .Register(Component.For<IRunFeedbackPresenter>().ImplementedBy<RunFeedbackPresenter>())
                 .Register(Component.For<IDirectoryWatcher>().ImplementedBy<DirectoryWatcher>().LifeStyle.Singleton)
