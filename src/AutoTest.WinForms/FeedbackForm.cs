@@ -37,6 +37,19 @@ namespace AutoTest.WinForms
         {
             Debug.WriteDetail("Handling {0}", message.GetType());
             runFeedback.ConsumeMessage(message);
+            if (message.GetType().Equals(typeof(ExternalCommandMessage)))
+            {
+                var commandMessage = (ExternalCommandMessage)message;
+                if (commandMessage.Sender == "EditorEngine")
+                {
+                    var msg = EditorEngineMessage.New(commandMessage.Command);
+                    if (msg.Command == "keypress" && msg.Arguments.Count == 1 && msg.Arguments[0].ToLower() == "ctrl+shift+j")
+                    {
+                        Activate();
+                        runFeedback.PrepareForFocus();
+                    }
+                }
+            }
         }
     }
 }
