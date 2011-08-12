@@ -137,6 +137,7 @@
             // 
             // pictureMoose
             // 
+            this.pictureMoose.Image = global::AutoTest.UI.Properties.Resources.MM_16;
             this.pictureMoose.Location = new System.Drawing.Point(2, 2);
             this.pictureMoose.Name = "pictureMoose";
             this.pictureMoose.Size = new System.Drawing.Size(20, 20);

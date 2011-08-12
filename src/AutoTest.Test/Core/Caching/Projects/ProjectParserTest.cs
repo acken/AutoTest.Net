@@ -51,6 +51,18 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
+        public void Should_find_FSharp_references()
+        {
+            var document = _parser.Parse(getFSharpProject(), null);
+            document.References.Length.ShouldEqual(1);
+            document.References[0].ShouldEqual(
+                Path.GetFullPath(
+                    string.Format("TestResources{0}FSharpClassLibrary{0}FSharpClassLibrary.fsproj",
+                                  Path.DirectorySeparatorChar)
+                        .Replace("\\", Path.DirectorySeparatorChar.ToString())));
+        }
+
+        [Test]
         public void Should_add_exists_referencedby_records()
         {
             var existingDocument = new ProjectDocument(ProjectType.CSharp);
@@ -143,5 +155,10 @@ namespace AutoTest.Test.Core.Caching.Projects
 		{
 			return string.Format("TestResources{0}VS2008{0}CSharpNoAnyCPU.csproj", Path.DirectorySeparatorChar);
 		}
+
+        private string getFSharpProject()
+        {
+            return string.Format("TestResources{0}VS2008{0}FSharpNUnitTestProject.fsproj", Path.DirectorySeparatorChar);
+        }
     }
 }

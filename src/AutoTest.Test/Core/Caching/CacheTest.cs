@@ -17,8 +17,10 @@ namespace AutoTest.Test.Core.Caching
         private FakeProjectParser _parser;
         private ProjectDocument _firstDocument;
         private ProjectDocument _secondDocument;
+        private ProjectDocument _thirdDocument;
         private string _testProject;
         private string _testProjectVB;
+        private string _testProjectFS;
 
         [SetUp]
         public void SetUp()
@@ -27,10 +29,13 @@ namespace AutoTest.Test.Core.Caching
             _firstDocument.HasBeenReadFromFile();
             _secondDocument = new ProjectDocument(ProjectType.CSharp);
             _secondDocument.HasBeenReadFromFile();
-            _parser = new FakeProjectParser(new ProjectDocument[] { _secondDocument, _firstDocument });
+            _thirdDocument = new ProjectDocument(ProjectType.FSharp);
+            _thirdDocument.HasBeenReadFromFile();
+            _parser = new FakeProjectParser(new ProjectDocument[] { _secondDocument, _thirdDocument, _firstDocument });
             _cache = new Cache(new FakeServiceLocator(_parser, delegate { return _cache; }));
             _testProject = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}CSharpNUnitTestProject.csproj", Path.DirectorySeparatorChar));
             _testProjectVB = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}NUnitTestProjectVisualBasic.vbproj", Path.DirectorySeparatorChar));
+            _testProjectFS = Path.GetFullPath(string.Format("TestResources{0}VS2008{0}FSharpNUnitTestProject.fsproj", Path.DirectorySeparatorChar));
         }
 
         [Test]
@@ -81,12 +86,15 @@ namespace AutoTest.Test.Core.Caching
         {
             _cache.Add<Project>(_testProject);
             _cache.Add<Project>(_testProjectVB);
+            _cache.Add<Project>(_testProjectFS);
             var projects = _cache.GetAll<Project>();
-            projects.Length.ShouldEqual(2);
+            projects.Length.ShouldEqual(3);
             projects[0].Key.ShouldEqual(_testProject);
             projects[0].Value.ShouldNotBeNull();
             projects[1].Key.ShouldEqual(_testProjectVB);
             projects[1].Value.ShouldNotBeNull();
+            projects[2].Key.ShouldEqual(_testProjectFS);
+            projects[2].Value.ShouldNotBeNull();
         }
 
         [Test]

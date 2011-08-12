@@ -9,6 +9,7 @@ namespace AutoTest.Core.Caching.Projects
     {
         None,
         CSharp,
-        VisualBasic
+        VisualBasic,
+        FSharp
     }
 }

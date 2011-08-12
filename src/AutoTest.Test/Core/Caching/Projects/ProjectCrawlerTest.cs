@@ -55,6 +55,14 @@ namespace AutoTest.Test.Core.Caching.Projects
             _crawler.Crawl("");
             _cache.ShouldHaveBeenAdded(Path.GetFullPath("AProject.vbproj"));
         }
+
+        [Test]
+        public void Should_Find_FSharp_Projects()
+        {
+            _fsService.WhenCrawlingFor("*.fsproj").Return("AProject.fsproj");
+            _crawler.Crawl("");
+            _cache.ShouldHaveBeenAdded(Path.GetFullPath("AProject.fsproj"));
+        }
 		
 		[Test]
 		public void Should_log_information_message_if_add_project_fails()

@@ -187,7 +187,7 @@ namespace AutoTest.Core.FileSystem
         private bool isProjectFile(string file)
         {
             var extension = Path.GetExtension(file).ToLower();
-            return extension == ".csproj" || extension == ".vbproj";
+            return extension == ".csproj" || extension == ".vbproj" || extension == ".fsproj";
         }
 		
 		private string getRelativePath(string path)

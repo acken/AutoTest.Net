@@ -84,7 +84,9 @@
       <Name>AutoTest.Messages</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\MM-16.ico" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\1305752593_move.png" />
   </ItemGroup>

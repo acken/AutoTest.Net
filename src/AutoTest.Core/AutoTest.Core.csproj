@@ -111,6 +111,7 @@
     <Compile Include="FileSystem\IWatchPathLocator.cs" />
     <Compile Include="FileSystem\NullIgnoreProvider.cs" />
     <Compile Include="FileSystem\PathParser.cs" />
+    <Compile Include="FileSystem\ProjectLocators\FSharpLocator.cs" />
     <Compile Include="FileSystem\WatchPathLocator.cs" />
     <Compile Include="Launchers\ApplicatonLauncher.cs" />
     <Compile Include="Messaging\BlockedMessage.cs" />

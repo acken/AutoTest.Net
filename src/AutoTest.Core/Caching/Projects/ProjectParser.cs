@@ -14,6 +14,7 @@ namespace AutoTest.Core.Caching.Projects
     {
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
         private const string VB_PROJECT_EXTENTION = ".vbproj";
+        private const string FSHARP_PROJECT_EXTENTION = ".fsproj";
 
         private IFileSystemService _fsService;
         private string _projectFile;
@@ -102,6 +103,8 @@ namespace AutoTest.Core.Caching.Projects
                     return ProjectType.CSharp;
                 case VB_PROJECT_EXTENTION:
                     return ProjectType.VisualBasic;
+                case FSHARP_PROJECT_EXTENTION:
+                    return ProjectType.FSharp;
             }
             return ProjectType.None;
         }

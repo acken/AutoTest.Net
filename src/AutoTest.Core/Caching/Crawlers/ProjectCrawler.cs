@@ -16,6 +16,7 @@ namespace AutoTest.Core.Caching.Crawlers
     {
         private const string CSHARP_PROJECT_EXTENTION = "csproj";
         private const string VB_PROJECT_EXTENTION = "vbproj";
+        private const string FSHARP_PROJECT_EXTENTION = "fsproj";
         private ICache _cache;
         private IFileSystemService _fsService;
 		private IMessageBus _bus;
@@ -33,6 +34,7 @@ namespace AutoTest.Core.Caching.Crawlers
                 return;
             getCSharpProjects(path);
             getVisualBasicProjects(path);
+            getFSharpProjects(path);
         }
 
         private void getCSharpProjects(string path)
@@ -48,6 +50,14 @@ namespace AutoTest.Core.Caching.Crawlers
             var files = _fsService.GetFiles(
                 path, 
                 string.Format("*.{0}", VB_PROJECT_EXTENTION));
+            addProjects(files);
+        }
+
+        private void getFSharpProjects(string path)
+        {
+            var files = _fsService.GetFiles(
+                path,
+                string.Format("*.{0}", FSHARP_PROJECT_EXTENTION));
             addProjects(files);
         }
 

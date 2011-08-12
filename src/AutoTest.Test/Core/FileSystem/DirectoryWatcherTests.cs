@@ -303,6 +303,30 @@ namespace AutoTest.Test.Core
         }
 
         [Test]
+        public void Should_always_publish_fs_project_files()
+        {
+            var messageBus = MockRepository.GenerateMock<IMessageBus>();
+            var validator = MockRepository.GenerateMock<IWatchValidator>();
+            var configuration = MockRepository.GenerateMock<IConfiguration>();
+            configuration.Stub(x => x.IgnoreFile).Return("");
+            validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish(null)).IgnoreArguments().Return(true).Repeat.Any();
+            configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
+            var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce);
+            var file = Path.GetFullPath("some_project_file_for_detection.fsproj");
+            _cahce.Stub(c => c.Get<Project>(file)).Return(new Project("", new ProjectDocument(ProjectType.FSharp)));
+            var watchDirectory = Path.GetDirectoryName(file);
+            watcher.Watch(watchDirectory);
+            watcher.Pause();
+            watcher.Resume();
+
+            File.WriteAllText(file, "meh ");
+            Thread.Sleep(450);
+
+            messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(null), m => m.IgnoreArguments());
+        }
+
+        [Test]
         public void Should_not_publish_pusblish_files_not_listed_in_cache()
         {
             var messageBus = MockRepository.GenerateMock<IMessageBus>();
