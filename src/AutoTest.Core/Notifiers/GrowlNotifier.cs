@@ -71,13 +71,13 @@ namespace AutoTest.Core.Notifiers
             switch (type)
             {
                 case NotificationType.Green:
-                    icon += "/Icons/circleWIN.png";
+                    icon = Path.Combine(icon, Path.Combine("Icons", "circleWIN.png"));
                     break;
                 case NotificationType.Yellow:
-                    icon += "/Icons/circleWAIL.png";
+                    icon = Path.Combine(icon, Path.Combine("Icons", "circleWAIL.png"));
                     break;
                 case NotificationType.Red:
-                    icon += "/Icons/circleFAIL.png";
+                    icon = Path.Combine(icon, Path.Combine("Icons", "circleFAIL.png"));
                     break;
             }
 			string args;

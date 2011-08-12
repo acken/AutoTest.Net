@@ -260,7 +260,7 @@ namespace AutoTest.UI
             label1.Refresh();
         }
 
-        private void Handle(CacheMessages cache)
+        private new void Handle(CacheMessages cache)
         {
             object selected = null;
             if (listViewFeedback.SelectedItems.Count == 1)
@@ -297,7 +297,7 @@ namespace AutoTest.UI
             ResumeLayout();
         }
 
-        private void Handle(LiveTestStatusMessage liveStatus)
+        private new void Handle(LiveTestStatusMessage liveStatus)
         {
             if (!_isRunning)
                 return;
