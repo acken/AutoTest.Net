@@ -64,6 +64,7 @@ IF NOT EXIST %DEPLOYDIR% (
 copy %BINARYDIR%\AutoTest.Messages.dll %DEPLOYDIR%\AutoTest.Messages.dll
 copy %BINARYDIR%\AutoTest.Core.dll %DEPLOYDIR%\AutoTest.Core.dll
 copy %BINARYDIR%\AutoTest.Console.exe %DEPLOYDIR%\AutoTest.Console.exe
+copy %BINARYDIR%\AutoTest.UI.dll %DEPLOYDIR%\AutoTest.UI.dll
 copy %BINARYDIR%\AutoTest.WinForms.exe %DEPLOYDIR%\AutoTest.WinForms.exe
 copy %BINARYDIR%\AutoTest.config.template %DEPLOYDIR%\AutoTest.config
 copy %DIR%README %DEPLOYDIR%\README
