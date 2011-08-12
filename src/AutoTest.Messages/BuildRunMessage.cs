@@ -25,6 +25,6 @@ namespace AutoTest.Messages
 			_results.SetDataFrom(reader);
 		}
 		#endregion
-}
+    }
 }
 

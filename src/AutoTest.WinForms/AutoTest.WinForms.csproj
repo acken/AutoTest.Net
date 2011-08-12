@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -137,6 +137,10 @@
     <ProjectReference Include="..\AutoTest.Messages\AutoTest.Messages.csproj">
       <Project>{5352CB10-E898-4089-BFF0-79D635FB44C9}</Project>
       <Name>AutoTest.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoTest.UI\AutoTest.UI.csproj">
+      <Project>{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}</Project>
+      <Name>AutoTest.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

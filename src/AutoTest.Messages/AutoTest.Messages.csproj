@@ -61,10 +61,14 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="BuildMessage.cs" />
     <Compile Include="BuildRunResults.cs" />
+    <Compile Include="CacheBuildMessage.cs" />
+    <Compile Include="CacheMessage.cs" />
+    <Compile Include="CacheTestMessage.cs" />
     <Compile Include="ChangedFile.cs" />
     <Compile Include="BuildRunMessage.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="ErrorMessage.cs" />
+    <Compile Include="IMessageForwarder.cs" />
     <Compile Include="InformationMessage.cs" />
     <Compile Include="LiveTestStatusMessage.cs" />
     <Compile Include="RunAction.cs" />

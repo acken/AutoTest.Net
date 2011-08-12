@@ -71,6 +71,9 @@ namespace AutoTest.Messages.Serializers
             Register<LiveTestStatus>(19);
             Register<LiveTestStatusMessage>(20);
             Register<AbortMessage>(21);
+            Register<CacheBuildMessage>(22);
+            Register<CacheTestMessage>(23);
+            Register<CacheMessages>(24);
         }
 
         public void Register<T>(int typeId) where T : ICustomBinarySerializable

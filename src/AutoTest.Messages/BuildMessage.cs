@@ -47,6 +47,6 @@ namespace AutoTest.Messages
 			ErrorMessage = reader.ReadString();
 		}
 		#endregion
-}
+    }
 }
 

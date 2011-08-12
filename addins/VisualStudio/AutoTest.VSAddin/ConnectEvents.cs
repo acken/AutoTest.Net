@@ -47,10 +47,7 @@ namespace AutoTest.VSAddin
         {
             try
             {
-                if (!File.Exists(_applicationObject.Solution.FullName))
-                    return;
-                WatchFolder = Path.GetDirectoryName(_applicationObject.Solution.FullName);
-                bootStrapAutoTest(WatchFolder);
+                bootStrapAutoTest(_applicationObject.Solution.FullName);
             }
             catch (Exception ex)
             {

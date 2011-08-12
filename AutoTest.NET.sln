@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MSpec.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MSpec.Tests", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MSpec.Tests\AutoTest.TestRunners.MSpec.Tests.csproj", "{849CF95D-A213-4CCE-B598-C328FE398FBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.UI", "src\AutoTest.UI\AutoTest.UI.csproj", "{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = AutoTest.NET.vsmdi
@@ -310,6 +312,16 @@ Global
 		{849CF95D-A213-4CCE-B598-C328FE398FBC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{849CF95D-A213-4CCE-B598-C328FE398FBC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{849CF95D-A213-4CCE-B598-C328FE398FBC}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

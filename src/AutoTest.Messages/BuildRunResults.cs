@@ -75,6 +75,6 @@ namespace AutoTest.Messages
 			}
 		}
 		#endregion
-}
+    }
 }
 

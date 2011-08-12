@@ -9,6 +9,9 @@ using System.IO;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
+using AutoTest.UI;
+using AutoTest.Core.Presenters;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.WinForms
 {
@@ -39,16 +42,13 @@ namespace AutoTest.WinForms
                 var assemblies = new List<string>();
                 var cache = BootStrapper.Services.Locate<AutoTest.Core.Caching.ICache>();
                 var configuration = BootStrapper.Services.Locate<IConfiguration>();
-                var projects = cache.GetAll<AutoTest.Core.Caching.Projects.Project>();
-                foreach (var project in projects)
+                using (var watcher = BootStrapper.Services.Locate<IDirectoryWatcher>())
                 {
-                    var assembly = project.GetAssembly(configuration.CustomOutputPath);
-                    if (!File.Exists(assembly))
-                        continue;
-                    assemblies.Add(assembly);
+                    watcher.Watch(directoryToWatch);
+                    var proxy = BootStrapper.Services.Locate<IMessageProxy>();
+                    proxy.SetMessageForwarder(overviewForm.Form);
+        	        Application.Run(overviewForm.Form);
                 }
-
-        	    Application.Run(overviewForm.Form);
         	    BootStrapper.ShutDown();
 			}
 			catch (Exception exception)
@@ -117,6 +117,8 @@ namespace AutoTest.WinForms
                 if (watchDirectory == null)
                     return null;
             }
+            BootStrapper.Services
+                .Locate<IRunResultCache>().EnabledDeltas();
             BootStrapper.InitializeCache(watchDirectory);
             return watchDirectory;
         }
@@ -133,6 +135,11 @@ namespace AutoTest.WinForms
         {
             BootStrapper.Configure();
             BootStrapper.Container
+                .Register(Component.For<IMessageProxy>()
+                                    .Forward<IRunFeedbackView>()
+                                    .Forward<IInformationFeedbackView>()
+                                    .Forward<IConsumerOf<AbortMessage>>()
+                                    .ImplementedBy<MessageProxy>().LifeStyle.Singleton)
                 .Register(Component.For<IOverviewForm>().ImplementedBy<FeedbackForm>())
                 .Register(Component.For<IInformationForm>().ImplementedBy<InformationForm>())
                 .Register(Component.For<IWatchDirectoryPicker>().ImplementedBy<WatchDirectoryPickerForm>());
