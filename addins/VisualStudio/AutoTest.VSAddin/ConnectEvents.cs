@@ -4,6 +4,8 @@ using System.Text;
 using EnvDTE;
 using System.IO;
 using AutoTest.Core.DebugLog;
+using AutoTest.VSAddin.ATEngine;
+using AutoTest.Messages;
 
 namespace AutoTest.VSAddin
 {
@@ -11,13 +13,15 @@ namespace AutoTest.VSAddin
     {
         private static SolutionEvents _solutionEvents = null;
 
-        private Window _toolWindow;
-        private FeedbackWindow _control;
+        public static Window _toolWindow;
+        public static FeedbackWindow _control;
 
         private static _dispSolutionEvents_OpenedEventHandler _openedEvent = null;
         private static _dispSolutionEvents_AfterClosingEventHandler _afterClosingEvent = null;
 
-        public static string WatchFolder = null;
+        public static CacheTestMessage LastDebugRun;
+        public static string _WatchToken = null;
+        public static Engine _engine = null;
 
         private void bindWorkspaceEvents()
         {
@@ -47,7 +51,14 @@ namespace AutoTest.VSAddin
         {
             try
             {
-                bootStrapAutoTest(_applicationObject.Solution.FullName);
+                _applicationObject.ExecuteCommand("AutoTest.VSAddin.Connect.AutoTestNet_FeedbackWindow", "");
+                _WatchToken = _applicationObject.Solution.FullName;
+                _engine = new Engine(_control);
+                _engine.Bootstrap(_WatchToken);
+                if (_engine.IsRunning)
+                    _control.SetText("Engine is running and waiting for changes");
+                else
+                    _control.SetText("Engine is paused and will not detect changes");
             }
             catch (Exception ex)
             {
@@ -59,7 +70,7 @@ namespace AutoTest.VSAddin
         {
             try
             {
-                terminateAutoTest();
+                _engine.Shutdown();
             }
             catch (Exception ex)
             {

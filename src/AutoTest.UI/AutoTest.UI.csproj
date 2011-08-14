@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\lib\Cecil\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -42,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodePosition.cs" />
+    <Compile Include="CodeReflection\TypeConverter.cs" />
     <Compile Include="RunFinishedInfo.cs" />
     <Compile Include="ListItemBehaviourHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

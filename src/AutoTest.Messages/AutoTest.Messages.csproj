@@ -71,6 +71,7 @@
     <Compile Include="IMessageForwarder.cs" />
     <Compile Include="InformationMessage.cs" />
     <Compile Include="LiveTestStatusMessage.cs" />
+    <Compile Include="OnDemandTestRunMessage.cs" />
     <Compile Include="RunAction.cs" />
     <Compile Include="RunInformationMessage.cs" />
     <Compile Include="RunReport.cs" />

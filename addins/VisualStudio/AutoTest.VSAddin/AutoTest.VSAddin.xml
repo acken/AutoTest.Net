@@ -21,23 +21,6 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="F:AutoTest.VSAddin.InformationWindow.components">
-            <summary>
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:AutoTest.VSAddin.InformationWindow.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:AutoTest.VSAddin.InformationWindow.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:AutoTest.VSAddin.Connect">
             <summary>The object for implementing an Add-in.</summary>
             <seealso class='IDTExtensibility2' />

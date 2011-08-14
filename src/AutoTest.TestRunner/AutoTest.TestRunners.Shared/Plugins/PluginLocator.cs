@@ -38,8 +38,9 @@ namespace AutoTest.TestRunners.Shared.Plugins
                     var asm = System.Reflection.Assembly.LoadFrom(Assembly);
                     runner = (IAutoTestNetTestRunner)asm.CreateInstance(Type);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.Write(ex);
                     return null;
                 }
             }
@@ -80,7 +81,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                     Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
-                        plugins.AddRange(getPlugins(file));
+                        plugins.AddRange(getPlugins(Path.GetFullPath(file)));
                 }
                 finally
                 {

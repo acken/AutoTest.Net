@@ -1,128 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Threading;
-using AutoTest.Core.Caching.RunResultCache;
-using System.Drawing;
 using EnvDTE80;
+using AutoTest.VS.Util.Debugger;
+using EnvDTE;
 
 namespace AutoTest.VSAddin
 {
-    [ProgId("AutoTestFeedbackWindow"), ClassInterface(ClassInterfaceType.AutoDual), Guid("1C96720B-163C-41EF-9E00-1FC3731CF613")]
+    [ProgId("AutoTestNet_FeedbackWindow"), ClassInterface(ClassInterfaceType.AutoDual), Guid("67663444-f874-401c-9e55-053bb0b5bd0d")]
     public partial class FeedbackWindow : UserControl
     {
-        private FeedbackView _viewHandler;
-        private SynchronizationContext _syncContext;
+        private DTE2 _application;
 
         public FeedbackWindow()
         {
-            _syncContext = AsyncOperationManager.SynchronizationContext;
             InitializeComponent();
         }
 
-        internal void CreateViewHandler(DTE2 application)
+        public void SetApplication(DTE2 application)
         {
-            _viewHandler = new FeedbackView(x => printMessage(x), x => relistCache(x), application);
+            _application = application;
         }
 
-        private void printMessage(RunMessages message)
+        public void Consume(object message)
         {
-            _syncContext.Post(s => 
-                {
-                    var msg = (RunMessages)s;
-                    label1.Text = msg.Message;
-                    if (msg.Type == RunMessageType.Normal)
-                    {
-                        label1.ForeColor = Color.Black;
-                        label1.Font = new Font(label1.Font, FontStyle.Regular);
-                    }
-                    if (msg.Type == RunMessageType.Succeeded)
-                    {
-                        label1.ForeColor = Color.Green;
-                        label1.Font = new Font(label1.Font, FontStyle.Bold);
-                    }
-                    if (msg.Type == RunMessageType.Failed)
-                    {
-                        label1.ForeColor = Color.Red;
-                        label1.Font = new Font(label1.Font, FontStyle.Bold);
-                    }
-                    this.Refresh();
-                }, message);
+            runFeedback.ConsumeMessage(message);
         }
 
-        private void relistCache(IRunResultCache cache)
+        public void SetText(string text)
         {
-            _syncContext.Post(c => rePopulateList(c), cache);
+            runFeedback.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, text));
         }
 
-        private void rePopulateList(object cacheObject)
+        private void runFeedback_DebugTest(object sender, UI.DebugTestArgs e)
         {
-            IRunResultCache cache = (IRunResultCache)cacheObject;
-            IItem selected = null;
-            if (listViewFeedback.SelectedItems.Count == 1)
-                selected = (IItem)listViewFeedback.SelectedItems[0].Tag;
-
-            listViewFeedback.Items.Clear();
-            foreach (var error in cache.Errors)
-                addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error, selected);
-
-            foreach (var failed in cache.Failed)
-                addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed, selected);
-
-            foreach (var warning in cache.Warnings)
-                addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning, selected);
-
-            foreach (var ignored in cache.Ignored)
-                addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected);
-            this.Refresh();
+            var debugger = new DebugHandler(_application);
+            debugger.Debug(e.Test);
+            Connect.LastDebugRun = e.Test;
         }
 
-        private void addFeedbackItem(string type, string message, Color colour, IItem tag, IItem selected)
+        private void runFeedback_GoToReference(object sender, UI.GoToReferenceArgs e)
         {
-            var item = listViewFeedback.Items.Add(type);
-            item.SubItems.Add(message);
-            item.ForeColor = colour;
-            item.Tag = tag;
-            if (selected != null && tag.GetType().Equals(selected.GetType()) && tag.Equals(selected))
-                item.Selected = true;
+            try
+            {
+                var window = _application.OpenFile(EnvDTE.Constants.vsViewKindCode, e.Position.File);
+                window.Activate();
+                var selection = (TextSelection)_application.ActiveDocument.Selection;
+                selection.MoveToDisplayColumn(e.Position.LineNumber, e.Position.Column, false);
+            }
+            catch
+            {
+            }
         }
 
-        private string formatBuildResult(BuildItem item)
+        private void runFeedback_GoToType(object sender, UI.GoToTypeArgs e)
         {
-            var buildMessage = item.Value;
-            return string.Format("{0}, {1}", buildMessage.ErrorMessage, buildMessage.File);
+            try
+            {
+                var signature = new AutoTest.UI.CodeReflection.TypeConverter(e.Assembly).ToSignature(e.TypeName);
+                if (signature != null)
+                    AutoTest.VS.Util.MethodFinder_Slow.GotoMethodByFullname(signature, _application);
+            }
+            catch
+            {
+            }
         }
 
-        private string formatTestResult(TestItem item)
+        public void PrepareForFocus()
         {
-            var test = item.Value;
-            return string.Format("{0} -> {1}", test.Status, test.Name);
+            runFeedback.PrepareForFocus();
         }
 
-        private void buttonInformation_Click(object sender, EventArgs e)
+        public bool IsInFocus()
         {
-            _viewHandler.ShowInformation();
-        }
-
-        private void listViewFeedback_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (listViewFeedback.SelectedItems.Count != 1)
-                return;
-
-            _viewHandler.GoToMessageReference((IItem)listViewFeedback.SelectedItems[0].Tag);
-        }
-
-        private void listViewFeedback_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right)
-                return;
-            if (listViewFeedback.SelectedItems.Count != 1)
-                return;
-            _viewHandler.ShowMessageInfo((IItem)listViewFeedback.SelectedItems[0].Tag, Cursor.Position);
+            return runFeedback.IsInFocus();
         }
     }
 }

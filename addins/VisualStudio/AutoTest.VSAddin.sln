@@ -1,18 +1,64 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.VSAddin", "AutoTest.VSAddin\AutoTest.VSAddin.csproj", "{41569825-6729-4BC2-A47C-F528EB92AEBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.VS.Util", "AutoTest.VS.Util\AutoTest.VS.Util.csproj", "{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.UI", "..\..\src\AutoTest.UI\AutoTest.UI.csproj", "{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Messages", "..\..\src\AutoTest.Messages\AutoTest.Messages.csproj", "{5352CB10-E898-4089-BFF0-79D635FB44C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.Core", "..\..\src\AutoTest.Core\AutoTest.Core.csproj", "{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.Shared", "..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj", "{7D34AABB-DD67-4826-AD89-75D91A1375F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.VSAddin", "AutoTest.VSAddin\AutoTest.VSAddin.csproj", "{D46ADD6B-B8BF-460D-973C-D5BB001A158D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{41569825-6729-4BC2-A47C-F528EB92AEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41569825-6729-4BC2-A47C-F528EB92AEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41569825-6729-4BC2-A47C-F528EB92AEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41569825-6729-4BC2-A47C-F528EB92AEBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}.Release|x86.ActiveCfg = Release|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5352CB10-E898-4089-BFF0-79D635FB44C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A05A6F1-2CC0-4A55-A54B-F2AA252F7B45}.Release|x86.ActiveCfg = Release|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|x86.ActiveCfg = Debug|x86
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Debug|x86.Build.0 = Debug|x86
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|x86.ActiveCfg = Release|x86
+		{7D34AABB-DD67-4826-AD89-75D91A1375F5}.Release|x86.Build.0 = Release|x86
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46ADD6B-B8BF-460D-973C-D5BB001A158D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
