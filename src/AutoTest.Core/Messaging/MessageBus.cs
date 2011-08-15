@@ -165,61 +165,51 @@ namespace AutoTest.Core.Messaging
             {
                 if (OnInformationMessage != null)
                     OnInformationMessage(this, new InformationMessageEventArgs((InformationMessage) (IMessage) message));
-                handled = true;
             }
             else if (typeof(T) == typeof(BuildRunMessage))
             {
                 if (OnBuildMessage != null)
                     OnBuildMessage(this, new BuildMessageEventArgs((BuildRunMessage) (IMessage) message));
-                handled = true;
             }
             else if (typeof(T) == typeof(TestRunMessage))
             {
                 if (OnTestRunMessage != null)
                     OnTestRunMessage(this, new TestRunMessageEventArgs((TestRunMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(RunStartedMessage))
             {
                 if (OnRunStartedMessage != null)
                     OnRunStartedMessage(this, new RunStartedMessageEventArgs((RunStartedMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(RunFinishedMessage))
             {
                 if (OnRunFinishedMessage != null)
                     OnRunFinishedMessage(this, new RunFinishedMessageEventArgs((RunFinishedMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(WarningMessage))
             {
                 if (OnWarningMessage != null)
                     OnWarningMessage(this, new WarningMessageEventArgs((WarningMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(ErrorMessage))
             {
                 if (OnErrorMessage != null)
                     OnErrorMessage(this, new ErrorMessageEventArgs((ErrorMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(RunInformationMessage))
             {
                 if (OnRunInformationMessage != null)
                     OnRunInformationMessage(this, new RunInformationMessageEventArgs((RunInformationMessage)(IMessage)message));
-                handled = true;
             }
 			else if (typeof(T) == typeof(ExternalCommandMessage))
             {
                 if (OnExternalCommand != null)
                     OnExternalCommand(this, new ExternalCommandArgs((ExternalCommandMessage)(IMessage)message));
-                handled = true;
             }
             else if (typeof(T) == typeof(LiveTestStatusMessage))
             {
                 if (OnLiveTestFeedback != null)
                     OnLiveTestFeedback(this, new LiveTestFeedbackArgs((LiveTestStatusMessage)(IMessage)message));
-                handled = true;
             }
             return handled;
         }

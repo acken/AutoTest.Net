@@ -53,10 +53,16 @@
     <Compile Include="Builds\IVSBuildRunner.cs" />
     <Compile Include="Builds\OutputParser.cs" />
     <Compile Include="Builds\VSBuildRunner.cs" />
+    <Compile Include="CommandHandling\RerunLastDebugSession.cs" />
+    <Compile Include="CommandHandling\DebugCurrentTest.cs" />
+    <Compile Include="CommandHandling\RerunLastManualTestRun.cs" />
+    <Compile Include="CommandHandling\RunTestsUnderCursor.cs" />
     <Compile Include="CommandHandling\GenericCommand.cs" />
     <Compile Include="CommandHandling\CommandDispatcher.cs" />
     <Compile Include="CommandHandling\CommandHandler.cs" />
     <Compile Include="CommandHandling\ICommandHandler.cs" />
+    <Compile Include="CommandHandling\RunTestsForSolution.cs" />
+    <Compile Include="CommandHandling\RunTestsForCodeModel.cs" />
     <Compile Include="Debugger\DebugHandler.cs" />
     <Compile Include="Debugger\IAutoTestRunnerDebugProcess.cs" />
     <Compile Include="Debugger\UnmanagedProcess.cs" />

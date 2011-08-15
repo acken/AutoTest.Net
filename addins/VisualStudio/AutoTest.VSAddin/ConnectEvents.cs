@@ -19,7 +19,6 @@ namespace AutoTest.VSAddin
         private static _dispSolutionEvents_OpenedEventHandler _openedEvent = null;
         private static _dispSolutionEvents_AfterClosingEventHandler _afterClosingEvent = null;
 
-        public static CacheTestMessage LastDebugRun;
         public static string _WatchToken = null;
         public static Engine _engine = null;
 
@@ -53,7 +52,7 @@ namespace AutoTest.VSAddin
             {
                 _applicationObject.ExecuteCommand("AutoTest.VSAddin.Connect.AutoTestNet_FeedbackWindow", "");
                 _WatchToken = _applicationObject.Solution.FullName;
-                _engine = new Engine(_control);
+                _engine = new Engine(_control, _applicationObject);
                 _engine.Bootstrap(_WatchToken);
                 if (_engine.IsRunning)
                     _control.SetText("Engine is running and waiting for changes");

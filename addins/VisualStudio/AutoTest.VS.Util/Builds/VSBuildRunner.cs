@@ -11,7 +11,7 @@ namespace AutoTest.VS.Util.Builds
     public class VSBuildRunner : IVSBuildRunner
     {
         private DTE2 _application;
-        private bool _runBuilds;
+        private Func<bool> _runBuilds;
         private DateTime _timeOfLastOutputParsing = DateTime.MinValue;
         private Action<string> _setOutputPath;
         private Action<object> _notify;
@@ -19,7 +19,7 @@ namespace AutoTest.VS.Util.Builds
 
         private static string _configuration = "";
 
-        public VSBuildRunner(DTE2 application, bool runBuilds, Action<string> setOutputPath, Action<object> notify, Action<string> clearBuildItemsForProject)
+        public VSBuildRunner(DTE2 application, Func<bool> runBuilds, Action<string> setOutputPath, Action<object> notify, Action<string> clearBuildItemsForProject)
         {
             _application = application;
             _runBuilds = runBuilds;
@@ -64,7 +64,7 @@ namespace AutoTest.VS.Util.Builds
             else
             {
                 extractBuildOutput();
-                if (_runBuilds)
+                if (_runBuilds())
                 {
                     var report = new Messages.RunReport();
                     report.AddBuild(_application.Solution.FullName, new TimeSpan(), true);

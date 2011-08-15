@@ -289,7 +289,7 @@ namespace AutoTest.Test.Core.Configuration
 		public void Should_register_null_pre_processors()
 		{
 			var preProcessors = _locator.LocateAll<IPreProcessTestruns>();
-			preProcessors.Length.ShouldEqual(1);
+			preProcessors.Length.ShouldEqual(3);
 		}
 		
 		[Test]
@@ -356,7 +356,7 @@ namespace AutoTest.Test.Core.Configuration
         public void Shoud_not_contain_build_pre_processors()
         {
             var preProcessors = _locator.LocateAll<IPreProcessBuildruns>();
-            preProcessors.Length.ShouldEqual(1);
+            preProcessors.Length.ShouldEqual(2);
         }
 
         [Test]
@@ -392,6 +392,18 @@ namespace AutoTest.Test.Core.Configuration
         public void Shoud_register_abort_consumers()
         {
             Assert.That(_locator.LocateAll<IConsumerOf<AbortMessage>>().Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Shoud_register_run_finished_consumers()
+        {
+            Assert.That(_locator.LocateAll<IConsumerOf<RunFinishedMessage>>().Length, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Shoud_register_on_demand_run_pre_processor()
+        {
+            Assert.That(_locator.LocateAll<IOnDemanTestrunPreprocessor>().Length, Is.EqualTo(1));
         }
     }
 }

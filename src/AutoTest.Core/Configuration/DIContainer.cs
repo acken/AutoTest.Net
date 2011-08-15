@@ -90,7 +90,12 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<IApplicatonLauncher>().ImplementedBy<ApplicatonLauncher>().LifeStyle.Singleton)
                 .Register(Component.For<ICustomIgnoreProvider>().ImplementedBy<NullIgnoreProvider>())
                 .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton)
-                .Register(Component.For<IWatchPathLocator>().ImplementedBy<WatchPathLocator>());
+                .Register(Component.For<IWatchPathLocator>().ImplementedBy<WatchPathLocator>())
+                .Register(Component.For<IOnDemanTestrunPreprocessor>()
+                                    .Forward<IPreProcessBuildruns>()
+                                    .Forward<IPreProcessTestruns>()
+                                    .Forward<IConsumerOf<RunFinishedMessage>>()
+                                    .ImplementedBy<OnDemanTestrunPreprocessor>().LifeStyle.Singleton);
 
             if (defaultConfigurationLocator == null)
                 defaultConfigurationLocator = new DefaultConfigurationLocator();

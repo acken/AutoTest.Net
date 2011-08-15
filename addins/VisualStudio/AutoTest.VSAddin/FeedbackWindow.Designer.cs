@@ -55,6 +55,7 @@
             this.Controls.Add(this.runFeedback);
             this.Name = "FeedbackWindow";
             this.Size = new System.Drawing.Size(414, 103);
+            this.Resize += new System.EventHandler(this.FeedbackWindow_Resize);
             this.ResumeLayout(false);
 
         }

@@ -14,6 +14,8 @@ namespace AutoTest.VSAddin
     {
         private DTE2 _application;
 
+        public event EventHandler<UI.DebugTestArgs> DebugTest;
+
         public FeedbackWindow()
         {
             InitializeComponent();
@@ -36,9 +38,8 @@ namespace AutoTest.VSAddin
 
         private void runFeedback_DebugTest(object sender, UI.DebugTestArgs e)
         {
-            var debugger = new DebugHandler(_application);
-            debugger.Debug(e.Test);
-            Connect.LastDebugRun = e.Test;
+            if (DebugTest != null)
+                DebugTest(sender, e);
         }
 
         private void runFeedback_GoToReference(object sender, UI.GoToReferenceArgs e)
@@ -76,6 +77,16 @@ namespace AutoTest.VSAddin
         public bool IsInFocus()
         {
             return runFeedback.IsInFocus();
+        }
+
+        public void ClearBuilds(string project)
+        {
+            runFeedback.ClearBuilds(project);
+        }
+
+        private void FeedbackWindow_Resize(object sender, EventArgs e)
+        {
+            runFeedback.Resize();
         }
     }
 }

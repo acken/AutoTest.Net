@@ -73,7 +73,7 @@ namespace AutoTest.VS.Util.Menues
             try
             {
                 var commands = (Commands2)_application.Commands;
-                var editorCommandBar = ((CommandBars)_application.CommandBars)["MenuBar"];
+                var editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
                 var editPopUp = getPopup(editorCommandBar.Controls, popup);
                 var item = getCommandBarControl(editPopUp.Controls, caption);
                 if (item != null)
@@ -153,7 +153,7 @@ namespace AutoTest.VS.Util.Menues
             try
             {
                 var commands = (Commands2)_application.Commands;
-                var editorCommandBar = ((CommandBars)_application.CommandBars)["MenuBar"];
+                var editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
                 var editPopUp = getPopup(editorCommandBar.Controls, popup);
                 var item = getCommandBarControl(editPopUp.Controls, caption);
                 if (item != null)

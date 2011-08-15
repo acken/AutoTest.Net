@@ -57,7 +57,8 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public PluginLocator()
         {
-            _path = "TestRunners";
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _path = Path.Combine(path, "TestRunners");
         }
 
         public PluginLocator(string path)
