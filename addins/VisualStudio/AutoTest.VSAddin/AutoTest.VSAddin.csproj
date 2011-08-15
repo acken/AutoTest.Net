@@ -132,7 +132,8 @@
     <Content Include="..\..\..\..\..\Documents\Visual Studio 2010\Addins\AutoTest.VSAddin - For Testing.AddIn">
       <Link>AutoTest.VSAddin - For Testing.AddIn</Link>
     </Content>
-    <Content Include="AutoTest.VSAddin.AddIn" />
+    <Content Include="AutoTest.VSAddin2008.AddIn" />
+    <Content Include="AutoTest.VSAddin2010.AddIn" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FeedbackWindow.resx">

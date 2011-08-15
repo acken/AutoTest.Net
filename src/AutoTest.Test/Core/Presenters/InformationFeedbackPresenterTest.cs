@@ -25,6 +25,8 @@ namespace AutoTest.Test.Core.Presenters
         public void SetUp()
         {
             var locator = MockRepository.GenerateMock<IServiceLocator>();
+            locator.Stub(x => x.LocateAll<IConsumerOf<ErrorMessage>>()).Return(new IConsumerOf<ErrorMessage>[] { });
+            locator.Stub(x => x.LocateAll<IOverridingConsumer<ErrorMessage>>()).Return(new IOverridingConsumer<ErrorMessage>[] { });
             _bus = new MessageBus(locator);
             _view = new FakeInformationFeedbackView();
             _presenter = new InformationFeedbackPresenter(_bus);

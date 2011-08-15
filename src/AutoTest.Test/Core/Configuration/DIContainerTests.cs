@@ -289,7 +289,7 @@ namespace AutoTest.Test.Core.Configuration
 		public void Should_register_null_pre_processors()
 		{
 			var preProcessors = _locator.LocateAll<IPreProcessTestruns>();
-			preProcessors.Length.ShouldEqual(3);
+			preProcessors.Length.ShouldEqual(2);
 		}
 		
 		[Test]
@@ -299,7 +299,7 @@ namespace AutoTest.Test.Core.Configuration
             container.Configure();
 			container.AddRunFailedTestsFirstPreProcessor();
 			var preProcessors = container.Services.LocateAll<IPreProcessTestruns>();
-			preProcessors.Length.ShouldEqual(2);
+			preProcessors.Length.ShouldEqual(3);
 		}
 		
 		[Test]
