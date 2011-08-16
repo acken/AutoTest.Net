@@ -153,7 +153,11 @@ namespace AutoTest.VS.Util.Menues
             try
             {
                 var commands = (Commands2)_application.Commands;
-                var editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
+                CommandBar editorCommandBar;
+                if (commandBar == "MenuBar")
+                    editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
+                else
+                    editorCommandBar = getCommandBar((CommandBars)_application.CommandBars, commandBar);
                 var editPopUp = getPopup(editorCommandBar.Controls, popup);
                 var item = getCommandBarControl(editPopUp.Controls, caption);
                 if (item != null)

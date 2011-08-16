@@ -17,22 +17,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
     {
         private readonly IServiceLocator _services;
         private readonly IMessageBus _bus;
-		private readonly IMarkProjectsForRebuild _rebuildMarker;
-        private readonly ISolutionChangeConsumer _solutionHanlder;
 
-        public FileChangeConsumer(IServiceLocator services, IMessageBus bus, IMarkProjectsForRebuild rebuildMarker, ISolutionChangeConsumer solutionHanlder)
+        public FileChangeConsumer(IServiceLocator services, IMessageBus bus)
         {
             _services = services;
             _bus = bus;
-			_rebuildMarker = rebuildMarker;
-            _solutionHanlder = solutionHanlder;
         }
 
         public void Consume(FileChangeMessage message)
         {
             Debug.ConsumingFileChange(message);
-            _solutionHanlder.Consume(message.Files);
-			_rebuildMarker.HandleProjects(message);
             var totalListOfProjects = new List<ChangedFile>();
             var locators = _services.LocateAll<ILocateProjects>();
             foreach (var file in message.Files)

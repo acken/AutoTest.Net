@@ -4,7 +4,7 @@ namespace AutoTest.Core
 {
 	public interface IMarkProjectsForRebuild
 	{
-		void HandleProjects(FileChangeMessage message);
+		void HandleProjects(ChangedFile file);
 	}
 }
 

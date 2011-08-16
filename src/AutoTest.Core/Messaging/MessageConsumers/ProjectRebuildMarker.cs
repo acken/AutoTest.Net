@@ -3,24 +3,28 @@ using AutoTest.Messages;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.DebugLog;
+using AutoTest.Core.Configuration;
+using System.IO;
 namespace AutoTest.Core
 {
 	class ProjectRebuildMarker : IMarkProjectsForRebuild
 	{
+        private IConfiguration _configuration;
 		private ICache _cache;
-		
-		public ProjectRebuildMarker(ICache cache)
-		{
-			_cache = cache;
+
+        public ProjectRebuildMarker(ICache cache, IConfiguration configuration)
+        {
+            _cache = cache;
+            _configuration = configuration;
 		}
 		
-		public void HandleProjects(FileChangeMessage message)
+		public void HandleProjects(ChangedFile file)
 		{
-			foreach (var file in message.Files)
-			{
-				handleProject(".csproj", file);
-				handleProject(".vbproj", file);
-			}
+            if (File.Exists(_configuration.WatchToken))
+                return;
+			handleProject(".csproj", file);
+			handleProject(".vbproj", file);
+            handleProject(".fsproj", file);
 		}
 		
 		private bool handleProject(string extension, ChangedFile file)

@@ -8,6 +8,7 @@ using AutoTest.Messages;
 using AutoTest.Core.Launchers;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.Messaging.MessageConsumers;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -25,6 +26,8 @@ namespace AutoTest.Core.FileSystem
         private IWatchValidator _validator;
 		private IConfiguration _configuration;
         private ICache _cache;
+        private readonly IMarkProjectsForRebuild _rebuildMarker;
+        private readonly ISolutionChangeConsumer _solutionHanlder;
 		private string _watchPath = "";
         private bool _paused = true;
         private string _ignorePath = "";
@@ -32,7 +35,7 @@ namespace AutoTest.Core.FileSystem
 
         public bool IsPaused { get { return _paused; } }
 
-        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer, ICache cache)
+        public DirectoryWatcher(IMessageBus bus, IWatchValidator validator, IConfiguration configuration, IHandleDelayedConfiguration delayedConfigurer, IWatchPathLocator watchPathLocator, IApplicatonLauncher launcer, ICache cache, IMarkProjectsForRebuild rebuildMarker, ISolutionChangeConsumer solutionHanlder)
         {
             _bus = bus;
             _validator = validator;
@@ -41,6 +44,8 @@ namespace AutoTest.Core.FileSystem
             _watchPathLocator = watchPathLocator;
 			_launcer = launcer;
             _cache = cache;
+            _rebuildMarker = rebuildMarker;
+            _solutionHanlder = solutionHanlder;
             _watcher = new FileSystemWatcher
                            {
                                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
@@ -167,6 +172,8 @@ namespace AutoTest.Core.FileSystem
             if (Directory.Exists(file.FullName))
                 return;
             var fileChangeProdiver = true;
+            _solutionHanlder.Consume(file);
+            _rebuildMarker.HandleProjects(file);
             if (_bus.BuildProvider != null)
                 fileChangeProdiver = !_bus.BuildProvider.Equals("NoBuild");
             if (fileChangeProdiver && !_configuration.WatchAllFiles && !((isProjectFile(file.FullName) && _cache.Get<Project>(file.FullName) != null) || _cache.IsProjectFile(file.FullName)))

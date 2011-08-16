@@ -8,6 +8,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 {
     public interface ISolutionChangeConsumer
     {
-        void Consume(ChangedFile[] files);
+        void Consume(ChangedFile file);
     }
 }
