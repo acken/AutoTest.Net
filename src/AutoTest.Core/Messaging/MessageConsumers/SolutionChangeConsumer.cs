@@ -7,6 +7,8 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Crawlers;
 using AutoTest.Core.Configuration;
 using System.IO;
+using AutoTest.Core.DebugLog;
+using System.Threading;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -28,7 +30,27 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (!File.Exists(_configuration.WatchToken))
                 return;
             if (file.Extension.ToLower().Equals(".sln"))
-                _crawler.Crawl(file.FullName);
+            {
+                try
+                {
+                    tryCrawl(file);
+                }
+                catch (IOException ex)
+                {
+                    Debug.WriteException(ex);
+                    Thread.Sleep(200);
+                    tryCrawl(file);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteException(ex);
+                }
+            }
+        }
+
+        private void tryCrawl(ChangedFile file)
+        {
+            _crawler.Crawl(file.FullName);
         }
 
         #endregion

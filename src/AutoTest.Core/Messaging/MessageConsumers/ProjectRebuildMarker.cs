@@ -20,23 +20,32 @@ namespace AutoTest.Core
 		
 		public void HandleProjects(ChangedFile file)
 		{
-            if (File.Exists(_configuration.WatchToken))
-                return;
-			handleProject(".csproj", file);
-			handleProject(".vbproj", file);
-            handleProject(".fsproj", file);
+            try
+            {
+                handleProject(".csproj", file);
+                handleProject(".vbproj", file);
+                handleProject(".fsproj", file);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteException(ex);
+            }
 		}
 		
 		private bool handleProject(string extension, ChangedFile file)
 		{
+            var isWatchingSolution = File.Exists(_configuration.WatchToken);
 			if (file.Extension.ToLower().Equals(extension))
 			{
 				var project = _cache.Get<Project>(file.FullName);
                 if (project == null)
                 {
-                    Debug.WriteDebug("Adding and marking project for rebuild " + file.FullName);
-                    _cache.Add<Project>(file.FullName);
-                    project = _cache.Get<Project>(file.FullName);
+                    if (!isWatchingSolution)
+                    {
+                        Debug.WriteDebug("Adding and marking project for rebuild " + file.FullName);
+                        _cache.Add<Project>(file.FullName);
+                        project = _cache.Get<Project>(file.FullName);
+                    }
                 }
                 else
                 {

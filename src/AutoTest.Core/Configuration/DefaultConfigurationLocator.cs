@@ -21,6 +21,15 @@ namespace AutoTest.Core.Configuration
 		{
 			return PathParsing.GetRootDirectory();
 		}
+
+        private string getLogPath()
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var atDir = Path.Combine(appData, "AutoTest.Net");
+            if (!Directory.Exists(atDir))
+                Directory.CreateDirectory(atDir);
+            return atDir;
+        }
 	}
 }
 

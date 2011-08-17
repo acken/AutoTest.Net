@@ -26,7 +26,7 @@ namespace AutoTest.VS.Util.Menues
             //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
             CommandBar menuBarCommandBar = ((CommandBars)_application.CommandBars)["MenuBar"];
             var commands = (Commands2)_application.Commands;
-
+            
             CommandBarControl toolsControl = getCommandBarControl(menuBarCommandBar.Controls, name);
             try
             {
