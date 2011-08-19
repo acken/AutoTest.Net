@@ -1,17 +1,22 @@
 (View in WordPad or similar on windows since the file uses Unix line endings)
 
 AutoTest.Net (http://groups.google.com/group/autotestnet)
-This product provides continuous testing for the .Net platform.It contains a 
+This product provides continuous testing for the .Net platform. It contains a 
+Visual Studio Addin through a windows installer (AutoTest-v*.*.*.exe),
 winforms app and a console app.
+The Visual Studio Addin will by default start as paused so after opening a
+solution click AutoTest.Net->Resume Engine. To have it always run afeter
+opening a solution set the StartPaused setting to false and restart the engine.
 
 Features
+	* Watch directory or solution file
 	* File tracking: Automatic builds and testruns
 	* Assembly tracking: Automatic test runs for built assemblies (if 
 	  BuildExecutable is removed from config)
 		* You can then build through Visual Studio or something similar while
 		  still having your tests run automatically
 	* Cross platform support through Mono
-	* Supports C# and Visual Basic projects
+	* Supports C# and Visual Basic and F# projects
 	* Supported build tools
 		* MSBuild.exe
 		* Mono's xbuild
@@ -56,5 +61,10 @@ When done go in and run build and deploy scripts (biuld.sh/build.bat and
 deploy.sh/deploy.bat depending on whether you are on Windows(bat) or something else(sh)).
 After running build and deploy scripts you will find the built binaries under the 
 ReleaseBinaries folder.
+
+Build Visual Studio Addin from source
+Go through the steps described in the previous section except for the actual build and
+deploy part. Now download Inno Setup and install it to the path specified in package.bat.
+After it's installed run package.bat and find the installer in ReleaseBinaries\Installer.
 
 PS!! For building on mono you need 2.8 or later and it uses Git's core.autocrlf=true
