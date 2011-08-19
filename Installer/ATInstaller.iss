@@ -85,10 +85,10 @@ Name: "{group}\{cm:UninstallProgram,AutoTest.Net}"; Filename: "{uninstallexe}"
 [Registry]
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
 
 [Run]
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\.NETFramework,InstallRoot}\{reg:HKCR\CLSID\{{61b3e12b-3586-3a58-a497-7ed7c4c794b9%7D\InprocServer32\2.0.0.0,RuntimeVersion}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registeringcontrols ..."; Flags: runhidden;
