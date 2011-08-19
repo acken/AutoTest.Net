@@ -79,6 +79,11 @@ namespace AutoTest.VSAddin
             return runFeedback.IsInFocus();
         }
 
+        public void Clear()
+        {
+            runFeedback.ClearList();
+        }
+
         public void ClearBuilds(string project)
         {
             runFeedback.ClearBuilds(project);

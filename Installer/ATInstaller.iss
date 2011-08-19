@@ -7,14 +7,14 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{DE3A8FE7-5918-471A-BF59-84C2C3328CCF}
 AppName=AutoTest.Net
-AppVersion=1.1.0
-AppVerName=AutoTest.Net 1.1.0
+AppVersion=1.2.0
+AppVerName=AutoTest.Net 1.2.0
 AppPublisher=AutoTest.Net
 DefaultDirName={pf}\AutoTest.Net
 DefaultGroupName=AutoTest.Net
 LicenseFile=..\ReleaseBinaries\AutoTest.License.txt
 OutputDir=..\ReleaseBinaries\Installer
-OutputBaseFilename=AutoTest.Net-v1.1.0
+OutputBaseFilename=AutoTest.Net-v1.2.0
 Compression=lzma
 SolidCompression=yes
 Uninstallable=yes
@@ -33,9 +33,10 @@ Source: "..\ReleaseBinaries\AutoTest.WinForms.exe"; DestDir: "{app}"; Flags: ign
 Source: "..\ReleaseBinaries\README"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\ReleaseBinaries\AutoTest.VS.Util.dll"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "..\ReleaseBinaries\AutoTest.VSAddin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\AutoTest.VSAddin.dll"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\AutoTest.VSAddin2008.Addin"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "..\ReleaseBinaries\AutoTest.VSAddin2010.Addin"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "..\ReleaseBinaries\VSMenuKiller.exe"; DestDir: "{app}"; Flags: ignoreversion;
 
 Source: "..\ReleaseBinaries\Icons\circleFAIL.png"; DestDir: "{app}\Icons"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Icons\circleWAIL.png"; DestDir: "{app}\Icons"; Flags: ignoreversion
@@ -74,24 +75,27 @@ Source: "..\ReleaseBinaries\Castle.license.txt"; DestDir: "{app}"; Flags: ignore
 Source: "..\ReleaseBinaries\Castle.Windsor.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Mono.Cecil.dll"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "..\src\AutoTest.Core\AutoTest.config.template.VS"; DestDir: "{app}"; Flags: ignoreversion
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{cm:UninstallProgram,ContinuousTests}"; Filename: "{uninstallexe}"
+Name: "{group}\{cm:UninstallProgram,AutoTest.Net}"; Filename: "{uninstallexe}"
 
 [Registry]
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\10.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0"; ValueType: string; ValueName: ""; ValueData: "AutomationOptions";
 Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions"; ValueType: string; ValueName: ""; ValueData: "LookInFolders";
-Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookInFolders"; ValueType: string; ValueName: "{app}"; ValueData: ""; Flags: uninsdeletekey
 
 [Run]
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\.NETFramework,InstallRoot}\{reg:HKCR\CLSID\{{61b3e12b-3586-3a58-a497-7ed7c4c794b9%7D\InprocServer32\2.0.0.0,RuntimeVersion}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registeringcontrols ..."; Flags: runhidden;
 
 [UninstallRun]
-Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2008 addin ..."; Flags: runhidden;
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\.NETFramework,InstallRoot}\{reg:HKCR\CLSID\{{61b3e12b-3586-3a58-a497-7ed7c4c794b9%7D\InprocServer32\2.0.0.0,RuntimeVersion}\RegAsm.exe"; Parameters: /unregister AutoTest.VSAddin.dll; WorkingDir: {app}; StatusMsg: "Unregisteringcontrols ..."; Flags: runhidden;
 
 [Code]

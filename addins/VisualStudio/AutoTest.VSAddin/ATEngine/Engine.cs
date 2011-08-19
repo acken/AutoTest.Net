@@ -50,7 +50,7 @@ namespace AutoTest.VSAddin.ATEngine
         public void Bootstrap(string watchToken)
         {
             _watchToken = watchToken;
-            BootStrapper.Configure();
+            BootStrapper.Configure(new LocalAppDataConfigurationLocator("AutoTest.config.template.VS"));
             BootStrapper.Container
                 .Register(Component.For<IMessageProxy>()
                                     .Forward<IRunFeedbackView>()
@@ -70,6 +70,7 @@ namespace AutoTest.VSAddin.ATEngine
             _watcher.Watch(_watchToken);
             _window.DebugTest += new EventHandler<UI.DebugTestArgs>(_window_DebugTest);
             setCustomOutputPath();
+            _window.Clear();
         }
 
         public void Pause()
