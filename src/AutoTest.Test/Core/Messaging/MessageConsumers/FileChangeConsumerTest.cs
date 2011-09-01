@@ -21,16 +21,13 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IServiceLocator _services;
         private IMessageBus _bus;
         private FileChangeConsumer _subject;
-        private IMarkProjectsForRebuild _marker;
 
         [SetUp]
         public void testSetup()
         {
             _services = MockRepository.GenerateMock<IServiceLocator>();
             _bus = MockRepository.GenerateMock<IMessageBus>();
-			_marker = MockRepository.GenerateMock<IMarkProjectsForRebuild>();
-            var crawler = MockRepository.GenerateMock<ISolutionChangeConsumer>();
-            _subject = new FileChangeConsumer(_services, _bus, _marker, crawler);
+            _subject = new FileChangeConsumer(_services, _bus);
         }
 
         [Test]
@@ -96,18 +93,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
                                                    p.Files[0].Name.Equals("FirstSubProject.vbproj") &&
                                                    p.Files[1].Name.Equals("SecondSubProject.xproj") &&
                                                    p.Files[2].Name.Equals("ThirdSubProject.xproj"))));
-        }
-        
-        [Test]
-        public void When_changed_file_is_project_handle_it()
-        {
-            var locator = new FakeProjectLocator(new ChangedFile[] { new ChangedFile("someproject.csproj") });
-            locator.WhenAskedIfFileIsProjectReturn(true);
-            _services.Stub(s => s.LocateAll<ILocateProjects>()).Return(new ILocateProjects[] { locator });
-            var fileChange = new FileChangeMessage();
-            fileChange.AddFile(new ChangedFile("someproject.csproj"));
-            _subject.Consume(fileChange);
-            _marker.AssertWasCalled(m => m.HandleProjects(fileChange));
         }
     }
 }
