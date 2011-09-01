@@ -32,12 +32,13 @@ namespace AutoTest.VS.Util.Menues
             {
                 if (toolsControl == null)
                 {
-                    var command = (CommandBar) commands.AddCommandBar(caption, vsCommandBarType.vsCommandBarTypeMenu, menuBarCommandBar, 30);
+                    var command = (CommandBar) commands.AddCommandBar(name, vsCommandBarType.vsCommandBarTypeMenu, menuBarCommandBar, 30);
                     toolsControl = getCommandBarControl(menuBarCommandBar.Controls, name);
+                    toolsControl.Caption = caption;
                 }
                 toolsControl.Enabled = true;
             }
-            catch
+            catch (Exception ex)
             {
             }
         }
@@ -116,6 +117,7 @@ namespace AutoTest.VS.Util.Menues
             while (enu.MoveNext())
             {
                 var control = (CommandBarControl)enu.Current;
+                
                 if (control.accName == name)
                     return control;
             }
