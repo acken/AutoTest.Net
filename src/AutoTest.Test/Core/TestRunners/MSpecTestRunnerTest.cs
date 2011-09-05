@@ -9,6 +9,7 @@ using AutoTest.Messages;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.IO;
+using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Test.Core.TestRunners
 {
@@ -76,7 +77,7 @@ namespace AutoTest.Test.Core.TestRunners
             var assembly = String.Empty;
             _fileSystem.Stub(f => f.FileExists(assembly)).IgnoreArguments().Return(true);
             _assemblyReader.Stub(a => a.GetTargetFramework(assembly)).Return(new Version());
-            _assemblyReader.Stub(r => r.GetReferences(assembly)).Return(new[] { "Machine.Specifications" });
+            _assemblyReader.Stub(r => r.GetReferences(assembly)).Return(new[] { new TypeName("Machine.Specifications", "Machine.Specifications") });
 
             var handles = _runner.CanHandleTestFor(assembly);
 

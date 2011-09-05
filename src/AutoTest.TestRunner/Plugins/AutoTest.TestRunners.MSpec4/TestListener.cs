@@ -6,7 +6,7 @@ using Machine.Specifications.Runner;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Communication;
 
-namespace AutoTest.TestRunners.MSpec
+namespace AutoTest.TestRunners.MSpec4
 {
     class TestListener : ISpecificationRunListener
     {
@@ -59,7 +59,7 @@ namespace AutoTest.TestRunners.MSpec
                     specification.ContainingType,
                     DateTime.Now.Subtract(_start).TotalMilliseconds,
                     specification.ContainingType,
-                    specification.ContainingType,
+                    specification.ContainingType + "." + specification.FieldName,
                     getState(result.Status),
                     getMessage(result.Exception));
             test.AddStackLines(getStackLines(result.Exception));

@@ -59,7 +59,7 @@ namespace AutoTest.TestRunners.XUnit
         {
             using (var parser = _reflectionProviderFactory(assembly))
             {
-                return parser.GetReferences().Contains("xunit");
+                return parser.GetReferences().Count(x => x.Name.Equals("xunit")) > 0;
             }
         }
 

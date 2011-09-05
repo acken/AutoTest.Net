@@ -40,7 +40,7 @@ namespace AutoTest.Test.Core.TestRunners
 		{
             _fsService.Stub(f => f.FileExists("")).IgnoreArguments().Return(true);
             _assemblyReader.Stub(a => a.GetTargetFramework("")).Return(new Version());
-			_assemblyReader.Stub(r => r.GetReferences("")).Return(new string[] { "nunit.framework" });
+			_assemblyReader.Stub(r => r.GetReferences("")).Return(new [] { new TypeName("nunit.framework", "nunit.framework") });
             var change = "";
             _runner.CanHandleTestFor(change).ShouldBeTrue();
 		}

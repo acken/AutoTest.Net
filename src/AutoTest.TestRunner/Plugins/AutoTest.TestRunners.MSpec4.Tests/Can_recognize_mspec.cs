@@ -7,7 +7,7 @@ using System.Reflection;
 using System.IO;
 using AutoTest.TestRunners.Shared.Options;
 
-namespace AutoTest.TestRunners.MSpec.Tests
+namespace AutoTest.TestRunners.MSpec4.Tests
 {
     [Category("slow")]
     [TestFixture]
@@ -17,14 +17,14 @@ namespace AutoTest.TestRunners.MSpec.Tests
         public void I_can_haz_mspec_test()
         {
             var runner = new Runner();
-            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"), Is.True);
+            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"), Is.True);
         }
 
         [Test]
         public void When_handed_a_non_mspec_test_it_will_not_recognize_it()
         {
             var runner = new Runner();
-            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec.Tests.TestResource.SomeClass"), Is.False);
+            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec4.Tests.TestResource.SomeClass"), Is.False);
         }
 
         [Test]
@@ -38,14 +38,14 @@ namespace AutoTest.TestRunners.MSpec.Tests
         public void When_passed_a_class_containing_mspec_test_fields_it_will_report_that_it_can_handle_it()
         {
             var runner = new Runner();
-            Assert.That(runner.ContainsTestsFor(getAssembly(), "AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"), Is.True);
+            Assert.That(runner.ContainsTestsFor(getAssembly(), "AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"), Is.True);
         }
 
         [Test]
         public void Will_respond_to_mspec_identifier()
         {
             var runner = new Runner();
-            Assert.That(runner.Handles("MSpec"), Is.True);
+            Assert.That(runner.Handles("MSpec4"), Is.True);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddTest("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers");
+            options.AddTest("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers");
             var settings = new RunSettings(options, new string[] {}, null);
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -61,9 +61,9 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Passed));
             Assert.That(test.Assembly, Is.EqualTo(getAssembly()));
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
-            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
-            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
-            Assert.That(test.TestDisplayName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestDisplayName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers.results_in_4"));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddTest("AutoTest.TestRunners.MSpec.Tests.TestResource.Ignored_test");
+            options.AddTest("AutoTest.TestRunners.MSpec4.Tests.TestResource.Ignored_test");
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -79,8 +79,8 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Ignored));
             Assert.That(test.Assembly, Is.EqualTo(getAssembly()));
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
-            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Ignored_test"));
-            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Ignored_test"));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Ignored_test"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Ignored_test"));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddTest("AutoTest.TestRunners.MSpec.Tests.TestResource.Not_implemented_test");
+            options.AddTest("AutoTest.TestRunners.MSpec4.Tests.TestResource.Not_implemented_test");
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -96,8 +96,8 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Ignored));
             Assert.That(test.Assembly, Is.EqualTo(getAssembly()));
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
-            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Not_implemented_test"));
-            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Not_implemented_test"));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Not_implemented_test"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Not_implemented_test"));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddTest("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_not_add_numbers");
+            options.AddTest("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_not_add_numbers");
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);          
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -113,8 +113,8 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Failed));
             Assert.That(test.Assembly, Is.EqualTo(getAssembly()));
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
-            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_not_add_numbers"));
-            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_not_add_numbers"));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_not_add_numbers"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_not_add_numbers"));
             Assert.That(test.Message, Is.EqualTo("I'm failing here"));
             Assert.That(test.StackLines.Count(), Is.EqualTo(2));
         }
@@ -124,7 +124,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddMember("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers");
+            options.AddMember("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers");
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -132,8 +132,8 @@ namespace AutoTest.TestRunners.MSpec.Tests
             Assert.That(test.State, Is.EqualTo(Shared.Results.TestState.Passed));
             Assert.That(test.Assembly, Is.EqualTo(getAssembly()));
             Assert.That(test.Runner, Is.EqualTo("MSpec"));
-            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
-            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestFixture, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"));
+            Assert.That(test.TestName, Is.EqualTo("AutoTest.TestRunners.MSpec4.Tests.TestResource.Can_add_numbers"));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
         {
             var runner = new Runner();
             var options = new AssemblyOptions(getAssembly());
-            options.AddNamespace("AutoTest.TestRunners.MSpec.Tests.TestResource");
+            options.AddNamespace("AutoTest.TestRunners.MSpec4.Tests.TestResource");
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(4));
@@ -159,7 +159,7 @@ namespace AutoTest.TestRunners.MSpec.Tests
 
         private static string getAssembly()
         {
-            return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "AutoTest.TestRunners.MSpec.Tests.TestResource.dll");
+            return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "AutoTest.TestRunners.MSpec4.Tests.TestResource.dll");
         }
     }
 }

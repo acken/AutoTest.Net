@@ -174,6 +174,7 @@ namespace AutoTest.UI
                 printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
                 generateSummary(null);
                 organizeListItemBehaviors(null);
+                clearRunnerTypeAnyItems();
                 _isRunning = true;
             }, text);
         }
@@ -348,6 +349,21 @@ namespace AutoTest.UI
                 }
             }
             ResumeLayout();
+        }
+
+        private void clearRunnerTypeAnyItems()
+        {
+            var toRemove = new List<ListViewItem>();
+            foreach (ListViewItem listItem in listViewFeedback.Items)
+            {
+                if (listItem.Tag.GetType().Equals(typeof(CacheTestMessage)))
+                {
+                    var item = (CacheTestMessage)listItem.Tag;
+                    if (item.Test.Runner == TestRunner.Any)
+                        toRemove.Add(listItem);
+                }
+            }
+            toRemove.ForEach(x => listViewFeedback.Items.Remove(x));
         }
 
         private int getFirstItemPosition(string[] placeBefore)

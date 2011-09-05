@@ -122,8 +122,6 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         private void removeChanged(TestRunResults results)
         {
-            _failed.RemoveAll(x => x.Value.Runner == TestRunner.Any);
-            _ignored.RemoveAll(x => x.Value.Runner == TestRunner.Any);
             foreach (var test in results.Passed)
             {
                 var item = new TestItem(results.Assembly, results.Project, test);

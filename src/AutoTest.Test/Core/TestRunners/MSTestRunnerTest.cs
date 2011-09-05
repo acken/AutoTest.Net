@@ -37,7 +37,7 @@ namespace AutoTest.Test.Core.TestRunners
 		{
             _fsService.Stub(f => f.FileExists("")).IgnoreArguments().Return(true);
             _assemblyReader.Stub(a => a.GetTargetFramework("")).Return(new Version());
-			_assemblyReader.Stub(r => r.GetReferences("")).Return(new string[] { "Microsoft.VisualStudio.QualityTools.UnitTestFramework" });
+            _assemblyReader.Stub(r => r.GetReferences("")).Return(new[] { new TypeName("Microsoft.VisualStudio.QualityTools.UnitTestFramework", "Microsoft.VisualStudio.QualityTools.UnitTestFramework") });
 			var change = "";
             _runner.CanHandleTestFor(change).ShouldBeTrue();
 		}

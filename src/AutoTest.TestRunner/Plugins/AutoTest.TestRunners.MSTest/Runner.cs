@@ -61,7 +61,7 @@ namespace AutoTest.TestRunners.MSTest
         {
             using (var parser = _reflectionProviderFactory(assembly))
             {
-                return parser.GetReferences().Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
+                return parser.GetReferences().Count(x => x.Name.Equals("Microsoft.VisualStudio.QualityTools.UnitTestFramework")) > 0;
             }
         }
 

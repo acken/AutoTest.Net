@@ -50,7 +50,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!_fileSystem.FileExists(file))
                 return false;
 
-            return _assemblyReader.GetReferences(assembly).Contains("Machine.Specifications");
+            return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("Machine.Specifications")) > 0;
         }
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)

@@ -12,7 +12,7 @@ using Machine.Specifications.Runner.Impl;
 using System.Reflection;
 using System.IO;
 
-namespace AutoTest.TestRunners.MSpec
+namespace AutoTest.TestRunners.MSpec4
 {
     public class Runner : IAutoTestNetTestRunner
     {
@@ -21,7 +21,7 @@ namespace AutoTest.TestRunners.MSpec
         private ITestFeedbackProvider _feedback;
         private List<TestResult> _results;
 
-        public string Identifier { get { return "MSpec"; } }
+        public string Identifier { get { return "MSpec4"; } }
 
         public void SetLogger(ILogger logger)
         {
@@ -40,6 +40,9 @@ namespace AutoTest.TestRunners.MSpec
 
         public bool IsTest(string assembly, string member)
         {
+            if (!ContainsTestsFor(assembly))
+                return false;
+
             using (var locator = _reflectionProviderFactory(assembly))
             {
                 var fixture = locator.LocateClass(member);
@@ -62,7 +65,8 @@ namespace AutoTest.TestRunners.MSpec
         {
             using (var parser = _reflectionProviderFactory(assembly))
             {
-                return parser.GetReferences().Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.3.0.0")) > 0;
+                var references = parser.GetReferences();
+                return references.Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.4.0.0")) > 0;
             }
         }
 

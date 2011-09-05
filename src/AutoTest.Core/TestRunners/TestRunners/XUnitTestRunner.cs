@@ -37,7 +37,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!_fsService.FileExists(_configuration.XunitTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
                 return false;
 
-            return _assemblyReader.GetReferences(assembly).Contains("xunit");
+            return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("xunit")) > 0;
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)

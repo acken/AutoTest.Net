@@ -57,4 +57,17 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             Attributes = attributes;
         }
     }
+
+    [Serializable]
+    public class TypeName
+    {
+        public string FullName { get; private set; }
+        public string Name { get; private set; }
+
+        public TypeName(string fullname, string name)
+        {
+            FullName = fullname;
+            Name = name;
+        }
+    }
 }

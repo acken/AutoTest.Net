@@ -10,7 +10,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         string GetName(string assembly);
         Version GetTargetFramework(string assembly);
         Targeting.Platform GetPlatform(string assembly);
-        IEnumerable<string> GetReferences(string assembly);
+        IEnumerable<TypeName> GetReferences(string assembly);
     }
 
     public class AssemblyPropertyReader : IAssemblyPropertyReader
@@ -39,7 +39,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             }
         }
 
-        public IEnumerable<string> GetReferences(string assembly)
+        public IEnumerable<TypeName> GetReferences(string assembly)
         {
             using (var provider = Reflect.On(assembly))
             {

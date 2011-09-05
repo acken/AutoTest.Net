@@ -59,7 +59,7 @@ namespace AutoTest.TestRunners.NUnit
         {
             using (var parser = _reflectionProviderFactory(assembly))
             {
-                return parser.GetReferences().Contains("nunit.framework");
+                return parser.GetReferences().Count(x => x.Name.Equals("nunit.framework")) > 0;
             }
         }
 

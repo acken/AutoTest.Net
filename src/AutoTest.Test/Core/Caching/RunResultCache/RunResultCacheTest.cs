@@ -295,22 +295,6 @@ namespace AutoTest.Test.Core.Caching
         }
 
         [Test]
-        public void Should_remove_any_item_with_runner_type_any()
-        {
-            var results = new TestResult[]
-                              {
-                                  new TestResult(TestRunner.Any, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] {})
-                              };
-            var runResults = new TestRunResults("project", "assembly", false, TestRunner.NUnit, results);
-            _runResultCache.Merge(runResults);
-
-            runResults = new TestRunResults("project", "assembly", false, TestRunner.NUnit, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Passed, "Test name", "", new IStackLine[] { }) });
-            _runResultCache.Merge(runResults);
-
-            _runResultCache.Failed.Length.ShouldEqual(0);
-        }
-
-        [Test]
         public void Should_merge_tests_going_from_failed_to_ignored()
         {
             var runResults = new TestRunResults("project", "assembly", false, TestRunner.NUnit, new TestResult[] { new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test name", "Message", new IStackLine[] { }) });

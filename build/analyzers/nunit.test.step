@@ -104,6 +104,7 @@
           <exclude name="${dirs.build.code}${path.separator}**${path.separator}*Database*dll" />
           <exclude name="${dirs.build.code}${path.separator}**${path.separator}*.Integration*dll" />
           <exclude name="${dirs.build.code}${path.separator}**${path.separator}TestFu.dll" />
+		  <exclude name="${dirs.build.code}${path.separator}**${path.separator}*MSpec*.dll" />
           <include name="${dirs.build.code}${path.separator}**${path.separator}*Test*dll" />
           <include name="${dirs.build.code}${path.separator}**${path.separator}*Spec*dll" />
         </items>

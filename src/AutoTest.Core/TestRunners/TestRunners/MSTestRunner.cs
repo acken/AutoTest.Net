@@ -36,7 +36,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (!_fsService.FileExists(_configuration.MSTestRunner(string.Format("v{0}.{1}", framework.Major, framework.Minor))))
                 return false;
 
-            return _assemblyReader.GetReferences(assembly).Contains("Microsoft.VisualStudio.QualityTools.UnitTestFramework");
+            return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("Microsoft.VisualStudio.QualityTools.UnitTestFramework")) > 0;
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)

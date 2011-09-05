@@ -58,20 +58,20 @@ namespace AutoTest.Core.ReflectionProviders
             }
         }
 
-        public IEnumerable<string> GetReferences()
+        public IEnumerable<TypeName> GetReferences()
         {
             try
             {
                 var references = _assembly.MainModule.AssemblyReferences;
-                var names = new List<string>();
+                var names = new List<TypeName>();
                 foreach (var reference in references)
-                    names.Add(reference.Name);
+                    names.Add(new TypeName(reference.FullName, reference.Name));
                 return names;
             }
             catch
             {
             }
-            return new string[] { };
+            return new TypeName[] { };
         }
 
         public string GetParentType(string type)

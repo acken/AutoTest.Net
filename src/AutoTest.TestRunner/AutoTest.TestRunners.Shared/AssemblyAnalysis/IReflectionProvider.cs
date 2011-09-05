@@ -10,7 +10,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         string GetName();
         Version GetTargetFramework();
         Targeting.Platform GetPlatform();
-        IEnumerable<string> GetReferences();
+        IEnumerable<TypeName> GetReferences();
 
         string GetParentType(string type);
         SimpleClass LocateClass(string type);

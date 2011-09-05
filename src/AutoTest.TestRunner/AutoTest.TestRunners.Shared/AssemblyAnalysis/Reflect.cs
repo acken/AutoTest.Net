@@ -36,7 +36,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             }
         }
 
-        public static IEnumerable<string> GetReferences(string assembly)
+        public static IEnumerable<TypeName> GetReferences(string assembly)
         {
             using (var provider = _reflectionProviderFactory(assembly))
             {

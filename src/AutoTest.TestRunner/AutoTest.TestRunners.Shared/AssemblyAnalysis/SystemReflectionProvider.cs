@@ -52,7 +52,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             return _locator.GetPlatform();
         }
 
-        public IEnumerable<string> GetReferences()
+        public IEnumerable<TypeName> GetReferences()
         {
             return _locator.GetReferences();
         }
@@ -86,7 +86,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
         string GetName();
         string GetTargetFramework();
         Platform GetPlatform();
-        List<string> GetReferences();
+        List<TypeName> GetReferences();
         string GetParentType(string type);
         SimpleClass LocateClass(string type);
         SimpleMethod LocateMethod(string type);
@@ -159,20 +159,20 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             }
         }
 
-        public List<string> GetReferences()
+        public List<TypeName> GetReferences()
         {
             try
             {
                 var references = _assembly.GetReferencedAssemblies();
-                var names = new List<string>();
+                var names = new List<TypeName>();
                 foreach (var reference in references)
-                    names.Add(reference.Name);
+                    names.Add(new TypeName(reference.FullName, reference.Name));
                 return names;
             }
             catch
             {
             }
-            return new string[] { }.ToList();
+            return new TypeName[] { }.ToList();
         }
 
         public string GetParentType(string type)
