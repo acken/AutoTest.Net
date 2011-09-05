@@ -28,7 +28,7 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             var cls = locator.LocateClass(locator.GetParentType("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests.Should_find_me"));
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.TypeLocatorTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
-            Assert.AreEqual(9, cls.Methods.Count());
+            Assert.AreEqual(10, cls.Methods.Count());
         }
 
         [Test]
@@ -48,6 +48,14 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
             Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass.Blargh", method.Fullname);
             Assert.AreEqual(4, method.Attributes.Count());
         }
+
+        [Test]
+        public void Should_find_nested_classes()
+        {
+            var locator = new SystemReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var method = locator.LocateMethod("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod");
+            Assert.AreEqual("AutoTest.TestRunners.Tests.AssemblyAnalysis.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod", method.Fullname);
+        }
     }
     
     [MyAttribute]
@@ -56,6 +64,16 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
         [MyOtherAttribute]
         public void Blargh()
         {
+        }
+
+        public class MyNestedClass
+        {
+            public class MyNestedNestedClass
+            {
+                public void SomeMethod()
+                {
+                }
+            }
         }
     }
 
