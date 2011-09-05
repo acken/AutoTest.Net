@@ -568,30 +568,14 @@ namespace AutoTest.UI
                 {
                     e.Handled = true;
                     e.SuppressKeyPress = true;
-                    if (listViewFeedback.Items.Count == 0)
-                        return;
-                    if (listViewFeedback.SelectedItems.Count != 1)
-                        return;
-                    if (listViewFeedback.SelectedItems[0].Index == 0)
-                        return;
-                    var selectedIndex = listViewFeedback.SelectedItems[0].Index;
-                    listViewFeedback.SelectedItems[0].Selected = false;
-                    listViewFeedback.Items[selectedIndex - 1].Selected = true;
+                    System.Windows.Forms.SendKeys.Send("{UP}");
                     return;
                 }
                 if (e.KeyCode.Equals(Keys.J))
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
-                    if (listViewFeedback.Items.Count == 0)
-                        return;
-                    if (listViewFeedback.SelectedItems.Count != 1)
-                        return;
-                    if (listViewFeedback.SelectedItems[0].Index == (listViewFeedback.Items.Count - 1))
-                        return;
-                    var selectedIndex = listViewFeedback.SelectedItems[0].Index;
-                    listViewFeedback.SelectedItems[0].Selected = false;
-                    listViewFeedback.Items[selectedIndex + 1].Selected = true;
+                    System.Windows.Forms.SendKeys.Send("{DOWN}");
                     return;
                 }
             }
