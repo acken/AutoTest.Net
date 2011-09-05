@@ -63,6 +63,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 var result = new TestRunResults("", "", false, TestRunner.Any, new TestResult[] { new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Net internal error", ex.ToString()) });
                 _bus.Publish(new TestRunMessage(result));
             }
+            if (_exit)
+                runReport.WasAborted();
             _bus.Publish(new RunFinishedMessage(runReport));
             if (!_exit)
                 _abortedTestRuns.Clear();

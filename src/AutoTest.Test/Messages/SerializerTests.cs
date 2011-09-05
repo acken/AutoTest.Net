@@ -64,6 +64,7 @@ namespace AutoTest.Test
 			runreport.AddBuild("project 1", new TimeSpan(23), true);
 			runreport.AddBuild("project 2", new TimeSpan(12), false);
 			runreport.AddTestRun("project 2", "assembly", new TimeSpan(52), 12, 1, 2);
+            runreport.WasAborted();
 			var message = new RunFinishedMessage(runreport);
 			var output = serializeDeserialize<RunFinishedMessage>(message);
 			output.Report.NumberOfBuildsSucceeded.ShouldEqual(1);
@@ -76,6 +77,7 @@ namespace AutoTest.Test
 			output.Report.RunActions[1].Type.ShouldEqual(InformationType.Build);
 			output.Report.RunActions[1].Succeeded.ShouldEqual(false);
 			output.Report.RunActions[1].TimeSpent.ShouldEqual(new TimeSpan(12));
+            output.Report.Aborted.ShouldBeTrue();
 			
 			output.Report.NumberOfTestsPassed.ShouldEqual(12);
 			output.Report.NumberOfTestsFailed.ShouldEqual(2);

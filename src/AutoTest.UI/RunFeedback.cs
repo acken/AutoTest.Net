@@ -183,10 +183,17 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                var i = getRunFinishedInfo((RunFinishedMessage)x);
-                var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
-                printMessage(new RunMessages(runType, i.Text));
-                generateSummary(i.Report);
+                if (((RunFinishedMessage)x).Report.Aborted)
+                {
+                    printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
+                }
+                else
+                {
+                    var i = getRunFinishedInfo((RunFinishedMessage)x);
+                    var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
+                    printMessage(new RunMessages(runType, i.Text));
+                    generateSummary(i.Report);
+                }
                 _isRunning = false;
             }, msg);
         }

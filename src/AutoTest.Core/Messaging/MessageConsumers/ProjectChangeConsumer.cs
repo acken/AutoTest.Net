@@ -60,6 +60,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _bus.Publish(new RunStartedMessage(message.Files));
             var runReport = execute(message);
             runReport.SetTimeSpent(DateTime.Now.Subtract(now));
+            if (_exit)
+                runReport.WasAborted();
             _bus.Publish(new RunFinishedMessage(runReport));
             _exit = false;
             _isRunning = false;

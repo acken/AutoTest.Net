@@ -21,6 +21,7 @@ namespace AutoTest.Messages
         public int NumberOfTestsFailed { get { return _numberOfTestsFailed; } }
         public int NumberOfTestsIgnored { get { return _numberOfTestsIgnored; } }
         public int NumberOfTestsRan { get { return _numberOfTestsPassed + _numberOfTestsFailed + _numberOfTestsIgnored; } }
+        public bool Aborted { get; private set; }
 
         public RunAction[] RunActions { get { return _runActions.ToArray(); } }
 
@@ -51,6 +52,7 @@ namespace AutoTest.Messages
 		public void WriteDataTo(BinaryWriter writer)
 		{
             writer.Write(_timeSpent.TotalMilliseconds);
+            writer.Write(Aborted);
 			writer.Write((int) _numberOfBuildsSucceeded);
 			writer.Write((int) _numberOfBuildsFailed);
 			writer.Write((int) _numberOfTestsPassed);
@@ -64,6 +66,7 @@ namespace AutoTest.Messages
 		public void SetDataFrom(BinaryReader reader)
 		{
             _timeSpent = TimeSpan.FromMilliseconds(reader.ReadDouble());
+            Aborted = reader.ReadBoolean();
 			_numberOfBuildsSucceeded = reader.ReadInt32();
 			_numberOfBuildsFailed = reader.ReadInt32();
 			_numberOfTestsPassed = reader.ReadInt32();
@@ -78,6 +81,11 @@ namespace AutoTest.Messages
 			}
 		}
 		#endregion
-}
+
+        public void WasAborted()
+        {
+            Aborted = true;
+        }
+    }
 }
 
