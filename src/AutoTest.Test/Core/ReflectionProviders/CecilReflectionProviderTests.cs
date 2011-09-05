@@ -27,7 +27,6 @@ namespace AutoTest.Test.Core.ReflectionProviders
             var cls = locator.LocateClass(locator.GetParentType("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests.Should_find_me"));
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
-            Assert.AreEqual(5, cls.Methods.Count());
         }
 
         [Test]
@@ -47,6 +46,14 @@ namespace AutoTest.Test.Core.ReflectionProviders
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass.Blargh", method.Fullname);
             Assert.AreEqual(3, method.Attributes.Count());
         }
+
+        [Test]
+        public void Should_find_nested_classes()
+        {
+            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod");
+            Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod", method.Fullname);
+        }
     }
     
     [MyAttribute]
@@ -55,6 +62,16 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [MyOtherAttribute]
         public void Blargh()
         {
+        }
+
+        public class MyNestedClass
+        {
+            public class MyNestedNestedClass
+            {
+                public void SomeMethod()
+                {
+                }
+            }
         }
     }
 

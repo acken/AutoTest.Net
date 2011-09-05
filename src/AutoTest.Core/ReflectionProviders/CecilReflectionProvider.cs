@@ -122,12 +122,12 @@ namespace AutoTest.Core.ReflectionProviders
         {
             foreach (var type in types)
             {
-                if (type.FullName.Equals(typeName))
+                if (type.QualifiedName().Equals(typeName))
                     return getType(type);
                 var result = locateSimpleType(type.NestedTypes, typeName);
                 if (result != null)
                     return result;
-                result = locateSimpleMethod(type.Methods, typeName, type.FullName);
+                result = locateSimpleMethod(type.Methods, typeName, type.QualifiedName());
                 if (result != null)
                     return result;
             }
@@ -137,14 +137,14 @@ namespace AutoTest.Core.ReflectionProviders
         private SimpleType getType(TypeDefinition type)
         {
             return new SimpleClass(
-                type.FullName,
+                type.QualifiedName(),
                 getTypeAttributes(type),
                 type.Fields.Select(x => new SimpleField(
-                    type.FullName + "." + x.Name,
+                    type.QualifiedName() + "." + x.Name,
                     getAttributes(x.CustomAttributes),
                     x.FieldType.FullName)),
                 type.Methods.Select(x => new SimpleMethod(
-                    type.FullName + "." + x.Name,
+                    type.QualifiedName() + "." + x.Name,
                     getAttributes(x.CustomAttributes),
                     x.IsAbstract)),
                     type.IsAbstract);
@@ -191,6 +191,14 @@ namespace AutoTest.Core.ReflectionProviders
                     return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract);
             }
             return null;
+        }
+    }
+
+    public static class TypeDefenitionExtensions
+    {
+        public static string QualifiedName(this TypeDefinition me)
+        {
+            return me.FullName.Replace('/', '+');
         }
     }
 }
