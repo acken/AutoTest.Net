@@ -170,13 +170,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly);
                 assembly.AddTests(info.GetTestsFor(testRunner));
-                assembly.AddTests(info.GetTestsFor(TestRunner.Any));
                 DebugLog.Debug.WriteDetail("Found {0} tests for assembly", assembly.Tests.Count());
                 assembly.AddMembers(info.GetMembersFor(testRunner));
-                assembly.AddMembers(info.GetMembersFor(TestRunner.Any));
                 DebugLog.Debug.WriteDetail("Found {0} members for assembly", assembly.Members.Count());
                 assembly.AddNamespaces(info.GetNamespacesFor(testRunner));
-                assembly.AddNamespaces(info.GetNamespacesFor(TestRunner.Any));
                 DebugLog.Debug.WriteDetail("Found {0} namespaces for assembly", assembly.Namespaces.Count());
                 DebugLog.Debug.WriteDetail("Run only specified tests for runner {0} is {1}", testRunner, info.OnlyRunSpcifiedTestsFor(testRunner));
                 if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0 && assembly.Members.Count() == 0 && assembly.Namespaces.Count() == 0)
