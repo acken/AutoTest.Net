@@ -31,6 +31,7 @@ namespace AutoTest.UI
         public bool CanGoToTypes { get; set; }
         public bool CanDebug { get; set; }
         public int ListViewWidthOffset { get; set; }
+        public bool ShowRunInformation { get; set; }
 
         public bool ShowIcon
         {
@@ -56,6 +57,7 @@ namespace AutoTest.UI
             ShowIcon = true;
             CanDebug = false;
             CanGoToTypes = false;
+            ShowRunInformation = true;
             if (ListViewWidthOffset > 0)
                 listViewFeedback.Width = Width - ListViewWidthOffset;
             organizeListItemBehaviors(listViewFeedback.SelectedItems);
@@ -171,6 +173,8 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
+                if (!ShowRunInformation)
+                    x = "processing changes...";
                 printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
                 generateSummary(null);
                 organizeListItemBehaviors(null);
@@ -185,7 +189,8 @@ namespace AutoTest.UI
             {
                 if (((RunFinishedMessage)x).Report.Aborted)
                 {
-                    printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
+                    if (ShowRunInformation)
+                        printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
                 }
                 else
                 {
@@ -225,16 +230,19 @@ namespace AutoTest.UI
                 switch (message.Type)
                 {
                     case InformationType.Build:
-                        text = string.Format("building {0}", Path.GetFileName(message.Project));
+                        if (ShowRunInformation)
+                            text = string.Format("building {0}", Path.GetFileName(message.Project));
                         break;
                     case InformationType.TestRun:
                         text = "testing...";
                         break;
                     case InformationType.PreProcessing:
-                        text = "locating affected tests";
+                        if (ShowRunInformation)
+                            text = "locating affected tests";
                         break;
                 }
-                printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
+                if (text != "")
+                    printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
             }, msg);
         }
 
@@ -309,6 +317,7 @@ namespace AutoTest.UI
         {
             if (!_isRunning)
                 return;
+            
             SuspendLayout();
             var ofCount = liveStatus.TotalNumberOfTests > 0 ? string.Format(" of {0}", liveStatus.TotalNumberOfTests) : "";
             printMessage(new RunMessages(RunMessageType.Normal, string.Format("testing {0} ({1}{2} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted, ofCount)));
