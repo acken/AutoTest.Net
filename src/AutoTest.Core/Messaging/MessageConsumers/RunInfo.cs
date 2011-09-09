@@ -26,12 +26,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private List<TestRunner> _rerunAllWhenFinishedFor;
 
 		public Project Project { get; private set; }
+        public string TemporaryBuildProject { get; private set; }
 		public bool ShouldBeBuilt { get; private set; }
 		public string Assembly { get; private set; }
 		
 		public RunInfo(Project project)
 		{
 			Project = project;
+            TemporaryBuildProject = null;
 			ShouldBeBuilt = false;
 			Assembly = null;
             _testsToRun = new List<TestToRun>();
@@ -40,7 +42,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _onlyRunTestsFor = new List<TestRunner>();
             _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
-		
+
+        public void BuildTemporaryProject(string project)
+        {
+            TemporaryBuildProject = project;
+        }
+
 		public void ShouldBuild()
 		{
 			ShouldBeBuilt = true;

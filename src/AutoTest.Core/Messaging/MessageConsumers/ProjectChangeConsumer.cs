@@ -309,15 +309,16 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                                  info.Project.Key,
                                  info.Assembly,
                                  typeof(MSBuildRunner)));
-                return buildProject(info.Project, runReport);
+                return buildProject(info, runReport);
             }
 
             return null;
         }
 
-        private BuildRunResults buildProject(Project project, RunReport report)
+        private BuildRunResults buildProject(RunInfo info, RunReport report)
         {
-            var buildReport = _buildRunner.RunBuild(project, _configuration.BuildExecutable(project.Value), () => { return _exit; });
+            var project = info.Project;
+            var buildReport = _buildRunner.RunBuild(info, _configuration.BuildExecutable(project.Value), () => { return _exit; });
             buildReport = postProcessBuildReports(buildReport);
             var succeeded = buildReport.ErrorCount == 0;
             report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);

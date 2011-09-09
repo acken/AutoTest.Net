@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using AutoTest.Messages;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.Messaging.MessageConsumers;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -33,13 +34,17 @@ namespace AutoTest.Core.BuildRunners
             return runBuild(buildExecutable, arguments, solution, abortIfTrue);
         }
 
-        public BuildRunResults RunBuild(Project project, string buildExecutable, Func<bool> abortIfTrue)
+        public BuildRunResults RunBuild(RunInfo runInfo, string buildExecutable, Func<bool> abortIfTrue)
         {
+            var project = runInfo.Project;
 			var properties = buildProperties(project);
-            var arguments = string.Format("\"{0}\"", project.Key) + properties;
+            var projectPath = project.Key;
+            if (runInfo.TemporaryBuildProject != null)
+                projectPath = runInfo.TemporaryBuildProject;
+            var arguments = string.Format("\"{0}\"", projectPath) + properties;
 			if (project.Value.RequiresRebuild)
 				arguments += " /target:rebuild";
-            var target = project.Key;
+            var target = projectPath;
             return runBuild(buildExecutable, arguments, target, abortIfTrue);
         }
 
