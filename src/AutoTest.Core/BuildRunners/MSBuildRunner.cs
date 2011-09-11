@@ -67,6 +67,8 @@ namespace AutoTest.Core.BuildRunners
             {
                 if (abortIfTrue.Invoke())
                 {
+                    process.Kill();
+                    process.WaitForExit();
                     AutoTest.Core.DebugLog.Debug.WriteDebug("Aborting build run");
                     return new BuildRunResults(target);
                 }
