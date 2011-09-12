@@ -21,17 +21,23 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class AutoTestTestRunner : ITestRunner
+    public class AutoTestTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
         private IMessageBus _bus;
         private IRunResultCache _runCache;
+        private bool _handleRunnerFeedback = true;
 
         public AutoTestTestRunner(IConfiguration configuration, IMessageBus bus, IRunResultCache runCache)
         {
             _configuration = configuration;
             _bus = bus;
             _runCache = runCache;
+        }
+
+        public void DisableRunnerFeedback()
+        {
+            _handleRunnerFeedback = false;
         }
 
         public bool CanHandleTestFor(Project project)
@@ -64,7 +70,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var options = generateOptions(runInfos);
             if (options == null)
                 return new TestRunResults[] { };
-            var runner = new TestRunProcess(new AutoTestRunnerFeedback(_runCache, _bus, options))
+            AutoTestRunnerFeedback feedback = null;
+            if (_handleRunnerFeedback)
+                feedback = new AutoTestRunnerFeedback(_runCache, _bus, options);
+            var runner = new TestRunProcess(feedback)
 				.WrapTestProcessWith(processWrapper)
                 .AbortWhen(abortWhen);
             var tests = runner.ProcessTestRuns(options);

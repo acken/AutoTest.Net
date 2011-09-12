@@ -43,6 +43,16 @@ namespace AutoTest.VS.Util.Menues
             }
         }
 
+        public bool MenuExists(string name)
+        {
+            //Place the command on the tools menu.
+            //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
+            CommandBar menuBarCommandBar = ((CommandBars)_application.CommandBars)["MenuBar"];
+            var commands = (Commands2)_application.Commands;
+            
+            return getCommandBarControl(menuBarCommandBar.Controls, name) != null;
+        }
+
         private bool menuBarDoesNotExist(string menuName)
         {
             try

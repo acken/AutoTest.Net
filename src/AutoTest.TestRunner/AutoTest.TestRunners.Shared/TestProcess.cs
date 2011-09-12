@@ -127,7 +127,8 @@ namespace AutoTest.TestRunners.Shared
                                     {
                                         if (msg == "")
                                             return;
-                                        _feedback.TestFinished(TestResult.FromXml(msg));
+                                        if (_feedback != null)
+                                            _feedback.TestFinished(TestResult.FromXml(msg));
                                     });
                     });
             thread.Start(channel);

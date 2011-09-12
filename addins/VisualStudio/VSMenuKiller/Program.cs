@@ -11,25 +11,37 @@ namespace VSMenuKiller
     {
         static void Main(string[] args)
         {
+            args = new string[] { "VisualStudio.DTE.10.0", "MenuBar", "ContinuousTests" };
             try
             {
                 if (args.Length < 3)
-                    throw new Exception("Usage 'VisualStudio.DTE.10.0' 'MenuBar' 'AutoTest.Net' ['SomeMenu']");
+                    throw new Exception("Usage 'VisualStudio.DTE.10.0' 'MenuBar' 'AutoTest.Net' ['SomeMenu'] [--non-recursive]");
 
                 object control = null;
                 var dte = getDte(args[0]);
-
+                var nonRecursive = args.Count(x => x.Equals("--non-recursive")) > 0;
                 IEnumerator controls = getCommandBars(dte, args[1]);
                 for (int i = 2; i < args.Length; i++)
                 {
+                    if (args[i].StartsWith("--"))
+                        continue;
                     control = getControl(controls, args[i]);
                     controls = getControls(control);
                 }
 
-                var toDelete = new List<object>();
-                while (controls.MoveNext())
+                if (control == null)
                 {
-                    toDelete.Add(controls.Current);
+                    Console.WriteLine("Spesified menu was not found");
+                    return;
+                }
+
+                var toDelete = new List<object>();
+                if (!nonRecursive)
+                {
+                    while (controls.MoveNext())
+                    {
+                        toDelete.Add(controls.Current);
+                    }
                 }
                 toDelete.Add(control);
 
@@ -75,6 +87,8 @@ namespace VSMenuKiller
 
         private static IEnumerator getControls(object control)
         {
+            if (control == null)
+                return null;
             return control.Get("Controls").Invoke<IEnumerator>("GetEnumerator");
         }
 

@@ -64,6 +64,7 @@ namespace AutoTest.VS.Util.Debugger
                         else
                             dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed (v2.0, v1.1, v1.0)") };
                     }
+                    
                     EnvDTE80.Process2 proc2 = null;
                     foreach (EnvDTE80.Process2 proc in dbg2.GetProcesses(trans, null))
                     {

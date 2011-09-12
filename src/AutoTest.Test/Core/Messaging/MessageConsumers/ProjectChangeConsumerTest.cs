@@ -92,12 +92,12 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             var executable = Assembly.GetExecutingAssembly().Location;
             _listGenerator.Stub(l => l.Generate(null)).IgnoreArguments().Return(new string[] { "some file.csproj" });
             _configuration.Stub(c => c.BuildExecutable(_project.Value)).Return(executable);
-            _buildRunner.Stub(b => b.RunBuild(_project, executable, null)).IgnoreArguments().Return(new BuildRunResults(""));
+            _buildRunner.Stub(b => b.RunBuild(_runInfo, executable, null)).IgnoreArguments().Return(new BuildRunResults(""));
 
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));
             _consumer.Consume(message);
-            _buildRunner.AssertWasCalled(b => b.RunBuild(_project, executable, null), b => b.IgnoreArguments());
+            _buildRunner.AssertWasCalled(b => b.RunBuild(_runInfo, executable, null), b => b.IgnoreArguments());
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             var message = new ProjectChangeMessage();
             message.AddFile(new ChangedFile("some file.csproj"));
             _consumer.Consume(message);
-            _buildRunner.AssertWasNotCalled(b => b.RunBuild(_project, executable, null), b => b.IgnoreArguments());
+            _buildRunner.AssertWasNotCalled(b => b.RunBuild(_runInfo, executable, null), b => b.IgnoreArguments());
         }
 
         [Test]
