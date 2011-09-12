@@ -22,6 +22,8 @@ namespace AutoTest.Core
 		{
             try
             {
+                if (file.FullName.Contains("_rltm_build_fl_"))
+                    return;
                 handleProject(".csproj", file);
                 handleProject(".vbproj", file);
                 handleProject(".fsproj", file);
