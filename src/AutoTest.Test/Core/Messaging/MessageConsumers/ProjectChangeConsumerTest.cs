@@ -186,6 +186,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
                 .Return(result);
 			_runInfo.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
             _removedTestLocator.Stub(r => r.SetRemovedTestsAsPassed(null, null)).IgnoreArguments().Return(result[0]);
+            _removedTestLocator.Stub(r => r.RemoveUnmatchedRunInfoTests(null, null)).IgnoreArguments().Return(new List<TestRunResults>());
             _testAssemblyValidator.Stub(t => t.ShouldNotTestAssembly("")).IgnoreArguments().Return(false);
 
             var message = new ProjectChangeMessage();

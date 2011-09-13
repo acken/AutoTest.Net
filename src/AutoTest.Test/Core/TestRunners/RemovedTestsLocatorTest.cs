@@ -94,5 +94,25 @@ namespace AutoTest.Test.Core.TestRunners
             var meh = cache.PopDeltas();
             meh.RemovedTests.Length.ShouldEqual(0);
         }
+
+        [Test]
+        public void Should_remove_tests_for_run_infos_having_run_all_tests()
+        {
+            var results = new TestRunResults("project1", "assembly", false, TestRunner.NUnit, new TestResult[]
+                                                    {
+                                                        new TestResult(TestRunner.NUnit, TestRunStatus.Failed, "Test1")
+                                                    });
+            var cache = new RunResultCache();
+            cache.Merge(results);
+
+            var runInfo = new TestRunInfo(new Project("project1", new ProjectDocument(ProjectType.CSharp)), "assembly");
+            
+            var locator = new RemovedTestsLocator(cache);
+            var output = locator.RemoveUnmatchedRunInfoTests(new TestRunResults[] {}, new TestRunInfo[] { runInfo });
+
+            output.Count.ShouldEqual(1);
+            output[0].Passed.Length.ShouldEqual(1);
+            output[0].Passed[0].Name.ShouldEqual("Test1");
+        }
     }
 }

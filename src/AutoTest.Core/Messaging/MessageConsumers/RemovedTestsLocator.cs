@@ -19,6 +19,39 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _cache = cache;
         }
 
+        public List<TestRunResults> RemoveUnmatchedRunInfoTests(TestRunResults[] results, TestRunInfo[] infos)
+        {
+            var tests = new List<TestItem>();
+            tests.AddRange(_cache.Failed);
+            tests.AddRange(_cache.Ignored);
+
+            var removed = new List<TestRunResults>();
+            infos
+                .Where(i => results.Count(x => i.Assembly.Equals(x.Assembly)) == 0).ToList()
+                .ForEach(i =>
+                    {
+                        tests.Where(x => x.Key.Equals(i.Assembly) &&
+                                   (!i.OnlyRunSpcifiedTestsFor(x.Value.Runner) || i.GetTestsFor(x.Value.Runner).Count(t => t.Equals(x.Value.Name)) > 0))
+                            .GroupBy(x => x.Value.Runner).ToList()
+                            .ForEach(x => 
+                                {
+                                    removed.Add(new TestRunResults(
+                                        i.Project.Key,
+                                        i.Assembly,
+                                        i.OnlyRunSpcifiedTestsFor(TestRunner.Any),
+                                        x.Key,
+                                        x.Select(t => new TestResult(
+                                            t.Value.Runner,
+                                            TestRunStatus.Passed,
+                                            t.Value.Name,
+                                            t.Value.Message,
+                                            t.Value.StackTrace,
+                                            t.Value.TimeSpent.TotalMilliseconds).SetDisplayName(t.Value.DisplayName)).ToArray()));
+                                });
+                    });
+            return removed;
+        }
+
         public TestRunResults SetRemovedTestsAsPassed(TestRunResults results, TestRunInfo[] infos)
         {
             _results = results;

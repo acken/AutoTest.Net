@@ -334,8 +334,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private void runTests(ITestRunner testRunner, TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo>> processWrapper, RunReport runReport)
         {
             var results = runTests(testRunner, runInfos, processWrapper);
+            var resultList = new List<TestRunResults>();
+            resultList.AddRange(results);
+            resultList.AddRange(_removedTestLocator.RemoveUnmatchedRunInfoTests(results, runInfos));
             var modifiedResults = new List<TestRunResults>();
-			foreach (var result in results)
+            
+			foreach (var result in resultList)
 			{
 	            runReport.AddTestRun(
                     result.Project,
