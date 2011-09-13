@@ -61,8 +61,8 @@ namespace AutoTest.VS.Util
             }
             catch (Exception ex)
             {
-                AutoTest.Core.DebugLog.Debug.WriteDebug("Error on goto method " + signature);
-                AutoTest.Core.DebugLog.Debug.WriteException(ex);
+                Core.DebugLog.Debug.WriteDebug("Error on goto method " + signature);
+                Core.DebugLog.Debug.WriteException(ex);
             }
         }
 
@@ -74,8 +74,8 @@ namespace AutoTest.VS.Util
             }
             catch (Exception ex)
             {
-                AutoTest.Core.DebugLog.Debug.WriteDebug("error going to " + fullname);
-                AutoTest.Core.DebugLog.Debug.WriteException(ex);
+                Core.DebugLog.Debug.WriteDebug("error going to " + fullname);
+                Core.DebugLog.Debug.WriteException(ex);
             }
         }
 
@@ -89,7 +89,7 @@ namespace AutoTest.VS.Util
 
         private static void GotoSignature(string signature, DTE2 dte)
         {
-            AutoTest.Core.DebugLog.Debug.WriteDebug("going to signature: " + signature);
+            Core.DebugLog.Debug.WriteDebug("going to signature: " + signature);
             var name = GetTypeName(signature);
             var item = GetProjectItemFromFullName(dte, name);
             if (item == null) return;
@@ -117,9 +117,24 @@ namespace AutoTest.VS.Util
             return;
         }
 
+        public static void GotoTypeByFullName(DTE2 dte, string name)
+        {
+            try
+            {
+                var ProjectItem = GetProjectItemFromFullName(dte, name);
+                var window = dte.OpenFile(vsViewKindCode, ProjectItem.FileNames[0]);
+                window.Activate();
+            }
+            catch(Exception ex)
+            {
+                Core.DebugLog.Debug.WriteDebug("error going to type " + name);
+                Core.DebugLog.Debug.WriteException(ex);
+            }
+        }
+
         private static ProjectItem GetProjectItemFromFullName(DTE2 dte, string name)
         {
-            AutoTest.Core.DebugLog.Debug.WriteDebug("Finding " + name);
+            Core.DebugLog.Debug.WriteDebug("Finding " + name);
                 foreach (var proj in GetProjects(dte))
                 {
                     var cm = proj.CodeModel;
@@ -136,7 +151,7 @@ namespace AutoTest.VS.Util
                         }
                         if (typ != null)
                         {
-                            AutoTest.Core.DebugLog.Debug.WriteDebug("Found.");
+                            Core.DebugLog.Debug.WriteDebug("Found.");
                             try
                             {
                                 var item = typ.ProjectItem;
@@ -144,7 +159,7 @@ namespace AutoTest.VS.Util
                             }
                             catch
                             {
-                                AutoTest.Core.DebugLog.Debug.WriteDebug("In hackity hackity hack hack.");
+                                Core.DebugLog.Debug.WriteDebug("In hackity hackity hack hack.");
                                 //OK so we know the project that its in ...
                                 var items = GetProjectItemsRecursive(proj.ProjectItems);
                                 if (items == null) return null;
