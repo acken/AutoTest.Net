@@ -74,6 +74,7 @@ namespace AutoTest.Messages.Serializers
             Register<CacheBuildMessage>(22);
             Register<CacheTestMessage>(23);
             Register<CacheMessages>(24);
+            Register<OnDemandTestRunMessage>(25);
         }
 
         public void Register<T>(int typeId) where T : ICustomBinarySerializable
