@@ -26,6 +26,7 @@ namespace AutoTest.TestRunners
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpC7C9.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpC7DA.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)

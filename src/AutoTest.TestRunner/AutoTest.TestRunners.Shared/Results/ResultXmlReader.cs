@@ -86,8 +86,6 @@ namespace AutoTest.TestRunners.Shared.Results
                     _results.Add(ErrorHandler.GetError("Invalid result stream " + Environment.NewLine + _readerContent));
                 _results.Add(ErrorHandler.GetError(ex));
             }
-            if (_results.Count == 0)
-                _results.Add(new TestResult("", "", "", 0, _readerContent, TestState.Failed, ""));
             return _results;
         }
 

@@ -68,6 +68,8 @@ namespace AutoTest.Core.Caching.RunResultCache
 
         public bool IsTheSameTestAs(TestItem item)
         {
+            if (item.Value == null)
+                return false; // WTF!!?? == Fail
             return Key.Equals(item.Key) && Value.Runner.Equals(item.Value.Runner) && Value.Name.Equals(item.Value.Name);
         }
 
