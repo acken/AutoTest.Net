@@ -65,8 +65,6 @@ namespace AutoTest.TestRunners.Shared
             foreach (var target in testRuns)
             {
                 var process = new TestProcess(target, _feedback);
-                if (_runInParallel)
-                    process.RunParallel();
 				if (_processWrapper != null)
                     process.WrapTestProcessWith(_processWrapper);
                 process.AbortWhen(_abortWhen);
@@ -81,7 +79,7 @@ namespace AutoTest.TestRunners.Shared
 
         private IEnumerable<TargetedRun> getTargetedRuns(RunOptions options)
         {
-            var assembler = new TargetedRunAssembler(options, _locator);
+            var assembler = new TargetedRunAssembler(options, _locator, _runInParallel);
             return assembler.Assemble();
         }
     }

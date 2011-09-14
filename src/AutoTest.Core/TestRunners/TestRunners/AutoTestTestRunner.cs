@@ -76,6 +76,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
             var runner = new TestRunProcess(feedback)
 				.WrapTestProcessWith(processWrapper)
                 .AbortWhen(abortWhen);
+            if (_configuration.RunAssembliesInParallel)
+                runner.RunParallel();
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();
         }

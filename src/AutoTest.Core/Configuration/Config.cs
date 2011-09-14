@@ -56,6 +56,7 @@ namespace AutoTest.Core.Configuration
         public bool UseAutoTestTestRunner { get; private set; }
         public bool UseLowestCommonDenominatorAsWatchPath { get; private set; }
         public bool WatchAllFiles { get; private set; }
+        public bool RunAssembliesInParallel { get; private set; }
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
@@ -185,6 +186,8 @@ namespace AutoTest.Core.Configuration
                 UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
             if (core.WatchAllFiles.WasReadFromConfig)
                 WatchAllFiles = core.WatchAllFiles.Value;
+            if (core.RunAssembliesInParallel.WasReadFromConfig)
+                RunAssembliesInParallel = core.RunAssembliesInParallel.Value;
             core.Keys.ForEach(x => mergeKey(x));
 		}
 
@@ -220,6 +223,7 @@ namespace AutoTest.Core.Configuration
                 UseAutoTestTestRunner = core.UseAutoTestTestRunner.Value;
                 UseLowestCommonDenominatorAsWatchPath = core.UseLowestCommonDenominatorAsWatchPath.Value;
                 WatchAllFiles = core.WatchAllFiles.Value;
+                RunAssembliesInParallel = core.RunAssembliesInParallel.Value;
                 _keys = core.Keys;
             }
             catch (Exception ex)

@@ -39,6 +39,7 @@ namespace AutoTest.Core.Configuration
         bool UseAutoTestTestRunner { get; }
         bool UseLowestCommonDenominatorAsWatchPath { get; }
         bool WatchAllFiles { get; }
+        bool RunAssembliesInParallel { get; }
 
         string IgnoreFile { get; }
 

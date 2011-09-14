@@ -11,12 +11,14 @@ namespace AutoTest.TestRunners.Shared.Targeting
     {
         private RunOptions _options;
         private IAssemblyPropertyReader _locator;
+        private bool _runAssembliesInParallel;
         private List<TargetedRun> _runs;
 
-        public TargetedRunAssembler(RunOptions options, IAssemblyPropertyReader locator)
+        public TargetedRunAssembler(RunOptions options, IAssemblyPropertyReader locator, bool runAssembliesInParallel)
         {
             _options = options;
             _locator = locator;
+            _runAssembliesInParallel = runAssembliesInParallel;
         }
 
         public IEnumerable<TargetedRun> Assemble()
@@ -35,7 +37,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
             var platform = getPlatform(assemblyOptions.Assembly);
             var targetFramework = getTargetFramework(assemblyOptions.Assembly);
             var targeted = _runs.Where(x => x.TargetFramework.Equals(targetFramework) && x.Platform.Equals(platform)).FirstOrDefault();
-            if (targeted == null)
+            if (targeted == null || _runAssembliesInParallel)
                 targeted = addTarget(platform, targetFramework);
             targeted.AddRunner(runnerID, categories, assemblyOptions);
         }

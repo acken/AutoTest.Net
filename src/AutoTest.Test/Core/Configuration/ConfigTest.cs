@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +8,7 @@ using AutoTest.Core.Messaging;
 using AutoTest.Core.Caching.Projects;
 using System.IO;
 using AutoTest.Core.DebugLog;
+using System;
 
 namespace AutoTest.Test.Core.Configuration
 {
@@ -316,6 +316,12 @@ namespace AutoTest.Test.Core.Configuration
         public void Should_get_watch_all_strategy()
         {
             _config.WatchAllFiles.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Should_get_parallel_test_run_setting()
+        {
+            _config.RunAssembliesInParallel.ShouldBeTrue();
         }
 
 		private void createMergeFile()
