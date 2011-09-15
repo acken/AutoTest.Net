@@ -98,10 +98,11 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         [Test]
         public void Should_get_tests()
         {
-            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Tests.Count(), Is.EqualTo(2));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Tests.Count(), Is.EqualTo(3));
 
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Tests.ElementAt(0), Is.EqualTo("testassembly.class.test1"));
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Tests.ElementAt(1), Is.EqualTo("testassembly.class.test2"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Tests.ElementAt(2), Is.EqualTo("testassembly.class.test3"));
         }
 
         [Test]

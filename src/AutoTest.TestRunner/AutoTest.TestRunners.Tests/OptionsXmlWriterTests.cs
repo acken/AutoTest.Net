@@ -34,14 +34,14 @@ namespace AutoTest.TestRunners.Tests
             var runner2 = new RunnerOptions("another");
             runner2.AddAssembly(new AssemblyOptions(@"C:\my\other\testassembly.dll"));
             options.AddTestRun(runner2);
-
+            
             var writer = new OptionsXmlWriter(plugins, options);
             var file = Path.GetTempFileName();
             writer.Write(file);
 
             var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var original = File.ReadAllText(file).Replace("\r\n", "\n");
-            var generated = File.ReadAllText(Path.Combine(path, "TestOptions.xml")).Replace("\r\n", "\n");
+            var generated = File.ReadAllText(Path.Combine(path, "TestOptionsCorrected.xml")).Replace("\r\n", "\n");
             Assert.That(original, Is.EqualTo(generated));
         }
     }

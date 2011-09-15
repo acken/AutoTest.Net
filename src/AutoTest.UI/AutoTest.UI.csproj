@@ -69,6 +69,7 @@
     <Compile Include="TestDetailsForm.designer.cs">
       <DependentUpon>TestDetailsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextFormatters\DetailBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

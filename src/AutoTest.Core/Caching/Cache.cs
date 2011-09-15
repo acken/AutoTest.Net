@@ -78,7 +78,7 @@ namespace AutoTest.Core.Caching
             var unpreparedRecords = _records.Where(x => x.GetType().Equals(typeof(T)));
             var records = new List<T>();
             foreach (var record in unpreparedRecords)
-                records.Add((T) record);
+                records.Add((T)record);
             return records.ToArray();
         }
 
