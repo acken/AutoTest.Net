@@ -66,6 +66,7 @@
     <Compile Include="Debugger\DebugHandler.cs" />
     <Compile Include="Debugger\IAutoTestRunnerDebugProcess.cs" />
     <Compile Include="Debugger\UnmanagedProcess.cs" />
+    <Compile Include="DTEHacks\ProjectHandling.cs" />
     <Compile Include="GenericNameMangler.cs" />
     <Compile Include="Menues\MenuBuilder.cs" />
     <Compile Include="MethodFinder_Slow.cs" />

@@ -85,6 +85,12 @@ namespace AutoTest.Core.BuildRunners
                 if (!_results.Warnings.Contains(message))
                     _results.AddWarning(message);
             }
+            else if (_line.StartsWith("\tfatal error "))
+            {
+                BuildMessage message = parseMessage("fatal error ");
+                if (!_results.Errors.Contains(message))
+                    _results.AddError(message);
+            }
 		}
 
         private BuildMessage parseMessage(string type)
@@ -92,10 +98,13 @@ namespace AutoTest.Core.BuildRunners
             var message = new BuildMessage();
             try
             {
-                message.File = Path.Combine(_currentProjectPath, _line.Substring(0, _line.IndexOf('(')).Trim());
-                var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
-                message.LineNumber = int.Parse(position[0]);
-                message.LinePosition = int.Parse(position[1]);
+                if (_line.IndexOf('(') != -1)
+                {
+                    message.File = Path.Combine(_currentProjectPath, _line.Substring(0, _line.IndexOf('(')).Trim());
+                    var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
+                    message.LineNumber = int.Parse(position[0]);
+                    message.LinePosition = int.Parse(position[1]);
+                }
                 message.ErrorMessage = _line.Substring(_line.IndexOf(type) + type.Length,
                                                        _line.Length - (_line.IndexOf(type) + type.Length)).Trim();
             }

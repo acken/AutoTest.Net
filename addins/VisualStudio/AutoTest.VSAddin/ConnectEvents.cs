@@ -16,6 +16,9 @@ namespace AutoTest.VSAddin
         public static Window _toolWindow;
         public static FeedbackWindow _control;
 
+        private static BuildEvents _buildEvents;
+        private static _dispBuildEvents_OnBuildDoneEventHandler _buildCompletedEvent;
+
         private static _dispSolutionEvents_OpenedEventHandler _openedEvent = null;
         private static _dispSolutionEvents_AfterClosingEventHandler _afterClosingEvent = null;
 
@@ -24,8 +27,19 @@ namespace AutoTest.VSAddin
 
         private void bindWorkspaceEvents()
         {
+            bindEventsOnBuild();
             bindSolutionEvents();
             bindEventsOnSolution();
+        }
+
+        private void bindEventsOnBuild()
+        {
+            if (_buildEvents != null)
+                return;
+
+            _buildEvents = _applicationObject.Events.BuildEvents;
+            _buildCompletedEvent = new _dispBuildEvents_OnBuildDoneEventHandler(BuildEvents_OnBuildDone);
+            _buildEvents.OnBuildDone += _buildCompletedEvent;
         }
 
         private void bindSolutionEvents()
@@ -75,6 +89,12 @@ namespace AutoTest.VSAddin
             {
                 Debug.WriteException(ex);
             }
+        }
+
+        void BuildEvents_OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
+        {
+            var succeeded = _applicationObject.Solution.SolutionBuild.LastBuildInfo == 0;
+            _buildRunner.PusblishBuildErrors();
         }
     }
 }

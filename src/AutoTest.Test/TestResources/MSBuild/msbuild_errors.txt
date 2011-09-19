@@ -154,6 +154,7 @@ Core/Messaging/MessageBusTests.cs(3,16): error CS0234: The type or namespace nam
 Core/Messaging/MessageBusTests.cs(4,16): error CS0234: The type or namespace name `Core' does not exist in the namespace `AutoTest'. Are you missing an assembly reference?
 Core/Messaging/MessageBusTests.cs(5,16): error CS0234: The type or namespace name `Core' does not exist in the namespace `AutoTest'. Are you missing an assembly reference?
 Core/Messaging/MessageBusTests.cs(11,16): error CS0234: The type or namespace name `Core' does not exist in the namespace `AutoTest'. Are you missing an assembly reference?
+
 	Task "Csc" execution -- FAILED
 	Done building target "CoreCompile" in project "/home/ack/src/AutoTest.Net/src/AutoTest.Test/AutoTest.Test.csproj".-- FAILED
 

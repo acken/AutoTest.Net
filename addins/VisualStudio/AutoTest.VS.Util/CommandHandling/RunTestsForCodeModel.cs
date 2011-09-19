@@ -15,10 +15,12 @@ namespace AutoTest.VS.Util.CommandHandling
         private readonly Func<bool> _isEnabled;
         private readonly Func<bool> _manualBuild;
         private readonly Action<List<OnDemandRun>> _runTests;
+        private readonly Func<IEnumerable<OnDemandRun>, IEnumerable<string>> _getProjectsForBuild;
         private readonly DTE2 _applicationObject;
         private readonly IVSBuildRunner _buildRunner;
+        private readonly Action<IEnumerable<OnDemandRun>> _peek;
 
-        public RunTestsForCodeModel(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<List<OnDemandRun>> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner)
+        public RunTestsForCodeModel(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<List<OnDemandRun>> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner, Func<IEnumerable<OnDemandRun>, IEnumerable<string>> getProjectsForBuild, Action<IEnumerable<OnDemandRun>> peek)
         {
             _commandName = commandName;
             _isEnabled = isEnabled;
@@ -26,6 +28,8 @@ namespace AutoTest.VS.Util.CommandHandling
             _runTests = runTests;
             _applicationObject = applicationObject;
             _buildRunner = buildRunner;
+            _getProjectsForBuild = getProjectsForBuild;
+            _peek = peek;
         }
 
         public void Exec(EnvDTE.vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
@@ -44,8 +48,15 @@ namespace AutoTest.VS.Util.CommandHandling
                 {
                 }
             }
-            if (!_manualBuild() || _buildRunner.Build())
-                _runTests(runs);
+            try
+            {
+                _peek(runs);
+                if (!_manualBuild() || _buildRunner.Build(_getProjectsForBuild(runs)))
+                    _runTests(runs);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void addItemFor(List<OnDemandRun> runs, ProjectItem projectItem)

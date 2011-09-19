@@ -20,8 +20,9 @@ namespace AutoTest.VS.Util.CommandHandling
         private readonly Action<CacheTestMessage> _debug;
         private readonly DTE2 _applicationObject;
         private readonly IVSBuildRunner _buildRunner;
+        private readonly Action<CacheTestMessage> _peek;
 
-        public DebugCurrentTest(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Func<string, string> getAssemblyFromProject, Action<CacheTestMessage> debug, DTE2 applicationObject, IVSBuildRunner buildRunner)
+        public DebugCurrentTest(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Func<string, string> getAssemblyFromProject, Action<CacheTestMessage> debug, DTE2 applicationObject, IVSBuildRunner buildRunner, Action<CacheTestMessage> peek)
         {
             _commandName = commandName;
             _isEnabled = isEnabled;
@@ -30,6 +31,7 @@ namespace AutoTest.VS.Util.CommandHandling
             _debug = debug;
             _applicationObject = applicationObject;
             _buildRunner = buildRunner;
+            _peek = peek;
         }
 
         public void Exec(vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
@@ -43,10 +45,11 @@ namespace AutoTest.VS.Util.CommandHandling
                     return;
                 var test = types.Tests.Count() > 0 ? types.Tests.ElementAt(0) : types.Members.ElementAt(0);
 
+                var testMessage = new CacheTestMessage(assembly, new Messages.TestResult(Messages.TestRunner.Any, Messages.TestRunStatus.Passed, test));
+                _peek(testMessage);
                 if (!_manualBuild() || _buildRunner.Build())
                 {
                     var debugger = new DebugHandler(_applicationObject);
-                    var testMessage = new CacheTestMessage(assembly, new Messages.TestResult(Messages.TestRunner.Any, Messages.TestRunStatus.Passed, test));
                     _debug(testMessage);
                 }
             }

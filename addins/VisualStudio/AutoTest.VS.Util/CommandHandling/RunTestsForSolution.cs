@@ -17,8 +17,9 @@ namespace AutoTest.VS.Util.CommandHandling
         private readonly Action<List<OnDemandRun>> _runTests;
         private readonly DTE2 _applicationObject;
         private readonly IVSBuildRunner _buildRunner;
+        private readonly Action<IEnumerable<OnDemandRun>> _peek;
 
-        public RunTestsForSolution(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<List<OnDemandRun>> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner)
+        public RunTestsForSolution(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<List<OnDemandRun>> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner, Action<IEnumerable<OnDemandRun>> peek)
         {
             _commandName = commandName;
             _isEnabled = isEnabled;
@@ -26,6 +27,7 @@ namespace AutoTest.VS.Util.CommandHandling
             _runTests = runTests;
             _applicationObject = applicationObject;
             _buildRunner = buildRunner;
+            _peek = peek;
         }
 
         public void Exec(vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
@@ -33,6 +35,7 @@ namespace AutoTest.VS.Util.CommandHandling
             var runs = new List<OnDemandRun>();
             foreach (Project project in _applicationObject.Solution.Projects)
                 addProjects(runs, project);
+            _peek(runs);
             if (!_manualBuild() || _buildRunner.Build())
                 _runTests(runs);
         }

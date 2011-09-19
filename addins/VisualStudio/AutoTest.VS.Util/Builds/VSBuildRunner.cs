@@ -5,6 +5,7 @@ using System.Text;
 using EnvDTE80;
 using System.IO;
 using AutoTest.Messages;
+using AutoTest.VS.Util.DTEHacks;
 
 namespace AutoTest.VS.Util.Builds
 {
@@ -38,7 +39,45 @@ namespace AutoTest.VS.Util.Builds
             var state = _application.Solution.SolutionBuild.LastBuildInfo == 0;
             if (state)
                 SolutionStateHandler.Reset();
+
             return state;
+        }
+
+        public bool Build(IEnumerable<string> projects)
+        {
+            bool state = true;
+            if (!SolutionStateHandler.IsDirty)
+                return true;
+            prepareOutputPath();
+            foreach (var project in projects)
+            {
+                _application.Solution.SolutionBuild.BuildProject(
+                    getProjectConfiguration(project),
+                    project,
+                    true);
+                state = _application.Solution.SolutionBuild.LastBuildInfo == 0;
+                if (!state)
+                    break;
+            }
+            if (state)
+                SolutionStateHandler.Reset();
+            return state;
+        }
+
+        private string getProjectConfiguration(string project)
+        {
+            try
+            {
+                foreach (EnvDTE.Project prj in ProjectHandling.GetAll(_application))
+                {
+                    if (prj.FullName.Equals(project))
+                        return prj.ConfigurationManager.ActiveConfiguration.ConfigurationName;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return _application.Solution.SolutionBuild.ActiveConfiguration.Name;
         }
 
         private void prepareOutputPath()
@@ -56,14 +95,14 @@ namespace AutoTest.VS.Util.Builds
         {
             if (_application.Solution.SolutionBuild.LastBuildInfo > 0)
             {
-                extractBuildOutput();
+                extractBuildOutput(false);
                 var report = new Messages.RunReport();
                 report.AddBuild(_application.Solution.FullName, new TimeSpan(), false);
                 _notify(new RunFinishedMessage(report));
             }
             else
             {
-                extractBuildOutput();
+                extractBuildOutput(true);
                 if (_runBuilds())
                 {
                     var report = new Messages.RunReport();
@@ -73,7 +112,7 @@ namespace AutoTest.VS.Util.Builds
             }
         }
 
-        private void extractBuildOutput()
+        private void extractBuildOutput(bool success)
         {
             try
             {
@@ -88,7 +127,7 @@ namespace AutoTest.VS.Util.Builds
 
                         var parser = new OutputParser(_application, _timeOfLastOutputParsing);
                         var message = parser.Parse(context);
-                        if (message != null)
+                        if (message != null && (((message.ErrorsToAdd.Length > 0 || message.WarningsToAdd.Length > 0) && !success) || success))
                         {
                             var projects = parser.GetProjects();
                             foreach (var project in projects)

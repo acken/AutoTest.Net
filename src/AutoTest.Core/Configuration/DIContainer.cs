@@ -91,6 +91,7 @@ namespace AutoTest.Core.Configuration
                 .Register(Component.For<ICustomIgnoreProvider>().ImplementedBy<NullIgnoreProvider>())
                 .Register(Component.For<IWriteDebugInfo>().ImplementedBy<DebugWriter>().LifeStyle.Singleton)
                 .Register(Component.For<IWatchPathLocator>().ImplementedBy<WatchPathLocator>())
+                .Register(Component.For<IGenerateOrderedBuildLists>().ImplementedBy<BuildOrderHandler>())
                 .Register(Component.For<IOnDemanTestrunPreprocessor>()
                                     .Forward<IPreProcessBuildruns>()
                                     .Forward<IPreProcessTestruns>()

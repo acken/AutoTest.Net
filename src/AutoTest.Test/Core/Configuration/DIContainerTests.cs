@@ -405,5 +405,11 @@ namespace AutoTest.Test.Core.Configuration
         {
             Assert.That(_locator.LocateAll<IOnDemanTestrunPreprocessor>().Length, Is.EqualTo(1));
         }
+
+        [Test]
+        public void Should_register_build_order_generator()
+        {
+            Assert.That(_locator.Locate<IGenerateOrderedBuildLists>(), Is.InstanceOf<IGenerateOrderedBuildLists>());
+        }
     }
 }

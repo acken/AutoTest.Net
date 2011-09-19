@@ -5,6 +5,7 @@ using System.Text;
 using EnvDTE80;
 using EnvDTE;
 using AutoTest.VS.Util.Builds;
+using AutoTest.Messages;
 
 namespace AutoTest.VS.Util.CommandHandling
 {
@@ -16,8 +17,9 @@ namespace AutoTest.VS.Util.CommandHandling
         private readonly Action _runTests;
         private readonly DTE2 _applicationObject;
         private readonly IVSBuildRunner _buildRunner;
+        private readonly Func<IEnumerable<OnDemandRun>> _getLastTestRun;
 
-        public RerunLastManualTestRun(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action runTests, DTE2 applicationObject, IVSBuildRunner buildRunner)
+        public RerunLastManualTestRun(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action runTests, DTE2 applicationObject, IVSBuildRunner buildRunner, Func<IEnumerable<OnDemandRun>> getLastTestRun)
         {
             _commandName = commandName;
             _isEnabled = isEnabled;
@@ -25,11 +27,12 @@ namespace AutoTest.VS.Util.CommandHandling
             _runTests = runTests;
             _applicationObject = applicationObject;
             _buildRunner = buildRunner;
+            _getLastTestRun = getLastTestRun;
         }
 
         public void Exec(vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
         {
-            if (!_manualBuild() || _buildRunner.Build())
+            if (!_manualBuild() || _buildRunner.Build(_getLastTestRun().Select(x => x.Project)))
                 _runTests();
         }
 

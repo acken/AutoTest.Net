@@ -47,6 +47,16 @@ namespace AutoTest.VSAddin.ATEngine
             _application = application;
         }
 
+        public void SetLastTestRun(IEnumerable<OnDemandRun> runs)
+        {
+            LastTestRun = new List<OnDemandRun>(runs);
+        }
+
+        public void SetLastDebugSession(CacheTestMessage msg)
+        {
+            LastDebugSession = msg;
+        }
+
         public void Bootstrap(string watchToken)
         {
             _watchToken = watchToken;

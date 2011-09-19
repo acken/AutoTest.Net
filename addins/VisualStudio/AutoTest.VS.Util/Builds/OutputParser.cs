@@ -67,21 +67,36 @@ namespace AutoTest.VS.Util.Builds
             string id = null;
             if (line.Contains(": error"))
                 id = ": error";
+            if (line.StartsWith("fatal error"))
+                id = "fatal error";
             if (line.Contains(": warning"))
                 id = ": warning";
             if (id == null)
                 return;
             var fileRaw = line.Substring(0, line.IndexOf(id));
-            var file = fileRaw.Substring(0, fileRaw.IndexOf("("));
-            var locationRaw = fileRaw.Substring(fileRaw.IndexOf("(") + 1, fileRaw.IndexOf(")") - (fileRaw.IndexOf("(") + 1));
-            var location = locationRaw.Split(new char[] { ',' });
-            var lineNumber = int.Parse(location[0]);
-            var column = int.Parse(location[1]);
+            string file = "";
+            int lineNumber = 0;
+            int column = 0;
+            if (fileRaw.IndexOf("(") != -1)
+            {
+                file = fileRaw.Substring(0, fileRaw.IndexOf("("));
+                var locationRaw = fileRaw.Substring(fileRaw.IndexOf("(") + 1, fileRaw.IndexOf(")") - (fileRaw.IndexOf("(") + 1));
+                var location = locationRaw.Split(new char[] { ',' });
+                lineNumber = int.Parse(location[0]);
+                column = int.Parse(location[1]);
+            }
             var message = line.Substring(line.IndexOf(id) + id.Length, line.Length - (line.IndexOf(id) + id.Length)).Trim();
+            var cacheMsg = new CacheBuildMessage(_currentProject, new Messages.BuildMessage() { File = file, LineNumber = lineNumber, LinePosition = column, ErrorMessage = message });
             if (id == ": error")
-                _currentErrors.Add(new CacheBuildMessage(_currentProject, new Messages.BuildMessage() { File = file, LineNumber = lineNumber, LinePosition = column, ErrorMessage = message }));
+            {
+                if (_currentErrors.Count(x => x.Equals(cacheMsg)) == 0)
+                    _currentErrors.Add(cacheMsg);
+            }
             else
-                _currentWarnings.Add(new CacheBuildMessage(_currentProject, new Messages.BuildMessage() { File = file, LineNumber = lineNumber, LinePosition = column, ErrorMessage = message }));
+            {
+                if (_currentWarnings.Count(x => x.Equals(cacheMsg)) == 0)
+                    _currentWarnings.Add(cacheMsg);
+            }
         }
 
         private string getAssembly(string line)
@@ -108,10 +123,12 @@ namespace AutoTest.VS.Util.Builds
             {
                 if (_currentWasCompiled || assemblyWasUpdated())
                 {
-                    foreach (var error in _currentErrors)
-                        _message.AddError(error);
-                    foreach (var warning in _currentWarnings)
-                        _message.AddWarning(warning);
+                    _currentErrors
+                        .Where(x => _message.ErrorsToAdd.Count(y => y.Equals(x)) == 0).ToList()
+                        .ForEach(x => _message.AddError(x));
+                    _currentWarnings
+                        .Where(x => _message.WarningsToAdd.Count(y => y.Equals(x)) == 0).ToList()
+                        .ForEach(x => _message.AddWarning(x));
                     _projects.Add(_currentProject);
                 }
                 _currentWasCompiled = false;

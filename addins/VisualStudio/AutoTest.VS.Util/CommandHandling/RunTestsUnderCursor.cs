@@ -16,8 +16,9 @@ namespace AutoTest.VS.Util.CommandHandling
         private readonly Action<OnDemandRun> _runTests;
         private readonly DTE2 _applicationObject;
         private readonly IVSBuildRunner _buildRunner;
+        private readonly Action<OnDemandRun> _peek;
 
-        public RunTestsUnderCursor(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<OnDemandRun> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner)
+        public RunTestsUnderCursor(string commandName, Func<bool> isEnabled, Func<bool> manualBuild, Action<OnDemandRun> runTests, DTE2 applicationObject, IVSBuildRunner buildRunner, Action<OnDemandRun> peek)
         {
             _commandName = commandName;
             _isEnabled = isEnabled;
@@ -25,13 +26,15 @@ namespace AutoTest.VS.Util.CommandHandling
             _runTests = runTests;
             _applicationObject = applicationObject;
             _buildRunner = buildRunner;
+            _peek = peek;
         }
 
         public void Exec(vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
         {
             var pos = new OnDemandRunFromCursorPosition(_applicationObject);
             var types = pos.FromCurrentPosition();
-            if (!_manualBuild() || _buildRunner.Build())
+            _peek(types);
+            if (!_manualBuild() || _buildRunner.Build(new[] { types.Project }))
                 _runTests(types);
         }
 
