@@ -43,6 +43,9 @@
 	
 	<!-- Wether to use AutoTest.Net's own testrunner (Optional)-->
 	<!--<UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
+
+  <!-- Testing test assemblies in parallel-->
+  <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
 	
 	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
 	<!-- Default NUnit runner is AutoTest.TestRunner. This is an optional console runner -->
