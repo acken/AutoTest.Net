@@ -7,14 +7,14 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{DE3A8FE7-5918-471A-BF59-84C2C3328CCF}
 AppName=AutoTest.Net
-AppVersion=1.2.0
-AppVerName=AutoTest.Net 1.2.0
+AppVersion=1.3.0
+AppVerName=AutoTest.Net 1.3.0
 AppPublisher=AutoTest.Net
 DefaultDirName={pf}\AutoTest.Net
 DefaultGroupName=AutoTest.Net
 LicenseFile=..\ReleaseBinaries\AutoTest.License.txt
 OutputDir=..\ReleaseBinaries\Installer
-OutputBaseFilename=AutoTest.Net-v1.2.0
+OutputBaseFilename=AutoTest.Net-v1.3.0
 Compression=lzma
 SolidCompression=yes
 Uninstallable=yes
@@ -95,6 +95,8 @@ Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookI
 
 [Run]
 Filename:"{reg:HKLM\SOFTWARE\Microsoft\.NETFramework,InstallRoot}\{reg:HKCR\CLSID\{{61b3e12b-3586-3a58-a497-7ed7c4c794b9%7D\InprocServer32\2.0.0.0,RuntimeVersion}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registeringcontrols ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2008 addin ..."; Flags: runhidden;
 
 [UninstallRun]
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
