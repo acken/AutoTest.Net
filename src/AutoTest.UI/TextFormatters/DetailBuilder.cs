@@ -81,7 +81,8 @@ namespace AutoTest.UI.TextFormatters
             }
             return string.Format(
                 "Assembly: {0}{4}" +
-                "Test: {1}{4}{4}" +
+                "Test: {1}{4}" +
+                "Duration: " + getDuration(message) + "{4}{4}" +
                 "Message:{4}{2}{4}{4}" +
                 "Stack trace{4}{3}",
                 message.Assembly,
@@ -89,6 +90,18 @@ namespace AutoTest.UI.TextFormatters
                 message.Test.Message,
                 stackTrace.ToString(),
                 Environment.NewLine);
+        }
+
+        private string getDuration(CacheTestMessage message)
+        {
+            var duration = message.Test.TimeSpent;
+            if (duration.TotalHours >= 1)
+                return string.Format("{0} hours {1} minutes {2} seconds {3} milliseconds", duration.Hours, duration.Minutes, duration.Seconds, duration.Milliseconds);
+            if (duration.TotalMinutes >= 1)
+                return string.Format("{0} minutes {1} seconds {2} milliseconds", duration.Minutes, duration.Seconds, duration.Milliseconds);
+            if (duration.TotalSeconds >= 1)
+                return string.Format("{0} seconds {1} milliseconds", duration.Seconds, duration.Milliseconds);
+            return string.Format("{0} milliseconds", duration.Milliseconds);
         }
 
         private List<Link> getLinks()
