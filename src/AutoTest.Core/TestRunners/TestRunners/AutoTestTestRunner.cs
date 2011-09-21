@@ -78,6 +78,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 .AbortWhen(abortWhen);
             if (_configuration.RunAssembliesInParallel)
                 runner.RunParallel();
+            if (_configuration.TestRunnerCompatibilityMode)
+                runner.RunInCompatibilityMode();
             var tests = runner.ProcessTestRuns(options);
             return getResults(tests, runInfos).ToArray();
         }

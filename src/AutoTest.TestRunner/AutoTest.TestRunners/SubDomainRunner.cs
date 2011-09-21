@@ -20,8 +20,9 @@ namespace AutoTest.TestRunners
         private AssemblyOptions _assembly;
         private bool _shouldLog = false;
         private string _pipeName;
+        private bool _compatibilityMode;
 
-        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog, string pipeName)
+        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog, string pipeName, bool compatibilityMode)
         {
             _plugin = plugin;
             _id = id;
@@ -29,6 +30,7 @@ namespace AutoTest.TestRunners
             _assembly = assembly;
             _shouldLog = shouldLog;
             _pipeName = pipeName;
+            _compatibilityMode = compatibilityMode;
         }
 
         public void Run(object waitHandle)
@@ -68,7 +70,8 @@ namespace AutoTest.TestRunners
             }
             catch (Exception ex)
             {
-                Program.AddResults(ErrorHandler.GetError("Run", ex));
+                if (!_compatibilityMode)
+                    Program.AddResults(ErrorHandler.GetError("Any", ex));
             }
             finally
             {

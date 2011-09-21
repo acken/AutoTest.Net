@@ -324,6 +324,12 @@ namespace AutoTest.Test.Core.Configuration
             _config.RunAssembliesInParallel.ShouldBeTrue();
         }
 
+        [Test]
+        public void Should_get_test_runner_compatibility_mode()
+        {
+            _config.TestRunnerCompatibilityMode.ShouldBeTrue();
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

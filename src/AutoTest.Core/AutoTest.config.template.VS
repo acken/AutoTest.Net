@@ -109,6 +109,10 @@
 	<!-- Custom output folder (Optional) -->
 	<!-- Custom folder to use as as build output folder -->
 	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->
+
+  <!-- Runs test runner in compatibility mode. A lot of test runners out there simply swallow -->
+  <!-- app domain and background thread exception. Compatibility mode does the same -->
+  <!--<TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode>-->
   
 	<!-- Adjust watch path to nearest common path (Optional) -->
 	<!-- Wether to adjust watch path to the lowest common path used by all projects -->

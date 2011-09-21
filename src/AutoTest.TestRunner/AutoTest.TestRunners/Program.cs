@@ -26,7 +26,7 @@ namespace AutoTest.TestRunners
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
-            args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB01D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB01D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)
@@ -98,9 +98,18 @@ namespace AutoTest.TestRunners
 
         public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            var message = getException((Exception)args.ExceptionObject);
-            Console.WriteLine("Unhandled Exception");
-            Console.WriteLine(message);
+            if (!_arguments.CompatabilityMode)
+            {
+                var message = getException((Exception)args.ExceptionObject);
+                var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown from an app domain or a background thread while running a test", TestState.Panic, message);
+                AddResults(result);
+            }
+
+            Thread.CurrentThread.IsBackground = true;
+            Thread.CurrentThread.Name = "Dead thread";
+
+            while (true)
+                Thread.Sleep(TimeSpan.FromHours(1));
         }
 
         private static string getException(Exception ex)
@@ -113,7 +122,7 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent] [--logging]");
+            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent] [--logging] [--compatibility-mode]");
             Write("");
             Write("Options format");
             Write("<=====================================================>");
@@ -161,7 +170,7 @@ namespace AutoTest.TestRunners
                         WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
                         var pipeName = Guid.NewGuid().ToString();
                         junction.Combine(pipeName);
-                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging, pipeName);
+                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging, pipeName, _arguments.CompatabilityMode);
                         process.Run(null);
                     }
                 }

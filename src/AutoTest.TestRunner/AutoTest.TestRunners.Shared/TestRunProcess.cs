@@ -19,6 +19,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
         private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> _processWrapper = null;
+        private bool _compatabilityMode = false;
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -57,6 +58,12 @@ namespace AutoTest.TestRunners.Shared
 			return this;
 		}
 
+        public TestRunProcess RunInCompatibilityMode()
+        {
+            _compatabilityMode = true;
+            return this;
+        }
+
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {
             _results = new List<TestResult>();
@@ -67,6 +74,8 @@ namespace AutoTest.TestRunners.Shared
                 var process = new TestProcess(target, _feedback);
 				if (_processWrapper != null)
                     process.WrapTestProcessWith(_processWrapper);
+                if (_compatabilityMode)
+                    process.RunInCompatibilityMode();
                 process.AbortWhen(_abortWhen);
                 var thread = new Thread(new ThreadStart(process.Start));
                 thread.Start();

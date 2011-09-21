@@ -14,6 +14,7 @@ namespace AutoTest.TestRunners
         public bool Silent { get; set; }
         public bool Logging { get; set; }
         public string Channel { get; set; }
+        public bool CompatabilityMode { get; set; }
     }
 
     class ArgumentParser
@@ -50,6 +51,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.Logging = true;
             if (iAm(argument, "--channel"))
                 _parsedArgument.Channel = getValue(argument, "--channel=");
+            if (iAm(argument, "--compatibility-mode"))
+                _parsedArgument.CompatabilityMode = true;
         }
 
         private bool iAm(string argument, string parameterName)

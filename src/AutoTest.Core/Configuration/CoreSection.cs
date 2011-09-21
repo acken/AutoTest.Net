@@ -45,6 +45,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> UseLowestCommonDenominatorAsWatchPath { get; private set; }
         public ConfigItem<bool> WatchAllFiles { get; private set; }
         public ConfigItem<bool> RunAssembliesInParallel { get; private set; }
+        public ConfigItem<bool> TestRunnerCompatibilityMode { get; private set; }
 
         public List<KeyValuePair<string, string>> Keys { get; private set; }
 
@@ -73,6 +74,7 @@ namespace AutoTest.Core.Configuration
             UseLowestCommonDenominatorAsWatchPath = new ConfigItem<bool>(true);
             WatchAllFiles = new ConfigItem<bool>(false);
             RunAssembliesInParallel = new ConfigItem<bool>(false);
+            TestRunnerCompatibilityMode = new ConfigItem<bool>(false);
             Keys = new List<KeyValuePair<string, string>>();
         }
 
@@ -103,6 +105,7 @@ namespace AutoTest.Core.Configuration
             UseLowestCommonDenominatorAsWatchPath = getBoolItem("configuration/UseLowestCommonDenominatorAsWatchPath", true);
             WatchAllFiles = getBoolItem("configuration/WatchAllFiles", false);
             RunAssembliesInParallel = getBoolItem("configuration/RunAssembliesInParallel", false);
+            TestRunnerCompatibilityMode = getBoolItem("configuration/TestRunnerCompatibilityMode", false);
             Keys = getAllKeys("configuration/*");
         }
 		

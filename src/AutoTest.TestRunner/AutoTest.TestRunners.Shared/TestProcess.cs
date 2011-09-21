@@ -23,6 +23,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _startSuspended = false;
         private Func<bool> _abortWhen = null;
         private Action<Platform, Version, Action<ProcessStartInfo>> _processWrapper = null;
+        private bool _compatabilityMode = false;
         private Process _proc = null;
         private string _executable;
         private string _input;
@@ -57,6 +58,12 @@ namespace AutoTest.TestRunners.Shared
             _processWrapper = processWrapper;
             return this;
         }
+
+        public TestProcess RunInCompatibilityMode()
+        {
+            _compatabilityMode = true;
+            return this;
+        }
 		 
         public void Start()
         {
@@ -83,6 +90,8 @@ namespace AutoTest.TestRunners.Shared
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
                 arguments += " --startsuspended";
+            if (_compatabilityMode)
+                arguments += " --compatibility-mode";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
             _proc = new Process();
