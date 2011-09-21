@@ -101,8 +101,9 @@ namespace AutoTest.Core.Configuration
             if (defaultConfigurationLocator == null)
                 defaultConfigurationLocator = new DefaultConfigurationLocator();
             _services.Container.Register(Component.For<ILocateWriteLocation>().Instance(defaultConfigurationLocator));
-			
-			initializeNotifiers();
+
+            var config = _services.Locate<IConfiguration>();
+            initializeNotifiers(config);
         }
 		
 		public void AddRunFailedTestsFirstPreProcessor()
@@ -167,7 +168,7 @@ namespace AutoTest.Core.Configuration
 
         #endregion
 		
-		private void initializeNotifiers()
+		private void initializeNotifiers(IConfiguration config)
 		{
             if ((new notify_sendNotifier()).IsSupported())
             {
@@ -179,7 +180,7 @@ namespace AutoTest.Core.Configuration
                 Debug.WriteDebug("Snarl support found, endabling Snarl notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<SnarlNotifier>());
             }
-            else if ((new GrowlNotifier(null)).IsSupported())
+            else if ((new GrowlNotifier(config)).IsSupported())
             {
                 Debug.WriteDebug("Growl support found, endabling Growl notifications");
                 _services.Container.Register(Component.For<ISendNotifications>().ImplementedBy<GrowlNotifier>());
