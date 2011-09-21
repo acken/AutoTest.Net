@@ -12,7 +12,6 @@ namespace AutoTest.TestRunners
         public string OutputFile { get; set; }
         public bool StartSuspended { get; set; }
         public bool Silent { get; set; }
-        public bool RunInParallel { get; set; }
         public bool Logging { get; set; }
         public string Channel { get; set; }
     }
@@ -47,8 +46,6 @@ namespace AutoTest.TestRunners
                 _parsedArgument.StartSuspended = true;
             if (iAm(argument, "--silent"))
                 _parsedArgument.Silent = true;
-            if (iAm(argument, "--run_assemblies_parallel"))
-                _parsedArgument.RunInParallel = true;
             if (iAm(argument, "--logging"))
                 _parsedArgument.Logging = true;
             if (iAm(argument, "--channel"))

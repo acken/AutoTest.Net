@@ -26,7 +26,7 @@ namespace AutoTest.TestRunners
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpC7C9.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpC7DA.tmp" };
+            args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB01D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)
@@ -99,12 +99,8 @@ namespace AutoTest.TestRunners
         public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
-            var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test", TestState.Panic, message);
-            AddResults(result);
-            var writer = new ResultsXmlWriter(_results);
-            writer.Write(_arguments.OutputFile);
-            if (args.IsTerminating)
-                Environment.Exit(-1);
+            Console.WriteLine("Unhandled Exception");
+            Console.WriteLine(message);
         }
 
         private static string getException(Exception ex)
@@ -152,7 +148,6 @@ namespace AutoTest.TestRunners
 
         private static void run(OptionsXmlReader parser, PipeJunction junction)
         {
-            var handles = new List<ManualResetEvent>();
             foreach (var plugin in getPlugins(parser))
             {
                 var instance = plugin.New();
@@ -167,19 +162,10 @@ namespace AutoTest.TestRunners
                         var pipeName = Guid.NewGuid().ToString();
                         junction.Combine(pipeName);
                         var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging, pipeName);
-                        if (_arguments.RunInParallel)
-                        {
-                            var handle = new ManualResetEvent(false);
-                            handles.Add(handle);
-                            ThreadPool.QueueUserWorkItem(process.Run, handle);
-                        }
-                        else
-                            process.Run(null);
+                        process.Run(null);
                     }
                 }
             }
-            if (_arguments.RunInParallel)
-                WaitHandle.WaitAll(handles.ToArray());
         }
 
         private static RunnerOptions getTestRunsFor(IAutoTestNetTestRunner instance, RunnerOptions run)
