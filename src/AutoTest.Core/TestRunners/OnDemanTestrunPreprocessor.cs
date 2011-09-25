@@ -14,6 +14,7 @@ using AutoTest.Core.Configuration;
 using System.IO;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.TestRunners
 {
@@ -131,7 +132,7 @@ namespace AutoTest.Core.TestRunners
 
     public interface IOnDemanTestrunPreprocessor
     {
-        void Activate();
+        void Activate(Action runOnCompleted);
         void Deactivate();
         void AddRuns(OnDemandRun run);
     }
@@ -143,6 +144,7 @@ namespace AutoTest.Core.TestRunners
         private bool _isActive = false;
         private List<OnDemandRunInternal> _addToNextRun = new List<OnDemandRunInternal>();
         private IEnumerable<IAutoTestNetTestRunner> _identifiers = null;
+        private Action _runOnComplete = null;
 
         public OnDemanTestrunPreprocessor(ICache cache, IConfiguration configuration)
         {
@@ -150,13 +152,19 @@ namespace AutoTest.Core.TestRunners
             _configuration = configuration;
         }
 
-        public void Activate()
+        public void Activate(Action runOnCompleted)
         {
             _isActive = true;
+            _runOnComplete = runOnCompleted;
         }
 
         public void Deactivate()
         {
+            if (_isActive)
+            {
+                if (_runOnComplete != null)
+                    _runOnComplete();
+            }
             _isActive = false;
         }
 

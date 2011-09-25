@@ -121,18 +121,18 @@ namespace AutoTest.VSAddin.ATEngine
             bus.Publish(message);
         }
 
-        public void RerunLastTestRun()
+        public void RerunLastTestRun(Action runOnTaskCompleted)
         {
             if (LastTestRun != null)
-                RunTests(LastTestRun);
+                RunTests(LastTestRun, runOnTaskCompleted);
         }
 
-        public void RunTests(OnDemandRun run)
+        public void RunTests(OnDemandRun run, Action runOnTaskCompleted)
         {
-            RunTests(new List<OnDemandRun>(new OnDemandRun[] { run }));
+            RunTests(new List<OnDemandRun>(new OnDemandRun[] { run }), runOnTaskCompleted);
         }
 
-        public void RunTests(List<OnDemandRun> runs)
+        public void RunTests(List<OnDemandRun> runs, Action runOnTaskCompleted)
         {
             var cache = BootStrapper.Services.Locate<ICache>();
             var bus = BootStrapper.Services.Locate<IMessageBus>();
@@ -140,7 +140,7 @@ namespace AutoTest.VSAddin.ATEngine
             var projects = cache.GetAll<Project>();
             foreach (var run in runs)
                 onDemandRunner.AddRuns(run);
-            onDemandRunner.Activate();
+            onDemandRunner.Activate(runOnTaskCompleted);
             LastTestRun = runs;
             bus.Publish(getOnDemandMessage(runs, projects));
         }

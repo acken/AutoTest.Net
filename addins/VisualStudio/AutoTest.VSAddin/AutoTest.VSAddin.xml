@@ -4,6 +4,23 @@
         <name>AutoTest.VSAddin</name>
     </assembly>
     <members>
+        <member name="F:AutoTest.VSAddin.FeedbackWindow.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:AutoTest.VSAddin.FeedbackWindow.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:AutoTest.VSAddin.FeedbackWindow.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:AutoTest.VSAddin.Connect">
             <summary>The object for implementing an Add-in.</summary>
             <seealso class='IDTExtensibility2' />
@@ -38,23 +55,6 @@
             <summary>Implements the OnBeginShutdown method of the IDTExtensibility2 interface. Receives notification that the host application is being unloaded.</summary>
             <param term='custom'>Array of parameters that are host application specific.</param>
             <seealso class='IDTExtensibility2' />
-        </member>
-        <member name="F:AutoTest.VSAddin.FeedbackWindow.components">
-            <summary> 
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:AutoTest.VSAddin.FeedbackWindow.Dispose(System.Boolean)">
-            <summary> 
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:AutoTest.VSAddin.FeedbackWindow.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
         </member>
     </members>
 </doc>
