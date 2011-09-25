@@ -7,14 +7,14 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{DE3A8FE7-5918-471A-BF59-84C2C3328CCF}
 AppName=AutoTest.Net
-AppVersion=1.3.0
-AppVerName=AutoTest.Net 1.3.0
+AppVersion=1.3.1
+AppVerName=AutoTest.Net 1.3.1
 AppPublisher=AutoTest.Net
 DefaultDirName={pf}\AutoTest.Net
 DefaultGroupName=AutoTest.Net
 LicenseFile=..\ReleaseBinaries\AutoTest.License.txt
 OutputDir=..\ReleaseBinaries\Installer
-OutputBaseFilename=AutoTest.Net-v1.3.0
+OutputBaseFilename=AutoTest.Net-v1.3.1
 Compression=lzma
 SolidCompression=yes
 Uninstallable=yes
