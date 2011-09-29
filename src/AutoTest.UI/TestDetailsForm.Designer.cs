@@ -41,7 +41,7 @@
             // textBoxContent
             // 
             this.textBoxContent.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.textBoxContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxContent.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxContent.Location = new System.Drawing.Point(28, 4);
             this.textBoxContent.Multiline = true;
             this.textBoxContent.Name = "textBoxContent";
