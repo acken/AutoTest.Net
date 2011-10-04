@@ -20,6 +20,8 @@ namespace AutoTest.TestRunners
     {
         private static Arguments _arguments;
         private static List<TestResult> _results = new List<TestResult>();
+        private static int _mainThreadID = 0;
+        private static List<Thread> _haltedThreads = new List<Thread>();
         
         [STAThread]
         static void Main(string[] args)
@@ -27,6 +29,7 @@ namespace AutoTest.TestRunners
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB01D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
+            _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
             if (_arguments.Logging)
@@ -50,7 +53,21 @@ namespace AutoTest.TestRunners
             }
 
 			// We do this since NUnit threads some times keep staing in running mode even after finished.
+            killHaltedThreads();
             System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
+
+        private static void killHaltedThreads()
+        {
+            lock (_haltedThreads)
+            {
+                if (_haltedThreads.Count == 0)
+                    return;
+                foreach (var thread in _haltedThreads)
+                    thread.Abort();
+                Thread.Sleep(100);
+            }
+
         }
 
         private static void writeHeader()
@@ -98,15 +115,37 @@ namespace AutoTest.TestRunners
 
         public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
+            var message = getException((Exception)args.ExceptionObject);
+            if (Thread.CurrentThread.ManagedThreadId.Equals(_mainThreadID))
+            {
+                var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test", TestState.Panic, message);
+                AddResults(result);
+                var writer = new ResultsXmlWriter(_results);
+                writer.Write(_arguments.OutputFile);
+                if (args.IsTerminating)
+                    Environment.Exit(-1);
+                return;
+            }
+
             if (!_arguments.CompatabilityMode)
             {
-                var message = getException((Exception)args.ExceptionObject);
-                var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown from an app domain or a background thread while running a test", TestState.Panic, message);
+                var result = new TestResult(
+                    "Any",
+                    "",
+                    "",
+                    0,
+                    string.Format("An unhandled exception was thrown from an app domain or a background thread while running a test (Thread: {0}}", Thread.CurrentThread.Name),
+                    TestState.Panic,
+                    message);
                 AddResults(result);
             }
 
             Thread.CurrentThread.IsBackground = true;
             Thread.CurrentThread.Name = "Dead thread";
+            lock (_haltedThreads)
+            {
+                _haltedThreads.Add(Thread.CurrentThread);
+            }
 
             while (true)
                 Thread.Sleep(TimeSpan.FromHours(1));
