@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using EnvDTE80;
 using AutoTest.VS.Util.Debugger;
 using EnvDTE;
+using AutoTest.VS.Util.Navigation;
 
 namespace AutoTest.VSAddin
 {
@@ -60,11 +61,9 @@ namespace AutoTest.VSAddin
         {
             try
             {
-                var signature = new AutoTest.UI.CodeReflection.TypeConverter(e.Assembly).ToSignature(e.TypeName);
-                if (signature != null)
-                    AutoTest.VS.Util.MethodFinder_Slow.GotoMethodByFullname(signature, _application);
+                new TypeNavigation().GoToType(_application, e.Assembly, e.TypeName);
             }
-            catch
+            catch (Exception ex)
             {
             }
         }

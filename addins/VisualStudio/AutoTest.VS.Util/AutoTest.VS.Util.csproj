@@ -72,6 +72,7 @@
     <Compile Include="MethodFinder_Slow.cs" />
     <Compile Include="ElementNameFromCursorPosition.cs" />
     <Compile Include="MethodNameReader.cs" />
+    <Compile Include="Navigation\TypeNavigation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaverOfFilesThatVSKeepsStashigInMem.cs" />
     <Compile Include="SolutionStateHandler.cs" />
@@ -89,6 +90,10 @@
     <ProjectReference Include="..\..\..\src\AutoTest.TestRunner\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\AutoTest.UI\AutoTest.UI.csproj">
+      <Project>{3FFC895E-13FE-4C04-9613-BDCAF78BD6A2}</Project>
+      <Name>AutoTest.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
