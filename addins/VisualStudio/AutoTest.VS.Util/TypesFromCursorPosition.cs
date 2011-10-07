@@ -2,6 +2,8 @@
 using EnvDTE;
 using EnvDTE80;
 using AutoTest.Messages;
+using System.IO;
+using AutoTest.VS.Util.SourceParsers;
 
 namespace AutoTest.VS.Util
 {
@@ -33,6 +35,48 @@ namespace AutoTest.VS.Util
 
         public OnDemandRun FromCurrentPosition()
         {
+            if (isSpecFlowFeature())
+                return getFromSpecFlowFeature();
+            else
+                return getFromCodeModel();
+        }
+
+        private bool isSpecFlowFeature()
+        {
+            return Path.GetExtension(_application.ActiveDocument.Name).ToLower().Equals(".feature");
+        }
+
+        private OnDemandRun getFromSpecFlowFeature()
+        {
+            try
+            {
+                _project = _application.ActiveDocument.ProjectItem.ContainingProject.FullName;
+                var feature = _application.ActiveDocument.FullName;
+                var items = _application.ActiveDocument.ProjectItem.ProjectItems;
+                ProjectItem item = null;
+                foreach (object itm in items)
+                {
+                    item = (ProjectItem)itm;
+                    break;
+                }
+                var codeBehind = item.Document.FullName;
+                var sel = (TextSelection)_application.ActiveDocument.Selection;
+                var point = (TextPoint)sel.ActivePoint;
+                var signature = new SpecFlowFeatureParser(File.ReadAllText(feature), File.ReadAllText(codeBehind)).GetTest(point.Line - 1);
+                if (signature == null)
+                    return new OnDemandRun(_project);
+                if (signature.Type == SignatureType.Class)
+                    return new OnDemandRun(_project, new string[] { }, new string[] { signature.Name }, new string[] { });
+                return new OnDemandRun(_project, new string[] { signature.Name }, new string[] { }, new string[] { });
+            }
+            catch
+            {
+            }
+            return new OnDemandRun(_project);
+        }
+
+        private OnDemandRun getFromCodeModel()
+        {
             try
             {
                 getCodeFromPosition();
@@ -61,7 +105,7 @@ namespace AutoTest.VS.Util
                 AutoTest.Core.DebugLog.Debug.WriteException(ex);
             }
             if (_test.Length > 0 || _member.Length > 0)
-                return new OnDemandRun(_project, _test, _member, new string[] {});
+                return new OnDemandRun(_project, _test, _member, new string[] { });
             else
                 return new OnDemandRun(_project, _test, _member, _namespace);
         }

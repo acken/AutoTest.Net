@@ -80,7 +80,7 @@ namespace AutoTest.Core.Notifiers
                     icon = Path.Combine(icon, Path.Combine("Icons", "circleFAIL.png"));
                     break;
             }
-            icon = icon.Replace(" ", "%20");
+            //icon = icon.Replace(" ", "%20");
 			string args;
 			if (Environment.OSVersion.Platform == PlatformID.MacOSX)
 				args = string.Format("--image \"{0}\" --title \"AutoTest.Net\" --message \"{1}\"", icon, msg);

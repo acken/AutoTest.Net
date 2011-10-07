@@ -51,6 +51,8 @@ namespace AutoTest.VS.Util.Builds
             prepareOutputPath();
             foreach (var project in projects)
             {
+                if (project == null)
+                    continue;
                 _application.Solution.SolutionBuild.BuildProject(
                     getProjectConfiguration(project),
                     project,

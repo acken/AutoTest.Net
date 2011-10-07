@@ -45,12 +45,21 @@
   <ItemGroup>
     <Compile Include="GenericNameManglerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceParsers\SpecFlowFeatureParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.VS.Util\AutoTest.VS.Util.csproj">
       <Project>{5CD7E57A-595E-4E25-9964-DDD3F34CC06D}</Project>
       <Name>AutoTest.VS.Util</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SpecflowCodeBehind.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SpecflowFeature.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
