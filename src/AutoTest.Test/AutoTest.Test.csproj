@@ -155,6 +155,7 @@
     <Compile Include="Core\Messaging\FileChangeMessageTests.cs" />
     <Compile Include="Core\Messaging\MessageTestBase.cs" />
     <Compile Include="Core\TestRunners\XUnitTestRunnerTest.cs" />
+    <Compile Include="Messages\FileStorage\PathTranslatorTests.cs" />
     <Compile Include="TestObjects\Listener.cs" />
     <Compile Include="TestObjects\Message.cs" />
     <Compile Include="TestObjects\Talker.cs" />

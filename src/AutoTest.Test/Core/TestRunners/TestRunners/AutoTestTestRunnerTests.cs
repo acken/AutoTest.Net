@@ -31,7 +31,7 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
         [Test]
         public void Should_publish_passing_test_that_has_previously_failed()
         {
-            _cache.Stub(x => x.Failed).Return(new TestItem[] { new TestItem("", "", new Messages.TestResult(TestRunner.NUnit, TestRunStatus.Failed, "PreviouslyFailingTest")) });
+            _cache.Stub(x => x.Failed).Return(new TestItem[] { new TestItem("", "", new AutoTest.Messages.TestResult(TestRunner.NUnit, TestRunStatus.Failed, "PreviouslyFailingTest")) });
 
             _feedback.TestFinished(new AutoTest.TestRunners.Shared.Results.TestResult("", "", "", 0, "PreviouslyFailingTest", AutoTest.TestRunners.Shared.Results.TestState.Passed, ""));
 

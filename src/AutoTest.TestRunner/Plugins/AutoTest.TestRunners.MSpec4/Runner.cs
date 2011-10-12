@@ -66,7 +66,7 @@ namespace AutoTest.TestRunners.MSpec4
             using (var parser = _reflectionProviderFactory(assembly))
             {
                 var references = parser.GetReferences();
-                return references.Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.4.0.0")) > 0;
+                return references.Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.4.")) > 0;
             }
         }
 

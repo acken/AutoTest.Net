@@ -9,6 +9,7 @@ using AutoTest.Core.Launchers;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
+using AutoTest.Messages.FileStorage;
 
 namespace AutoTest.Core.FileSystem
 {
@@ -132,9 +133,9 @@ namespace AutoTest.Core.FileSystem
 		
 		private void mergeLocalConfig(string path)
 		{
-			var file = Path.Combine(path, "AutoTest.config");
+            var file = new ConfigurationLocator().GetConfiguration(_configuration.WatchToken);
 			if (File.Exists(file))
-				_bus.Publish(new InformationMessage("Loading local config file"));
+				_bus.Publish(new InformationMessage("Loading local config file " + file));
 			_configuration.Reload(file);
 		}
 

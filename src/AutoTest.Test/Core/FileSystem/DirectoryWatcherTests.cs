@@ -12,6 +12,7 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core;
+using AutoTest.Messages.FileStorage;
 
 namespace AutoTest.Test.Core
 {
@@ -47,12 +48,13 @@ namespace AutoTest.Test.Core
 			_validator.Stub(v => v.GetIgnorePatterns()).Return("");
 			_configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             _configuration.Stub(c => c.WatchAllFiles).Return(true);
+            _configuration.Stub(c => c.WatchToken).Return(_watchDirectory);
             _watcher = new DirectoryWatcher(_messageBus, _validator, _configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce, _rebuildMarker, _slnConsumer);
             _file = Path.GetFullPath("watcher_test.txt");
             _directory = Path.GetFullPath("mytestfolder");
 			_watchDirectory = Path.GetDirectoryName(_file);
             _pathLocator.Stub(x => x.Locate(_watchDirectory)).Return(_watchDirectory);
-			_localConfig = Path.Combine(_watchDirectory, "AutoTest.config");
+			_localConfig = new PathTranslator(_watchDirectory).Translate(Path.Combine(_watchDirectory, "AutoTest.config"));
 			File.WriteAllText(_localConfig, "<configuration></configuration>");
             _watcher.Watch(_watchDirectory);
         }
@@ -123,7 +125,7 @@ namespace AutoTest.Test.Core
 		[Test]
 		public void Should_reload_configuration_with_local_config()
 		{
-			_configuration.AssertWasCalled(c => c.Reload(Path.Combine(_watchDirectory, "AutoTest.config")));
+			_configuration.AssertWasCalled(c => c.Reload(_localConfig));
 		}
 
         [Test]

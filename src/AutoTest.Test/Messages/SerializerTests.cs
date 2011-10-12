@@ -199,28 +199,28 @@ namespace AutoTest.Test
         public void Should_serialize_Cache_message()
         {
             var message = new CacheMessages();
-            message.AddError(new CacheBuildMessage("project1", new Messages.BuildMessage() { ErrorMessage = "message", File = "file", LineNumber = 1, LinePosition = 2 }));
-            message.RemoveError(new CacheBuildMessage("project1", new Messages.BuildMessage() { ErrorMessage = "message to remove", File = "file", LineNumber = 1, LinePosition = 2 }));
-            message.AddError(new CacheBuildMessage("project2", new Messages.BuildMessage() { ErrorMessage = "message2", File = "file2", LineNumber = 1, LinePosition = 2 }));
-            message.AddWarning(new CacheBuildMessage("project3", new Messages.BuildMessage() { ErrorMessage = "warning message", File = "warning file", LineNumber = 3, LinePosition = 4 }));
-            message.RemoveWarning(new CacheBuildMessage("project3", new Messages.BuildMessage() { ErrorMessage = "warning message to remove", File = "warning file", LineNumber = 3, LinePosition = 4 }));
+            message.AddError(new CacheBuildMessage("project1", new BuildMessage() { ErrorMessage = "message", File = "file", LineNumber = 1, LinePosition = 2 }));
+            message.RemoveError(new CacheBuildMessage("project1", new BuildMessage() { ErrorMessage = "message to remove", File = "file", LineNumber = 1, LinePosition = 2 }));
+            message.AddError(new CacheBuildMessage("project2", new BuildMessage() { ErrorMessage = "message2", File = "file2", LineNumber = 1, LinePosition = 2 }));
+            message.AddWarning(new CacheBuildMessage("project3", new BuildMessage() { ErrorMessage = "warning message", File = "warning file", LineNumber = 3, LinePosition = 4 }));
+            message.RemoveWarning(new CacheBuildMessage("project3", new BuildMessage() { ErrorMessage = "warning message to remove", File = "warning file", LineNumber = 3, LinePosition = 4 }));
 
-            var failed = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Failed, "test name");
+            var failed = new TestResult(TestRunner.Any, TestRunStatus.Failed, "test name");
             failed.Message = "message";
             failed.StackTrace = new StackLineMessage[] { new StackLineMessage("stackmethod", "stack file", 5) };
             message.AddFailed(new CacheTestMessage("assembly1", failed));
 
-            var failed2 = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Failed, "test name");
+            var failed2 = new TestResult(TestRunner.Any, TestRunStatus.Failed, "test name");
             failed2.Message = "message";
             failed2.StackTrace = new StackLineMessage[] { new StackLineMessage("stackmethod", "stack file", 5) };
             message.AddFailed(new CacheTestMessage("assembly2", failed2));
 
-            var ignored = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Ignored, "test name ignored");
+            var ignored = new TestResult(TestRunner.Any, TestRunStatus.Ignored, "test name ignored");
             ignored.Message = "message ignored";
             ignored.StackTrace = new StackLineMessage[] { new StackLineMessage("stackmethod ignored", "", 6) };
             message.AddIgnored(new CacheTestMessage("assembly2", ignored));
 
-            ignored = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Ignored, "test name ignored");
+            ignored = new TestResult(TestRunner.Any, TestRunStatus.Ignored, "test name ignored");
             ignored.Message = "message ignored to remove";
             ignored.StackTrace = new StackLineMessage[] { new StackLineMessage("stackmethod ignored", "", 6) };
             message.RemoveTest(new CacheTestMessage("assembly2", ignored));
@@ -248,7 +248,7 @@ namespace AutoTest.Test
 
             Assert.AreEqual(2, output.FailedToAdd.Length);
             Assert.AreEqual("assembly1", output.FailedToAdd[0].Assembly);
-            Assert.AreEqual(Messages.TestRunStatus.Failed, output.FailedToAdd[0].Test.Status);
+            Assert.AreEqual(TestRunStatus.Failed, output.FailedToAdd[0].Test.Status);
             Assert.AreEqual("test name", output.FailedToAdd[0].Test.Name);
             Assert.AreEqual("message", output.FailedToAdd[0].Test.Message);
             Assert.AreEqual("stackmethod", output.FailedToAdd[0].Test.StackTrace[0].Method);
@@ -257,7 +257,7 @@ namespace AutoTest.Test
 
             Assert.AreEqual(1, output.IgnoredToAdd.Length);
             Assert.AreEqual("assembly2", output.IgnoredToAdd[0].Assembly);
-            Assert.AreEqual(Messages.TestRunStatus.Ignored, output.IgnoredToAdd[0].Test.Status);
+            Assert.AreEqual(TestRunStatus.Ignored, output.IgnoredToAdd[0].Test.Status);
             Assert.AreEqual("test name ignored", output.IgnoredToAdd[0].Test.Name);
             Assert.AreEqual("message ignored", output.IgnoredToAdd[0].Test.Message);
             Assert.AreEqual("stackmethod ignored", output.IgnoredToAdd[0].Test.StackTrace[0].Method);
@@ -273,9 +273,9 @@ namespace AutoTest.Test
         public void Should_serialize_Cache_message2()
         {
             var message = new CacheMessages();
-            message.AddWarning(new CacheBuildMessage("project3", new Messages.BuildMessage() { ErrorMessage = "warning message", File = "warning file", LineNumber = 3, LinePosition = 4 }));
+            message.AddWarning(new CacheBuildMessage("project3", new BuildMessage() { ErrorMessage = "warning message", File = "warning file", LineNumber = 3, LinePosition = 4 }));
 
-            var failed = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_run_tests");
+            var failed = new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_run_tests");
             failed.Message = "Rhino.Mocks.Exceptions.ExpectationViolationException : ITestRunner.RunTests(any); Expected #1, Actual #0.";
             failed.StackTrace = new StackLineMessage[]
                     { 
@@ -284,7 +284,7 @@ namespace AutoTest.Test
                     };
             message.AddFailed(new CacheTestMessage(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Test\bin\Debug\AutoTest.Test.dll", failed));
 
-            failed = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_run_builds");
+            failed = new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_run_builds");
             failed.Message = "Rhino.Mocks.Exceptions.ExpectationViolationException : IBuildRunner.RunBuild(\"C:\\Users\\ack\\src\\AutoTest.Net\\src\\AutoTest.Test\\bin\\Debug\\someProject.csproj\", \"C:\\Users\\ack\\src\\AutoTest.Net\\src\\AutoTest.Test\\bin\\Debug\\AutoTest.Test.dll\"); Expected #1, Actual #0.";
             failed.StackTrace = new StackLineMessage[]
                     { 
@@ -294,7 +294,7 @@ namespace AutoTest.Test
                     };
             message.AddFailed(new CacheTestMessage(@"C:\Users\ack\src\AutoTest.Net\src\AutoTest.Test\bin\Debug\AutoTest.Test.dll", failed));
 
-            failed = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_pre_process_run_information");
+            failed = new TestResult(TestRunner.Any, TestRunStatus.Failed, "AutoTest.Test.Core.Messaging.MessageConsumers.ProjectChangeConsumerTest.Should_pre_process_run_information");
             failed.Message = "Rhino.Mocks.Exceptions.ExpectationViolationException : IPreProcessTestruns.PreProcess(any); Expected #1, Actual #0.";
             failed.StackTrace = new StackLineMessage[]
                     { 
@@ -310,13 +310,13 @@ namespace AutoTest.Test
         [Test]
         public void Should_serialize_chache_test_message()
         {
-            var ignored = new Messages.TestResult(TestRunner.Any, Messages.TestRunStatus.Ignored, "test name ignored");
+            var ignored = new TestResult(TestRunner.Any, TestRunStatus.Ignored, "test name ignored");
             ignored.Message = "message ignored";
             ignored.StackTrace = new StackLineMessage[] { new StackLineMessage("stackmethod ignored", "stack file ignored", 6) };
             var message = new CacheTestMessage("assembly", ignored);
             var output = serializeDeserialize(message);
             Assert.AreEqual("assembly", output.Assembly);
-            Assert.AreEqual(Messages.TestRunStatus.Ignored, output.Test.Status);
+            Assert.AreEqual(TestRunStatus.Ignored, output.Test.Status);
             Assert.AreEqual("test name ignored", output.Test.Name);
             Assert.AreEqual("message ignored", output.Test.Message);
             Assert.AreEqual("stackmethod ignored", output.Test.StackTrace[0].Method);
@@ -327,7 +327,7 @@ namespace AutoTest.Test
         [Test]
         public void Should_serialize_chache_build_message()
         {
-            var item = new Messages.BuildMessage() { ErrorMessage = "message", File = "file", LineNumber = 1, LinePosition = 2 };
+            var item = new BuildMessage() { ErrorMessage = "message", File = "file", LineNumber = 1, LinePosition = 2 };
             var message = new CacheBuildMessage("project", item);
             var output = serializeDeserialize(message);
             Assert.AreEqual("project", output.Project);

@@ -41,11 +41,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void When_assembly_exists_with_different_tests_it_should_merge_with_existing()
         {
             var item = getItem("Assembly1");
-            item.AddTestsToRun(getTest(Messages.TestRunner.NUnit, "Existing test"));
+            item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing test"));
             _list.Add(item);
             item = getItem("Assembly1");
-            item.AddTestsToRun(getTest(Messages.TestRunner.NUnit, "Existing test"));
-            item.AddTestsToRun(getTest(Messages.TestRunner.NUnit, "A new test"));
+            item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing test"));
+            item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new test"));
             _newList.Add(item);
             Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
         }
@@ -54,10 +54,10 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void When_assembly_exists_with_same_test_but_different_runner_it_should_merge_with_existing()
         {
             var item = getItem("Assembly1");
-            item.AddTestsToRun(getTest(Messages.TestRunner.NUnit, "Existing test"));
+            item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing test"));
             _list.Add(item);
             item = getItem("Assembly1");
-            item.AddTestsToRun(getTest(Messages.TestRunner.MSTest, "Existing test"));
+            item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.MSTest, "Existing test"));
             _newList.Add(item);
             Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
         }
@@ -66,11 +66,11 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void When_assembly_exists_with_different_members_it_should_merge_with_existing()
         {
             var item = getItem("Assembly1");
-            item.AddMembersToRun(getTest(Messages.TestRunner.NUnit, "Existing member"));
+            item.AddMembersToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing member"));
             _list.Add(item);
             item = getItem("Assembly1");
-            item.AddMembersToRun(getTest(Messages.TestRunner.NUnit, "Existing member"));
-            item.AddMembersToRun(getTest(Messages.TestRunner.NUnit, "A new member"));
+            item.AddMembersToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing member"));
+            item.AddMembersToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new member"));
             _newList.Add(item);
             Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetMembers().Count(), Is.EqualTo(2));
         }
@@ -79,16 +79,16 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void When_assembly_exists_with_different_namespaces_it_should_merge_with_existing()
         {
             var item = getItem("Assembly1");
-            item.AddNamespacesToRun(getTest(Messages.TestRunner.NUnit, "Existing namespace"));
+            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
             _list.Add(item);
             item = getItem("Assembly1");
-            item.AddNamespacesToRun(getTest(Messages.TestRunner.NUnit, "Existing namespace"));
-            item.AddNamespacesToRun(getTest(Messages.TestRunner.NUnit, "A new namespace"));
+            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
+            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new namespace"));
             _newList.Add(item);
             Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetNamespaces().Count(), Is.EqualTo(2));
         }
 
-        private TestToRun[] getTest(Messages.TestRunner runner, string test)
+        private TestToRun[] getTest(AutoTest.Messages.TestRunner runner, string test)
         {
             return new TestToRun[] { new TestToRun(runner, test) };
         }
