@@ -7,6 +7,7 @@ using EnvDTE80;
 using EnvDTE;
 using System.Diagnostics;
 using System.IO;
+using AutoTest.Messages.FileStorage;
 
 namespace AutoTest.VSAddin.CommandHandling
 {
@@ -14,17 +15,19 @@ namespace AutoTest.VSAddin.CommandHandling
     {
         private readonly string _commandName;
         private readonly Func<string> _getPath;
+        private readonly Func<string, string> _translate;
         private readonly string _configurationDirectory;
 
-        public OpenConfiguration(string commandName, Func<string> getPath)
+        public OpenConfiguration(string commandName, Func<string> getPath, Func<string, string> translate)
         {
             _commandName = commandName;
             _getPath = getPath;
+            _translate = translate;
         }
 
         public void Exec(vsCommandExecOption ExecuteOption, ref object VariantIn, ref object VariantOut, ref bool Handled)
         {
-            var file = Path.Combine(_getPath(), "AutoTest.config");
+            var file = _translate(Path.Combine(_getPath(), "AutoTest.config"));
             if (!File.Exists(file))
                 File.WriteAllText(file, "");
             var process = new System.Diagnostics.Process();
