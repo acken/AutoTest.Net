@@ -53,10 +53,50 @@ namespace AutoTest.Test.Messages.FileStorage
         public void When_given_a_file_on_solution_root_it_should_place_it_on_storage_solution_root()
         {
             var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
+                .Translate(format("/home/ack/src/MySolution/SomeFileOnRoot.txt"));
+            Assert.That(
+                directory,
+                Is.EqualTo(format("/StorageLocation/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/SomeFileOnRoot.txt")));
+        }
+
+        [Test]
+        public void When_given_configuration_file_it_should_place_it_the_configuration_space()
+        {
+            var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/AutoTest.config"));
             Assert.That(
                 directory,
-                Is.EqualTo(format("/StorageLocation/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/AutoTest.config")));
+                Is.EqualTo(format("/StorageLocation/Configuration/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/AutoTest.config")));
+        }
+
+        [Test]
+        public void When_given_mm_dll_file_it_should_place_it_the_cache_space()
+        {
+            var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
+                .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.dll"));
+            Assert.That(
+                directory,
+                Is.EqualTo(format("/StorageLocation/Cache/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/project.mm_cd550a11ee76d30177aa5ce9d3738472/project.mm.dll")));
+        }
+
+        [Test]
+        public void When_given_mm_exe_file_it_should_place_it_the_cache_space()
+        {
+            var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
+                .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.exe"));
+            Assert.That(
+                directory,
+                Is.EqualTo(format("/StorageLocation/Cache/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/project.mm_7244e9f54cdaf2a123bdda0e7b937eef/project.mm.exe")));
+        }
+
+        [Test]
+        public void When_given_mm_cache_bin_file_it_should_place_it_the_cache_space()
+        {
+            var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
+                .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/projectmm_cache.bin"));
+            Assert.That(
+                directory,
+                Is.EqualTo(format("/StorageLocation/Cache/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/projectmm_cache_c39a9a2c31917ec0f174c8bde0fdb00a/projectmm_cache.bin")));
         }
 
         [Test]

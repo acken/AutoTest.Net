@@ -57,9 +57,25 @@ namespace AutoTest.Messages.FileStorage
             var relativePath = path.Replace(solutionDir + Path.DirectorySeparatorChar, "");
             if (relativePath != Path.GetFileName(path))
                 relativePath = getStandalonePath(relativePath);
-            var storagePath = Path.Combine(Path.Combine(_storagePath, generateSolutionToken(solutionDir)), relativePath);
+            var storagePath = getStoragePath(solutionDir, relativePath);
             addToCache(storagePath, path);
             preparePath(storagePath);
+            return storagePath;
+        }
+
+        private string getStoragePath(string solutionDir, string relativePath)
+        {
+            var fileName = Path.GetFileName(relativePath);
+            var solutionToken = generateSolutionToken(solutionDir);
+            var storagePath = "";
+            if (fileName.ToLower() == "autotest.config")
+                storagePath = Path.Combine(Path.Combine(Path.Combine(_storagePath, "Configuration"), solutionToken), relativePath);
+            else if (fileName.ToLower().EndsWith("mm.dll") ||
+                     fileName.ToLower().EndsWith("mm.exe") ||
+                     fileName.ToLower().EndsWith("mm_cache.bin"))
+                storagePath = Path.Combine(Path.Combine(Path.Combine(_storagePath, "Cache"), solutionToken), relativePath);
+            else
+                storagePath = Path.Combine(Path.Combine(_storagePath, solutionToken), relativePath);
             return storagePath;
         }
 
