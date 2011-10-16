@@ -78,6 +78,23 @@ namespace AutoTest.VS.Util.Menues
             return false;
         }
 
+        public void DeleteMenuItem(string commandBar, string popup, string caption)
+        {
+            try
+            {
+                var commands = (Commands2)_application.Commands;
+                var editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
+                var editPopUp = getPopup(editorCommandBar.Controls, popup);
+                var item = getCommandBarControl(editPopUp.Controls, caption);
+                if (item != null)
+                    item.Delete();
+                return;
+            }
+            catch
+            {
+            }
+        }
+
         public void CreateMenuItem(string commandBar, string popup, string caption, string description, string bindings, int place, string commandName, bool hasSeparator, int icon)
         {
             try
