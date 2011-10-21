@@ -22,7 +22,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _runInParallel = false;
         private bool _startSuspended = false;
         private Func<bool> _abortWhen = null;
-        private Action<Platform, Version, Action<ProcessStartInfo>> _processWrapper = null;
+        private Action<Platform, Version, Action<ProcessStartInfo, bool>> _processWrapper = null;
         private bool _compatabilityMode = false;
         private Process _proc = null;
         private string _executable;
@@ -53,7 +53,7 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 
-        public TestProcess WrapTestProcessWith(Action<Platform, Version, Action<ProcessStartInfo>> processWrapper)
+        public TestProcess WrapTestProcessWith(Action<Platform, Version, Action<ProcessStartInfo, bool>> processWrapper)
         {
             _processWrapper = processWrapper;
             return this;
@@ -76,12 +76,12 @@ namespace AutoTest.TestRunners.Shared
         private void runProcess()
         {
             if (_processWrapper == null)
-                run(new ProcessStartInfo());
+                run(new ProcessStartInfo(), false);
             else
                 _processWrapper.Invoke(_targetedRun.Platform, _targetedRun.TargetFramework, run);
         }
 
-        private void run(ProcessStartInfo startInfo)
+        private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
             var channel = Guid.NewGuid().ToString();
             var listener = startChannelListener(channel);
@@ -107,13 +107,11 @@ namespace AutoTest.TestRunners.Shared
 				_proc.StartInfo.Arguments = arguments;
 			}
             _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            _proc.StartInfo.RedirectStandardOutput = true;
-            _proc.StartInfo.UseShellExecute = false;
+            _proc.StartInfo.UseShellExecute = !doNotshellExecute;
             _proc.StartInfo.CreateNoWindow = true;
             _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
             _proc.Start();
             new System.Threading.Thread(listenForAborts).Start();
-            _proc.StandardOutput.ReadToEnd();
             _proc.WaitForExit();
             if (aborted())
             {

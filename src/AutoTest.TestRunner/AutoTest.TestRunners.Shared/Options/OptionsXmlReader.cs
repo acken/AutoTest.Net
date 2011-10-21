@@ -78,23 +78,11 @@ namespace AutoTest.TestRunners.Shared.Options
         private void getAssembly(XmlTextReader reader)
         {
             if (reader.IsEmptyElement)
-            {
-                var name = reader.GetAttribute("name");
-                if (_currentRunner.Assemblies.Count(x => x.Assembly.Equals(name)) == 0)
-                    _currentRunner.AddAssembly(new AssemblyOptions(name));
-            }
+                _currentRunner.AddAssembly(new AssemblyOptions(reader.GetAttribute("name")).HasBeenVerified(reader.GetAttribute("verified") == "true"));
             else if (reader.NodeType == XmlNodeType.EndElement)
-            {
-                if (_currentRunner.Assemblies.Count(x => x.Assembly.Equals(_currentAssembly.Assembly)) == 0)
-                    _currentRunner.AddAssembly(_currentAssembly);
-            }
+                _currentRunner.AddAssembly(_currentAssembly);
             else
-            {
-                var name = reader.GetAttribute("name");
-                _currentAssembly = _currentRunner.Assemblies.FirstOrDefault(x => x.Assembly.Equals(name));
-                if (_currentAssembly == null)
-                    _currentAssembly = new AssemblyOptions(name);
-            }
+                _currentAssembly = new AssemblyOptions(reader.GetAttribute("name")).HasBeenVerified(reader.GetAttribute("verified") == "true");
         }
 
         private void getTest(XmlTextReader reader)

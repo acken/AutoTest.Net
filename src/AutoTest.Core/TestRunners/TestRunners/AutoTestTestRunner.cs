@@ -65,7 +65,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return false;
         }
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform,Version,Action<ProcessStartInfo>> processWrapper, Func<bool> abortWhen)
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform,Version,Action<ProcessStartInfo, bool>> processWrapper, Func<bool> abortWhen)
         {
             var options = generateOptions(runInfos);
             if (options == null)
@@ -182,6 +182,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly);
+                assembly.HasBeenVerified(true);
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 DebugLog.Debug.WriteDetail("Found {0} tests for assembly", assembly.Tests.Count());
                 assembly.AddMembers(info.GetMembersFor(testRunner));

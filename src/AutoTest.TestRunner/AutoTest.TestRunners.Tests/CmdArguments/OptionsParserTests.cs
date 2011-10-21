@@ -85,12 +85,21 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         [Test]
         public void Should_get_assemblies()
         {
-            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.Count(), Is.EqualTo(2));
+            Assert.That(_parser.Options.TestRuns.Count(), Is.EqualTo(2));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.Count(), Is.EqualTo(4));
             Assert.That(_parser.Options.TestRuns.ElementAt(1).Assemblies.Count(), Is.EqualTo(1));
 
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Assembly, Is.EqualTo(@"C:\my\testassembly.dll"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).IsVerified, Is.True);
 
-            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(1).Assembly, Is.EqualTo(@"C:\my\anothernunitassembly.dll"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(1).Assembly, Is.EqualTo(@"C:\my\testassembly.dll"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(1).IsVerified, Is.False);
+
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(2).Assembly, Is.EqualTo(@"C:\my\anothernunitassembly.dll"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(2).IsVerified, Is.False);
+
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(3).Assembly, Is.EqualTo(@"C:\my\testassembly.dll"));
+            Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(3).IsVerified, Is.False);
 
             Assert.That(_parser.Options.TestRuns.ElementAt(1).Assemblies.ElementAt(0).Assembly, Is.EqualTo(@"C:\my\other\testassembly.dll"));
         }

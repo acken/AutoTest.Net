@@ -8,10 +8,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 {
     public class PreProcessedTesRuns
     {
-        public Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> ProcessWrapper { get; private set; }
+        public Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> ProcessWrapper { get; private set; }
         public RunInfo[] RunInfos { get; private set; }
 
-        public PreProcessedTesRuns(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo>> processWrapper, RunInfo[] runinfos)
+        public PreProcessedTesRuns(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> processWrapper, RunInfo[] runinfos)
         {
             ProcessWrapper = processWrapper;
             RunInfos = runinfos;

@@ -25,6 +25,7 @@ namespace AutoTest.TestRunners.Tests
             var runner1 = new RunnerOptions("nunit");
             runner1.AddCategories(new string[] { "SomeTestCategory", "SomeOtherTestCategory" });
             var assembly1 = new AssemblyOptions(@"C:\my\testassembly.dll");
+            assembly1.HasBeenVerified(true);
             assembly1.AddTests(new string[] { "testassembly.class.test1", "testassembly.class.test2" });
             assembly1.AddMembers(new string[] { "testassembly.class2", "testassembly.class3" });
             assembly1.AddNamespaces(new string[] { "testassembly.somenamespace1", "testassembly.somenamespace2" });

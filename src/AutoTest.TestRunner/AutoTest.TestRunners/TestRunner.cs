@@ -46,7 +46,7 @@ namespace AutoTest.TestRunners
                     if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
                         return _results;
                     Logger.Write("Checking whether assembly contains tests for {0}", id);
-                    if (!runner.ContainsTestsFor(settings.Assembly.Assembly))
+                    if (!settings.Assembly.IsVerified && !runner.ContainsTestsFor(settings.Assembly.Assembly))
                         return _results;
                     Logger.Write("Initializing channel");
                     runner.SetLiveFeedbackChannel(new TestFeedbackProvider(server));

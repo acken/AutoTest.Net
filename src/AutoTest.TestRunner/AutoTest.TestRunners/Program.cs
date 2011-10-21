@@ -225,12 +225,12 @@ namespace AutoTest.TestRunners
             newRun.AddCategories(run.Categories.ToArray());
             foreach (var asm in run.Assemblies)
             {
-                if (!instance.ContainsTestsFor(asm.Assembly))
+                if (!asm.IsVerified && !instance.ContainsTestsFor(asm.Assembly))
                     continue;
                 var assembly = new AssemblyOptions(asm.Assembly);
-                assembly.AddNamespaces(asm.Namespaces.Where(x => instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly.AddMembers(asm.Members.Where(x => instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly.AddTests(asm.Tests.Where(x => instance.IsTest(asm.Assembly, x)).ToArray());
+                assembly.AddNamespaces(asm.Namespaces.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
+                assembly.AddMembers(asm.Members.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
+                assembly.AddTests(asm.Tests.Where(x => asm.IsVerified || instance.IsTest(asm.Assembly, x)).ToArray());
                 if (hasNoTests(asm) || hasTests(assembly))
                     newRun.AddAssembly(assembly);
             }
