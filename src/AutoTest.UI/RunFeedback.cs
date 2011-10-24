@@ -129,7 +129,7 @@ namespace AutoTest.UI
 
         public bool isTheSameTestAs(CacheTestMessage original, CacheTestMessage item)
         {
-            return original.Assembly.Equals(item.Assembly) && original.Test.Runner.Equals(item.Test.Runner) && original.Test.Name.Equals(item.Test.Name);
+            return original.Assembly.Equals(item.Assembly) && original.Test.Runner.Equals(item.Test.Runner) && original.Test.Name.Equals(item.Test.Name)  && original.Test.DisplayName.Equals(item.Test.DisplayName);
         }
 
         public void ConsumeMessage(object message)

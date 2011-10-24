@@ -70,7 +70,7 @@ namespace AutoTest.Core.Caching.RunResultCache
         {
             if (item.Value == null)
                 return false; // WTF!!?? == Fail
-            return Key.Equals(item.Key) && Value.Runner.Equals(item.Value.Runner) && Value.Name.Equals(item.Value.Name);
+            return Key.Equals(item.Key) && Value.Runner.Equals(item.Value.Runner) && Value.Name.Equals(item.Value.Name) && Value.DisplayName.Equals(item.Value.DisplayName);
         }
 
         #region IItem Members

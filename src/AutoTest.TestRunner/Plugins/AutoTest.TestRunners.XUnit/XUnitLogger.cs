@@ -86,7 +86,8 @@ namespace AutoTest.TestRunners.XUnit
 
         private Shared.Results.TestResult getResult(double duration, Shared.Results.TestState state, string name, string message, string stackLines)
         {
-            var result = new Shared.Results.TestResult("XUnit", _currentAssembly, "", duration * 1000, name, state, message);
+            var testName = name.IndexOf("(") == -1 ? name : name.Substring(0, name.IndexOf("("));
+            var result = new Shared.Results.TestResult("XUnit", _currentAssembly, "", duration * 1000, testName, name, state, message);
             if (stackLines != null)
             {
                 var lines = stackLines.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);

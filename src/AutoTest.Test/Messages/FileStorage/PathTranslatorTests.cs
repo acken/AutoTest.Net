@@ -76,7 +76,7 @@ namespace AutoTest.Test.Messages.FileStorage
                 .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.dll"));
             Assert.That(
                 directory,
-                Is.EqualTo(format("/StorageLocation/Cache/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/project.mm_cd550a11ee76d30177aa5ce9d3738472/project.mm.dll")));
+                Is.EqualTo(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.dll")));
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace AutoTest.Test.Messages.FileStorage
                 .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.exe"));
             Assert.That(
                 directory,
-                Is.EqualTo(format("/StorageLocation/Cache/MySolution_cdd8fcbb3e82fce3dc5b40e585a4949d/project.mm_7244e9f54cdaf2a123bdda0e7b937eef/project.mm.exe")));
+                Is.EqualTo(format("/home/ack/src/MySolution/Project/bin/autotest.net/project.mm.exe")));
         }
 
         [Test]

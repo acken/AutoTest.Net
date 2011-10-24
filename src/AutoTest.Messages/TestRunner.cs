@@ -26,6 +26,8 @@ namespace AutoTest.Messages
         {
             try
             {
+                if (runner.ToLower().StartsWith("mspec"))
+                    return TestRunner.MSpec;
                 return (TestRunner)Enum.Parse(typeof(TestRunner), runner, true);
             }
             catch

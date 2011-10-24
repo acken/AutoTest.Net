@@ -51,6 +51,15 @@ namespace AutoTest.Messages.FileStorage
                 return null;
             if (path == null)
                 return null;
+
+            var fileName = Path.GetFileName(path);
+            if (fileName.ToLower().EndsWith("mm.dll") ||
+                fileName.ToLower().EndsWith("mm.exe"))
+            {
+                addToCache(path, path);
+                return path;
+            }
+
             var solutionDir = getSolutionDir();
             if (solutionDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 solutionDir = solutionDir.Substring(0, solutionDir.Length - 1);
@@ -70,9 +79,10 @@ namespace AutoTest.Messages.FileStorage
             var storagePath = "";
             if (fileName.ToLower() == "autotest.config")
                 storagePath = Path.Combine(Path.Combine(Path.Combine(_storagePath, "Configuration"), solutionToken), relativePath);
-            else if (fileName.ToLower().EndsWith("mm.dll") ||
-                     fileName.ToLower().EndsWith("mm.exe") ||
-                     fileName.ToLower().EndsWith("mm_cache.bin"))
+            //else if (fileName.ToLower().EndsWith("mm.dll") ||
+            //         fileName.ToLower().EndsWith("mm.exe"))
+            //    storagePath = Path.Combine(Path.Combine(Path.Combine(_storagePath, "Cache"), solutionToken), relativePath);
+            else if (fileName.ToLower().EndsWith("mm_cache.bin"))
                 storagePath = Path.Combine(Path.Combine(Path.Combine(_storagePath, "Cache"), solutionToken), relativePath);
             else
                 storagePath = Path.Combine(Path.Combine(_storagePath, solutionToken), relativePath);
