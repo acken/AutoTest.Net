@@ -42,7 +42,7 @@ namespace AutoTest.Core.Caching
         }
 
         public bool IsProjectFile(string file)
-        {
+		{
             return _files.Exists(c => c.File.Equals(file));
         }
 
