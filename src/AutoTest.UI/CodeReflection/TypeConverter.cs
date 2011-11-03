@@ -7,9 +7,9 @@ using Mono.Collections.Generic;
 
 namespace AutoTest.UI.CodeReflection
 {
-    public class TypeConverter
+    public class TypeConverter : IDisposable
     {
-        private AssemblyDefinition _assembly;
+        private AssemblyDefinition _assembly = null;
 
         public TypeConverter(string assembly)
         {
@@ -64,6 +64,12 @@ namespace AutoTest.UI.CodeReflection
             if (field == null)
                 return null;
             return new Signature(SignatureTypes.Field, field.FullName);
+        }
+
+        public void Dispose()
+        {
+            if (_assembly != null)
+                _assembly.Dispose();
         }
     }
 

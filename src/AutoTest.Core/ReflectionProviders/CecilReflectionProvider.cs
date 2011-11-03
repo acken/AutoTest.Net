@@ -23,6 +23,7 @@ namespace AutoTest.Core.ReflectionProviders
 
         public string GetName()
         {
+            int i = 2;
             return _assembly.FullName;
         }
 
@@ -104,7 +105,8 @@ namespace AutoTest.Core.ReflectionProviders
 
         public void Dispose()
         {
-            _assembly = null;
+            if (_assembly != null)
+                _assembly.Dispose();
         }
 
         private SimpleType locate(string type)
