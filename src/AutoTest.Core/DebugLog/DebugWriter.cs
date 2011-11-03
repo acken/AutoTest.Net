@@ -50,18 +50,24 @@ namespace AutoTest.Core.DebugLog
 		{
 			lock (_padLock)
             {
-                using (var writer = getWriter(_logFile))
+                try
                 {
-                    writer.WriteLine(string.Format("{0}:{1}:{2}.{3} - {4}",
-                        DateTime.Now.Hour.ToString().PadLeft(2, '0'),
-                        DateTime.Now.Minute.ToString().PadLeft(2, '0'),
-                        DateTime.Now.Second.ToString().PadLeft(2, '0'),
-                        DateTime.Now.Millisecond.ToString().PadLeft(3, '0'), text));
+                    using (var writer = getWriter(_logFile))
+                    {
+                        writer.WriteLine(string.Format("{0}:{1}:{2}.{3} - {4}",
+                            DateTime.Now.Hour.ToString().PadLeft(2, '0'),
+                            DateTime.Now.Minute.ToString().PadLeft(2, '0'),
+                            DateTime.Now.Second.ToString().PadLeft(2, '0'),
+                            DateTime.Now.Millisecond.ToString().PadLeft(3, '0'), text));
+                    }
+                    if ((new FileInfo(_logFile)).Length > 1024000)
+                    {
+                        File.Delete(string.Format("{0}.old", _logFile));
+                        File.Move(_logFile, string.Format("{0}.old", _logFile));
+                    }
                 }
-                if ((new FileInfo(_logFile)).Length > 1024000)
+                catch
                 {
-                    File.Delete(string.Format("{0}.old", _logFile));
-                    File.Move(_logFile, string.Format("{0}.old", _logFile));
                 }
             }
 		}
