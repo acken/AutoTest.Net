@@ -657,13 +657,12 @@ namespace AutoTest.UI
                 _testDetails.Top = y;
             }
 
-            _testDetails.Visible = true;
-            _testDetails.ResumeLayout();
             _testDetails.Show();
 
             _testDetails.SetCaption(caption);
             _testDetails.SetText(message, links, maxWidth);
             _testDetails.Visible = true;
+            _testDetails.ResumeLayout();
             _testDetails.BringToFront();
         }
 
