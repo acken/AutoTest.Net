@@ -638,11 +638,29 @@ namespace AutoTest.UI
 
         private void showDetailsWindow(string message, string caption, List<Link> links, int maxWidth)
         {
-            if (_testDetails == null)
+            var hasTestDetails = _testDetails != null;
+            var x = 0;
+            var y = 0;
+            if (hasTestDetails)
             {
-                _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType);
-                _testDetails.Show();
+                x = _testDetails.Left;
+                y = _testDetails.Top;
             }
+
+            _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType);
+            _testDetails.SuspendLayout();
+            _testDetails.Visible = false;
+
+            if (hasTestDetails)
+            {
+                _testDetails.Left = x;
+                _testDetails.Top = y;
+            }
+
+            _testDetails.Visible = true;
+            _testDetails.ResumeLayout();
+            _testDetails.Show();
+
             _testDetails.SetCaption(caption);
             _testDetails.SetText(message, links, maxWidth);
             _testDetails.Visible = true;
