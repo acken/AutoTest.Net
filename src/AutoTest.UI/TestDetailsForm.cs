@@ -18,14 +18,21 @@ namespace AutoTest.UI
         private int _lineHeight = 0;
         private List<Link> _links = new List<Link>();
 
-        public TestDetailsForm(Action<string, int> gotToLink, Action<string, string> goToType)
+        public TestDetailsForm(Action<string, int> gotToLink, Action<string, string> goToType, int x, int y, string message, string caption, List<Link> links, int maxWidth)
         {
             InitializeComponent();
-        
+            SuspendLayout();
             _goToLink = gotToLink;
             _goToType = goToType;
             textBoxFocusHolder.Location = new Point(-1000, -1000);
             textBoxFocusHolder.Select();
+            if (x != -1)
+                Left = x;
+            if (y != -1)
+                Top = y;
+            SetCaption(caption);
+            SetText(message, links, maxWidth);
+            ResumeLayout();
         }
 
         public void SetCaption(string text)
