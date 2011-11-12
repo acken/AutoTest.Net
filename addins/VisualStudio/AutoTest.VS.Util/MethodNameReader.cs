@@ -150,6 +150,7 @@ namespace AutoTest.VS.Util
                 }
                 return current;
             }
+            return codeNamespace.Name;
         }
 
         private static string getStructName(CodeStruct structure)
