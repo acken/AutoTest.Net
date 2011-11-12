@@ -26,7 +26,7 @@ namespace AutoTest.VS.Util
             }
             catch(Exception ex)
             {
-                AutoTest.Core.DebugLog.Debug.WriteDebug("Exception getting Method String : " + ex.ToString());
+                Core.DebugLog.Debug.WriteDebug("Exception getting Method String : " + ex.ToString());
                 return null;
             }
             return null;
@@ -127,20 +127,35 @@ namespace AutoTest.VS.Util
         private static string getInterfaceName(CodeInterface @interface)
         {
             var parents = GetParents(@interface);
-            var nspace = @interface.Namespace.Name;
+            var nspace = GetNameSpaceName(@interface.Namespace);
             return nspace + "." + parents;
         }
 
         private static string getClassName(CodeClass clazz)
         {
             string parents = GetParents(clazz);
-            var nspace = clazz.Namespace.Name;
+            var nspace = GetNameSpaceName(clazz.Namespace);
             return nspace + "." + parents;
         }
+
+        private static string GetNameSpaceName(CodeNamespace codeNamespace)
+        {
+            if(codeNamespace.Parent != null)
+            {
+                var parentNameSpace = codeNamespace.Parent as CodeNamespace;
+                string current = codeNamespace.Name;
+                if(parentNameSpace != null)
+                {
+                    current = GetNameSpaceName(parentNameSpace) + "." + current;
+                }
+                return current;
+            }
+        }
+
         private static string getStructName(CodeStruct structure)
         {
             string parents = GetParents(structure);
-            var nspace = structure.Namespace.Name;
+            var nspace = GetNameSpaceName(structure.Namespace);
             return nspace + "." + parents;
         }
 
@@ -156,9 +171,9 @@ namespace AutoTest.VS.Util
             var parent = c.Parent as CodeClass;
             return GetParents((CodeElement)c, parent);
         }
+
         public static string GetParents(CodeStruct c)
         {
-
             var parent = c.Parent as CodeClass;
             return GetParents((CodeElement)c, parent);
         }
