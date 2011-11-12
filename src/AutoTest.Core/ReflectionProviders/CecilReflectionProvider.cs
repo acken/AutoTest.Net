@@ -23,7 +23,6 @@ namespace AutoTest.Core.ReflectionProviders
 
         public string GetName()
         {
-            int i = 2;
             return _assembly.FullName;
         }
 
