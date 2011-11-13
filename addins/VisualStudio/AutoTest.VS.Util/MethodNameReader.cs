@@ -140,17 +140,7 @@ namespace AutoTest.VS.Util
 
         private static string GetNameSpaceName(CodeNamespace codeNamespace)
         {
-            if(codeNamespace.Parent != null)
-            {
-                var parentNameSpace = codeNamespace.Parent as CodeNamespace;
-                string current = codeNamespace.Name;
-                if(parentNameSpace != null)
-                {
-                    current = GetNameSpaceName(parentNameSpace) + "." + current;
-                }
-                return current;
-            }
-            return codeNamespace.Name;
+            return codeNamespace.FullName;
         }
 
         private static string getStructName(CodeStruct structure)
