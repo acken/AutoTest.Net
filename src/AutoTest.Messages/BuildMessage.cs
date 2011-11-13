@@ -33,10 +33,10 @@ namespace AutoTest.Messages
 		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
-			writer.Write((string) File);
+            writer.Write(File == null ? "" : File);
 			writer.Write((int) LineNumber);
 			writer.Write((int) LinePosition);
-			writer.Write((string) ErrorMessage);
+			writer.Write(ErrorMessage == null ? "" : ErrorMessage);
 		}
 
 		public void SetDataFrom (BinaryReader reader)

@@ -23,6 +23,7 @@ namespace AutoTest.Core.Caching.Projects
 
         public bool IsReadFromFile { get { return _isReadFromFile; } }
         public ProjectType Type { get { return _type; } }
+        public string DefaultNamespace { get; private set; }
         public string AssemblyName { get { return _assemblyname; } }
         public string OutputPath { get { return _outputPath; } }
         public string Framework { get { return _framework; } }
@@ -96,6 +97,11 @@ namespace AutoTest.Core.Caching.Projects
         public bool IsReferencing(string reference)
         {
             return _references.Contains(reference);
+        }
+
+        public void SetDefaultNamespace(string ns)
+        {
+            DefaultNamespace = ns;
         }
 
         public void SetAssemblyName(string assemblyName)
