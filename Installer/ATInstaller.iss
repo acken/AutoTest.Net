@@ -80,6 +80,8 @@ Source: "..\ReleaseBinaries\Mono.Cecil.dll"; DestDir: "{app}"; Flags: ignorevers
 
 Source: "..\src\AutoTest.Core\AutoTest.config.template.VS"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "..\ReleaseBinaries\progress.gif"; DestDir: "{app}"; Flags: ignoreversion
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

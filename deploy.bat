@@ -115,4 +115,6 @@ copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt
 copy %BINARYDIR%\Castle.Windsor.dll %DEPLOYDIR%\Castle.Windsor.dll
 copy %BINARYDIR%\Mono.Cecil.dll %DEPLOYDIR%\Mono.Cecil.dll
 
+copy %DIR%\Resources\progress.gif %DEPLOYDIR%\progress.gif
+
 copy %RESOURCES%\* %DEPLOYDIR%\Icons
