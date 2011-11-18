@@ -101,9 +101,9 @@ Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookI
 
 [Run]
 Filename:"{dotnet20}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registering Controls ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2011 addin ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2008 addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2011 addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2010 addin ..."; Flags: runhidden;
+Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2008 addin ..."; Flags: runhidden;
 
 [UninstallRun]
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2011 addin ..."; Flags: runhidden;
