@@ -137,6 +137,10 @@ namespace AutoTest.Core.FileSystem
 			if (File.Exists(file))
 				_bus.Publish(new InformationMessage("Loading local config file " + file));
 			_configuration.Reload(file);
+            if (_configuration.DebuggingEnabled)
+                _configuration.EnableLogging();
+            else
+                _configuration.DisableLogging();
 		}
 
         private void WatcherChangeHandler(object sender, FileSystemEventArgs e)

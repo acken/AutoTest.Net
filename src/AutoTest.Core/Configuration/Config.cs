@@ -463,6 +463,24 @@ namespace AutoTest.Core.Configuration
             WatchToken = watchToken;
         }
 
+        private Action<bool> _logging = null;
+        public void SetLoggerStateAction(Action<bool> setupLogging)
+        {
+            _logging = setupLogging;
+        }
+
+        public void EnableLogging()
+        {
+            if (_logging == null) return;
+            _logging(true);
+        }
+
+        public void DisableLogging()
+        {
+            if (_logging == null) return;
+            _logging(false);
+        }
+
         private string getVersionedSetting(string version, List<KeyValuePair<string, string>> setting)
         {
             if (setting.Count == 0)
