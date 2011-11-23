@@ -1,1 +1,1 @@
-build.bat && buildAddin.bat && deploy.bat && deployAddin.bat && "C:\Program Files\Inno Setup 5\ISCC.exe" Installer\ATInstaller.iss
+build.bat && buildAddin.bat && deploy.bat && deployAddin.bat && lib\InnoSetup5\ISCC.exe Installer\ATInstaller.iss
