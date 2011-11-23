@@ -80,9 +80,11 @@ copy %DIR%README %DEPLOYDIR%\README
 copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
 
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.exe
+copy %BINARYDIR%\App_3.5.config %DEPLOYDIR%\AutoTest.TestRunner.exe.config
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe
 copy %BINARYDIR%\AutoTest.TestRunner.exe.config %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe.config
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.x86.exe
+copy %BINARYDIR%\App_3.5.config %DEPLOYDIR%\AutoTest.TestRunner.x86.exe.config
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.x86.v4.0.exe
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe.config %DEPLOYDIR%\AutoTest.TestRunner.x86.v4.0.exe.config
 copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunners.Shared.dll

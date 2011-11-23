@@ -44,9 +44,11 @@ Source: "..\ReleaseBinaries\Icons\circleWAIL.png"; DestDir: "{app}\Icons"; Flags
 Source: "..\ReleaseBinaries\Icons\circleWIN.png"; DestDir: "{app}\Icons"; Flags: ignoreversion
 
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\AutoTest.TestRunner.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.v4.0.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.v4.0.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.x86.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\AutoTest.TestRunner.x86.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.x86.v4.0.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunner.x86.v4.0.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\AutoTest.TestRunners.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
