@@ -72,6 +72,16 @@ namespace AutoTest.Test.Core.Caching.Projects
         }
 
         [Test]
+        public void Should_find_default_namespace()
+        {
+            var document = _parser.Parse(getCSharpProject(), null);
+            document.DefaultNamespace.ShouldEqual("CSharpNUnitTestProject");
+
+            document = _parser.Parse(getVisualBasicProject(), null);
+            document.DefaultNamespace.ShouldEqual("NUnitTestProjectVisualBasic");
+        }
+
+        [Test]
         public void Should_set_assembly_name()
         {
             var document = _parser.Parse(getCSharpProject(), null);

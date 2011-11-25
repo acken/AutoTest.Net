@@ -104,7 +104,8 @@ namespace AutoTest.Core.ReflectionProviders
 
         public void Dispose()
         {
-            _assembly = null;
+            if (_assembly != null)
+                _assembly.Dispose();
         }
 
         private SimpleType locate(string type)

@@ -176,6 +176,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         {
             DebugLog.Debug.WriteDetail("Getting runner options for {0}", instance.Identifier);
             var runner = new RunnerOptions(instance.Identifier);
+            runner.AddCategories(_configuration.TestCategoriesToIgnore);
             var testRunner = TestRunnerConverter.FromString(instance.Identifier);
             foreach (var info in unitInfos)
             {

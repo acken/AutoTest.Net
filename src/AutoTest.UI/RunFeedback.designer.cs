@@ -38,7 +38,9 @@
             this.listViewFeedback = new System.Windows.Forms.ListView();
             this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.pictureBoxWorking = new System.Windows.Forms.PictureBox();
             this.pictureMoose = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWorking)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMoose)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,6 +137,19 @@
             this.columnMessage.Text = "Message";
             this.columnMessage.Width = 1017;
             // 
+            // pictureBoxWorking
+            // 
+            this.pictureBoxWorking.ErrorImage = null;
+            this.pictureBoxWorking.ImageLocation = "progress.gif";
+            this.pictureBoxWorking.InitialImage = null;
+            this.pictureBoxWorking.Location = new System.Drawing.Point(2, 2);
+            this.pictureBoxWorking.Name = "pictureBoxWorking";
+            this.pictureBoxWorking.Size = new System.Drawing.Size(20, 20);
+            this.pictureBoxWorking.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxWorking.TabIndex = 15;
+            this.pictureBoxWorking.TabStop = false;
+            this.pictureBoxWorking.Visible = false;
+            // 
             // pictureMoose
             // 
             this.pictureMoose.Image = global::AutoTest.UI.Properties.Resources.MM_16;
@@ -149,6 +164,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pictureBoxWorking);
             this.Controls.Add(this.pictureMoose);
             this.Controls.Add(this.linkLabelSystemMessages);
             this.Controls.Add(this.linkLabelErrorDescription);
@@ -158,6 +174,7 @@
             this.Controls.Add(this.label1);
             this.Name = "RunFeedback";
             this.Size = new System.Drawing.Size(413, 101);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWorking)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMoose)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -176,5 +193,6 @@
         public System.Windows.Forms.ColumnHeader columnMessage;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureMoose;
+        private System.Windows.Forms.PictureBox pictureBoxWorking;
     }
 }

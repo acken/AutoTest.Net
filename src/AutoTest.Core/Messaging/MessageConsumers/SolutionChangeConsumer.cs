@@ -39,7 +39,13 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 {
                     Debug.WriteException(ex);
                     Thread.Sleep(200);
-                    tryCrawl(file);
+                    try
+                    {
+                        tryCrawl(file);
+                    }
+                    catch
+                    {
+                    }
                 }
                 catch (Exception ex)
                 {

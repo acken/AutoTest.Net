@@ -40,9 +40,11 @@ cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt
 
 cp $BINARYDIR/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.exe
+cp $BINARYDIR/App_3.5.config $DEPLOYDIR/AutoTest.TestRunner.exe.config
 cp $BINARYDIR/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.v4.0.exe
 cp $BINARYDIR/AutoTest.TestRunner.exe.config $DEPLOYDIR/AutoTest.TestRunner.v4.0.exe.config
 cp $BINARYDIRx86/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.x86.exe
+cp $BINARYDIR/App_3.5.config $DEPLOYDIR/AutoTest.TestRunner.x86.exe.config
 cp $BINARYDIRx86/AutoTest.TestRunner.exe $DEPLOYDIR/AutoTest.TestRunner.x86.v4.0.exe
 cp $BINARYDIRx86/AutoTest.TestRunner.exe.config $DEPLOYDIR/AutoTest.TestRunner.x86.v4.0.exe.config
 cp $BINARYDIR/AutoTest.TestRunners.Shared.dll $DEPLOYDIR/AutoTest.TestRunners.Shared.dll
@@ -74,5 +76,7 @@ cp $BINARYDIR/Castle.Facilities.Logging.dll $DEPLOYDIR/Castle.Facilities.Logging
 cp $CASTLEDIR/Castle.license.txt $DEPLOYDIR/Castle.license.txt
 cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 cp $BINARYDIR/Mono.Cecil.dll $DEPLOYDIR/Mono.Cecil.dll
+
+cp $DIR/Resources/progress.gif $DEPLOYDIR/progress.gif
 
 cp ./$RESOURCES/* $DEPLOYDIR/Icons

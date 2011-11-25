@@ -41,6 +41,7 @@ namespace AutoTest.Core.Configuration
 			else
 				_container.Configure(configurator);
 			var configuration = _container.Services.Locate<IConfiguration>();
+            setLoggerEnabler();
             if (configuration.DebuggingEnabled)
                 enableLogging();
             UseCecilForReflectionWithAutoTestTestRunner();
@@ -82,11 +83,28 @@ namespace AutoTest.Core.Configuration
         {
             Reflect.ScratchThat_InsteadUseThisAwesome((assembly) => { return new CecilReflectionProvider(assembly); });
         }
+
+        private static void setLoggerEnabler()
+        {
+            var config = _container.Services.Locate<IConfiguration>();
+            config.SetLoggerStateAction((enabled) =>
+            {
+                if (enabled)
+                {
+                    var debugLogger = _container.Services.Locate<IWriteDebugInfo>();
+                    Debug.EnableLogging(debugLogger);
+                }
+                else
+                {
+                    Debug.DisableLogging();
+                }
+            });
+        }
 		
 		private static void enableLogging()
 		{
-			var debugLogger = _container.Services.Locate<IWriteDebugInfo>();
-			Debug.EnableLogging(debugLogger);
+            _container.Services.Locate<IConfiguration>()
+                .EnableLogging();
 		}
     }
 }

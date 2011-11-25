@@ -59,5 +59,9 @@ namespace AutoTest.Core.Configuration
 
         void SetWatchPath(string watchFolder);
         void SetWatchToken(string watchToken);
+
+        void SetLoggerStateAction(Action<bool> setupLogging);
+        void EnableLogging();
+        void DisableLogging();
     }
 }

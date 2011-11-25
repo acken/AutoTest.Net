@@ -33,6 +33,7 @@ namespace AutoTest.Core.Caching.Projects
             readFile();
             var newDocument = new ProjectDocument(getType());
             setAssembly(newDocument);
+            setDefaultNamespace(newDocument);
             setOutputPath(newDocument);
             setFrameworkVersion(newDocument);
             setProductVersion(newDocument);
@@ -78,6 +79,14 @@ namespace AutoTest.Core.Caching.Projects
             if (outputType.InnerText.ToLower().Contains("exe"))
                 fileType = "exe";
             newDocument.SetAssemblyName(string.Format("{0}.{1}", assemblyName.InnerText, fileType));
+        }
+
+        private void setDefaultNamespace(ProjectDocument newDocument)
+        {
+            var ns = _xml.SelectSingleNode("b:Project/b:PropertyGroup/b:RootNamespace", _nsManager);
+            if (ns == null)
+                throw new Exception("Could not read root namespace. Invalid project file.");
+            newDocument.SetDefaultNamespace(ns.InnerText);
         }
 
         private void setOutputPath(ProjectDocument newDocument)

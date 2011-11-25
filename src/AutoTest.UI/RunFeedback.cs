@@ -18,6 +18,8 @@ namespace AutoTest.UI
         private TestDetailsForm _testDetails;
         private readonly object _messagLock = new object();
         private bool _isRunning;
+        private bool _progressUpdatedExternally = false;
+        private string _progressPicture;
 
         private bool _showErrors = true;
         private bool _showWarnings = true;
@@ -62,6 +64,7 @@ namespace AutoTest.UI
             if (ListViewWidthOffset > 0)
                 listViewFeedback.Width = Width - ListViewWidthOffset;
             organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
         }
 
         public new void Resize()
@@ -180,14 +183,38 @@ namespace AutoTest.UI
                 generateSummary(null);
                 organizeListItemBehaviors(null);
                 clearRunnerTypeAnyItems();
+                setProgress(true, "processing changes...", false, null);
                 _isRunning = true;
             }, text);
+        }
+
+        public void SetProgress(bool on, string information, string picture)
+        {
+            _progressUpdatedExternally = on;
+            setProgress(on, information, true, picture);
+        }
+
+        public void setProgress(bool on, string information, bool external, string picture)
+        {
+            if (_progressUpdatedExternally && !external)
+                return;
+            if (picture == null)
+                picture = _progressPicture;
+            if (pictureBoxWorking.ImageLocation != picture)
+            {
+                pictureBoxWorking.ImageLocation = picture;
+                pictureBoxWorking.Refresh();
+            }
+            pictureMoose.Visible = !on;
+            pictureBoxWorking.Visible = on;
+            _toolTipProvider.SetToolTip(pictureBoxWorking, information);
         }
 
         private void runFinished(RunFinishedMessage msg)
         {
             _syncContext.Post(x =>
             {
+                setProgress(false, "", false, null);
                 if (((RunFinishedMessage)x).Report.Aborted)
                 {
                     if (ShowRunInformation)
@@ -283,7 +310,7 @@ namespace AutoTest.UI
             if (listViewFeedback.SelectedItems.Count == 1)
                 selected = listViewFeedback.SelectedItems[0].Tag;
 
-            SuspendLayout();
+            listViewFeedback.SuspendLayout();
             removeItems(cache);
             if (_showErrors)
             {
@@ -311,15 +338,15 @@ namespace AutoTest.UI
                 foreach (var ignored in cache.IgnoredToAdd)
                     addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected, position);
             }
-            ResumeLayout();
+            listViewFeedback.ResumeLayout();
         }
 
         private new void Handle(LiveTestStatusMessage liveStatus)
         {
             if (!_isRunning)
                 return;
-            
-            SuspendLayout();
+
+            listViewFeedback.SuspendLayout();
             var ofCount = liveStatus.TotalNumberOfTests > 0 ? string.Format(" of {0}", liveStatus.TotalNumberOfTests) : "";
             printMessage(new RunMessages(RunMessageType.Normal, string.Format("testing {0} ({1}{2} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted, ofCount)));
 
@@ -365,7 +392,7 @@ namespace AutoTest.UI
                     addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem, selected, index);
                 }
             }
-            ResumeLayout();
+            listViewFeedback.ResumeLayout();
         }
 
         private void clearRunnerTypeAnyItems()
@@ -638,14 +665,17 @@ namespace AutoTest.UI
 
         private void showDetailsWindow(string message, string caption, List<Link> links, int maxWidth)
         {
-            if (_testDetails == null)
+            var hasTestDetails = _testDetails != null;
+            var x = -1;
+            var y = -1;
+            if (hasTestDetails)
             {
-                _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType);
-                _testDetails.Show();
+                x = _testDetails.Left;
+                y = _testDetails.Top;
             }
-            _testDetails.SetCaption(caption);
-            _testDetails.SetText(message, links, maxWidth);
-            _testDetails.Visible = true;
+
+            _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType, x, y, message, caption, links, maxWidth);
+            _testDetails.Show();
             _testDetails.BringToFront();
         }
 
