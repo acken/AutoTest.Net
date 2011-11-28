@@ -23,12 +23,13 @@ namespace AutoTest.Test.Core.Presenters
         private RunFeedbackPresenter _presenter;
         private IMessageBus _bus;
         private FakeRunResultMerger _resultMerger;
+		private IServiceLocator _locator;
 
         [SetUp]
         public void SetUp()
         {
-            var locator = MockRepository.GenerateMock<IServiceLocator>();
-            _bus = new MessageBus(locator);
+            _locator = MockRepository.GenerateMock<IServiceLocator>();
+            _bus = new MessageBus(_locator);
             _resultMerger = new FakeRunResultMerger();
             _view = new FakeRunFeedbackView();
             _presenter = new RunFeedbackPresenter(_bus, _resultMerger);
@@ -40,7 +41,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new BuildRunMessage(new BuildRunResults(""));
             _bus.Publish<BuildRunMessage>(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.BuildRunMessage != null; });
             _resultMerger.HasMergedBuildResults.ShouldBeTrue();
             _view.BuildRunMessage.ShouldBeTheSameAs(message);
         }
@@ -50,7 +51,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new TestRunMessage(new TestRunResults("", "", false, TestRunner.NUnit, null));
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.TestRunMessage != null; });
             _resultMerger.HasMergedTestResults.ShouldBeTrue();
             _view.TestRunMessage.ShouldBeTheSameAs(message);
         }
@@ -60,7 +61,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new FileChangeMessage();
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.FileChangeMessage != null; });
             _view.FileChangeMessage.ShouldBeTheSameAs(message);
         }
 
@@ -69,7 +70,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new RunStartedMessage(null);
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.RunStartedMessage != null; });
             _view.RunStartedMessage.ShouldBeTheSameAs(message);
         }
 
@@ -78,7 +79,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new RunFinishedMessage(null);
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.RunFinishedMessage != null; });
             _view.RunFinishedMessage.ShouldBeTheSameAs(message);
         }
 
@@ -87,7 +88,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new RunInformationMessage(InformationType.Build, "", "", "".GetType());
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.RunInformationMessage != null; });
             _view.RunInformationMessage.ShouldBeTheSameAs(message);
         }
 		
@@ -96,7 +97,7 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new ExternalCommandMessage("sender", "command");
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.ExternalCommandMessage != null; });
             _view.ExternalCommandMessage.ShouldBeTheSameAs(message);
         }
 
@@ -105,13 +106,15 @@ namespace AutoTest.Test.Core.Presenters
         {
             var message = new LiveTestStatusMessage("", 0, 0, new LiveTestStatus[] { }, new LiveTestStatus[] { });
             _bus.Publish(message);
-            waitForAsyncCall();
+            waitForAsyncCall(() => { return _view.LiveTestStatusMessage != null; });
             _view.LiveTestStatusMessage.ShouldBeTheSameAs(message);
         }
 
-        private void waitForAsyncCall()
+        private void waitForAsyncCall(Func<bool> ok)
         {
-            Thread.Sleep(40);
+			var now = DateTime.Now;
+			while (!ok() && DateTime.Now.Subtract(now).TotalSeconds < 2)
+            	Thread.Sleep(10);
         }
     }
 }

@@ -77,6 +77,6 @@ cp $CASTLEDIR/Castle.license.txt $DEPLOYDIR/Castle.license.txt
 cp $BINARYDIR/Castle.Windsor.dll $DEPLOYDIR/Castle.Windsor.dll
 cp $BINARYDIR/Mono.Cecil.dll $DEPLOYDIR/Mono.Cecil.dll
 
-cp $DIR/Resources/progress.gif $DEPLOYDIR/progress.gif
+cp ./Resources/progress.gif $DEPLOYDIR/progress.gif
 
 cp ./$RESOURCES/* $DEPLOYDIR/Icons
