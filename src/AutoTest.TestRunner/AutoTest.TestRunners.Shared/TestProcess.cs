@@ -115,7 +115,8 @@ namespace AutoTest.TestRunners.Shared
             _proc.WaitForExit();
             if (aborted())
             {
-                listener.Abort();
+				if (listener != null)
+                	listener.Abort();
                 return;
             }
             var results = getResults(_output);
@@ -124,6 +125,8 @@ namespace AutoTest.TestRunners.Shared
 
         private Thread startChannelListener(string channel)
         {
+			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+				return null;
             var thread = new Thread(
                 (x) => 
                     { 

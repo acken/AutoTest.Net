@@ -74,7 +74,7 @@
   <property name="app.xbuild" value="C:\Program Files (x86)\Mono-2.10.1\bin\xbuild.bat" overwrite="false" if="${platform::is-windows() and file::exists('C:\Program Files (x86)\Mono-2.10.1\bin\xbuild.bat')}" />
   <property name="app.xbuild" value="C:\Program Files\Mono-2.10.1\bin\xbuild.bat" overwrite="false" if="${platform::is-windows() and file::exists('C:\Program Files\Mono-2.10.1\bin\xbuild.bat')}" />
 
-  <property name="app.xbuild" value="/usr/local/bin/xbuild" overwrite="false" if="${platform::is-unix() and file::exists('/usr/local/bin/xbuild')}" />
+  <property name="app.xbuild" value="/usr/bin/xbuild" overwrite="false" if="${platform::is-unix() and file::exists('/usr/bin/xbuild')}" />
   <property name="app.xbuild" value="xbuild" overwrite="false" if="${platform::is-unix()}" />
 
   <property name="framework.multitargeting" value="false" />
