@@ -45,10 +45,7 @@ namespace AutoTest.UI
             set
             {
                 pictureMoose.Visible = value;
-                if (value == false)
-                    label1.Left = pictureMoose.Left;
-                else
-                    label1.Left = pictureMoose.Left + pictureMoose.Width + 5;
+                label1.Left = pictureMoose.Left + pictureMoose.Width + 5;
 
             }
         }
