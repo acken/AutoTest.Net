@@ -7,6 +7,7 @@ SET DEPLOYDIR="%DIR%ReleaseBinaries"
 SET CASTLEDIR="%DIR%lib\Castle.Windsor"
 SET MSPEC3DIR="%DIR%lib\MSpec3"
 SET MSPEC4DIR="%DIR%lib\MSpec"
+SET MSPEC5DIR="%DIR%lib\MSpec5"
 SET VSADDINDIR="%DIR%addins\VisualStudio\FilesToDeploy"
 SET RESOURCES="%DIR%src\Resources"
 
@@ -19,6 +20,7 @@ IF NOT EXIST %DEPLOYDIR% (
   mkdir %DEPLOYDIR%\TestRunners\MSTest
   mkdir %DEPLOYDIR%\TestRunners\MSpec
   mkdir %DEPLOYDIR%\TestRunners\MSpec4
+  mkdir %DEPLOYDIR%\TestRunners\MSpec5
   mkdir %DEPLOYDIR%\TestRunners\MbUnit
 ) ELSE (
   IF NOT EXIST %DEPLOYDIR%\Icons (
@@ -33,6 +35,7 @@ IF NOT EXIST %DEPLOYDIR% (
 	mkdir %DEPLOYDIR%\TestRunners\MSTest
 	mkdir %DEPLOYDIR%\TestRunners\MSpec
 	mkdir %DEPLOYDIR%\TestRunners\MSpec4
+	mkdir %DEPLOYDIR%\TestRunners\MSpec5
 	mkdir %DEPLOYDIR%\TestRunners\MbUnit
   ) ELSE (
 	IF NOT EXIST %DEPLOYDIR%\TestRunners\NUnit (
@@ -59,6 +62,11 @@ IF NOT EXIST %DEPLOYDIR% (
 		mkdir %DEPLOYDIR%\TestRunners\MSpec4
 	) ELSE (
 		del %DEPLOYDIR%\TestRunners\MSpec4\* /Q
+	)
+	IF NOT EXIST %DEPLOYDIR%\TestRunners\MSpec5 (
+		mkdir %DEPLOYDIR%\TestRunners\MSpec5
+	) ELSE (
+		del %DEPLOYDIR%\TestRunners\MSpec5\* /Q
 	)
 	IF NOT EXIST %DEPLOYDIR%\TestRunners\MbUnit (
 		mkdir %DEPLOYDIR%\TestRunners\MbUnit
@@ -105,6 +113,9 @@ copy %MSPEC3DIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSpec\Machin
 
 copy %BINARYDIR%\AutoTest.TestRunners.MSpec4.dll %DEPLOYDIR%\TestRunners\MSpec4\AutoTest.TestRunners.MSpec4.dll
 copy %MSPEC4DIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSpec4\Machine.Specifications.dll
+
+copy %BINARYDIR%\AutoTest.TestRunners.MSpec5.dll %DEPLOYDIR%\TestRunners\MSpec5\AutoTest.TestRunners.MSpec5.dll
+copy %MSPEC5DIR%\Machine.Specifications.dll %DEPLOYDIR%\TestRunners\MSpec5\Machine.Specifications.dll
 
 copy %BINARYDIR%\AutoTest.TestRunners.MbUnit.dll %DEPLOYDIR%\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll
 copy %BINARYDIR%\Gallio.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.dll

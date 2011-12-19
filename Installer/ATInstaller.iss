@@ -70,6 +70,9 @@ Source: "..\ReleaseBinaries\TestRunners\MSpec\Machine.Specifications.dll"; DestD
 Source: "..\ReleaseBinaries\TestRunners\MSpec4\AutoTest.TestRunners.MSpec4.dll"; DestDir: "{app}\TestRunners\MSpec4"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\TestRunners\MSpec4\Machine.Specifications.dll"; DestDir: "{app}\TestRunners\MSpec4"; Flags: ignoreversion
 
+Source: "..\ReleaseBinaries\TestRunners\MSpec5\AutoTest.TestRunners.MSpec5.dll"; DestDir: "{app}\TestRunners\MSpec5"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\TestRunners\MSpec5\Machine.Specifications.dll"; DestDir: "{app}\TestRunners\MSpec5"; Flags: ignoreversion
+
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\Gallio.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\Gallio.XmlSerializers.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
