@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{ADE4CDA5-9DD9-4038-B1AE-56183E8098CD}</ProjectGuid>
+    <ProjectGuid>{715F140E-6C30-4BBF-84B7-92F5CEF2913A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners.MSpec4.Tests</RootNamespace>
-    <AssemblyName>AutoTest.TestRunners.MSpec4.Tests</AssemblyName>
+    <RootNamespace>AutoTest.TestRunners.MSpec5.Tests.TestResource</RootNamespace>
+    <AssemblyName>AutoTest.TestRunners.MSpec5.Tests.TestResource</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,27 +37,17 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <HintPath>..\..\..\..\lib\NUnit\nunit.framework.dll</HintPath>
+    <Reference Include="Machine.Specifications, Version=0.5.1.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\MSpec5\Machine.Specifications.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Can_recognize_mspec.cs" />
+    <Compile Include="Can_add_numbers.cs" />
+    <Compile Include="Can_not_add_numbers.cs" />
+    <Compile Include="Ignored_test.cs" />
+    <Compile Include="Not_implemented_test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
-      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
-      <Name>AutoTest.TestRunners.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.MSpec4.Tests.TestResource\AutoTest.TestRunners.MSpec4.Tests.TestResource.csproj">
-      <Project>{715F140E-6C30-4BBF-84B7-92F5CEF2913A}</Project>
-      <Name>AutoTest.TestRunners.MSpec4.Tests.TestResource</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.MSpec4\AutoTest.TestRunners.MSpec4.csproj">
-      <Project>{88B3E013-F5F7-4BEF-B0D0-26F954866425}</Project>
-      <Name>AutoTest.TestRunners.MSpec4</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
