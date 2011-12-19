@@ -13,6 +13,12 @@ namespace AutoTest.TestRunners.MSpec5.Tests
     [TestFixture]
     public class Can_recognize_mspec
     {
+        [TearDown]
+        public void Test_teardown()
+        {
+            System.Threading.Thread.Sleep(200);
+        }
+
         [Test]
         public void I_can_haz_mspec_test()
         {

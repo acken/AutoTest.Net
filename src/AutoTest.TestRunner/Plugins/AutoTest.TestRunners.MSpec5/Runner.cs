@@ -21,7 +21,7 @@ namespace AutoTest.TestRunners.MSpec5
         private ITestFeedbackProvider _feedback;
         private List<TestResult> _results;
 
-        public string Identifier { get { return "MSpec4"; } }
+        public string Identifier { get { return "MSpec5"; } }
 
         public void SetLogger(ILogger logger)
         {
@@ -66,7 +66,7 @@ namespace AutoTest.TestRunners.MSpec5
             using (var parser = _reflectionProviderFactory(assembly))
             {
                 var references = parser.GetReferences();
-                return references.Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.4.")) > 0;
+                return references.Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.5.")) > 0;
             }
         }
 

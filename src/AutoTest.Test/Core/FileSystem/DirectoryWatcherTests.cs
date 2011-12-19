@@ -390,7 +390,7 @@ namespace AutoTest.Test.Core
 		public void Publish<T> (T message)
 		{
 			if (typeof(T).Equals(typeof(FileChangeMessage)))
-				Message = (FileChangeMessage)message;
+				Message = (FileChangeMessage)(IMessage)message;
 		}
 
 		public void SetBuildProvider (string buildProvider)

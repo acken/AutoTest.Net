@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{ADE4CDA5-9DD9-4038-B1AE-56183E8098CD}</ProjectGuid>
+    <ProjectGuid>{41E1718A-2305-4D89-9740-2C2F138F927B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoTest.TestRunners.MSpec5.Tests</RootNamespace>
@@ -51,11 +51,11 @@
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutoTest.TestRunners.MSpec5.Tests.TestResource\AutoTest.TestRunners.MSpec5.Tests.TestResource.csproj">
-      <Project>{715F140E-6C30-4BBF-84B7-92F5CEF2913A}</Project>
+      <Project>{207E85A4-9797-4AE4-B041-5D423859CF26}</Project>
       <Name>AutoTest.TestRunners.MSpec5.Tests.TestResource</Name>
     </ProjectReference>
     <ProjectReference Include="..\AutoTest.TestRunners.MSpec5\AutoTest.TestRunners.MSpec5.csproj">
-      <Project>{88B3E013-F5F7-4BEF-B0D0-26F954866425}</Project>
+      <Project>{20267E9E-43D7-4BF0-9CCB-0545A46824F7}</Project>
       <Name>AutoTest.TestRunners.MSpec5</Name>
     </ProjectReference>
   </ItemGroup>
