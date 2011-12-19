@@ -28,7 +28,7 @@ namespace AutoTest.TestRunners
         {
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpB01D.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
+            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp639.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
             _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
@@ -116,28 +116,29 @@ namespace AutoTest.TestRunners
         public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
-            if (Thread.CurrentThread.ManagedThreadId.Equals(_mainThreadID))
-            {
-                var result = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test", TestState.Panic, message);
-                AddResults(result);
-                var writer = new ResultsXmlWriter(_results);
-                writer.Write(_arguments.OutputFile);
-                if (args.IsTerminating)
-                    Environment.Exit(-1);
-                return;
-            }
 
             if (!_arguments.CompatabilityMode)
             {
-                var result = new TestResult(
-                    "Any",
-                    "",
-                    "",
-                    0,
-                    string.Format("An unhandled exception was thrown from an app domain or a background thread while running a test (Thread: {0}}", Thread.CurrentThread.Name),
-                    TestState.Panic,
-                    message);
-                AddResults(result);
+                var finalOutput = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test.", TestState.Panic,
+                        "This is usually caused by a background thread throwing an unhandled exception. " +
+                        "Most test runners run in clr 1 mode which hides these exceptions from you. If you still want to suppress these errors (not recommended) you can enable compatibility mode." + Environment.NewLine + Environment.NewLine +
+                        "To head on to happy land where fluffy bunnies roam freely painting green left right and center do so by passing the --compatibility-mode switch to the test " +
+                        "runner or set the <TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode> configuration option in " +
+                        "AutoTest.Net." + Environment.NewLine + Environment.NewLine + message);
+                AddResults(finalOutput);
+            }
+
+            if (args.IsTerminating)
+            {
+                var writer = new ResultsXmlWriter(_results);
+                writer.Write(_arguments.OutputFile);
+                Write(" ");
+                if (File.Exists(_arguments.OutputFile))
+                {
+                    Write("Test run result:");
+                    Write(File.ReadAllText(_arguments.OutputFile));
+                }
+                Environment.Exit(-1);
             }
 
             Thread.CurrentThread.IsBackground = true;
@@ -147,8 +148,11 @@ namespace AutoTest.TestRunners
                 _haltedThreads.Add(Thread.CurrentThread);
             }
 
-            while (true)
-                Thread.Sleep(TimeSpan.FromHours(1));
+            /*if (Thread.CurrentThread.ManagedThreadId != _mainThreadID)
+            {
+                while (true)
+                    Thread.Sleep(TimeSpan.FromHours(1));
+            }*/
         }
 
         private static string getException(Exception ex)
