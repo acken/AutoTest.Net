@@ -30,6 +30,10 @@
 	
 	<!-- When set this will enable logging to the debug.log file in the root directory -->
 	<Debugging>false</Debugging>
+
+  <!-- To change the default resycle size of the logs (1024000 = 1M) Set the number of bytes you -->
+  <!-- want the logs to roll at here -->
+  <!--<LogRecycleSize>1024000000</LogRecycleSize>-->
 	
 	<!-- Rerun failed tests before doing a full testrun (Optional) -->
 	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
