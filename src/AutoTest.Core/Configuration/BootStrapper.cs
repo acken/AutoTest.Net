@@ -92,7 +92,7 @@ namespace AutoTest.Core.Configuration
                 if (enabled)
                 {
                     var debugLogger = _container.Services.Locate<IWriteDebugInfo>();
-					debugLogger.SetRecycleSize(1024000000000); // 1TB
+					debugLogger.SetRecycleSize(config.LogRecycleSize);
                     Debug.EnableLogging(debugLogger);
                 }
                 else

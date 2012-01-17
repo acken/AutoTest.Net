@@ -41,6 +41,7 @@ namespace AutoTest.Core.Configuration
         bool WatchAllFiles { get; }
         bool RunAssembliesInParallel { get; }
         bool TestRunnerCompatibilityMode { get; }
+		long LogRecycleSize { get; }
 
         string IgnoreFile { get; }
 
