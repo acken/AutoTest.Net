@@ -329,6 +329,12 @@ namespace AutoTest.Test.Core.Configuration
         {
             _config.TestRunnerCompatibilityMode.ShouldBeTrue();
         }
+		
+		[Test]
+        public void Should_get_log_resycle_size()
+        {
+            _config.LogRecycleSize.ShouldEqual(123456789);
+        }
 
 		private void createMergeFile()
 		{

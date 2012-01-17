@@ -46,6 +46,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> WatchAllFiles { get; private set; }
         public ConfigItem<bool> RunAssembliesInParallel { get; private set; }
         public ConfigItem<bool> TestRunnerCompatibilityMode { get; private set; }
+        public ConfigItem<long> LogRecycleSize { get; private set; }
 
         public List<KeyValuePair<string, string>> Keys { get; private set; }
 
@@ -75,6 +76,7 @@ namespace AutoTest.Core.Configuration
             WatchAllFiles = new ConfigItem<bool>(false);
             RunAssembliesInParallel = new ConfigItem<bool>(false);
             TestRunnerCompatibilityMode = new ConfigItem<bool>(false);
+            LogRecycleSize = new ConfigItem<long>(1024000);
             Keys = new List<KeyValuePair<string, string>>();
         }
 
@@ -106,6 +108,7 @@ namespace AutoTest.Core.Configuration
             WatchAllFiles = getBoolItem("configuration/WatchAllFiles", false);
             RunAssembliesInParallel = getBoolItem("configuration/RunAssembliesInParallel", false);
             TestRunnerCompatibilityMode = getBoolItem("configuration/TestRunnerCompatibilityMode", false);
+            LogRecycleSize = getLongItem("configuration/LogRecycleSize", 1024000);
             Keys = getAllKeys("configuration/*");
         }
 		
@@ -175,6 +178,18 @@ namespace AutoTest.Core.Configuration
 			return item;
 		}
 		
+		private ConfigItem<long> getLongItem(string path, long defaultValue)
+		{
+			var item = new ConfigItem<long>(defaultValue);
+			var val = getLong(path, null);
+			if (val == null)
+				return item;
+			item.SetValue((long) val);
+			if (shouldExcludeFromConfig(path))
+				item.Exclude();
+			return item;
+		}
+		
 		private bool shouldExcludeFromConfig(string path)
 		{
 			return checkOverrideAttribute(path, "exclude");
@@ -208,6 +223,15 @@ namespace AutoTest.Core.Configuration
 			int state;
             var value = getValue(nodeName, "");
             if (int.TryParse(value, out state))
+                return state;
+            return defaultValue;
+		}
+		
+		private long? getLong(string nodeName, long? defaultValue)
+		{
+			long state;
+            var value = getValue(nodeName, "");
+            if (long.TryParse(value, out state))
                 return state;
             return defaultValue;
 		}

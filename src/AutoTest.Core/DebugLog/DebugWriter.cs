@@ -12,6 +12,12 @@ namespace AutoTest.Core.DebugLog
         private IMessageBus _bus;
 		private object _padLock = new object();
 		private string _logFile;
+		private long _resycleSize = 1024000;
+
+		public void SetRecycleSize(long size)
+		{
+			_resycleSize = size;
+		}
 		
 		public DebugWriter(ILocateWriteLocation locator, IMessageBus bus)
 		{
@@ -60,7 +66,7 @@ namespace AutoTest.Core.DebugLog
                             DateTime.Now.Second.ToString().PadLeft(2, '0'),
                             DateTime.Now.Millisecond.ToString().PadLeft(3, '0'), text));
                     }
-                    if ((new FileInfo(_logFile)).Length > 1024000)
+                    if ((new FileInfo(_logFile)).Length > _resycleSize)
                     {
                         File.Delete(string.Format("{0}.old", _logFile));
                         File.Move(_logFile, string.Format("{0}.old", _logFile));
