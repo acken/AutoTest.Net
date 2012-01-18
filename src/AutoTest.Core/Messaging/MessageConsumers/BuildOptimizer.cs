@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
+using AutoTest.Core.DebugLog;
 using System.IO;
 using AutoTest.Core.Configuration;
 namespace AutoTest.Core.Messaging.MessageConsumers
@@ -33,7 +34,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private RunInfo[] assemblefConfiguration(List<RunInfo> runList, bool useBuiltProjectsOutputPath)
         {
+			Debug.WriteDebug("Marking project for build");
             markProjectsForBuild(runList);
+			Debug.WriteDebug("Detecting rebuilds");
             detectProjectRebuilds(runList);
             if (useBuiltProjectsOutputPath)
                 locateAssemblyDestinationsRecursive(runList);
@@ -77,6 +80,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             for (int i = runList.Count - 1; i >= 0; i--)
             {
                 var item = runList[i];
+				Debug.WriteDebug("Setting assembly for " + item.Project.Key);
                 item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
             }
         }
@@ -101,6 +105,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (project.Assembly != null)
                     continue;
                 project.SetAssembly(Path.Combine(assemblyPath, project.Project.Value.AssemblyName));
+				Debug.WriteDebug("Setting assembly destinations recursive for " + project.Project.Key);
                 setAssemblyDestinationsRecursive(runList, project.Project, assemblyPath);
             }
         }
