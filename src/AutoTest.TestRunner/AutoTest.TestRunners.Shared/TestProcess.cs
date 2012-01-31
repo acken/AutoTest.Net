@@ -28,6 +28,7 @@ namespace AutoTest.TestRunners.Shared
         private string _executable;
         private string _input;
         private string _output;
+        private PipeClient _pipeClient = null;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
@@ -111,14 +112,15 @@ namespace AutoTest.TestRunners.Shared
             _proc.StartInfo.CreateNoWindow = true;
             _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
             _proc.Start();
-            new System.Threading.Thread(listenForAborts).Start();
+            var abortListener = new System.Threading.Thread(listenForAborts);
+            abortListener.Start();
             _proc.WaitForExit();
+            closeClient();
+            if (listener != null)
+                listener.Join();
+            abortListener.Join();
             if (aborted())
-            {
-				if (listener != null)
-                	listener.Abort();
                 return;
-            }
             var results = getResults(_output);
             TestRunProcess.AddResults(results);
         }
@@ -129,9 +131,9 @@ namespace AutoTest.TestRunners.Shared
 				return null;
             var thread = new Thread(
                 (x) => 
-                    { 
-                        new PipeClient()
-                            .Listen(
+                    {
+                        _pipeClient = new PipeClient();
+                        _pipeClient.Listen(
                                 x.ToString(),
                                 (msg) => 
                                     {
@@ -162,10 +164,20 @@ namespace AutoTest.TestRunners.Shared
             {
                 if (_abortWhen.Invoke())
                 {
+                    closeClient();
                     _proc.Kill();
                     return;
                 }
                 System.Threading.Thread.Sleep(10);
+            }
+        }
+
+        private void closeClient()
+        {
+            if (_pipeClient != null)
+            {
+                _pipeClient.Disconnect();
+                _pipeClient = null;
             }
         }
 

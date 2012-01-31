@@ -12,45 +12,55 @@ namespace AutoTest.TestRunners.Shared.Communication
         private int _offset = 0;
         private byte[] _bytes = new Byte[500];
         private List<byte> _current = new List<byte>();
+        private NamedPipeClientStream _client = null;
 
         public void Listen(string pipe, Action<string> onRecieve)
         {
-            using (var client = new NamedPipeClientStream(".", pipe, PipeDirection.In))
+            try
             {
-                try
+                _client = new NamedPipeClientStream(".", pipe, PipeDirection.In);
+                _client.Connect(4000);
+                while (_client.IsConnected)
                 {
-                    client.Connect(4000);
-                    while (client.IsConnected)
-                    {
-                        var str = getString(readMessage(client));
-                        if (str != null)
-                            onRecieve(str);
-                    }
+                    var str = getString(readMessage(_client));
+                    if (str != null)
+                        onRecieve(str);
                 }
-                catch (Exception ex)
-                {
-                    Logger.Write(ex);
-                }
+            }
+            catch
+            {
             }
         }
 
         public void Listen(string pipe, Action<byte[]> onRecieve)
         {
-            using (var client = new NamedPipeClientStream(".", pipe, PipeDirection.In))
+            try
+            {
+                _client = new NamedPipeClientStream(".", pipe, PipeDirection.In);
+                _client.Connect(4000);
+                while (_client.IsConnected)
+                {
+                    var bytes = readMessage(_client);
+                    if (bytes.Length > 0)
+                        onRecieve(bytes);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public void Disconnect()
+        {
+            if (_client != null)
             {
                 try
                 {
-                    client.Connect(4000);
-                    while (client.IsConnected)
-                    {
-                        var bytes = readMessage(client);
-                        if (bytes.Length > 0)
-                            onRecieve(bytes);
-                    }
+                    _client.Close();
+                    _client.Dispose();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Logger.Write(ex);
                 }
             }
         }

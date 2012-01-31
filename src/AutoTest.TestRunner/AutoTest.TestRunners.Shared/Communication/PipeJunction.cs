@@ -12,6 +12,7 @@ namespace AutoTest.TestRunners.Shared.Communication
     {
         private NamedPipeServerStream _server;
         private List<Thread> _pipes = new List<Thread>();
+        private List<PipeClient> _pipeClients = new List<PipeClient>();
         private Stack<byte[]> _messages = new Stack<byte[]>();
         private bool _exit = false;
 
@@ -37,7 +38,10 @@ namespace AutoTest.TestRunners.Shared.Communication
 
         private void run(object state)
         {
-            new PipeClient().Listen(state.ToString(), (x) => { queue(x); });
+            var client = new PipeClient();
+            _pipeClients.Add(client);
+            client.Listen(state.ToString(), (x) => { queue(x); });
+
         }
 
         private void queue(byte[] item)
@@ -62,8 +66,15 @@ namespace AutoTest.TestRunners.Shared.Communication
                     buffer[buffer.Length - 1] = 0;
                     _server.Write(buffer, 0, buffer.Length);
                 }
+                foreach (var client in _pipeClients)
+                {
+                    if (client != null)
+                        client.Disconnect();
+                }
                 if (_server.IsConnected)
                     _server.Disconnect();
+                // Make sure we kill the waiting threads so the app can quit
+                _pipes.ForEach(x => x.Join());
             }
             catch
             {
@@ -74,8 +85,6 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             _exit = true;
             Thread.Sleep(20);
-            // Make sure we kill the waiting threads so the app can quit
-            _pipes.ForEach(x => x.Abort());
         }
     }
 }

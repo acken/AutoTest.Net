@@ -22,22 +22,33 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public RunInfo[] AssembleBuildConfiguration(string[] projectList)
 		{
-			var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList, false);
+            return AssembleBuildConfiguration(projectList, false);
 		}
+
+        public RunInfo[] AssembleBuildConfiguration(string[] projectList, bool skipMarkingForBuild)
+        {
+            var runList = getRunInfoList(projectList);
+            return assemblefConfiguration(runList, false, skipMarkingForBuild);
+        }
 
         public RunInfo[] AssembleBuildConfiguration(Project[] projectList)
         {
-            var runList = getRunInfoList(projectList);
-            return assemblefConfiguration(runList, false);
+            return AssembleBuildConfiguration(projectList, false);
         }
 
-        private RunInfo[] assemblefConfiguration(List<RunInfo> runList, bool useBuiltProjectsOutputPath)
+        public RunInfo[] AssembleBuildConfiguration(Project[] projectList, bool skipMarkingForBuild)
         {
-			Debug.WriteDebug("Marking project for build");
-            markProjectsForBuild(runList);
-			Debug.WriteDebug("Detecting rebuilds");
-            detectProjectRebuilds(runList);
+            var runList = getRunInfoList(projectList);
+            return assemblefConfiguration(runList, false, skipMarkingForBuild);
+        }
+
+        private RunInfo[] assemblefConfiguration(List<RunInfo> runList, bool useBuiltProjectsOutputPath, bool skipMarkingForBuild)
+        {
+            if (!skipMarkingForBuild || useBuiltProjectsOutputPath)
+            {
+                markProjectsForBuild(runList);
+                detectProjectRebuilds(runList);
+            }
             if (useBuiltProjectsOutputPath)
                 locateAssemblyDestinationsRecursive(runList);
             else
@@ -80,7 +91,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             for (int i = runList.Count - 1; i >= 0; i--)
             {
                 var item = runList[i];
-				Debug.WriteDebug("Setting assembly for " + item.Project.Key);
                 item.SetAssembly(item.Project.GetAssembly(_configuration.CustomOutputPath));
             }
         }
@@ -105,7 +115,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 if (project.Assembly != null)
                     continue;
                 project.SetAssembly(Path.Combine(assemblyPath, project.Project.Value.AssemblyName));
-				Debug.WriteDebug("Setting assembly destinations recursive for " + project.Project.Key);
                 setAssemblyDestinationsRecursive(runList, project.Project, assemblyPath);
             }
         }
