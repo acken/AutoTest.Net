@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.Tests
         [Test]
         public void Should_locate_plugins()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var locator = new PluginLocator(path);
             var plugins = locator.Locate();
             
@@ -28,7 +28,7 @@ namespace AutoTest.TestRunners.Tests
         [Test]
         public void Should_create_instance()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var locator = new PluginLocator(path);
             var plugins = locator.Locate();
             var plugin = plugins.Where(x => x.Assembly.Equals(Path.Combine(path, "AutoTest.TestRunners.Tests.dll")) && x.Type.Equals("AutoTest.TestRunners.Tests.Plugins.Plugin1")).First();

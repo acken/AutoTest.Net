@@ -7,7 +7,7 @@ namespace AutoTest.Core.FileSystem
 	{
         public static string GetRootDirectory()
         {
-            return Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 	}
 }

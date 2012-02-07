@@ -25,7 +25,7 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
 
         private string getPath(string relativePath)
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, relativePath);
         }
 

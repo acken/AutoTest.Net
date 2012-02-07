@@ -279,7 +279,7 @@ namespace AutoTest.TestRunners
 
         private static IEnumerable<Plugin> allPlugins()
         {
-            var currentDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var dir = Path.Combine(currentDir, "TestRunners");
             if (!Directory.Exists(dir))
                 return new Plugin[] { };

@@ -40,7 +40,7 @@ namespace AutoTest.TestRunners.Tests
             var file = Path.GetTempFileName();
             writer.Write(file);
 
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var original = File.ReadAllText(file).Replace("\r\n", "\n");
             var generated = File.ReadAllText(Path.Combine(path, "TestOptionsCorrected.xml")).Replace("\r\n", "\n");
             Assert.That(original, Is.EqualTo(generated));

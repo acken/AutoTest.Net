@@ -24,7 +24,7 @@ namespace AutoTest.Test.Core.Configuration
 
         private string getWatchDirectory()
         {
-            var path = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, "TestResources");
         }
     }

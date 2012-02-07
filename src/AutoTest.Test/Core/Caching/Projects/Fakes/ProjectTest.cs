@@ -33,7 +33,7 @@ namespace AutoTest.Test
 		[Test]
 		public void When_custom_output_path_exists_use_only_custom_output_path()
 		{
-			var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			var document = new ProjectDocument(ProjectType.CSharp);
 			document.SetAssemblyName("mehassembly.dll");
 			document.SetOutputPath(string.Format("bin{0}Debug", Path.DirectorySeparatorChar));

@@ -216,7 +216,7 @@ namespace AutoTest.TestRunners.Shared
 
         private IEnumerable<Plugin> getPlugins(RunOptions options)
         {
-            var path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "TestRunners");
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestRunners");
             return new PluginLocator(path).GetPluginsFrom(options);
         }
 

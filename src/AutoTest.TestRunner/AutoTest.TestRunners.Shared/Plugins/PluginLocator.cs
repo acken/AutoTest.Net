@@ -29,7 +29,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
             var hitPaths = new string[]
                                 {
                                     Path.GetDirectoryName(Assembly),
-                                    Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
+                                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                                 };
             using (var resolver = new AssemblyResolver(hitPaths))
             {
@@ -57,7 +57,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public PluginLocator()
         {
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(PluginLocator)).Location);
             _path = Path.Combine(path, "TestRunners");
         }
 
@@ -72,14 +72,14 @@ namespace AutoTest.TestRunners.Shared.Plugins
             var hitPaths = new string[]
                                 {
                                     _path,
-                                    Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
+                                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                                 };
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 var currentDirectory = Environment.CurrentDirectory;
                 try
                 {
-                    Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                    Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                         plugins.AddRange(getPlugins(Path.GetFullPath(file)));

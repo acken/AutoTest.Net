@@ -59,7 +59,7 @@ namespace AutoTest.TestRunners
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
-                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(Assembly.GetExecutingAssembly().Location, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
 
                 // Prepare assemblies
                 Logger.Write("Preparing resolver");

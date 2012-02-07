@@ -25,7 +25,7 @@ namespace AutoTest.TestRunners
         {
             if (startLogger)
                 Logger.SetLogger(new ConsoleLogger());
-            _directories.Add(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+            _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
 
