@@ -26,7 +26,7 @@ namespace AutoTest.VS.Util.Debugger
             var currentPath = Environment.CurrentDirectory;
             try
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 using (var assembly = Reflect.On(options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Assembly))
                 {
                     _version = assembly.GetTargetFramework();
