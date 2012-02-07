@@ -33,7 +33,7 @@ namespace AutoTest.Core.Caching.Projects
                 return "";
 			if (customOutputPath != null && customOutputPath.Length > 0)
 				outputPath = customOutputPath;
-            if (!Directory.Exists(outputPath))
+            if (!Directory.Exists(outputPath) || !Path.IsPathRooted(outputPath))
             {
                 var projectPath = Path.GetDirectoryName(Key);
                 if (projectPath == null)
