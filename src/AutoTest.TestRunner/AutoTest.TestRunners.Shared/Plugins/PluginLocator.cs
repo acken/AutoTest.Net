@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Communication;
@@ -31,6 +30,8 @@ namespace AutoTest.TestRunners.Shared.Plugins
                                     Path.GetDirectoryName(Assembly),
                                     Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                                 };
+
+            hitPaths.ToList().ForEach(x => Logger.Write("Hint path (new): " + x));
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 try
@@ -57,7 +58,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
 
         public PluginLocator()
         {
-            var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(PluginLocator)).Location);
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             _path = Path.Combine(path, "TestRunners");
         }
 
@@ -72,14 +73,15 @@ namespace AutoTest.TestRunners.Shared.Plugins
             var hitPaths = new string[]
                                 {
                                     _path,
-                                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                                 };
+            hitPaths.ToList().ForEach(x => Logger.Write("Hint path (locate): " + x));
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 var currentDirectory = Environment.CurrentDirectory;
                 try
                 {
-                    Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    Environment.CurrentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                     var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
                         plugins.AddRange(getPlugins(Path.GetFullPath(file)));
@@ -115,11 +117,11 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 .Select(x => new Plugin(file, x.FullName));
         }
 
-        private Assembly loadAssembly(string file)
+        private System.Reflection.Assembly loadAssembly(string file)
         {
             try
             {
-                return Assembly.LoadFrom(file);
+                return System.Reflection.Assembly.LoadFrom(file);
             }
             catch
             {
@@ -139,7 +141,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
 
-        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             if (_assemblyCache.ContainsKey(args.Name))
             {
@@ -165,7 +167,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
             {
                 if (_assemblyCache.ContainsValue(f))
                     return false;
-                var name = Assembly.ReflectionOnlyLoadFrom(f).FullName;
+                var name = System.Reflection.Assembly.ReflectionOnlyLoadFrom(f).FullName;
                 if (!_assemblyCache.ContainsKey(name))
                     _assemblyCache.Add(name, f);
                 return name.Equals(args.Name);
