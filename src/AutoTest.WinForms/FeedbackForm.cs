@@ -43,7 +43,9 @@ namespace AutoTest.WinForms
                 if (commandMessage.Sender == "EditorEngine")
                 {
                     var msg = EditorEngineMessage.New(commandMessage.Command);
-                    if (msg.Command == "keypress" && msg.Arguments.Count == 1 && msg.Arguments[0].ToLower() == "ctrl+shift+j")
+                    if (msg.Arguments.Count == 2 &&
+						msg.Arguments[0].ToLower() == "autotest.net" &&
+						msg.Arguments[0].ToLower() == "setfocus")
                     {
                         Activate();
                         runFeedback.PrepareForFocus();
