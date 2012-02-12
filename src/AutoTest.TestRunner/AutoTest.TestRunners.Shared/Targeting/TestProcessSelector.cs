@@ -20,7 +20,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
 
         public string Get(Platform platform, Version version)
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var platformString = getPlatformString(platform);
             var frameworkString = getFrameworkString(version);
             return Path.Combine(path, string.Format("AutoTest.TestRunner{0}{1}.exe", platformString, frameworkString));

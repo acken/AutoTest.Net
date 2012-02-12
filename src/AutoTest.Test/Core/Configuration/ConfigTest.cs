@@ -21,7 +21,7 @@ namespace AutoTest.Test.Core.Configuration
 
         public string GetConfigurationFile()
         {
-            var path = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, "AutoTest.ForTests.config");
         }
     }
@@ -340,7 +340,7 @@ namespace AutoTest.Test.Core.Configuration
 		{
 			if (File.Exists(_overridConfig))
 				File.Delete(_overridConfig);
-			var path = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
+			var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 			var file = Path.Combine(path, Path.Combine("TestResources", "myignorefile.txt"));
 			using (var writer = new StreamWriter(_overridConfig))
 			{

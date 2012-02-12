@@ -58,7 +58,7 @@ namespace AutoTest.Test.Core.Caching.Crawlers
 
         private string getFullPath(string relativePath)
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, relativePath);
         }
 

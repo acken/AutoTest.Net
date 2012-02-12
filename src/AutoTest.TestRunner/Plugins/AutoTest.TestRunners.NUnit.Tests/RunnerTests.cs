@@ -44,7 +44,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         //        LoaderOptimization = LoaderOptimization.MultiDomainHost
         //    };
         //    _childDomain = AppDomain.CreateDomain("NUnit app domain", null, domainSetup);
-        //    _plugin = new Plugin(new Uri(typeof(Runner).Assembly.CodeBase).LocalPath, typeof(Runner).FullName);
+        //    _plugin = new Plugin(typeof(Runner).Assembly.Location, typeof(Runner).FullName);
         //    _runner = (ITestRunner)_childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
         //}
 
@@ -58,7 +58,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_test()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var runner = new Runner();
             var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_pass";
@@ -68,7 +68,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_testcase()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var runner = new Runner();
             var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1.Should_fail";
@@ -78,7 +78,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_fixture()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var runner = new Runner();
             var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1";
@@ -88,7 +88,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_recognize_inherited_fixture()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var runner = new Runner();
             var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             var cls = "AutoTest.TestRunners.NUnit.Tests.TestResource.InheritedFixture";
@@ -98,7 +98,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         [Test]
         public void Should_contain_tests_for()
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var runner = new Runner();
             var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
             Assert.That(runner.ContainsTestsFor(assembly), Is.True);

@@ -25,12 +25,13 @@ namespace AutoTest.TestRunners
         {
             if (startLogger)
                 Logger.SetLogger(new ConsoleLogger());
-            _directories.Add(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+            _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
 
         public IEnumerable<TestResult> Run(Plugin plugin, string id, RunSettings settings)
         {
+            IEnumerable<TestResult> resultSet = null;
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
             Logger.Write("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
@@ -54,7 +55,7 @@ namespace AutoTest.TestRunners
                     Logger.Write("Setting current directory to " + newCurrent);
                     Environment.CurrentDirectory = newCurrent;
                     Logger.Write("Starting test run");
-                    return runner.Run(settings);
+                    resultSet = runner.Run(settings);
                 }
             }
             catch
@@ -66,6 +67,7 @@ namespace AutoTest.TestRunners
                 Environment.CurrentDirectory = currentDirectory;
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
             }
+            return resultSet;
         }
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

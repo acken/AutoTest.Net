@@ -43,7 +43,7 @@ namespace AutoTest.TestRunners.XUnit.Tests
         //        LoaderOptimization = LoaderOptimization.MultiDomainHost
         //    };
         //    _childDomain = AppDomain.CreateDomain("XUnit app domain", null, domainSetup);
-        //    _plugin = new Plugin(new Uri(typeof(Runner).Assembly.CodeBase).LocalPath, typeof(Runner).FullName);
+        //    _plugin = new Plugin(typeof(Runner).Assembly.Location, typeof(Runner).FullName);
         //    _runner = (ITestRunner)_childDomain.CreateInstanceAndUnwrap(typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
         //}
 
@@ -82,7 +82,7 @@ namespace AutoTest.TestRunners.XUnit.Tests
 
         private string getPath(string relativePath)
         {
-            var path = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, relativePath);
         }
 

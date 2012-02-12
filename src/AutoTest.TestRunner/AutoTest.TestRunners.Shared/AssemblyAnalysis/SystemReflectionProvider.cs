@@ -28,7 +28,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
-                _locator = (ISystemReflectionProvider_Internal)_childDomain.CreateInstanceFromAndUnwrap(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath, typeof(SystemReflectionProvider_Internal).FullName);
+                _locator = (ISystemReflectionProvider_Internal)_childDomain.CreateInstanceFromAndUnwrap(Assembly.GetExecutingAssembly().Location, typeof(SystemReflectionProvider_Internal).FullName);
                 _locator.Load(assembly);
             }
             catch (Exception ex)
@@ -104,7 +104,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             var hitPaths = new string[]
                                 {
                                     Path.GetDirectoryName(assembly),
-                                    Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
+                                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                                 };
             using (var resolver = new AssemblyResolver(hitPaths))
             {

@@ -66,7 +66,7 @@ namespace AutoTest.Core.Notifiers
         {
             if (_growl_executable == null)
                 locateGrowlExecutable();
-            var bleh = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
+            var bleh = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string icon = bleh;
             switch (type)
             {

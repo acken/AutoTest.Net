@@ -14,7 +14,7 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [Test]
         public void Should_find_me()
         {
-            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
             var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests.Should_find_me");
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests.Should_find_me", method.Fullname);
             Assert.AreEqual("NUnit.Framework.TestAttribute", method.Attributes.ElementAt(0));
@@ -23,7 +23,7 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [Test]
         public void Should_find_my_parent()
         {
-            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
             var cls = locator.LocateClass(locator.GetParentType("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests.Should_find_me"));
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests", cls.Fullname);
             Assert.AreEqual("NUnit.Framework.TestFixtureAttribute", cls.Attributes.ElementAt(0));
@@ -32,7 +32,7 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [Test]
         public void Should_find_inherited_attributes()
         {
-            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
             var cls = locator.LocateClass("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests");
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.CecilReflectionProviderTests", cls.Fullname);
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.MyAttribute", cls.Attributes.ElementAt(1));
@@ -41,7 +41,7 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [Test]
         public void Should_find_inherited_attributes_in_methods()
         {
-            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
             var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.BaseClass.Blargh");
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass.Blargh", method.Fullname);
             Assert.AreEqual(3, method.Attributes.Count());
@@ -50,7 +50,7 @@ namespace AutoTest.Test.Core.ReflectionProviders
         [Test]
         public void Should_find_nested_classes()
         {
-            var locator = new CecilReflectionProvider(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
             var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod");
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod", method.Fullname);
         }

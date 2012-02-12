@@ -117,7 +117,8 @@ namespace AutoTest.TestRunners
         {
             var message = getException((Exception)args.ExceptionObject);
 
-            if (!_arguments.CompatabilityMode)
+            // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
+            if (!_arguments.CompatabilityMode && !args.ExceptionObject.GetType().Equals(typeof(System.AppDomainUnloadedException)))
             {
                 var finalOutput = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test.", TestState.Panic,
                         "This is usually caused by a background thread throwing an unhandled exception. " +
@@ -278,7 +279,7 @@ namespace AutoTest.TestRunners
 
         private static IEnumerable<Plugin> allPlugins()
         {
-            var currentDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var dir = Path.Combine(currentDir, "TestRunners");
             if (!Directory.Exists(dir))
                 return new Plugin[] { };

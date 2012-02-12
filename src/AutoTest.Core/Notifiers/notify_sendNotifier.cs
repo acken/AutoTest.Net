@@ -37,7 +37,7 @@ namespace AutoTest.Core.Notifiers
 		#endregion
 		
 		private void runNotification(string msg, NotificationType type) {
-			var bleh = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath);
+            var bleh = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			string icon = bleh;
 			switch (type) {
 				case NotificationType.Green:

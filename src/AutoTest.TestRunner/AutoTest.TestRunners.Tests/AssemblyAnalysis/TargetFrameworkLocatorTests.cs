@@ -15,7 +15,7 @@ namespace AutoTest.TestRunners.Tests.AssemblyAnalysis
         [Test]
         public void Should_get_framework_version_from_assembly()
         {
-            var assembly = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var assembly = Assembly.GetExecutingAssembly().Location;
             var locator = new AssemblyPropertyReader();
             Assert.That(locator.GetTargetFramework(assembly), Is.EqualTo(new Version(2, 0)));
         }

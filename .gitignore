@@ -1,5 +1,6 @@
 obj
 bin
+default/
 deploy
 deploy/*
 test-results/
