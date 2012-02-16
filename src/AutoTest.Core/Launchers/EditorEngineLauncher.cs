@@ -61,6 +61,7 @@ namespace AutoTest.Core.Launchers
 
 		void Handle_clientIncomingMessage(object sender, IncomingMessageArgs e)
 		{
+			Debug.WriteDebug("Dispatching editor message: " + e.Message);
 			_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
 		}
 	}
