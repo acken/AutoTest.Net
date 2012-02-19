@@ -40,8 +40,12 @@
             this.columnMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pictureBoxWorking = new System.Windows.Forms.PictureBox();
             this.pictureMoose = new System.Windows.Forms.PictureBox();
+            this.pictureBoxRed = new System.Windows.Forms.PictureBox();
+            this.pictureBoxGray = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWorking)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMoose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
             this.SuspendLayout();
             // 
             // linkLabelSystemMessages
@@ -108,9 +112,9 @@
             // 
             // listViewFeedback
             // 
-            this.listViewFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFeedback.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnType,
             this.columnMessage});
@@ -152,7 +156,7 @@
             // 
             // pictureMoose
             // 
-            this.pictureMoose.Image = global::AutoTest.UI.Properties.Resources.MM_16;
+            this.pictureMoose.Image = global::AutoTest.UI.Properties.Resources.circleWIN;
             this.pictureMoose.Location = new System.Drawing.Point(2, 2);
             this.pictureMoose.Name = "pictureMoose";
             this.pictureMoose.Size = new System.Drawing.Size(20, 20);
@@ -160,10 +164,32 @@
             this.pictureMoose.TabIndex = 14;
             this.pictureMoose.TabStop = false;
             // 
+            // pictureBoxRed
+            // 
+            this.pictureBoxRed.Image = global::AutoTest.UI.Properties.Resources.circleFAIL;
+            this.pictureBoxRed.Location = new System.Drawing.Point(2, 2);
+            this.pictureBoxRed.Name = "pictureBoxRed";
+            this.pictureBoxRed.Size = new System.Drawing.Size(20, 20);
+            this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxRed.TabIndex = 16;
+            this.pictureBoxRed.TabStop = false;
+            // 
+            // pictureBoxGray
+            // 
+            this.pictureBoxGray.Image = global::AutoTest.UI.Properties.Resources.circleAbort;
+            this.pictureBoxGray.Location = new System.Drawing.Point(2, 2);
+            this.pictureBoxGray.Name = "pictureBoxGray";
+            this.pictureBoxGray.Size = new System.Drawing.Size(20, 20);
+            this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxGray.TabIndex = 17;
+            this.pictureBoxGray.TabStop = false;
+            // 
             // RunFeedback
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pictureBoxGray);
+            this.Controls.Add(this.pictureBoxRed);
             this.Controls.Add(this.pictureBoxWorking);
             this.Controls.Add(this.pictureMoose);
             this.Controls.Add(this.linkLabelSystemMessages);
@@ -176,6 +202,8 @@
             this.Size = new System.Drawing.Size(413, 101);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWorking)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMoose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,5 +222,7 @@
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureMoose;
         private System.Windows.Forms.PictureBox pictureBoxWorking;
+        private System.Windows.Forms.PictureBox pictureBoxRed;
+        private System.Windows.Forms.PictureBox pictureBoxGray;
     }
 }

@@ -50,6 +50,7 @@ namespace AutoTest.TestRunners.Shared.Communication
                 if (_server.IsConnected)
                     _server.Disconnect();
                 _server.Dispose();
+                _server = null;
             }
             catch
             {
@@ -70,7 +71,8 @@ namespace AutoTest.TestRunners.Shared.Communication
         public void Dispose()
         {
             _exit = true;
-            Thread.Sleep(20);
+            while (_server != null)
+                Thread.Sleep(10);
             // Make sure we kill the waiting threads so the app can quit
             _activeThreads.ForEach(x => x.Abort());
         }

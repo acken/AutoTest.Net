@@ -28,8 +28,9 @@ namespace AutoTest.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WatchDirectoryPickerForm));
             this.listViewDirectories = new System.Windows.Forms.ListView();
-            this.columnDirectory = new System.Windows.Forms.ColumnHeader();
+            this.columnDirectory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textBoxDirectory = new System.Windows.Forms.TextBox();
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -40,13 +41,13 @@ namespace AutoTest.WinForms
             // 
             this.listViewDirectories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnDirectory});
+            this.listViewDirectories.FullRowSelect = true;
             this.listViewDirectories.Location = new System.Drawing.Point(11, 42);
             this.listViewDirectories.Name = "listViewDirectories";
             this.listViewDirectories.Size = new System.Drawing.Size(609, 192);
             this.listViewDirectories.TabIndex = 0;
             this.listViewDirectories.UseCompatibleStateImageBehavior = false;
             this.listViewDirectories.View = System.Windows.Forms.View.Details;
-			this.listViewDirectories.FullRowSelect = true;
             this.listViewDirectories.SelectedIndexChanged += new System.EventHandler(this.listViewDirectories_SelectedIndexChanged);
             // 
             // columnDirectory
@@ -101,6 +102,7 @@ namespace AutoTest.WinForms
             this.Controls.Add(this.buttonBrowse);
             this.Controls.Add(this.textBoxDirectory);
             this.Controls.Add(this.listViewDirectories);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WatchDirectoryPickerForm";
             this.Text = "Choose directory for AutoTest.Net to watch";
             this.ResumeLayout(false);

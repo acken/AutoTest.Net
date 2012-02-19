@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -97,6 +97,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ajax-loader.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MM.AT.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MM-16-AT.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circleFAIL.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circleWIN.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circleAbort.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

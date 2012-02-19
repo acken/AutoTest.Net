@@ -34,15 +34,16 @@
             // 
             // runFeedback
             // 
-            this.runFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.runFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.runFeedback.CanDebug = false;
             this.runFeedback.CanGoToTypes = false;
             this.runFeedback.ListViewWidthOffset = 0;
             this.runFeedback.Location = new System.Drawing.Point(2, 2);
             this.runFeedback.Name = "runFeedback";
             this.runFeedback.ShowIcon = true;
+            this.runFeedback.ShowRunInformation = true;
             this.runFeedback.Size = new System.Drawing.Size(937, 216);
             this.runFeedback.TabIndex = 0;
             this.runFeedback.GoToReference += new System.EventHandler<AutoTest.UI.GoToReferenceArgs>(this.runFeedback_GoToReference);

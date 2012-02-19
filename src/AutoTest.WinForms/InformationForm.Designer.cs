@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InformationForm));
             this.linkLabelInfo = new System.Windows.Forms.LinkLabel();
             this.informationList = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // linkLabelInfo
@@ -67,6 +68,7 @@
             this.ClientSize = new System.Drawing.Size(877, 384);
             this.Controls.Add(this.linkLabelInfo);
             this.Controls.Add(this.informationList);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "InformationForm";
             this.Text = "AutoTest.Net - Information, warning and error messages";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.InformationForm_FormClosing);

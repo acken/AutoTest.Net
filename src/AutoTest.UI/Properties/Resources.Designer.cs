@@ -67,10 +67,38 @@ namespace AutoTest.UI.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap circleAbort {
+            get {
+                object obj = ResourceManager.GetObject("circleAbort", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap circleFAIL {
+            get {
+                object obj = ResourceManager.GetObject("circleFAIL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap circleWIN {
+            get {
+                object obj = ResourceManager.GetObject("circleWIN", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap MM_16 {
             get {
                 object obj = ResourceManager.GetObject("MM-16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon MM_16_AT {
+            get {
+                object obj = ResourceManager.GetObject("MM_16_AT", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

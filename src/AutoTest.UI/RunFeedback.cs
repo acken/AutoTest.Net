@@ -14,6 +14,14 @@ namespace AutoTest.UI
 {
     public partial class RunFeedback : UserControl
     {
+        enum ImageStates
+        {
+            None,
+            Green,
+            Red,
+            Progress
+        }
+
         private readonly SynchronizationContext _syncContext;
         private TestDetailsForm _testDetails;
         private readonly object _messagLock = new object();
@@ -180,7 +188,7 @@ namespace AutoTest.UI
                 generateSummary(null);
                 organizeListItemBehaviors(null);
                 clearRunnerTypeAnyItems();
-                setProgress(true, "processing changes...", false, null);
+                setProgress(ImageStates.Progress, "processing changes...", false, null);
                 _isRunning = true;
             }, text);
         }
@@ -188,10 +196,13 @@ namespace AutoTest.UI
         public void SetProgress(bool on, string information, string picture)
         {
             _progressUpdatedExternally = on;
-            setProgress(on, information, true, picture);
+            var state = ImageStates.None;
+            if (on)
+                state = ImageStates.Progress;
+            setProgress(state, information, true, picture);
         }
 
-        public void setProgress(bool on, string information, bool external, string picture)
+        private void setProgress(ImageStates state, string information, bool external, string picture)
         {
             if (_progressUpdatedExternally && !external)
                 return;
@@ -202,8 +213,10 @@ namespace AutoTest.UI
                 pictureBoxWorking.ImageLocation = picture;
                 pictureBoxWorking.Refresh();
             }
-            pictureMoose.Visible = !on;
-            pictureBoxWorking.Visible = on;
+            pictureBoxRed.Visible = state == ImageStates.Red;
+            pictureMoose.Visible = state == ImageStates.Green;
+            pictureBoxGray.Visible = state == ImageStates.None;
+            pictureBoxWorking.Visible = state == ImageStates.Progress;
             _toolTipProvider.SetToolTip(pictureBoxWorking, information);
         }
 
@@ -211,16 +224,22 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                setProgress(false, "", false, null);
                 if (((RunFinishedMessage)x).Report.Aborted)
                 {
                     if (ShowRunInformation)
+                    {
+                        setProgress(ImageStates.None, "", false, null);
                         printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
+                    }
                 }
                 else
                 {
                     var i = getRunFinishedInfo((RunFinishedMessage)x);
                     var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
+                    if (runType == RunMessageType.Succeeded)
+                        setProgress(ImageStates.Green, "", false, null);
+                    else
+                        setProgress(ImageStates.Red, "", false, null);
                     printMessage(new RunMessages(runType, i.Text));
                     generateSummary(i.Report);
                 }
