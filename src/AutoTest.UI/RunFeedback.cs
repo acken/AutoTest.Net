@@ -27,6 +27,7 @@ namespace AutoTest.UI
         private readonly object _messagLock = new object();
         private bool _isRunning;
         private bool _progressUpdatedExternally = false;
+        private ImageStates _lastInternalState = ImageStates.None;
         private string _progressPicture;
 
         private bool _showErrors = true;
@@ -196,7 +197,7 @@ namespace AutoTest.UI
         public void SetProgress(bool on, string information, string picture)
         {
             _progressUpdatedExternally = on;
-            var state = ImageStates.None;
+            var state = _lastInternalState;
             if (on)
                 state = ImageStates.Progress;
             setProgress(state, information, true, picture);
@@ -218,6 +219,8 @@ namespace AutoTest.UI
             pictureBoxGray.Visible = state == ImageStates.None;
             pictureBoxWorking.Visible = state == ImageStates.Progress;
             _toolTipProvider.SetToolTip(pictureBoxWorking, information);
+            if (!external)
+                _lastInternalState = state;
         }
 
         private void runFinished(RunFinishedMessage msg)
