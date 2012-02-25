@@ -12,16 +12,16 @@ using AutoTest.UI.TextFormatters;
 
 namespace AutoTest.UI
 {
+    public enum ImageStates
+    {
+        None,
+        Green,
+        Red,
+        Progress
+    }
+
     public partial class RunFeedback : UserControl
     {
-        enum ImageStates
-        {
-            None,
-            Green,
-            Red,
-            Progress
-        }
-
         private readonly SynchronizationContext _syncContext;
         private TestDetailsForm _testDetails;
         private readonly object _messagLock = new object();
@@ -201,6 +201,15 @@ namespace AutoTest.UI
             if (on)
                 state = ImageStates.Progress;
             setProgress(state, information, true, picture);
+        }
+
+        public void SetProgress(bool on, string information, ImageStates imageState)
+        {
+            _progressUpdatedExternally = on;
+            var state = _lastInternalState;
+            if (on)
+                state = ImageStates.Progress;
+            setProgress(imageState, information, true, null);
         }
 
         private void setProgress(ImageStates state, string information, bool external, string picture)
