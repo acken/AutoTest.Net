@@ -29,5 +29,15 @@ namespace AutoTest.TestRunners.NUnit.Tests.TestResource
         {
             Assert.Ignore("ignored test");
         }
+
+        [TestFixture]
+        public class NestedFixture
+        {
+            [Test]
+            public void Nested_test()
+            {
+                Assert.AreEqual(true, true);
+            }
+        }
     }
 }

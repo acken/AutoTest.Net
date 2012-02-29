@@ -104,6 +104,16 @@ namespace AutoTest.TestRunners.NUnit.Tests
             Assert.That(runner.ContainsTestsFor(assembly), Is.True);
         }
 
+        [Test]
+        public void Should_recognize_nested_test_fixtures()
+        {
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var runner = new Runner();
+            var assembly = Path.Combine(path, "AutoTest.TestRunners.NUnit.Tests.TestResource.dll");
+            var method = "AutoTest.TestRunners.NUnit.Tests.TestResource.Fixture1+NestedFixture.Nested_test";
+            Assert.That(runner.IsTest(assembly, method), Is.True);
+        }
+
         //[Test]
         //public void Should_run_test()
         //{

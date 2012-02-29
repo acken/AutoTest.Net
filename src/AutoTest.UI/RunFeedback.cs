@@ -567,6 +567,7 @@ namespace AutoTest.UI
 
         private void goToType(string assembly, string typename)
         {
+            var type = typename.Replace("+", ".");
             if (GoToType != null)
                 GoToType(this, new GoToTypeArgs(assembly, typename));
         }

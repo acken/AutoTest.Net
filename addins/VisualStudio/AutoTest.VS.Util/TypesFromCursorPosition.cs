@@ -117,10 +117,25 @@ namespace AutoTest.VS.Util
                 _namespace = new[] { elem.FullName };
 
             if (elem.Kind == vsCMElement.vsCMElementClass)
-                _member = new[] { elem.FullName };
+            {
+                var cls = MethodNameReader.GetMethodStringFromElement(elem);
+                _member = new[] { cls.Replace("/", "+") };
+            }
 
             if (elem.Kind == vsCMElement.vsCMElementFunction)
-                _test = new[] { elem.FullName };
+            {
+                var test = MethodNameReader.GetMethodStringFromElement(elem);
+                test = test
+                    .Replace("::", ".")
+                    .Replace("/", "+");
+                var parenthesis = test.IndexOf("(");
+                if (parenthesis != -1)
+                    test = test.Substring(0, parenthesis);
+                var space = test.IndexOf(" ");
+                if (space != -1)
+                    test = test.Substring(space + 1, test.Length - (space + 1));
+                _test = new[] { test };
+            }
         }
 
         private void getCodeFromPosition()

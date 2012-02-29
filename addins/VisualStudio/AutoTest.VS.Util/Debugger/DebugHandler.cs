@@ -127,7 +127,7 @@ namespace AutoTest.VS.Util.Debugger
         private bool setBreakpointFromMethod(CacheTestMessage test, ref string targetFramework)
         {
             AutoTest.Core.DebugLog.Debug.WriteDebug("Attempting to set breakpoint through test method for " + test.Test.Name);
-            var breakpoint = _application.Debugger.Breakpoints.Add(test.Test.Name);
+            var breakpoint = _application.Debugger.Breakpoints.Add(test.Test.Name.Replace("+", "."));
             if (breakpoint != null)
                 return true;
             return false;
@@ -136,7 +136,8 @@ namespace AutoTest.VS.Util.Debugger
         private bool setBreakpointFromStacktrace(CacheTestMessage test, ref string targetFramework)
         {
             // pull test name from full name
-            var testName = test.Test.Name.Substring(test.Test.Name.LastIndexOf('.') + 1, test.Test.Name.Length - (test.Test.Name.LastIndexOf('.') + 1));
+            var vsTestName = test.Test.Name.Replace("+", ".");
+            var testName = vsTestName.Substring(vsTestName.LastIndexOf('.') + 1, vsTestName.Length - (vsTestName.LastIndexOf('.') + 1));
             AutoTest.Core.DebugLog.Debug.WriteDebug("Attempting to set breakpoint through call stack for " + testName);
             foreach (var line in test.Test.StackTrace)
             {
