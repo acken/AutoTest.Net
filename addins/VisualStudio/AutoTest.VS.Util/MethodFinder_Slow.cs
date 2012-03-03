@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
-
+using System.Windows.Forms;
 namespace AutoTest.VS.Util
 {
     public class MethodFinder_Slow
@@ -84,7 +84,7 @@ namespace AutoTest.VS.Util
             var space = fullname.IndexOf(" ");
             var endoftype = fullname.IndexOf("::");
             if (space == -1 || endoftype == -1 || endoftype - space < 0) return fullname;
-            return fullname.Substring(space + 1, endoftype - space - 1);
+            return fullname.Substring(space + 1, endoftype - space - 1).Replace("/", ".");
         }
 
         private static void GotoSignature(string signature, DTE2 dte)
@@ -135,48 +135,50 @@ namespace AutoTest.VS.Util
         private static ProjectItem GetProjectItemFromFullName(DTE2 dte, string name)
         {
             Core.DebugLog.Debug.WriteDebug("Finding " + name);
-                foreach (var proj in GetProjects(dte))
+            foreach (var proj in GetProjects(dte))
+            {
+                var cm = proj.CodeModel;
+                if (cm != null)
                 {
-                    var cm = proj.CodeModel;
-                    if (cm != null)
+                    CodeType typ = null;
+                    try
                     {
-                        CodeType typ = null;
-                        try
-                        {
-                            typ = cm.CodeTypeFromFullName(name);
-                        }
-                        catch
-                        {
+                        typ = cm.CodeTypeFromFullName(name);
+                    }
+                    catch
+                    {
                             
-                        }
+                    }
+                        
+                    Core.DebugLog.Debug.WriteDebug("Found.");
+                    try
+                    {
                         if (typ != null)
                         {
-                            Core.DebugLog.Debug.WriteDebug("Found.");
-                            try
-                            {
-                                var item = typ.ProjectItem;
-                                return item;
-                            }
-                            catch
-                            {
-                                Core.DebugLog.Debug.WriteDebug("In hackity hackity hack hack.");
-                                //OK so we know the project that its in ...
-                                var items = GetProjectItemsRecursive(proj.ProjectItems);
-                                if (items == null) return null;
-                                foreach(var item in items)
-                                {
-                                    if(item.FileCodeModel == null) continue;
-                                    if (FindType(item.FileCodeModel.CodeElements, name))
-                                    {
-                                        return item;
-                                    }
-                                }
-                            }
+                            var item = typ.ProjectItem;
+                            return item;
+                        }
+                    }
+                    catch
+                    {
+                                
+                    }
+                    Core.DebugLog.Debug.WriteDebug("In hackity hackity hack hack.");
+                    //OK so we know the project that its in ...
+                    var items = GetProjectItemsRecursive(proj.ProjectItems);
+                    if (items == null) return null;
+                    foreach(var item in items)
+                    {
+                        if(item.FileCodeModel == null) continue;
+                        if (FindType(item.FileCodeModel.CodeElements, name))
+                        {
+                            return item;
                         }
                     }
                 }
-                throw new Exception("name not found in any projects");
             }
+            throw new Exception("name not found in any projects");
+        }
 
         private static bool FindType(CodeElements codeElements, string name)
         {
