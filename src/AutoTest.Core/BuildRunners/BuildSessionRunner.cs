@@ -10,6 +10,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
+using AutoTest.Core.Caching;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -20,6 +21,7 @@ namespace AutoTest.Core.BuildRunners
 
     class BuildSessionRunner : IBuildSessionRunner
     {
+        private ICache _cache;
         private BuildConfiguration _buildConfig;
         private IMessageBus _bus;
         private IConfiguration _configuration;
@@ -28,8 +30,9 @@ namespace AutoTest.Core.BuildRunners
         private IFileSystemService _fs;
         private Func<bool> _exit;
 
-        public BuildSessionRunner(BuildConfiguration buildConfig, IMessageBus bus, IConfiguration config, IBuildRunner buildRunner, IPreProcessBuildruns[] buildPreProcessors, IFileSystemService fs)
+        public BuildSessionRunner(BuildConfiguration buildConfig, ICache cache, IMessageBus bus, IConfiguration config, IBuildRunner buildRunner, IPreProcessBuildruns[] buildPreProcessors, IFileSystemService fs)
         {
+            _cache = cache;
             _buildConfig = buildConfig;
             _fs = fs;
             _bus = bus;
@@ -90,6 +93,7 @@ namespace AutoTest.Core.BuildRunners
 
         private BuildRunResults optimisticBuild(string[] changedProjects, RunInfo[] projectList, RunReport runReport)
         {
+            var builtProjects = new List<RunInfo>();
             var indirectlyBuilt = new List<string>();
             foreach (var file in projectList)
             {
@@ -105,6 +109,7 @@ namespace AutoTest.Core.BuildRunners
                         throw new Exception("Optimistic build is not adviced for this scenario");
                     if (report != null)
                         return report;
+                    builtProjects.Add(file);
                 }
                 else
                 {
@@ -112,9 +117,25 @@ namespace AutoTest.Core.BuildRunners
                     indirectlyBuilt.Add(file.Project.Key);
                 }
             }
+            builtProjects.ForEach(x => copyAssembly(x.Project.Key, x.Assembly));
             foreach (var project in indirectlyBuilt)
                 runReport.AddBuild(project, new TimeSpan(0), true);
             return null;
+        }
+
+        private void copyAssembly(string key, string source)
+        {
+            var project = _cache.Get<Project>(key);
+            if (project == null || project.Value == null)
+                return;
+            var destination =
+                Path.Combine(
+                    Path.GetDirectoryName(project.GetAssembly(_configuration.CustomOutputPath)),
+                    Path.GetFileName(source));
+            if (source != destination)
+                _fs.CopyFile(source, destination);
+            foreach (var reference in project.Value.ReferencedBy)
+                copyAssembly(reference, source);
         }
 
         private BuildRunResults buildProjects(RunInfo[] projectList, RunReport runReport)
