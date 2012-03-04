@@ -411,5 +411,11 @@ namespace AutoTest.Test.Core.Configuration
         {
             Assert.That(_locator.Locate<IGenerateOrderedBuildLists>(), Is.InstanceOf<IGenerateOrderedBuildLists>());
         }
+
+        [Test]
+        public void Should_register_build_session_runner()
+        {
+            Assert.That(_locator.Locate<IBuildSessionRunner>(), Is.InstanceOf<IBuildSessionRunner>());
+        }
     }
 }

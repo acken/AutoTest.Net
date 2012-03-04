@@ -23,12 +23,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private bool _exit = false;
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
+        private IBuildSessionRunner _buildRunner;
         private IConfiguration _configuration;
-        private IBuildRunner _buildRunner;
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
 		private IOptimizeBuildConfiguration _buildOptimizer;
-        private IPreProcessBuildruns[] _preBuildProcessors;
         private IPreProcessTestruns[] _preProcessors;
         private ILocateRemovedTests _removedTestLocator;
         private List<RunInfo> _abortedBuilds = new List<RunInfo>();
@@ -36,7 +35,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public bool IsRunning { get { return _isRunning; } }
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator, IPreProcessBuildruns[] preBuildProcessors)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildSessionRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
         {
             _bus = bus;
             _listGenerator = listGenerator;
@@ -46,7 +45,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			_testAssemblyValidator = testAssemblyValidator;
 			_buildOptimizer = buildOptimizer;
             _preProcessors = preProcessors;
-            _preBuildProcessors = preBuildProcessors;
             _removedTestLocator = removedTestLocator;
         }
 
@@ -88,8 +86,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             try
             {
                 Debug.WriteDebug("Starting project change run");
-                var list = getPrioritizedList(message);
-                if (!buildAll(list, runReport))
+                var changedProjects = getListOfChangedProjects(message);
+                var list = getPrioritizedList(changedProjects);
+                if (!_buildRunner.Build(changedProjects, list, runReport, () => { return _exit; }))
                     return runReport;
                 if (_exit)
                 {
@@ -110,11 +109,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return runReport;
         }
 
-        private RunInfo[] getPrioritizedList(ProjectChangeMessage message)
+        private RunInfo[] getPrioritizedList(string[] changedProjects)
         {
-            var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
+            var projectsAndDependencies = _listGenerator.Generate(changedProjects);
             var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
-            list = preProcessBuildRun(list);
             list = mergeWithAbortedBuilds(list);
             return list;
         }
@@ -122,27 +120,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private RunInfo[] mergeWithAbortedBuilds(RunInfo[] list)
         {
             return new RunInfoMerger(list).MergeWith(_abortedBuilds).ToArray();
-        }
-
-        private RunInfo[] preProcessBuildRun(RunInfo[] runInfos)
-        {
-            foreach (var preProcessor in _preBuildProcessors)
-                runInfos = preProcessor.PreProcess(runInfos);
-            return runInfos;
-        }
-
-        private BuildRunResults postProcessBuildReports(BuildRunResults report)
-        {
-            foreach (var preProcessor in _preBuildProcessors)
-                report = preProcessor.PostProcessBuildResults(report);
-            return report;
-        }
-
-        private RunInfo[] postProcessBuildRuns(RunInfo[] runInfos, ref RunReport runReport)
-        {
-            foreach (var preProcessor in _preBuildProcessors)
-                runInfos = preProcessor.PostProcess(runInfos, ref runReport);
-            return runInfos;
         }
 
         private void markAllAsBuilt(RunInfo[] list)
@@ -157,64 +134,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             foreach (var file in message.Files)
                 projects.Add(file.FullName);
             return projects.ToArray();
-        }
-		
-		private bool buildAll(RunInfo[] projectList, RunReport runReport)
-		{
-            if (projectList.Where(x => x.ShouldBeBuilt).Select(x => x).Count() == 0)
-                return true;
-
-            Debug.WriteInfo("Running builds");
-            BuildRunResults results = null;
-            if (_configuration.ShouldBuildSolution)
-                results = buildSolution(projectList, runReport);
-            else
-                results = buildProjects(projectList, runReport);
-            projectList = postProcessBuildRuns(projectList, ref runReport);
-            return results == null;
-		}
-
-        private BuildRunResults buildProjects(RunInfo[] projectList, RunReport runReport)
-        {
-            var indirectlyBuilt = new List<string>();
-            foreach (var file in projectList)
-            {
-                if (file.ShouldBeBuilt)
-                {
-                    Debug.WriteDebug("Set to build project {0}", file.Project.Key);
-                    var report = build(file, runReport);
-                    if (report != null)
-                        return report;
-                }
-                else
-                {
-                    Debug.WriteDebug("Not set to build project {0}", file.Project.Key);
-                    indirectlyBuilt.Add(file.Project.Key);
-                }
-            }
-            foreach (var project in indirectlyBuilt)
-                runReport.AddBuild(project, new TimeSpan(0), true);
-            return null;
-        }
-
-        private BuildRunResults buildSolution(RunInfo[] projectList, RunReport runReport)
-        {
-            var buildExecutable = _configuration.BuildExecutable(new ProjectDocument(ProjectType.None));
-            if (File.Exists(buildExecutable))
-            {
-                _bus.Publish(new RunInformationMessage(InformationType.Build, _configuration.SolutionToBuild, "", typeof(MSBuildRunner)));
-
-                var buildReport = _buildRunner.RunBuild(_configuration.SolutionToBuild, projectList.Where(p => p.Project.Value.RequiresRebuild).Count() > 0, buildExecutable, () => { return _exit; });
-                buildReport = postProcessBuildReports(buildReport);
-                var succeeded = buildReport.ErrorCount == 0;
-                runReport.AddBuild(_configuration.WatchToken, buildReport.TimeSpent, succeeded);
-                _bus.Publish(new BuildRunMessage(buildReport));
-                if (succeeded)
-                    return null;
-                else
-                    return buildReport;
-            }
-            return null;
         }
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
@@ -299,35 +218,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
 			return false;
 		}
-
-        private BuildRunResults build(RunInfo info, RunReport runReport)
-        {
-            if (File.Exists(_configuration.BuildExecutable(info.Project.Value)))
-            {
-                _bus.Publish(new RunInformationMessage(
-                                 InformationType.Build,
-                                 info.Project.Key,
-                                 info.Assembly,
-                                 typeof(MSBuildRunner)));
-                return buildProject(info, runReport);
-            }
-
-            return null;
-        }
-
-        private BuildRunResults buildProject(RunInfo info, RunReport report)
-        {
-            var project = info.Project;
-            var buildReport = _buildRunner.RunBuild(info, _configuration.BuildExecutable(project.Value), () => { return _exit; });
-            buildReport = postProcessBuildReports(buildReport);
-            var succeeded = buildReport.ErrorCount == 0;
-            report.AddBuild(buildReport.Project, buildReport.TimeSpent, succeeded);
-            _bus.Publish(new BuildRunMessage(buildReport));
-            if (succeeded)
-                return null;
-            else
-                return buildReport;
-        }
 
         #endregion
 

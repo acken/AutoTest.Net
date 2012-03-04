@@ -27,6 +27,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
         private IConfiguration _configuration;
+        private IBuildSessionRunner _buildSessionRunner;
         private IBuildRunner _buildRunner;
         private ITestRunner _testRunner;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
@@ -34,6 +35,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private IPreProcessTestruns _preProcessor;
 		private RunInfo _runInfo;
         private ILocateRemovedTests _removedTestLocator;
+        private IFileSystemService _fs;
 
         [SetUp]
         public void SetUp()
@@ -48,6 +50,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             _testRunner = MockRepository.GenerateMock<ITestRunner>();
 			_testAssemblyValidator = MockRepository.GenerateMock<IDetermineIfAssemblyShouldBeTested>();
 			_optimizer = MockRepository.GenerateMock<IOptimizeBuildConfiguration>();
+            _fs = MockRepository.GenerateMock<IFileSystemService>();
 			_runInfo = new RunInfo(_project);
 			_runInfo.ShouldBuild();
 			_runInfo.SetAssembly(_project.Value.AssemblyName);
@@ -59,7 +62,8 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             buildPreProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             var buildPreProcessors = new IPreProcessBuildruns[] { buildPreProcessor };
             _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
-            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator, buildPreProcessors);
+            _buildSessionRunner = new BuildSessionRunner(new BuildConfiguration(null), _bus, _configuration, _buildRunner, buildPreProcessors, _fs);
+            _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildSessionRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator);
         }
 
         [Test]

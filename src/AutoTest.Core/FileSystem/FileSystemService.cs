@@ -30,5 +30,15 @@ namespace AutoTest.Core.FileSystem
         {
             return File.Exists(file);
         }
+
+        public void CopyFile(string source, string destination)
+        {
+            File.Copy(source, destination);
+        }
+
+        public void DeleteFile(string source)
+        {
+            File.Delete(source);
+        }
     }
 }

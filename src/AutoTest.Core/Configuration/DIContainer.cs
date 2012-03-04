@@ -30,6 +30,7 @@ namespace AutoTest.Core.Configuration
     public class DIContainer : IDisposable
     {
         private ServiceLocator _services;
+        private BuildConfiguration _buildConfig = new BuildConfiguration(null);
 
         public IServiceLocator Services { get { return _services; } }
 		public IWindsorContainer Container { get { return _services.Container; } }
@@ -38,12 +39,18 @@ namespace AutoTest.Core.Configuration
 		{
 			Configure(null);
 		}
+
+        public void SetBuildConfiguration(BuildConfiguration config)
+        {
+            _buildConfig = config;
+        }
 		
         public void Configure(ILocateWriteLocation defaultConfigurationLocator)
         {
             _services = new ServiceLocator();
             _services.Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(_services.Container.Kernel));
             _services.Container
+                .Register(Component.For<BuildConfiguration>().Instance(_buildConfig))
                 .Register(Component.For<IServiceLocator>().Instance(_services))
                 .Register(Component.For<IMessageBus>().ImplementedBy<MessageBus>().LifeStyle.Singleton)
                 .Register(Component.For<IFileSystemService>().ImplementedBy<FileSystemService>())
@@ -96,7 +103,8 @@ namespace AutoTest.Core.Configuration
                                     .Forward<IPreProcessBuildruns>()
                                     .Forward<IPreProcessTestruns>()
                                     .Forward<IConsumerOf<RunFinishedMessage>>()
-                                    .ImplementedBy<OnDemanTestrunPreprocessor>().LifeStyle.Singleton);
+                                    .ImplementedBy<OnDemanTestrunPreprocessor>().LifeStyle.Singleton)
+                .Register(Component.For<IBuildSessionRunner>().ImplementedBy<BuildSessionRunner>());
 
             if (defaultConfigurationLocator == null)
                 defaultConfigurationLocator = new DefaultConfigurationLocator();
