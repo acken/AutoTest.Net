@@ -33,6 +33,8 @@ namespace AutoTest.Core.FileSystem
 
         public void CopyFile(string source, string destination)
         {
+            if (File.Exists(destination))
+                File.Delete(destination);
             File.Copy(source, destination);
         }
 

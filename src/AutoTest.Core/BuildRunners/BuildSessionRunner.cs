@@ -11,6 +11,7 @@ using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Caching;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -85,7 +86,8 @@ namespace AutoTest.Core.BuildRunners
             {
                 try {
                     return optimisticBuild(changedProjects, projectList, runReport);
-                } catch {
+                } catch (Exception ex) {
+                    Debug.WriteException(ex);
                 }
             }
             return buildProjects(projectList, runReport);
@@ -100,7 +102,7 @@ namespace AutoTest.Core.BuildRunners
                 if (changedProjects.Contains(file.Project.Key))
                 {
                     Debug.WriteDebug("Optimistic build for project {0}", file.Project.Key);
-                    var original = file.Assembly + ".original";
+                    var original = file.Assembly + ".original" + Path.GetExtension(file.Assembly);
                     _fs.CopyFile(file.Assembly, original);
                     var report = build(file, runReport);
                     var optimisticAdviced = _buildConfig.OptimisticBuildStrategy(file.Assembly, original);
