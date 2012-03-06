@@ -1,6 +1,6 @@
 namespace AutoTest.Core.Caching.Projects
 {
-    interface IProjectParser
+    public interface IProjectParser
     {
         ProjectDocument Parse(string projectFile, ProjectDocument existingDocument);
     }

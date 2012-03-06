@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace AutoTest.Core.Notifiers
 {
-    class SnarlNotifier : ISendNotifications
+    public class SnarlNotifier : ISendNotifications
     {
 
         private const string APP_NAME = "AutoTest.Net";

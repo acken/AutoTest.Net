@@ -7,7 +7,7 @@ using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class ProjectPrioritizer : IPrioritizeProjects
+    public class ProjectPrioritizer : IPrioritizeProjects
     {
         private ICache _cache;
         private List<string> _prioritized;

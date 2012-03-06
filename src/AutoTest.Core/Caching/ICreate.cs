@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching
 {
-    interface ICreate<T>
+    public interface ICreate<T>
     {
         T Create(string key);
     }

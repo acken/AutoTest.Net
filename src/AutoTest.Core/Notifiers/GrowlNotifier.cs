@@ -9,7 +9,7 @@ using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.Notifiers
 {
-    class GrowlNotifier : ISendNotifications
+    public class GrowlNotifier : ISendNotifications
     {
 		private IConfiguration _configuration;
         private string _growl_executable = null;

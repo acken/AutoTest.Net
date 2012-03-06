@@ -15,7 +15,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         string Build(MSpecTestRunner.Run run);
     }
 
-    internal class MSpecCommandLineBuilder : IMSpecCommandLineBuilder
+    public class MSpecCommandLineBuilder : IMSpecCommandLineBuilder
     {
         readonly IFileSystemService _fileSystem;
 

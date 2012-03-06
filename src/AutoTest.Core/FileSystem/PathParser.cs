@@ -7,7 +7,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.FileSystem
 {
-    class PathParser
+    public class PathParser
     {
         private string _path;
 

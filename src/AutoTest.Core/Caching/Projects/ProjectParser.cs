@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectParser : IProjectParser
+    public class ProjectParser : IProjectParser
     {
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
         private const string VB_PROJECT_EXTENTION = ".vbproj";

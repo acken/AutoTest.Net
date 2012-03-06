@@ -15,7 +15,7 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class MSTestRunner : ITestRunner
+    public class MSTestRunner : ITestRunner
     {
         private IConfiguration _configuration;
         private IAssemblyPropertyReader _assemblyReader;

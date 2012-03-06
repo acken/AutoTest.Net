@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    interface IPrioritizeProjects
+    public interface IPrioritizeProjects
     {
         string[] Prioritize(string[] references);
     }

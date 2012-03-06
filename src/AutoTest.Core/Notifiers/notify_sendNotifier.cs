@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 namespace AutoTest.Core.Notifiers
 {
-	class notify_sendNotifier : ISendNotifications
+	public class notify_sendNotifier : ISendNotifications
 	{
 		#region ISendNotifications implementation
 		public void Notify (string msg, NotificationType type)

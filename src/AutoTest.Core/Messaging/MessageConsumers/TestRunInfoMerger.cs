@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class TestRunInfoMerger
+    public class TestRunInfoMerger
     {
         private List<RunInfo> _list;
 

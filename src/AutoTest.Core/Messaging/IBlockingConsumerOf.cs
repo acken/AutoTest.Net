@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging
 {
-    interface IBlockingConsumerOf<TMesssage> : IMessageConsumer
+    public interface IBlockingConsumerOf<TMesssage> : IMessageConsumer
     {
         void Consume(TMesssage message);
     }

@@ -15,12 +15,12 @@ using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.Core.BuildRunners
 {
-    interface IBuildSessionRunner
+    public interface IBuildSessionRunner
     {
         bool Build(string[] originalProjects, RunInfo[] projectList, RunReport runReport, Func<bool> exit);
     }
 
-    class BuildSessionRunner : IBuildSessionRunner
+    public class BuildSessionRunner : IBuildSessionRunner
     {
         private ICache _cache;
         private BuildConfiguration _buildConfig;

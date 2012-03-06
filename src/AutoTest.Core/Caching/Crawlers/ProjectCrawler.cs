@@ -12,7 +12,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
-    class ProjectCrawler
+    public class ProjectCrawler
     {
         private const string CSHARP_PROJECT_EXTENTION = "csproj";
         private const string VB_PROJECT_EXTENTION = "vbproj";

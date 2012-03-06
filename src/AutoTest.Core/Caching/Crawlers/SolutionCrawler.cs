@@ -12,7 +12,7 @@ using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
-    class SolutionCrawler : ISolutionParser
+    public class SolutionCrawler : ISolutionParser
     {
         private IFileSystemService _fsService;
         private IMessageBus _bus;

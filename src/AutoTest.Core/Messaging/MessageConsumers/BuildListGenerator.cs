@@ -7,7 +7,7 @@ using AutoTest.Core.Caching.Projects;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class BuildListGenerator : IGenerateBuildList
+    public class BuildListGenerator : IGenerateBuildList
     {
         private ICache _cache;
         private List<string> _list;

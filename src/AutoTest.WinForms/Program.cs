@@ -15,7 +15,7 @@ using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.WinForms
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.

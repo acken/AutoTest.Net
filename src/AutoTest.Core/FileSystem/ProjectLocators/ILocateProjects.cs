@@ -7,7 +7,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.FileSystem.ProjectLocators
 {
-    interface ILocateProjects
+    public interface ILocateProjects
     {
         ChangedFile[] Locate(string file);
         bool IsProject(string file);

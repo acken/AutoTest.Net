@@ -7,7 +7,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.BuildRunners
 {
-    class MSBuildOutputParser
+    public class MSBuildOutputParser
     {
         private BuildRunResults _results;
         private string[] _lines;

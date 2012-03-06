@@ -9,7 +9,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.RunResultCache
 {
-    class RunResultCache : IRunResultCache, IMergeRunResults
+    public class RunResultCache : IRunResultCache, IMergeRunResults
     {
         private object _padLock = new object();
         private bool _deltasSupported = false;

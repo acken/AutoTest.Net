@@ -6,7 +6,7 @@ using System.IO;
 
 namespace AutoTest.Core.FileSystem
 {
-    class FileSystemService : IFileSystemService
+    public class FileSystemService : IFileSystemService
     {
         public string[] GetFiles(string path, string searchPattern)
         {

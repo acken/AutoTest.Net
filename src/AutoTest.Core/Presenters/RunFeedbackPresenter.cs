@@ -8,7 +8,7 @@ using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.Presenters
 {
-    class RunFeedbackPresenter : IRunFeedbackPresenter, IDisposable
+    public class RunFeedbackPresenter : IRunFeedbackPresenter, IDisposable
     {
         private IMessageBus _bus;
         private IMergeRunResults _runResultMerger;

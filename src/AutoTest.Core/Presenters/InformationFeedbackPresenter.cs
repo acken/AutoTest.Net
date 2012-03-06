@@ -7,7 +7,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Presenters
 {
-    class InformationFeedbackPresenter : IInformationFeedbackPresenter
+    public class InformationFeedbackPresenter : IInformationFeedbackPresenter
     {
         private IMessageBus _bus;
         private IInformationFeedbackView _view;

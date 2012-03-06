@@ -8,7 +8,7 @@ using System.IO;
 
 namespace AutoTest.Core.FileSystem
 {
-    class WatchPathLocator : AutoTest.Core.FileSystem.IWatchPathLocator
+    public class WatchPathLocator : AutoTest.Core.FileSystem.IWatchPathLocator
     {
         private ICache _cache;
 

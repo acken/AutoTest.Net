@@ -15,7 +15,7 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class NUnitTestRunner : ITestRunner
+    public class NUnitTestRunner : ITestRunner
     {
         private IMessageBus _bus;
         private IConfiguration _configuration;

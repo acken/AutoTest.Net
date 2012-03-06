@@ -200,7 +200,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         }
     }
 
-    class AutoTestRunnerFeedback : ITestRunProcessFeedback
+    public class AutoTestRunnerFeedback : ITestRunProcessFeedback
     {
         private IRunResultCache _runCache;
         private IMessageBus _bus;

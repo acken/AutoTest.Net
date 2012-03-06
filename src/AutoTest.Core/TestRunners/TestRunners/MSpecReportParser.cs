@@ -10,7 +10,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    internal class MSpecReportParser
+    public class MSpecReportParser
     {
         readonly string _reportFile;
         readonly MSpecTestRunner.Run _run;

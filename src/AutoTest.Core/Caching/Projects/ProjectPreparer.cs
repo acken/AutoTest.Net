@@ -6,7 +6,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectPreparer : IPrepare<Project>
+    public class ProjectPreparer : IPrepare<Project>
     {
         private IProjectParser _parser;
         private ICache _cache;

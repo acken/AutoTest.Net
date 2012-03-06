@@ -18,7 +18,7 @@ namespace AutoTest.Core.Configuration
         }
     }
 
-    class CoreSection
+    public class CoreSection
     {
         private XmlDocument _xml = new XmlDocument();
 

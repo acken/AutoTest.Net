@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectReferenceParser
+    public class ProjectReferenceParser
     {
         public IEnumerable<string> GetAllBinaryReferences(string projectFile)
         {
