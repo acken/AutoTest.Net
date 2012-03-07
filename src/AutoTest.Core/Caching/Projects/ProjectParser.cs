@@ -149,6 +149,8 @@ namespace AutoTest.Core.Caching.Projects
                 .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.Resource, _projectFile)));
             getNodes("b:Project/b:ItemGroup/b:None", "Include")
                 .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.None, _projectFile)));
+			getNodes("b:Project/b:ItemGroup/b:Content", "Include")
+                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.None, _projectFile)));
         }
 
         private List<string> getNodes(string nodeName)
