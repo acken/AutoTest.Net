@@ -41,7 +41,8 @@ namespace AutoTest.Core.Configuration
                 return WatchToken;
             }
         }
-		
+
+        public string MSBuildAdditionalParameters { get; private set; }
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
@@ -162,6 +163,8 @@ namespace AutoTest.Core.Configuration
             mergeCodeEditor(core.CodeEditor);
 			if (core.DebuggingEnabled.WasReadFromConfig)
 				_debuggingEnabled = core.DebuggingEnabled.Value;
+            if (core.MSBuildAdditionalParameters.WasReadFromConfig)
+                MSBuildAdditionalParameters = mergeValueItem(core.MSBuildAdditionalParameters, "");
 			if (core.GrowlNotify.WasReadFromConfig)
 				GrowlNotify = mergeValueItem(core.GrowlNotify, null);
 			if (core.NotifyOnRunStarted.WasReadFromConfig)
@@ -216,6 +219,7 @@ namespace AutoTest.Core.Configuration
                 _mspecTestRunner.AddRange(core.MSpecTestRunner.Value);
                 _codeEditor = core.CodeEditor.Value;
                 _debuggingEnabled = core.DebuggingEnabled.Value;
+                MSBuildAdditionalParameters = core.MSBuildAdditionalParameters.Value;
 				GrowlNotify = core.GrowlNotify.Value;
 				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
 				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;

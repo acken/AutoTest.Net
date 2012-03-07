@@ -27,6 +27,7 @@ namespace AutoTest.Core.Configuration
         bool DebuggingEnabled { get; }
 		bool NotifyOnRunStarted { get; }
 		bool NotifyOnRunCompleted { get; }
+        string MSBuildAdditionalParameters { get; }
 		string GrowlNotify { get; }
 		string[] WatchIgnoreList { get; }
 		bool ShouldUseBinaryChangeIgnoreLists { get; }
