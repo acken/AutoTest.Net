@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,15 +37,36 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Machine.Specifications, Version=0.3.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\MSpec3\Machine.Specifications.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallAdapter.cs" />
+    <Compile Include="DefaultArgumentHandler.cs" />
+    <Compile Include="DefaultMethodEmitter.cs" />
+    <Compile Include="DefaultProxyMethodBuilder.cs" />
+    <Compile Include="Interceptor.cs" />
+    <Compile Include="InterceptorHandler.cs" />
+    <Compile Include="Interfaces\IArgumentHandler.cs" />
+    <Compile Include="Interfaces\IInterceptor.cs" />
+    <Compile Include="Interfaces\IInvokeWrapper.cs" />
+    <Compile Include="Interfaces\IMethodBodyEmitter.cs" />
+    <Compile Include="Interfaces\IProxy.cs" />
+    <Compile Include="Interfaces\IProxyMethodBuilder.cs" />
+    <Compile Include="Interfaces\IWithTarget.cs" />
+    <Compile Include="InvocationHandler.cs" />
+    <Compile Include="InvocationInfo.cs" />
+    <Compile Include="IProxyCache.cs" />
+    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="ProxyCache.cs" />
+    <Compile Include="ProxyCacheEntry.cs" />
+    <Compile Include="ProxyDummy.cs" />
+    <Compile Include="ProxyFactory.cs" />
+    <Compile Include="ProxyImplementor.cs" />
+    <Compile Include="ProxyObjectReference.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StindMap.cs" />
     <Compile Include="TestListener.cs" />
+    <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
