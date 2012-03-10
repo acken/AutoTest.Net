@@ -28,13 +28,25 @@ namespace AutoTest.Core.Caching.RunResultCache
             return GetHashCode().Equals(obj.GetHashCode());
         }
 
+        private int _hashCode = 0;
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}", Key, Value.GetHashCode().ToString()).GetHashCode();
+            if (_hashCode != 0) return _hashCode;
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Key == null ? 0 : Key.GetHashCode());
+                hash = hash * 23 + (Value == null ? 0 : Value.GetHashCode());
+                _hashCode = hash;
+                return _hashCode;
+            }
         }
 
+        private string _toString = null;
         public override string ToString()
         {
+            if (_toString != null) return _toString;
             var stackTrace = new StringBuilder();
             foreach (var line in Value.StackTrace)
             {
@@ -54,7 +66,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 }
 
             }
-            return string.Format(
+            _toString = string.Format(
                 "Assembly: {0}{4}" +
                 "Test: {1}{4}" +
                 "Message:{4}{2}{4}" +
@@ -64,6 +76,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                 Value.Message,
                 stackTrace.ToString(),
 			    Environment.NewLine);
+            return _toString;
         }
 
         public bool IsTheSameTestAs(TestItem item)

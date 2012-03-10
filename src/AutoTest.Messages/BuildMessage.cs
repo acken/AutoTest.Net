@@ -22,11 +22,16 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}|{2}|{3}",
-                                 File,
-                                 LineNumber,
-                                 LinePosition,
-                                 ErrorMessage).GetHashCode();
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (File == null ? 0 : File.GetHashCode());
+                hash = hash * 23 + LineNumber.GetHashCode();
+                hash = hash * 23 + LinePosition.GetHashCode();
+                hash = hash * 23 + (ErrorMessage == null ? 0 : ErrorMessage.GetHashCode());
+                return hash;
+            }
         }
 	
 

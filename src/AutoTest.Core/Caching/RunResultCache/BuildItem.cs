@@ -27,16 +27,28 @@ namespace AutoTest.Core.Caching.RunResultCache
             return GetHashCode().Equals(other.GetHashCode());
         }
 
+        private int _hashCode = 0;
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}", Key, Value.GetHashCode().ToString()).GetHashCode();
+            if (_hashCode != 0) return _hashCode;
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Key == null ? 0 : Key.GetHashCode());
+                hash = hash * 23 + (Value == null ? 0 : Value.GetHashCode());
+                _hashCode = hash;
+                return _hashCode;
+            }
         }
 
+        private string _toString = null;
         public override string ToString()
         {
+            if (_toString != null) return _toString;
             if (File.Exists(getFilePath()))
             {
-                return string.Format(
+                _toString = string.Format(
                     "Project: {0}{6}" +
                     "File: {4}{1}:line {2}{5}{6}" +
                     "Message:{6}{3}",
@@ -50,7 +62,7 @@ namespace AutoTest.Core.Caching.RunResultCache
             }
             else
             {
-                return string.Format(
+                _toString = string.Format(
                     "Project: {0}{4}" +
                     "File: {1}:line {2}{4}" +
                     "Message:{4}{3}",
@@ -60,6 +72,7 @@ namespace AutoTest.Core.Caching.RunResultCache
                     Value.ErrorMessage,
 				    Environment.NewLine);
             }
+            return _toString;
         }
 
         #region IItem Members

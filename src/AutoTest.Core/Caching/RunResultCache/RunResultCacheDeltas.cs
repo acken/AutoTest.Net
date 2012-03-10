@@ -9,86 +9,86 @@ namespace AutoTest.Core.Caching.RunResultCache
 {
     public class RunResultCacheDeltas
     {
-        private List<BuildItem> _addedErrors = new List<BuildItem>();
-        private List<BuildItem> _removedErrors = new List<BuildItem>();
-        private List<BuildItem> _addedWarnings = new List<BuildItem>();
-        private List<BuildItem> _removedWarnings = new List<BuildItem>();
+        private Dictionary<int, BuildItem> _addedErrors = new Dictionary<int, BuildItem>();
+        private Dictionary<int, BuildItem> _removedErrors = new Dictionary<int, BuildItem>();
+        private Dictionary<int, BuildItem> _addedWarnings = new Dictionary<int, BuildItem>();
+        private Dictionary<int, BuildItem> _removedWarnings = new Dictionary<int, BuildItem>();
 
-        private List<TestItem> _addedTests = new List<TestItem>();
-        private List<TestItem> _removedTests = new List<TestItem>();
+        private Dictionary<int, TestItem> _addedTests = new Dictionary<int, TestItem>();
+        private Dictionary<int, TestItem> _removedTests = new Dictionary<int, TestItem>();
 
-        public BuildItem[] AddedErrors { get { return _addedErrors.ToArray(); } }
-        public BuildItem[] RemovedErrors { get { return _removedErrors.ToArray(); } }
-        public BuildItem[] AddedWarnings { get { return _addedWarnings.ToArray(); } }
-        public BuildItem[] RemovedWarnings { get { return _removedWarnings.ToArray(); } }
+        public BuildItem[] AddedErrors { get { return _addedErrors.Select(x => x.Value).ToArray(); } }
+        public BuildItem[] RemovedErrors { get { return _removedErrors.Select(x => x.Value).ToArray(); } }
+        public BuildItem[] AddedWarnings { get { return _addedWarnings.Select(x => x.Value).ToArray(); } }
+        public BuildItem[] RemovedWarnings { get { return _removedWarnings.Select(x => x.Value).ToArray(); } }
 
-        public TestItem[] AddedTests { get { return _addedTests.ToArray(); } }
-        public TestItem[] RemovedTests { get { return _removedTests.ToArray(); } }
+        public TestItem[] AddedTests { get { return _addedTests.Select(x => x.Value).ToArray(); } }
+        public TestItem[] RemovedTests { get { return _removedTests.Select(x => x.Value).ToArray(); } }
 
-        public void AddError(BuildItem error) { _addedErrors.Add(error); }
-        public void RemoveError(BuildItem error) { _removedErrors.Add(error); }
-        public void AddWarning(BuildItem warning) { _addedWarnings.Add(warning); }
-        public void RemoveWarning(BuildItem warning) { _removedWarnings.Add(warning); }
-        public void AddTest(TestItem test) { _addedTests.Add(test); }
-        public void RemoveTest(TestItem ignored) { _removedTests.Add(ignored); }
+        public void AddError(BuildItem error) { _addedErrors.Add(error.GetHashCode(), error); }
+        public void RemoveError(BuildItem error) { _removedErrors.Add(error.GetHashCode(), error); }
+        public void AddWarning(BuildItem warning) { _addedWarnings.Add(warning.GetHashCode(), warning); }
+        public void RemoveWarning(BuildItem warning) { _removedWarnings.Add(warning.GetHashCode(), warning); }
+        public void AddTest(TestItem test) { _addedTests.Add(test.GetHashCode(), test); }
+        public void RemoveTest(TestItem ignored) { _removedTests.Add(ignored.GetHashCode(), ignored); }
 
-        public void Load(List<BuildItem> lastErrors, List<BuildItem> lastWarnings, List<TestItem> lastFailed, List<TestItem> lastIgnored, List<BuildItem> errors, List<BuildItem> warnings, List<TestItem> failed, List<TestItem> ignored)
+        public void Load(Dictionary<int, BuildItem> lastErrors, Dictionary<int, BuildItem> lastWarnings, Dictionary<int, TestItem> lastFailed, Dictionary<int, TestItem> lastIgnored, Dictionary<int, BuildItem> errors, Dictionary<int, BuildItem> warnings, Dictionary<int, TestItem> failed, Dictionary<int, TestItem> ignored)
         {
             getBuildDeltas(lastErrors, errors, _addedErrors, _removedErrors);
             getBuildDeltas(lastWarnings, warnings, _addedWarnings, _removedWarnings);
             getTestDeltas(lastFailed, failed, _addedTests, _removedTests);
             getTestDeltas(lastIgnored, ignored, _addedTests, _removedTests);
-            logDeltas();
+            //logDeltas();
         }
 
-        private void getBuildDeltas(List<BuildItem> lastBuildItems, List<BuildItem> buildItems, List<BuildItem> added, List<BuildItem> removed)
+        private void getBuildDeltas(Dictionary<int, BuildItem> lastBuildItems, Dictionary<int, BuildItem> buildItems, Dictionary<int, BuildItem> added, Dictionary<int, BuildItem> removed)
         {
             foreach (var error in buildItems)
             {
-                if (!lastBuildItems.Contains(error))
-                    added.Add(error);
+                if (!lastBuildItems.ContainsKey(error.Key))
+                    added.Add(error.Key, error.Value);
             }
             foreach (var error in lastBuildItems)
             {
-                if (!buildItems.Contains(error))
-                    removed.Add(error);
+                if (!buildItems.ContainsKey(error.Key))
+                    removed.Add(error.Key, error.Value);
             }
         }
 
-        private void getTestDeltas(List<TestItem> lastTests, List<TestItem> tests, List<TestItem> added, List<TestItem> removed)
+        private void getTestDeltas(Dictionary<int, TestItem> lastTests, Dictionary<int, TestItem> tests, Dictionary<int, TestItem> added, Dictionary<int, TestItem> removed)
         {
             foreach (var test in tests)
             {
-                if (!lastTests.Contains(test))
-                    added.Add(test);
+                if (!lastTests.ContainsKey(test.Key))
+                    added.Add(test.Key, test.Value);
             }
             foreach (var test in lastTests)
             {
-                if (!tests.Contains(test))
-                    removed.Add(test);
+                if (!tests.ContainsKey(test.Key))
+                    removed.Add(test.Key, test.Value);
             }
         }
 
-        private void logDeltas()
+        /*private void logDeltas()
         {
             if (Debug.IsDisabled)
                 return;
 
             Debug.WriteDebug("Result deltas");
             foreach (var error in _addedErrors)
-                logBuildItem("Added error", error);
+                logBuildItem("Added error", error.Value);
             foreach (var error in _removedErrors)
-                logBuildItem("Removed error", error);
+                logBuildItem("Removed error", error.Value);
 
             foreach (var warning in _addedWarnings)
-                logBuildItem("Added warning", warning);
+                logBuildItem("Added warning", warning.Value);
             foreach (var warning in _removedWarnings)
-                logBuildItem("Removed warning", warning);
+                logBuildItem("Removed warning", warning.Value);
 
             foreach (var test in _addedTests)
-                logTest("Added test", test);
+                logTest("Added test", test.Value);
             foreach (var test in _removedTests)
-                logTest("Removed test", test);
+                logTest("Removed test", test.Value);
         }
 
         private void logBuildItem(string prefix, BuildItem item)
@@ -107,6 +107,6 @@ namespace AutoTest.Core.Caching.RunResultCache
             foreach (var line in iStackLine)
                 builder.Append(string.Format(" {0}, {1}:{2}", line.File, line.Method, line.LineNumber));
             return builder.ToString();
-        }
+        }*/
     }
 }

@@ -81,6 +81,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (_configuration.TestRunnerCompatibilityMode)
                 runner.RunInCompatibilityMode();
             var tests = runner.ProcessTestRuns(options);
+            _handleRunnerFeedback = true;
             return getResults(tests, runInfos).ToArray();
         }
 
