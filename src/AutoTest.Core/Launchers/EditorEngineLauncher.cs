@@ -8,7 +8,11 @@ using AutoTest.Core.DebugLog;
 using AutoTest.Messages;
 namespace AutoTest.Core.Launchers
 {
-	public class EditorEngineLauncher
+	public class EditorEngineLauncher :
+		IConsumerOf<BuildRunMessage>,
+		IConsumerOf<TestRunMessage>,
+		IConsumerOf<RunStartedMessage>,
+		IConsumerOf<RunFinishedMessage>
 	{
 		private IMessageBus _bus;		
 		private string _path = null;
@@ -33,6 +37,42 @@ namespace AutoTest.Core.Launchers
 			if (!isConnected())
 				return;
 			_client.Send(string.Format("goto {0}|{1}|{2}", file, line, column));
+		}
+
+		public void Consume(BuildRunMessage message) {
+			if (!isConnected()) return;
+			var state = "succeeded";
+			if (message.Results.ErrorCount > 0)
+				state = "failed";
+			_client.Send(
+				string.Format("autotest.net build \"{0}\" {1}",
+					message.Results.Project,
+					state));
+		}
+		
+		public void Consume(TestRunMessage message) {
+			if (!isConnected()) return;
+			var state = "succeeded";
+			if (message.Results.Failed.Length > 0)
+				state = "failed";
+			_client.Send(
+				string.Format("autotest.net testrun \"{0}\" {1} {2}",
+					message.Results.Assembly,
+					message.Results.Runner.ToString(),
+					state));
+		}
+		
+		public void Consume(RunStartedMessage message) {
+			if (!isConnected()) return;
+			_client.Send("autotest.net runstarted");
+		}
+		
+		public void Consume(RunFinishedMessage message) {
+			if (!isConnected()) return;
+			_client.Send(
+				string.Format("autotest.net runfinished {0} {1}",
+					message.Report.NumberOfBuildsFailed,
+					message.Report.NumberOfTestsFailed));
 		}
 		
 		private bool isConnected()

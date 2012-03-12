@@ -381,6 +381,13 @@ namespace AutoTest.Test.Core.Configuration
             var reader = _locator.Locate<IAssemblyPropertyReader>();
             reader.ShouldBeTheSameAs(reader);
         }
+		
+		[Test]
+        public void Should_register_editor_engine_launcher()
+        {
+            var reader = _locator.Locate<EditorEngineLauncher>();
+            reader.ShouldBeTheSameAs(_locator.Locate<EditorEngineLauncher>());
+        }
 
         [Test]
         public void Should_register_watch_path_locator()
@@ -397,7 +404,7 @@ namespace AutoTest.Test.Core.Configuration
         [Test]
         public void Shoud_register_run_finished_consumers()
         {
-            Assert.That(_locator.LocateAll<IConsumerOf<RunFinishedMessage>>().Length, Is.EqualTo(1));
+            Assert.That(_locator.LocateAll<IConsumerOf<RunFinishedMessage>>().Length, Is.EqualTo(2));
         }
 
         [Test]

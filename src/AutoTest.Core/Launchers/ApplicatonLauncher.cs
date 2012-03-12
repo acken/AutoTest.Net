@@ -15,11 +15,11 @@ namespace AutoTest.Core.Launchers
 		private EditorEngineLauncher _editorEngine;
 		private string _path = null;
 
-        public ApplicatonLauncher(IConfiguration configuration, IMessageBus bus)
+        public ApplicatonLauncher(IConfiguration configuration, IMessageBus bus, EditorEngineLauncher editorEngineLauncher)
         {
             _configuration = configuration;
 			_bus = bus;
-			_editorEngine = new EditorEngineLauncher(_bus);
+			_editorEngine = editorEngineLauncher;
         }
 		
 		public void Initialize(string path)

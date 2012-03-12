@@ -112,8 +112,12 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private RunInfo[] getPrioritizedList(ProjectChangeMessage message)
         {
-            var projectsAndDependencies = _listGenerator.Generate(getListOfChangedProjects(message));
+			var changedProjects = getListOfChangedProjects(message);
+            var projectsAndDependencies = _listGenerator.Generate(changedProjects);
             var list = _buildOptimizer.AssembleBuildConfiguration(projectsAndDependencies);
+			list
+				.Where(x => changedProjects.Contains(x.Project.Key)).ToList()
+				.ForEach(x => x.Changed());
             list = preProcessBuildRun(list);
             list = mergeWithAbortedBuilds(list);
             return list;

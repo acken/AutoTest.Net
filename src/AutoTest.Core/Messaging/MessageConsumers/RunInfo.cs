@@ -29,6 +29,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         public string TemporaryBuildProject { get; private set; }
 		public bool ShouldBeBuilt { get; private set; }
 		public string Assembly { get; private set; }
+		public bool IsChanged { get; private set; }
 		
 		public RunInfo(Project project)
 		{
@@ -88,6 +89,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (!_rerunAllWhenFinishedFor.Contains(runner))
                 _rerunAllWhenFinishedFor.Add(runner);
         }
+
+		public void Changed()
+		{
+			IsChanged = true;
+		}
 
         public void AddTestsToRun(TestRunner runner, string test) { _testsToRun.Add(new TestToRun(runner, test)); }
         public void AddTestsToRun(TestRunner runner, IEnumerable<string> tests)

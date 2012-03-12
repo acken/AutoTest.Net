@@ -98,8 +98,8 @@ namespace AutoTest.Core.Messaging
         private void publish<T>(object threadContext)
         {
             T message = (T) threadContext;
-            if (handleByType<T>(message))
-                return;
+			// Used to return after this. Silly events ;)
+            handleByType<T>(message);
 
             var blockingConsumers = _services.LocateAll<IBlockingConsumerOf<T>>();
             if (blockingConsumers != null && blockingConsumers.Length > 0)
