@@ -3,7 +3,7 @@ using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem;
 namespace AutoTest.Core.TestRunners
 {
-	class TestRunValidator : IDetermineIfAssemblyShouldBeTested
+	public class TestRunValidator : IDetermineIfAssemblyShouldBeTested
 	{
 		private IConfiguration _configuration;
         private IFileSystemService _fs;

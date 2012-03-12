@@ -6,9 +6,7 @@ BINARYDIRx86="./build_outputx86/AutoTest.TestRunner"
 DEPLOYDIR="./ReleaseBinaries"
 CASTLEDIR="./lib/Castle.Windsor"
 GALLIODIR="./lib/Gallio"
-MSPEC3DIR="./lib/MSpec3"
 MSPEC4DIR="./lib/MSpec"
-MSPEC5DIR="./lib/MSpec5"
 VSADDINDIR="./addins/VisualStudio/FilesToDeploy"
 RESOURCES="./src/Resources"
 
@@ -28,8 +26,6 @@ mkdir $DEPLOYDIR/TestRunners/NUnit
 mkdir $DEPLOYDIR/TestRunners/XUnit
 mkdir $DEPLOYDIR/TestRunners/MSTest
 mkdir $DEPLOYDIR/TestRunners/MSpec
-mkdir $DEPLOYDIR/TestRunners/MSpec4
-mkdir $DEPLOYDIR/TestRunners/MSpec5
 mkdir $DEPLOYDIR/TestRunners/MbUnit
 
 cp $BINARYDIR/AutoTest.Messages.dll $DEPLOYDIR/AutoTest.Messages.dll
@@ -63,13 +59,6 @@ cp $BINARYDIR/AutoTest.TestRunners.MSTest.dll $DEPLOYDIR/TestRunners/MSTest/Auto
 cp $BINARYDIR/celer.Core.dll $DEPLOYDIR/TestRunners/MSTest/celer.Core.dll
 
 cp $BINARYDIR/AutoTest.TestRunners.MSpec.dll $DEPLOYDIR/TestRunners/MSpec/AutoTest.TestRunners.MSpec.dll
-cp $MSPEC3DIR/Machine.Specifications.dll $DEPLOYDIR/TestRunners/MSpec/Machine.Specifications.dll
-
-cp $BINARYDIR/AutoTest.TestRunners.MSpec4.dll $DEPLOYDIR/TestRunners/MSpec4/AutoTest.TestRunners.MSpec4.dll
-cp $MSPEC4DIR/Machine.Specifications.dll $DEPLOYDIR/TestRunners/MSpec4/Machine.Specifications.dll
-
-cp $BINARYDIR/AutoTest.TestRunners.MSpec5.dll $DEPLOYDIR/TestRunners/MSpec5/AutoTest.TestRunners.MSpec5.dll
-cp $MSPEC5DIR/Machine.Specifications.dll $DEPLOYDIR/TestRunners/MSpec5/Machine.Specifications.dll
 
 cp $BINARYDIR/AutoTest.TestRunners.MbUnit.dll $DEPLOYDIR/TestRunners/MbUnit/AutoTest.TestRunners.MbUnit.dll
 cp $BINARYDIR/Gallio.dll $DEPLOYDIR/TestRunners/MbUnit/Gallio.dll

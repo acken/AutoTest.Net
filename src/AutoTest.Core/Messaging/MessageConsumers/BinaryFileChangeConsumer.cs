@@ -8,7 +8,7 @@ using AutoTest.Messages;
 using System.IO;
 namespace AutoTest.Core.Messaging
 {
-	class BinaryFileChangeConsumer : IConsumerOf<FileChangeMessage>
+	public class BinaryFileChangeConsumer : IConsumerOf<FileChangeMessage>
 	{
 		private IMessageBus _bus;
 		private IRetrieveAssemblyIdentifiers _assemblyIdBuilder;

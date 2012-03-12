@@ -21,7 +21,14 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}", Project, BuildItem.GetHashCode()).GetHashCode();
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Project == null ? 0 : Project.GetHashCode());
+                hash = hash * 23 + (BuildItem == null ? 0 : BuildItem.GetHashCode());
+                return hash;
+            }
         }
 
         public void SetDataFrom(BinaryReader reader)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching.Crawlers
 {
-    interface ISolutionParser
+    public interface ISolutionParser
     {
         void Crawl(string solutionFile);
     }

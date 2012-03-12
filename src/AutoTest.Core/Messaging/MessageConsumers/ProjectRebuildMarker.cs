@@ -7,7 +7,7 @@ using AutoTest.Core.Configuration;
 using System.IO;
 namespace AutoTest.Core
 {
-	class ProjectRebuildMarker : IMarkProjectsForRebuild
+	public class ProjectRebuildMarker : IMarkProjectsForRebuild
 	{
         private IConfiguration _configuration;
 		private ICache _cache;

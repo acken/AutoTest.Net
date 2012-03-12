@@ -6,7 +6,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class MSTestResponseParser
+    public class MSTestResponseParser
     {
         private string _project;
         private string _assembly;

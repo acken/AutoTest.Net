@@ -56,6 +56,14 @@ namespace AutoTest.Test.Core.Caching.Projects.Fakes
             return _directoryExists;
         }
 
+        public void CopyFile(string source, string destination)
+        {
+        }
+
+        public void DeleteFile(string source)
+        {
+        }
+
         #endregion
 
         public bool FileExists(string reference)

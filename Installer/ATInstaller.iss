@@ -65,13 +65,6 @@ Source: "..\ReleaseBinaries\TestRunners\MSTest\AutoTest.TestRunners.MSTest.dll";
 Source: "..\ReleaseBinaries\TestRunners\MSTest\celer.Core.dll"; DestDir: "{app}\TestRunners\MSTest"; Flags: ignoreversion
 
 Source: "..\ReleaseBinaries\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll"; DestDir: "{app}\TestRunners\MSpec"; Flags: ignoreversion
-Source: "..\ReleaseBinaries\TestRunners\MSpec\Machine.Specifications.dll"; DestDir: "{app}\TestRunners\MSpec"; Flags: ignoreversion
-
-Source: "..\ReleaseBinaries\TestRunners\MSpec4\AutoTest.TestRunners.MSpec4.dll"; DestDir: "{app}\TestRunners\MSpec4"; Flags: ignoreversion
-Source: "..\ReleaseBinaries\TestRunners\MSpec4\Machine.Specifications.dll"; DestDir: "{app}\TestRunners\MSpec4"; Flags: ignoreversion
-
-Source: "..\ReleaseBinaries\TestRunners\MSpec5\AutoTest.TestRunners.MSpec5.dll"; DestDir: "{app}\TestRunners\MSpec5"; Flags: ignoreversion
-Source: "..\ReleaseBinaries\TestRunners\MSpec5\Machine.Specifications.dll"; DestDir: "{app}\TestRunners\MSpec5"; Flags: ignoreversion
 
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\Gallio.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion

@@ -30,5 +30,22 @@ namespace AutoTest.Messages
             writer.Write(Assembly);
             Test.WriteDataTo(writer);
         }
+
+        public override bool Equals(object obj)
+        {
+            return GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (Assembly == null ? 0 : Assembly.GetHashCode());
+                hash = hash * 23 + (Test == null ? 0 : Test.GetHashCode());
+                return hash;
+            }
+        }
     }
 }

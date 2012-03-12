@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectFactory : ICreate<Project>
+    public class ProjectFactory : ICreate<Project>
     {
         #region ICreate<Project> Members
 

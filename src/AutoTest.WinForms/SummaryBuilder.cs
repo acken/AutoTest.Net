@@ -9,7 +9,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.WinForms
 {
-    class SummaryBuilder
+    public class SummaryBuilder
     {
         private RunReport _report;
 

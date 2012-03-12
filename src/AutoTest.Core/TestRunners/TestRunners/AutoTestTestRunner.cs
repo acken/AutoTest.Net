@@ -81,6 +81,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             if (_configuration.TestRunnerCompatibilityMode)
                 runner.RunInCompatibilityMode();
             var tests = runner.ProcessTestRuns(options);
+            _handleRunnerFeedback = true;
             return getResults(tests, runInfos).ToArray();
         }
 
@@ -200,7 +201,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         }
     }
 
-    class AutoTestRunnerFeedback : ITestRunProcessFeedback
+    public class AutoTestRunnerFeedback : ITestRunProcessFeedback
     {
         private IRunResultCache _runCache;
         private IMessageBus _bus;

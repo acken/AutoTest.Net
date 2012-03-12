@@ -6,7 +6,7 @@ using AutoTest.Core.Messaging;
 using System.Reflection;
 namespace AutoTest.Core.Configuration
 {
-	class DefaultConfigurationLocator : ILocateWriteLocation
+	public class DefaultConfigurationLocator : ILocateWriteLocation
 	{
         public string GetLogfile()
         {

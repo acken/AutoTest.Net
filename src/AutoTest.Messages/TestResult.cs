@@ -125,15 +125,21 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            return string.Format("{0}|{1}|{2}|{3}", _runner, _name, _message, getStackTraceHash()).GetHashCode();
-        }
-
-        private string getStackTraceHash()
-        {
-            var build = new StringBuilder();
-            foreach (var line in _stackTrace)
-                build.Append(string.Format("{0}|{1}|{2}|", line.File, line.Method, line.LineNumber));
-            return build.ToString();
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + _runner.GetHashCode();
+                hash = hash * 23 + (_name == null ? 0 : _name.GetHashCode());
+                hash = hash * 23 + (_message == null ? 0 : _message.GetHashCode());
+                foreach (var line in _stackTrace)
+                {
+                    hash = hash * 23 + (line.File == null ? 0 : line.File.GetHashCode());
+                    hash = hash * 23 + (line.Method == null ? 0 : line.Method.GetHashCode());
+                    hash = hash * 23 + line.LineNumber.GetHashCode();
+                }
+                return hash;
+            }
         }
 
 		#region ICustomBinarySerializable implementation

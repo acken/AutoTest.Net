@@ -8,7 +8,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-    class RemovedTestsLocator : ILocateRemovedTests
+    public class RemovedTestsLocator : ILocateRemovedTests
     {
         private IRunResultCache _cache;
         private TestRunInfo[] _infos;

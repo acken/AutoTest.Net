@@ -9,7 +9,7 @@ using System.IO;
 using AutoTest.Core.Configuration;
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
-	class BuildOptimizer : IOptimizeBuildConfiguration
+	public class BuildOptimizer : IOptimizeBuildConfiguration
 	{
 		private ICache _cache;
 		private IConfiguration _configuration;

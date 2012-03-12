@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging
 {
-    interface IOverridingConsumer<TMessage> : IMessageConsumer
+    public interface IOverridingConsumer<TMessage> : IMessageConsumer
     {
         bool IsRunning { get; }
         void Consume(TMessage message);

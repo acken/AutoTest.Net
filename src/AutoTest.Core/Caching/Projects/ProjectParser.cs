@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectParser : IProjectParser
+    public class ProjectParser : IProjectParser
     {
         private const string CSHARP_PROJECT_EXTENTION = ".csproj";
         private const string VB_PROJECT_EXTENTION = ".vbproj";
@@ -148,6 +148,8 @@ namespace AutoTest.Core.Caching.Projects
             getNodes("b:Project/b:ItemGroup/b:EmbeddedResource", "Include")
                 .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.Resource, _projectFile)));
             getNodes("b:Project/b:ItemGroup/b:None", "Include")
+                .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.None, _projectFile)));
+			getNodes("b:Project/b:ItemGroup/b:Content", "Include")
                 .ForEach(x => newDocument.AddFile(new ProjectFile(new PathParser(x.Replace('\\', Path.DirectorySeparatorChar)).ToAbsolute(projectPath), FileType.None, _projectFile)));
         }
 

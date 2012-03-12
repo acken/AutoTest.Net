@@ -48,8 +48,10 @@ namespace AutoTest.Core.BuildRunners
             return runBuild(buildExecutable, arguments, target, abortIfTrue);
         }
 
-        private static BuildRunResults runBuild(string buildExecutable, string arguments, string target, Func<bool> abortIfTrue)
+        private BuildRunResults runBuild(string buildExecutable, string arguments, string target, Func<bool> abortIfTrue)
         {
+            if (_configuration.MSBuildAdditionalParameters.Length > 0)
+                arguments += " " + _configuration.MSBuildAdditionalParameters;
             var timer = Stopwatch.StartNew();
             DebugLog.Debug.WriteInfo("Running build: {0} {1}", buildExecutable, arguments);
             Process process = new Process();

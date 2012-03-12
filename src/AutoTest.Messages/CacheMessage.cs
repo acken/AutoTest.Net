@@ -128,25 +128,33 @@ namespace AutoTest.Messages
 
         public override int GetHashCode()
         {
-            var builder = new StringBuilder();
-            foreach (var message in _errorsToAdd)
-                builder.Append(message.GetHashCode().ToString() + "|");
-            foreach (var message in _errorsToRemove)
-                builder.Append(message.GetHashCode().ToString() + "|");
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                foreach (var message in _errorsToAdd)
+                    hash = hash * 23 + message.GetHashCode();
 
-            foreach (var message in _warningsToAdd)
-                builder.Append(message.GetHashCode().ToString() + "|");
-            foreach (var message in _warningsToRemove)
-                builder.Append(message.GetHashCode().ToString() + "|");
+                foreach (var message in _errorsToRemove)
+                    hash = hash * 23 + message.GetHashCode();
 
-            foreach (var message in _failedToAdd)
-                builder.Append(message.GetHashCode().ToString() + "|");
-            foreach (var message in _ignoredToAdd)
-                builder.Append(message.GetHashCode().ToString() + "|");
+                foreach (var message in _warningsToAdd)
+                    hash = hash * 23 + message.GetHashCode();
 
-            foreach (var message in _testsToRemove)
-                builder.Append(message.GetHashCode().ToString() + "|");
-            return builder.GetHashCode();
+                foreach (var message in _warningsToRemove)
+                    hash = hash * 23 + message.GetHashCode();
+
+                foreach (var message in _failedToAdd)
+                    hash = hash * 23 + message.GetHashCode();
+
+                foreach (var message in _ignoredToAdd)
+                    hash = hash * 23 + message.GetHashCode();
+
+                foreach (var message in _testsToRemove)
+                    hash = hash * 23 + message.GetHashCode();
+
+                return hash;
+            }
         }
     }
 }

@@ -19,7 +19,14 @@ namespace AutoTest.Core
 		
 		public override int GetHashCode ()
 		{
-			return (Exe + "|" + Version).GetHashCode();
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + Exe.GetHashCode();
+                hash = hash * 23 + Version.GetHashCode();
+                return hash;
+            }
 		}
 	}
 }

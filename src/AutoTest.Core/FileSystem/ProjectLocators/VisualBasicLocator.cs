@@ -7,7 +7,7 @@ using AutoTest.Messages;
 
 namespace AutoTest.Core.FileSystem.ProjectLocators
 {
-    class VisualBasicLocator : ILocateProjects
+    public class VisualBasicLocator : ILocateProjects
     {
         private ICrawlForProjectFiles _filesLocator;
 

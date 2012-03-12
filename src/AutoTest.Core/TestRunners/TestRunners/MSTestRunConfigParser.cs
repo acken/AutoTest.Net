@@ -8,7 +8,7 @@ using AutoTest.Core.FileSystem;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class MSTestRunConfigParser
+    public class MSTestRunConfigParser
     {
         private IConfiguration _configuration;
         private IFileSystemService _fs;

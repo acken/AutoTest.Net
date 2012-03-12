@@ -5,7 +5,7 @@ using AutoTest.Core.Caching.RunResultCache;
 using System.Collections.Generic;
 namespace AutoTest.Core.TestRunners
 {
-	class RunFailedTestsFirstPreProcessor : IPreProcessTestruns
+	public class RunFailedTestsFirstPreProcessor : IPreProcessTestruns
 	{
 		private IRunResultCache _resultCache;
 		

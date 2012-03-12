@@ -76,7 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildRunners\BuildConfiguration.cs" />
     <Compile Include="BuildRunners\BuildOrderHandler.cs" />
+    <Compile Include="BuildRunners\BuildSessionRunner.cs" />
     <Compile Include="BuildRunners\IAssemblyChangedProvider.cs" />
     <Compile Include="BuildRunners\IPreProcessBuildruns.cs" />
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />

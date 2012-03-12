@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Caching.Projects
 {
-    class ProjectReloader : IReload<Project>
+    public class ProjectReloader : IReload<Project>
     {
         private ICache _cache;
 

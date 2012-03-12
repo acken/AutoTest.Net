@@ -7,7 +7,7 @@ using System.IO;
 
 namespace AutoTest.Core.FileSystem.ProjectLocators
 {
-    class FSharpLocator : ILocateProjects
+    public class FSharpLocator : ILocateProjects
     {
         private ICrawlForProjectFiles _filesLocator;
 

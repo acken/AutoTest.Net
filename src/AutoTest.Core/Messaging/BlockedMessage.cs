@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AutoTest.Core.Messaging
 {
-    class BlockedMessage
+    public class BlockedMessage
     {
         private object _padLock = new object();
         private Stack<object> _messages = new Stack<object>();

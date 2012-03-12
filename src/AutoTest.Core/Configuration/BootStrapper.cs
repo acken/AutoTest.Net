@@ -15,6 +15,7 @@ using AutoTest.Core.Presenters;
 using AutoTest.Core.DebugLog;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using AutoTest.Core.ReflectionProviders;
+using AutoTest.Core.BuildRunners;
 
 namespace AutoTest.Core.Configuration
 {
@@ -46,6 +47,11 @@ namespace AutoTest.Core.Configuration
                 enableLogging();
             UseCecilForReflectionWithAutoTestTestRunner();
 			Debug.InitialConfigurationFinished();
+        }
+
+        public static void SetBuildConfiguration(BuildConfiguration config)
+        {
+            _container.SetBuildConfiguration(config);
         }
 
         public static void InitializeCache(string watchFolder)

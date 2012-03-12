@@ -336,6 +336,12 @@ namespace AutoTest.Test.Core.Configuration
             _config.LogRecycleSize.ShouldEqual(123456789);
         }
 
+        [Test]
+        public void Should_get_msbuild_additional_parameters()
+        {
+            _config.MSBuildAdditionalParameters.ShouldEqual("more params");
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

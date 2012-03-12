@@ -6,7 +6,7 @@ using System.IO;
 
 namespace AutoTest.Core.FileSystem
 {
-    class FileSystemService : IFileSystemService
+    public class FileSystemService : IFileSystemService
     {
         public string[] GetFiles(string path, string searchPattern)
         {
@@ -29,6 +29,18 @@ namespace AutoTest.Core.FileSystem
         public bool FileExists(string file)
         {
             return File.Exists(file);
+        }
+
+        public void CopyFile(string source, string destination)
+        {
+            if (File.Exists(destination))
+                File.Delete(destination);
+            File.Copy(source, destination);
+        }
+
+        public void DeleteFile(string source)
+        {
+            File.Delete(source);
         }
     }
 }

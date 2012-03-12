@@ -1,7 +1,7 @@
 using System;
 namespace AutoTest.Core.Configuration
 {
-	class ConfigItem<T>
+	public class ConfigItem<T>
 	{
 		public bool WasReadFromConfig { get; private set; }
 		public bool ShouldMerge { get; private set; }

@@ -8,7 +8,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.Caching
 {
-    class Cache : ICache
+    public class Cache : ICache
     {
         private IServiceLocator _services;
         private List<IRecord> _records = new List<IRecord>();

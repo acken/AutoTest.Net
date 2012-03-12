@@ -9,7 +9,7 @@ using AutoTest.Core.Configuration;
 
 namespace AutoTest.Core.FileSystem
 {
-    class WatchValidator : IWatchValidator
+    public class WatchValidator : IWatchValidator
     {
 		private IConfiguration _configuration;
         private ICustomIgnoreProvider[] _ignoreProviders;

@@ -1,103 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Machine.Specifications.Runner;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.MSpec
 {
-    class TestListener : ISpecificationRunListener
+    class TestListenerProxy : LinFu.DynamicProxy.IInterceptor
     {
         private string _assembly;
         private ITestFeedbackProvider _feedback;
-        private List<TestResult> _results = new List<TestResult>();
         private DateTime _start = DateTime.MinValue;
+        private List<TestResult> _results = new List<TestResult>();
 
         public TestResult[] Results { get { return _results.ToArray(); } }
 
-        public TestListener(ITestFeedbackProvider feedback, string assembly)
+        public TestListenerProxy(ITestFeedbackProvider feedback, string assembly)
         {
             _feedback = feedback;
             _assembly = assembly;
         }
 
-        public void OnAssemblyEnd(AssemblyInfo assembly)
+        public object Intercept(LinFu.DynamicProxy.InvocationInfo invocation)
         {
+            var args = invocation.Arguments;
+            if (invocation.TargetMethod.Name == "OnSpecificationEnd")
+                onSpecificationEnd(args[0], args[1]);
+            else if (invocation.TargetMethod.Name == "OnSpecificationStart")
+                onSpecificationStart(args[0]);
+            return null;
         }
 
-        public void OnAssemblyStart(AssemblyInfo assembly)
+        private void onSpecificationStart(object specification)
         {
+            _start = DateTime.Now;
         }
 
-        public void OnContextEnd(ContextInfo context)
-        {
-        }
-
-        public void OnContextStart(ContextInfo context)
-        {
-        }
-
-        public void OnFatalError(Machine.Specifications.ExceptionResult exception)
-        {
-        }
-
-        public void OnRunEnd()
-        {
-        }
-
-        public void OnRunStart()
-        {
-        }
-
-        public void OnSpecificationEnd(SpecificationInfo specification, Machine.Specifications.Result result)
+        private void onSpecificationEnd(object specification, object result)
         {
             var test = new TestResult(
                     "MSpec",
                     _assembly,
-                    specification.ContainingType,
+                    specification.Get<string>("ContainingType"),
                     DateTime.Now.Subtract(_start).TotalMilliseconds,
-                    specification.ContainingType,
-                    specification.ContainingType,
-                    getState(result.Status),
-                    getMessage(result.Exception));
-            test.AddStackLines(getStackLines(result.Exception));
+                    specification.Get<string>("ContainingType"),
+                    specification.Get<string>("ContainingType"),
+                    getState(result.Get<object>("Status").ToString()),
+                    getMessage(result.Get<object>("Exception")));
+            test.AddStackLines(getStackLines(result.Get<object>("Exception")));
             _results.Add(test);
             if (_feedback != null)
                 _feedback.TestFinished(test);
         }
 
-        private StackLine[] getStackLines(Machine.Specifications.ExceptionResult exceptionResult)
+        private StackLine[] getStackLines(object exceptionResult)
         {
             if (exceptionResult == null)
                 return new StackLine[] { };
-            return exceptionResult.StackTrace
+            return exceptionResult.Get<string>("StackTrace")
                 .Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => new StackLine(x)).ToArray();
         }
 
-        private string getMessage(Machine.Specifications.ExceptionResult exceptionResult)
+        private string getMessage(object exceptionResult)
         {
             if (exceptionResult == null)
                 return "";
-            return exceptionResult.Message;
+            return exceptionResult.Get<string>("Message");
         }
 
-        public void OnSpecificationStart(SpecificationInfo specification)
+        private TestState getState(string status)
         {
-            _start = DateTime.Now;
-        }
-
-        private TestState getState(Machine.Specifications.Status status)
-        {
-            if (status == Machine.Specifications.Status.Failing)
+            if (status == "Failing")
                 return TestState.Failed;
-            else if (status == Machine.Specifications.Status.Ignored)
+            else if (status == "Ignored")
                 return TestState.Ignored;
-            else if (status == Machine.Specifications.Status.NotImplemented)
+            else if (status == "NotImplemented")
                 return TestState.Ignored;
-            else if (status == Machine.Specifications.Status.Passing)
+            else if (status == "Passing")
                 return TestState.Passed;
             return TestState.Panic;
         }

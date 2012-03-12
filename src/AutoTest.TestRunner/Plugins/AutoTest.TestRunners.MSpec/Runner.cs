@@ -8,9 +8,9 @@ using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Communication;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using AutoTest.TestRunners.Shared.Results;
-using Machine.Specifications.Runner.Impl;
 using System.Reflection;
 using System.IO;
+using System.Globalization;
 
 namespace AutoTest.TestRunners.MSpec
 {
@@ -62,7 +62,7 @@ namespace AutoTest.TestRunners.MSpec
         {
             using (var parser = _reflectionProviderFactory(assembly))
             {
-                return parser.GetReferences().Count(x => x.FullName.StartsWith("Machine.Specifications, Version=0.3.")) > 0;
+                return parser.GetReferences().Count(x => x.FullName.StartsWith("Machine.Specifications")) > 0;
             }
         }
 
@@ -73,28 +73,37 @@ namespace AutoTest.TestRunners.MSpec
 
         public IEnumerable<TestResult> Run(RunSettings settings)
         {
-            _results = new List<TestResult>();
-            var listener = new TestListener(_feedback, settings.Assembly.Assembly);
             var assembly = getAssembly(settings.Assembly.Assembly);
-            var runner = new AppDomainRunner(listener, Machine.Specifications.Runner.RunOptions.Default);
+
+            var generator = new LinFu.DynamicProxy.ProxyFactory();
+            var proxy = new TestListenerProxy(_feedback, settings.Assembly.Assembly);
+
+            _results = new List<TestResult>();
+            var mspec = Assembly.LoadFrom("Machine.Specifications.dll");
+            var type = mspec.GetType("Machine.Specifications.Runner.Impl.AppDomainRunner");
+            var iTestListener = mspec.GetType("Machine.Specifications.Runner.ISpecificationRunListener");
+            var dflt = mspec.GetType("Machine.Specifications.Runner.RunOptions").GetProperty("Default").GetValue(null, null);
+            var listener = generator.CreateProxy(iTestListener, proxy, new Type[] {});
+
+            var runner = Activator.CreateInstance(type, new object[] {listener, dflt});
             runTests(settings, assembly, runner);
-            _results.AddRange(listener.Results);
+            _results.AddRange(proxy.Results);
             return _results;
         }
 
-        private void runTests(RunSettings settings, Assembly assembly, AppDomainRunner runner)
+        private void runTests(RunSettings settings, Assembly assembly, object runner)
         {
             if (runAllTests(settings))
             {
-                runner.RunAssembly(assembly);
+                runner.Run("RunAssembly", new object[] {assembly});
                 return;
             }
             foreach (var member in settings.Assembly.Tests)
-                runner.RunMember(assembly, assembly.GetType(member));
+                runner.Run("RunMember", new object[] {assembly, assembly.GetType(member)});
             foreach (var member in settings.Assembly.Members)
-                runner.RunMember(assembly, assembly.GetType(member));
+                runner.Run("RunMember", new object[] { assembly, assembly.GetType(member)});
             foreach (var ns in settings.Assembly.Namespaces)
-                runner.RunNamespace(assembly, ns);
+                runner.Run("RunNamespace", new object[] {assembly, ns});
         }
 
         private bool runAllTests(RunSettings settings)

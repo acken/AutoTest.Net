@@ -12,7 +12,7 @@ using AutoTest.Core.DebugLog;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
-    class NUnitTestResponseParser
+    public class NUnitTestResponseParser
     {
         private IMessageBus _bus;
         private List<TestResult> _result = new List<TestResult>();
