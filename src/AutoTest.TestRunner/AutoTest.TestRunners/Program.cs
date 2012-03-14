@@ -29,6 +29,7 @@ namespace AutoTest.TestRunners
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
             //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp639.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
+            //args = new string[] { @"--input=C:\Users\n06261\AppData\Local\Temp\tmp1BF9.tmp", @"--output=C:\Users\n06261\AppData\Local\Temp\tmpB02D.tmp", "--logging" };
             _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();

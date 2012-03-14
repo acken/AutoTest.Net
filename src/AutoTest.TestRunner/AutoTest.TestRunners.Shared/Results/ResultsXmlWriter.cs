@@ -53,14 +53,14 @@ namespace AutoTest.TestRunners.Shared.Results
                     foreach (var fixture in assembly.GroupBy(x => x.TestFixture))
                     {
                         writer.WriteStartElement("fixture");
-                        writer.WriteAttributeString("name", fixture.Key);
+                        writer.WriteAttributeString("name", escape(fixture.Key));
                         foreach (var test in fixture)
                         {
                             writer.WriteStartElement("test");
                             writer.WriteAttributeString("state", test.State.ToString());
-                            writer.WriteAttributeString("name", test.TestName);
+                            writer.WriteAttributeString("name", escape(test.TestName));
                             if (test.TestDisplayName != null)
-                                writer.WriteAttributeString("displayName", test.TestDisplayName);
+                                writer.WriteAttributeString("displayName", escape(test.TestDisplayName));
                             writer.WriteAttributeString("duration", test.DurationInMilliseconds.ToString());
                             writer.WriteStartElement("message");
                             writer.WriteCData(test.Message);
@@ -92,5 +92,37 @@ namespace AutoTest.TestRunners.Shared.Results
             }
             writer.WriteEndElement();
         }
+
+        private string escape(string text)
+        {
+            return sanitizeXmlString(text);
+        }
+
+        private string sanitizeXmlString(string xml)
+        {
+            if (xml == null)
+                throw new ArgumentNullException("xml");
+
+            var buffer = new StringBuilder(xml.Length);
+            foreach (char c in xml)
+                if (isLegalXmlChar(c))
+                    buffer.Append(c);
+
+            return buffer.ToString();
+        }
+
+        private bool isLegalXmlChar(int character)
+        {
+            return
+            (
+                 character == 0x9 /* == '\t' == 9   */          ||
+                 character == 0xA /* == '\n' == 10  */          ||
+                 character == 0xD /* == '\r' == 13  */          ||
+                (character >= 0x20 && character <= 0xD7FF) ||
+                (character >= 0xE000 && character <= 0xFFFD) ||
+                (character >= 0x10000 && character <= 0x10FFFF)
+            );
+        }
+
     }
 }
