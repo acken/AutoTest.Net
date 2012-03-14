@@ -12,14 +12,16 @@ namespace AutoTest.Messages
         private LiveTestStatus[] _failedButNowPassing;
 
         public string CurrentAssembly { get; private set; }
+        public string CurrentTest { get; private set; }
         public int TestsCompleted { get; private set; }
         public int TotalNumberOfTests { get; private set; }
         public LiveTestStatus[] FailedTests { get { return _failedTest; } }
         public LiveTestStatus[] FailedButNowPassingTests { get { return _failedButNowPassing; } }
 
-        public LiveTestStatusMessage(string assembly, int totalNumberOfTests, int completedTests, LiveTestStatus[] failedTests, LiveTestStatus[] failedButNowPassing)
+        public LiveTestStatusMessage(string assembly, string currentTest, int totalNumberOfTests, int completedTests, LiveTestStatus[] failedTests, LiveTestStatus[] failedButNowPassing)
         {
             CurrentAssembly = assembly;
+            CurrentTest = currentTest;
             TotalNumberOfTests = totalNumberOfTests;
             TestsCompleted = completedTests;
             _failedTest = failedTests;
@@ -29,6 +31,10 @@ namespace AutoTest.Messages
         public void WriteDataTo(BinaryWriter writer)
         {
             writer.Write(CurrentAssembly);
+            if (CurrentTest == null)
+                writer.Write("");
+            else
+                writer.Write(CurrentTest);
             writer.Write(TotalNumberOfTests);
             writer.Write(TestsCompleted);
             writer.Write(_failedTest.Length);
@@ -43,6 +49,7 @@ namespace AutoTest.Messages
         {
             var tests = new List<LiveTestStatus>();
             CurrentAssembly = reader.ReadString();
+            CurrentTest = reader.ReadString();
             TotalNumberOfTests = reader.ReadInt32();
             TestsCompleted = reader.ReadInt32();
             var count = reader.ReadInt32();

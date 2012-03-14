@@ -54,5 +54,10 @@ namespace AutoTest.TestRunners.Tests
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
         {
         }
+
+        public void TestStarted(string signature)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

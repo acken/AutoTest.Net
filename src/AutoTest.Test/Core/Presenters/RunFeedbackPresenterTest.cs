@@ -104,7 +104,7 @@ namespace AutoTest.Test.Core.Presenters
         [Test]
         public void Should_subscribe_to_live_test_feedback_messages()
         {
-            var message = new LiveTestStatusMessage("", 0, 0, new LiveTestStatus[] { }, new LiveTestStatus[] { });
+            var message = new LiveTestStatusMessage("", "", 0, 0, new LiveTestStatus[] { }, new LiveTestStatus[] { });
             _bus.Publish(message);
             waitForAsyncCall(() => { return _view.LiveTestStatusMessage != null; });
             _view.LiveTestStatusMessage.ShouldBeTheSameAs(message);

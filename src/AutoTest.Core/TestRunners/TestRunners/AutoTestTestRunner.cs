@@ -212,6 +212,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
         private object _padLock = new object();
         private string _currentAssembly = "";
         private int _testCount = 0;
+        private string _currentTest = "";
 
         public AutoTestRunnerFeedback(IRunResultCache cache, IMessageBus bus, RunOptions options)
         {
@@ -235,6 +236,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
             DebugLog.Debug.WriteInfo("Running tests: " + commandline);
         }
 
+        public void TestStarted(string signature)
+        {
+            _currentTest = signature;
+        }
+
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
         {
             lock (_padLock)
@@ -248,6 +254,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                         new LiveTestStatusMessage(
                             _currentAssembly,
+                            _currentTest,
                             _totalTestCount,
                             _testCount,
                             new LiveTestStatus[] { },
@@ -260,6 +267,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                             new LiveTestStatusMessage(
                                 _currentAssembly,
+                                _currentTest,
                                 _totalTestCount,
                                 _testCount,
                                 new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
@@ -272,6 +280,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _bus.Publish(
                             new LiveTestStatusMessage(
                                 _currentAssembly,
+                                _currentTest,
                                 _totalTestCount,
                                 _testCount,
                                 new LiveTestStatus[] { },

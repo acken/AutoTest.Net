@@ -76,6 +76,8 @@ namespace AutoTest.TestRunners.XUnit
 
         public bool TestStart(string name, string type, string method)
         {
+            if (_channel != null)
+                _channel.TestStarted(name);
             return true;
         }
 

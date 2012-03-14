@@ -376,7 +376,10 @@ namespace AutoTest.UI
 
             listViewFeedback.SuspendLayout();
             var ofCount = liveStatus.TotalNumberOfTests > 0 ? string.Format(" of {0}", liveStatus.TotalNumberOfTests) : "";
-            printMessage(new RunMessages(RunMessageType.Normal, string.Format("testing {0} ({1}{2} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted, ofCount)));
+            var testName = liveStatus.CurrentTest;
+            if (testName.Trim().Length > 0)
+                testName += " in ";
+            printMessage(new RunMessages(RunMessageType.Normal, string.Format("testing {3}{0} ({1}{2} tests completed)", Path.GetFileNameWithoutExtension(liveStatus.CurrentAssembly), liveStatus.TestsCompleted, ofCount, testName)));
 
             if (_showFailing)
             {

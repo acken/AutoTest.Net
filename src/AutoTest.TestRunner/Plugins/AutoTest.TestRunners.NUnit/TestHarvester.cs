@@ -96,6 +96,8 @@ namespace AutoTest.TestRunners.NUnit
 
         public void TestStarted(TestName testName)
         {
+            if (_channel != null)
+                _channel.TestStarted(testName.FullName);
         }
 
         public void SuiteStarted(TestName testName)

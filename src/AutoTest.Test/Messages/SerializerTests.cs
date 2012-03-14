@@ -169,9 +169,10 @@ namespace AutoTest.Test
         [Test]
         public void Should_serialize_live_status_message()
         {
-            var message = new LiveTestStatusMessage("assembly1", 10, 5, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) }, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) });
+            var message = new LiveTestStatusMessage("assembly1", "currenttest", 10, 5, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) }, new LiveTestStatus[] { new LiveTestStatus("", new TestResult(TestRunner.Any, TestRunStatus.Failed, "")) });
             var output = serializeDeserialize<LiveTestStatusMessage>(message);
             output.CurrentAssembly.ShouldEqual("assembly1");
+            output.CurrentTest.ShouldEqual("currenttest");
             output.TotalNumberOfTests.ShouldEqual(10);
             output.TestsCompleted.ShouldEqual(5);
             output.FailedTests.Length.ShouldEqual(1);

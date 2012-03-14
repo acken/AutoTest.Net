@@ -34,6 +34,8 @@ namespace AutoTest.TestRunners.MSpec
         private void onSpecificationStart(object specification)
         {
             _start = DateTime.Now;
+            if (_feedback != null)
+                _feedback.TestStarted(specification.Get<string>("ContainingType"));
         }
 
         private void onSpecificationEnd(object specification, object result)

@@ -9,12 +9,17 @@ namespace AutoTest.TestRunners.Shared.Communication
 {
     public interface ITestFeedbackProvider
     {
+        void TestStarted(string testName);
         void TestFinished(TestResult result);
     }
 
     public class NullTestFeedbackProvider : ITestFeedbackProvider
     {
         public void TestFinished(TestResult result)
+        {
+        }
+
+        public void TestStarted(string testName)
         {
         }
     }
@@ -26,6 +31,14 @@ namespace AutoTest.TestRunners.Shared.Communication
         public TestFeedbackProvider(PipeServer channel)
         {
             _channel = channel;
+        }
+
+        public void TestStarted(string testName)
+        {
+            if (testName == null)
+                return;
+            Logger.Write("{0}...", testName);
+            _channel.Send("Test started:" + testName);
         }
 
         public void TestFinished(TestResult result)

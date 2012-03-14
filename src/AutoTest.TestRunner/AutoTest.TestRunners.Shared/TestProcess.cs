@@ -140,7 +140,13 @@ namespace AutoTest.TestRunners.Shared
                                         if (msg == "")
                                             return;
                                         if (_feedback != null)
-                                            _feedback.TestFinished(TestResult.FromXml(msg));
+                                        {
+                                            var testStarted = "Test started:";
+                                            if (msg.StartsWith(testStarted))
+                                                _feedback.TestStarted(msg.Substring(testStarted.Length, msg.Length - testStarted.Length));
+                                            else
+                                                _feedback.TestFinished(TestResult.FromXml(msg));
+                                        }
                                     });
                     });
             thread.Start(channel);

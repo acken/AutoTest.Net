@@ -9,6 +9,7 @@ namespace AutoTest.TestRunners.Shared
     public interface ITestRunProcessFeedback
     {
         void ProcessStart(string commandline);
+        void TestStarted(string signature);
         void TestFinished(TestResult result);
     }
 }

@@ -71,6 +71,8 @@ namespace AutoTest.TestRunners.MSTest
         private void runTests(RunSettings settings, IGrouping<Type, MethodInfo> fixture)
         {
             log("Running fixture {0}", fixture.Key);
+            if (_channel != null)
+                _channel.TestStarted(fixture.Key.ToString());
             new MSTestTestFixture(fixture.Key)
                 .Run(fixture.ToList()).ToList()
                 .ForEach(result =>
