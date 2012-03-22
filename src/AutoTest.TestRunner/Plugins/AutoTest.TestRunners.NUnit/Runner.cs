@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
