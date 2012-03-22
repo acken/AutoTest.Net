@@ -32,9 +32,9 @@ namespace AutoTest.UI
                 onNothing();
             else if (selectedItems.Count != 1)
                 onNothing();
-            else if (selectedItems[0].Tag.GetType().Equals(typeof(CacheBuildMessage)))
+            else if (selectedItems[0].Tag.GetType() == typeof(CacheBuildMessage))
                 onBuildMessage((CacheBuildMessage)selectedItems[0].Tag);
-            else if (selectedItems[0].Tag.GetType().Equals(typeof(CacheTestMessage)))
+            else if (selectedItems[0].Tag.GetType() == typeof(CacheTestMessage))
                 onTestMessage((CacheTestMessage)selectedItems[0].Tag);
         }
 

@@ -45,7 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodePosition.cs" />
+    <Compile Include="CodeReflection\Signature.cs" />
+    <Compile Include="CodeReflection\SignatureTypes.cs" />
     <Compile Include="CodeReflection\TypeConverter.cs" />
+    <Compile Include="ImageStates.cs" />
     <Compile Include="RunFinishedInfo.cs" />
     <Compile Include="ListItemBehaviourHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

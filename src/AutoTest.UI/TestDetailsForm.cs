@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AutoTest.UI
 {
     public partial class TestDetailsForm : Form
     {
-        private Action<string, int> _goToLink;
-        private Action<string, string> _goToType;
+        private readonly Action<string, int> _goToLink;
+        private readonly Action<string, string> _goToType;
         private string _currentText = "";
-        private int _line = 0;
-        private int _lineHeight = 0;
+        private int _line;
+        private int _lineHeight;
         private List<Link> _links = new List<Link>();
 
         public TestDetailsForm(Action<string, int> gotToLink, Action<string, string> goToType, int x, int y, string message, string caption, List<Link> links, int maxWidth)
@@ -57,8 +53,8 @@ namespace AutoTest.UI
             textBoxContent.SelectionStart = 0;
             textBoxContent.SelectionLength = 0;
 
-            this.Height = 10;
-            this.Width = 10;
+            Height = 10;
+            Width = 10;
             textBoxFocusHolder.Select();
             positionArrow();
         }
@@ -79,12 +75,12 @@ namespace AutoTest.UI
             return label1.Width;
         }
 
-        private int getInternalWidth(string current)
-        {
-            label1.Font = textBoxContent.Font;
-            label1.Text = current;
-            return label1.Width;
-        }
+        //private int getInternalWidth(string current)
+        //{
+        //    label1.Font = textBoxContent.Font;
+        //    label1.Text = current;
+        //    return label1.Width;
+        //}
 
         private int getHeight(string current, int width)
         {
@@ -92,7 +88,8 @@ namespace AutoTest.UI
                 return 0;
 
             var gfx = textBoxContent.CreateGraphics();
-            var size = gfx.MeasureString(current, textBoxContent.Font);
+            //TODO we need size?
+            //var size = gfx.MeasureString(current, textBoxContent.Font);
             _lineHeight = ((int)gfx.MeasureString(current, textBoxContent.Font).Height);
             gfx.Dispose();
 

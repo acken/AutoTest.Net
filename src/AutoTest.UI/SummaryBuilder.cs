@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using AutoTest.Messages;
 using System.IO;
@@ -9,7 +7,7 @@ namespace AutoTest.UI
 {
     class SummaryBuilder
     {
-        private RunReport _report;
+        private readonly RunReport _report;
 
         public SummaryBuilder(RunReport report)
         {
