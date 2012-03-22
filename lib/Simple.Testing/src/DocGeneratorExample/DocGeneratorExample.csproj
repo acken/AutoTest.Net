@@ -2,18 +2,20 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{60800BA0-9F82-4CE4-A283-5BC27CC7DE04}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTest.TestRunners.SimpleTesting.Tests</RootNamespace>
-    <AssemblyName>AutoTest.TestRunners.SimpleTesting.Tests</AssemblyName>
+    <RootNamespace>DocGeneratorExample</RootNamespace>
+    <AssemblyName>DocGeneratorExample</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +24,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\..\lib\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,21 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Can_recognize_simpletesting.cs" />
+    <Compile Include="AccountSpecifications.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AutoTest.TestRunners.Shared\AutoTest.TestRunners.Shared.csproj">
-      <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
-      <Name>AutoTest.TestRunners.Shared</Name>
+    <ProjectReference Include="..\Simple.Testing.Example\Simple.Testing.Example.csproj">
+      <Project>{A245A823-1DA4-4086-A265-158DC379B446}</Project>
+      <Name>Simple.Testing.Example</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.SimpleTesting.Tests.Resources\AutoTest.TestRunners.SimpleTesting.Tests.Resources.csproj">
-      <Project>{F805F188-B103-4CD1-B68F-97B0A4698B15}</Project>
-      <Name>AutoTest.TestRunners.SimpleTesting.Tests.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoTest.TestRunners.SimpleTesting\AutoTest.TestRunners.SimpleTesting.csproj">
-      <Project>{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}</Project>
-      <Name>AutoTest.TestRunners.SimpleTesting</Name>
+    <ProjectReference Include="..\Simple.Testing.Framework\Simple.Testing.Framework.csproj">
+      <Project>{A6E67E2A-2A26-4016-BE26-D6F3141729D9}</Project>
+      <Name>Simple.Testing.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

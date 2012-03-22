@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Logging;
@@ -10,12 +9,12 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using AutoTest.TestRunners.Shared.Results;
 using System.Reflection;
 using System.IO;
-using System.Globalization;
 
 namespace AutoTest.TestRunners.MSpec
 {
     public class Runner : IAutoTestNetTestRunner
     {
+        //TODO GFY not used
         private ILogger _logger;
         private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
         private ITestFeedbackProvider _feedback;
@@ -109,9 +108,9 @@ namespace AutoTest.TestRunners.MSpec
         private bool runAllTests(RunSettings settings)
         {
             return
-                settings.Assembly.Tests.Count() == 0 &&
-                settings.Assembly.Members.Count() == 0 &&
-                settings.Assembly.Namespaces.Count() == 0;
+                !settings.Assembly.Tests.Any() &&
+                !settings.Assembly.Members.Any() &&
+                !settings.Assembly.Namespaces.Any();
         }
 
         private Assembly getAssembly(string assembly)

@@ -14,7 +14,7 @@ namespace AutoTest.TestRunners.SimpleTesting
     public class Runner : IAutoTestNetTestRunner
     {
         private ILogger _logger;
-        private Func<string, IReflectionProvider> _reflectionProviderFactory;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = assembly => Reflect.On(assembly);
         private ITestFeedbackProvider _testFeedbackProviderChannel;
 
         public string Identifier
@@ -39,17 +39,31 @@ namespace AutoTest.TestRunners.SimpleTesting
 
         public bool IsTest(string assembly, string member)
         {
-            throw new NotImplementedException();
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var fixture = locator.LocateClass(member);
+                if (fixture == null)
+                    return false;
+
+                var specFound =
+                    fixture.Methods.Any(x => x.ReturnType.StartsWith("Simple.Testing.Framework.Specification"));
+                var enumerableFound = fixture.Methods.Any(q => q.ReturnType.StartsWith("IEnumerable<Simple.Testing.Specification>"));
+                return !fixture.IsAbstract && (specFound || enumerableFound);
+
+            }
         }
 
         public bool ContainsTestsFor(string assembly, string member)
         {
-            throw new NotImplementedException();
+            return IsTest(assembly, member);
         }
 
         public bool ContainsTestsFor(string assembly)
         {
-            throw new NotImplementedException();
+            using (var parser = _reflectionProviderFactory(assembly))
+            {
+                return parser.GetReferences().Count(x => x.FullName.StartsWith("Simple.Testing")) > 0;
+            }
         }
 
         public bool Handles(string identifier)

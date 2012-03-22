@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using Mono.Cecil;
 using System.IO;
 using AutoTest.TestRunners.Shared.Targeting;
-using Mono.Collections.Generic;
 
 namespace AutoTest.Core.ReflectionProviders
 {
     public class CecilReflectionProvider : IReflectionProvider
     {
-        private AssemblyDefinition _assembly = null;
+        private readonly AssemblyDefinition _assembly;
 
         public CecilReflectionProvider(string assembly)
         {
@@ -87,7 +85,7 @@ namespace AutoTest.Core.ReflectionProviders
             var cls = locate(type);
             if (cls == null)
                 return null;
-            if (cls.GetType().Equals(typeof(SimpleClass)))
+            if (cls.GetType() == typeof(SimpleClass))
                 return (SimpleClass)cls;
             return null;
         }
@@ -97,7 +95,7 @@ namespace AutoTest.Core.ReflectionProviders
             var method = locate(type);
             if (method == null)
                 return null;
-            if (method.GetType().Equals(typeof(SimpleMethod)))
+            if (method.GetType() == typeof(SimpleMethod))
                 return (SimpleMethod)method;
             return null;
         }
@@ -119,7 +117,7 @@ namespace AutoTest.Core.ReflectionProviders
             return null;
         }
 
-        private SimpleType locateSimpleType(Collection<TypeDefinition> types, string typeName)
+        private SimpleType locateSimpleType(IEnumerable<TypeDefinition> types, string typeName)
         {
             foreach (var type in types)
             {
@@ -147,7 +145,7 @@ namespace AutoTest.Core.ReflectionProviders
                 type.Methods.Select(x => new SimpleMethod(
                     type.QualifiedName() + "." + x.Name,
                     getAttributes(x.CustomAttributes),
-                    x.IsAbstract)),
+                    x.IsAbstract, x.ReturnType.ToString())),
                     type.IsAbstract);
         }
 
@@ -161,7 +159,7 @@ namespace AutoTest.Core.ReflectionProviders
             return attributes;
         }
 
-        private IEnumerable<string> getAttributes(ICollection<CustomAttribute> customAttributes)
+        private IEnumerable<string> getAttributes(IEnumerable<CustomAttribute> customAttributes)
         {
             var attributes = new List<string>();
             foreach (var attribute in customAttributes)
@@ -183,13 +181,14 @@ namespace AutoTest.Core.ReflectionProviders
             addBaseAttributes(attributes, type.BaseType as TypeDefinition);
         }
 
-        private SimpleType locateSimpleMethod(Collection<MethodDefinition> methods, string typeName, string typeFullname)
+        private SimpleType locateSimpleMethod(IEnumerable<MethodDefinition> methods, string typeName, string typeFullname)
         {
             foreach (var method in methods)
             {
+                var retType = method.ReturnType;
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(typeName))
-                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract);
+                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract, retType.ToString());
             }
             return null;
         }

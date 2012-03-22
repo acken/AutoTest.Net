@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 using AutoTest.TestRunners.Shared.Communication;
 
@@ -9,16 +7,16 @@ namespace AutoTest.TestRunners.XUnit
 {
     class XUnitLogger : IRunnerLogger
     {
-        private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<Shared.Results.TestResult>();
+        private readonly List<Shared.Results.TestResult> _results = new List<Shared.Results.TestResult>();
         private string _currentAssembly = null;
-        private ITestFeedbackProvider _channel = null;
+        private readonly ITestFeedbackProvider _channel = null;
 
         public XUnitLogger(ITestFeedbackProvider channel)
         {
             _channel = channel;
         }
 
-        public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }
+        public IEnumerable<Shared.Results.TestResult> Results { get { return _results; } }
 
         public void SetCurrentAssembly(string assembly)
         {
@@ -92,7 +90,7 @@ namespace AutoTest.TestRunners.XUnit
             var result = new Shared.Results.TestResult("XUnit", _currentAssembly, "", duration * 1000, testName, name, state, message);
             if (stackLines != null)
             {
-                var lines = stackLines.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = stackLines.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                     result.AddStackLine(new Shared.Results.StackLine(line));
             }

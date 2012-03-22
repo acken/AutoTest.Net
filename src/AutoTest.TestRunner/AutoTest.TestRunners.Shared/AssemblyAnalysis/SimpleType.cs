@@ -25,10 +25,11 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
     public class SimpleMethod : SimpleType
     {
         public bool IsAbstract { get; private set; }
-
-        public SimpleMethod(string fullname, IEnumerable<string> attributes, bool isAbstract)
+        public string ReturnType { get; private set; }
+        public SimpleMethod(string fullname, IEnumerable<string> attributes, bool isAbstract, string retType)
             : base(fullname, attributes)
         {
+            ReturnType = retType;
             IsAbstract = isAbstract;
         }
     }

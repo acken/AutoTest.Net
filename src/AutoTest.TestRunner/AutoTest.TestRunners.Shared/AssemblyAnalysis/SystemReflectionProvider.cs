@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Plugins;
 using System.IO;
@@ -11,15 +10,15 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
 {
     public class SystemReflectionProvider : IReflectionProvider
     {
-        private AppDomain _childDomain = null;
+        private readonly AppDomain _childDomain;
         private ISystemReflectionProvider_Internal _locator;
 
         public SystemReflectionProvider(string assembly)
         {
             try
             {
-                AppDomainSetup domainSetup = new AppDomainSetup()
-                {
+                var domainSetup = new AppDomainSetup
+                                      {
                     ApplicationBase = Path.GetDirectoryName(assembly),
                     ApplicationName = AppDomain.CurrentDomain.SetupInformation.ApplicationName,
                     LoaderOptimization = LoaderOptimization.MultiDomainHost
@@ -101,11 +100,12 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             if (!File.Exists(assembly))
                 return;
 
-            var hitPaths = new string[]
+            var hitPaths = new[]
                                 {
                                     Path.GetDirectoryName(assembly),
                                     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                                 };
+            //TODO GFY WTF why do we not use the resolver?
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 try
@@ -188,7 +188,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             var cls = locate(type);
             if (cls == null)
                 return null;
-            if (cls.GetType().Equals(typeof(SimpleClass)))
+            if (cls.GetType() == typeof(SimpleClass))
                 return (SimpleClass)cls;
             return null;
         }
@@ -198,7 +198,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             var method = locate(type);
             if (method == null)
                 return null;
-            if (method.GetType().Equals(typeof(SimpleMethod)))
+            if (method.GetType() == typeof(SimpleMethod))
                 return (SimpleMethod)method;
             return null;
         }
@@ -242,7 +242,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                 type.GetMethods().Select(x => new SimpleMethod(
                     type.FullName + "." + x.Name,
                     getAttributes(x.GetCustomAttributes(true)).ToList(),
-                    x.IsAbstract)).ToList(),
+                    x.IsAbstract, x.ReturnType.ToString())).ToList(),
                     type.IsAbstract);
         }
 
@@ -284,7 +284,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             {
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(typeName))
-                    return new SimpleMethod(fullName, getAttributes(method.GetCustomAttributes(true)).ToList(), method.IsAbstract);
+                    return new SimpleMethod(fullName, getAttributes(method.GetCustomAttributes(true)).ToList(), method.IsAbstract, method.ReturnType.ToString());
             }
             return null;
         }
