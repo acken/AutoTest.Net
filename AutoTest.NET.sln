@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.Simple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.SimpleTesting.Tests.Resources", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.SimpleTesting.Tests.Resources\AutoTest.TestRunners.SimpleTesting.Tests.Resources.csproj", "{F805F188-B103-4CD1-B68F-97B0A4698B15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Testing.Framework", "lib\Simple.Testing\src\Simple.Testing.Framework\Simple.Testing.Framework.csproj", "{A6E67E2A-2A26-4016-BE26-D6F3141729D9}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = AutoTest.NET.vsmdi
@@ -334,9 +336,7 @@ Global
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49}.Release|x86.ActiveCfg = Release|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -344,9 +344,7 @@ Global
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48}.Release|x86.ActiveCfg = Release|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -354,10 +352,16 @@ Global
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F805F188-B103-4CD1-B68F-97B0A4698B15}.Release|x86.ActiveCfg = Release|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -397,6 +401,7 @@ Global
 		{849CF95D-A213-4CCE-B598-C328FE398FBC} = {D4655401-9406-4E3B-B347-BF09715FB6CD}
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49} = {5FA46723-32D9-4512-9D8A-ECD4B27F0102}
 		{D6647114-59E5-4811-8C0D-6BBA3D4A68F5} = {5FA46723-32D9-4512-9D8A-ECD4B27F0102}
+		{A6E67E2A-2A26-4016-BE26-D6F3141729D9} = {5FA46723-32D9-4512-9D8A-ECD4B27F0102}
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48} = {D6647114-59E5-4811-8C0D-6BBA3D4A68F5}
 		{F805F188-B103-4CD1-B68F-97B0A4698B15} = {D6647114-59E5-4811-8C0D-6BBA3D4A68F5}
 	EndGlobalSection

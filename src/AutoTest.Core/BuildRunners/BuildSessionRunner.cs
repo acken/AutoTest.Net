@@ -12,6 +12,7 @@ using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.Caching;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.BuildRunners
 {
@@ -23,6 +24,7 @@ namespace AutoTest.Core.BuildRunners
     public class BuildSessionRunner : IBuildSessionRunner
     {
         private ICache _cache;
+        private IRunResultCache _runCache;
         private BuildConfiguration _buildConfig;
         private IMessageBus _bus;
         private IConfiguration _configuration;
@@ -31,9 +33,10 @@ namespace AutoTest.Core.BuildRunners
         private IFileSystemService _fs;
         private Func<bool> _exit;
 
-        public BuildSessionRunner(BuildConfiguration buildConfig, ICache cache, IMessageBus bus, IConfiguration config, IBuildRunner buildRunner, IPreProcessBuildruns[] buildPreProcessors, IFileSystemService fs)
+        public BuildSessionRunner(BuildConfiguration buildConfig, ICache cache, IMessageBus bus, IConfiguration config, IBuildRunner buildRunner, IPreProcessBuildruns[] buildPreProcessors, IFileSystemService fs, IRunResultCache runCache)
         {
             _cache = cache;
+            _runCache = runCache;
             _buildConfig = buildConfig;
             _fs = fs;
             _bus = bus;
@@ -55,7 +58,7 @@ namespace AutoTest.Core.BuildRunners
                 results = buildSolution(projectList, runReport);
             else
                 results = buildProjects(originalProjects, projectList, runReport);
-            projectList = postProcessBuildRuns(projectList, ref runReport);
+            postProcessBuildRuns(projectList, ref runReport);
             return results == null;
         }
 
@@ -95,11 +98,24 @@ namespace AutoTest.Core.BuildRunners
 
         private BuildRunResults optimisticBuild(string[] changedProjects, RunInfo[] projectList, RunReport runReport)
         {
+            var projectWithIssues = new List<string>();
+            _runCache
+                .Errors
+                .GroupBy(x => x.Key)
+                .Select(x => x.Key);
+            _runCache
+                .Errors
+                .GroupBy(x => x.Key)
+                .Select(x => x.Key).ToList()
+                .ForEach(x => {
+                    if (!projectWithIssues.Contains(x))
+                        projectWithIssues.Add(x);
+                });
             var builtProjects = new List<RunInfo>();
             var indirectlyBuilt = new List<string>();
             foreach (var file in projectList)
             {
-                if (changedProjects.Contains(file.Project.Key))
+                if (changedProjects.Contains(file.Project.Key) || projectWithIssues.Contains(file.Project.Key))
                 {
                     Debug.WriteDebug("Optimistic build for project {0}", file.Project.Key);
                     var original = file.Assembly + ".original" + Path.GetExtension(file.Assembly);

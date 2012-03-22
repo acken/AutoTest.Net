@@ -37,6 +37,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         private ILocateRemovedTests _removedTestLocator;
         private IFileSystemService _fs;
         private ICache _cache;
+        private IRunResultCache _runCache;
 
         [SetUp]
         public void SetUp()
@@ -53,6 +54,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			_optimizer = MockRepository.GenerateMock<IOptimizeBuildConfiguration>();
             _fs = MockRepository.GenerateMock<IFileSystemService>();
             _cache = MockRepository.GenerateMock<ICache>();
+            _runCache = MockRepository.GenerateMock<IRunResultCache>();
 			_runInfo = new RunInfo(_project);
 			_runInfo.ShouldBuild();
 			_runInfo.SetAssembly(_project.Value.AssemblyName);
@@ -64,7 +66,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             buildPreProcessor.Stub(x => x.PreProcess(null)).IgnoreArguments().Return(new RunInfo[] { _runInfo });
             var buildPreProcessors = new IPreProcessBuildruns[] { buildPreProcessor };
             _removedTestLocator = MockRepository.GenerateMock<ILocateRemovedTests>();
-            _buildSessionRunner = new BuildSessionRunner(new BuildConfiguration(null), _cache, _bus, _configuration, _buildRunner, buildPreProcessors, _fs);
+            _buildSessionRunner = new BuildSessionRunner(new BuildConfiguration(null), _cache, _bus, _configuration, _buildRunner, buildPreProcessors, _fs, _runCache);
             _consumer = new ProjectChangeConsumer(_bus, _listGenerator, _configuration, _buildSessionRunner, new ITestRunner[] { _testRunner }, _testAssemblyValidator, _optimizer, preProcessors, _removedTestLocator);
         }
 

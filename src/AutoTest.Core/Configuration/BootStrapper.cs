@@ -30,7 +30,7 @@ namespace AutoTest.Core.Configuration
         public static IWindsorContainer Container { get { return _container.Container; } }
 		public static DIContainer DIContainer { get { return _container; } }
 
-		public static void Configure()
+        public static void Configure()
 		{
 			Configure(null);
 		}
