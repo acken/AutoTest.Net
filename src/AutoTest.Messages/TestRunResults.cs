@@ -46,7 +46,6 @@ namespace AutoTest.Messages
             return query.ToArray();
         }
 
-		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
 			writer.Write((string) _project);
@@ -76,7 +75,6 @@ namespace AutoTest.Messages
 			}
 			_testResults = results.ToArray();
 		}
-		#endregion
 	}
 }
 

@@ -1,4 +1,3 @@
-using System;
 namespace AutoTest.Messages
 {
 	public enum TestRunStatus

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 namespace AutoTest.Messages
 {
@@ -13,7 +12,6 @@ namespace AutoTest.Messages
             _results = results;
         }
 
-		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
 			_results.WriteDataTo(writer);
@@ -24,7 +22,6 @@ namespace AutoTest.Messages
 			_results = new TestRunResults("", "", false, TestRunner.Any, new TestResult[] {});
 			_results.SetDataFrom(reader);
 		}
-		#endregion
-	}
+    }
 }
 

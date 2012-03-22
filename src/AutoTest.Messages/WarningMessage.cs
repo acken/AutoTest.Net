@@ -11,7 +11,6 @@ namespace AutoTest.Messages
             Warning = warning;
         }
 
-		#region ICustomBinarySerializable implementation
 		public void WriteDataTo (BinaryWriter writer)
 		{
 			writer.Write((string) Warning);
@@ -21,7 +20,6 @@ namespace AutoTest.Messages
 		{
 			Warning = reader.ReadString();
 		}
-		#endregion
 	}
 }
 

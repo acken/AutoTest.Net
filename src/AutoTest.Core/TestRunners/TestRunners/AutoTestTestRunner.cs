@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Messages;
 using AutoTest.Core.Messaging.MessageConsumers;
-using AutoTest.Core.FileSystem;
 using AutoTest.Core.Configuration;
 using AutoTest.TestRunners.Shared;
 using AutoTest.TestRunners.Shared.Plugins;
-using AutoTest.Core.Caching;
 using System.IO;
 using System.Diagnostics;
-using System.Reflection;
 using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Results;
-using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 using AutoTest.Core.Caching.RunResultCache;
 using AutoTest.Core.Messaging;
 
@@ -23,9 +18,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 {
     public class AutoTestTestRunner : ITestRunner
     {
-        private IConfiguration _configuration;
-        private IMessageBus _bus;
-        private IRunResultCache _runCache;
+        private readonly IConfiguration _configuration;
+        private readonly IMessageBus _bus;
+        private readonly IRunResultCache _runCache;
         private bool _handleRunnerFeedback = true;
 
         public AutoTestTestRunner(IConfiguration configuration, IMessageBus bus, IRunResultCache runCache)
@@ -262,31 +257,30 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     _lastSend = DateTime.Now;
                     return;
                 }
-                else if (result.State == TestState.Failed)
+                if (result.State == TestState.Failed)
                 {
                     _bus.Publish(
-                            new LiveTestStatusMessage(
-                                _currentAssembly,
-                                _currentTest,
-                                _totalTestCount,
-                                _testCount,
-                                new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
-                                new LiveTestStatus[] { }));
+                        new LiveTestStatusMessage(
+                            _currentAssembly,
+                            _currentTest,
+                            _totalTestCount,
+                            _testCount,
+                            new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
+                            new LiveTestStatus[] { }));
                     _lastSend = DateTime.Now;
                     return;
                 }
-                else if (DateTime.Now > _lastSend.AddSeconds(1))
+                if (DateTime.Now > _lastSend.AddSeconds(1))
                 {
                     _bus.Publish(
-                            new LiveTestStatusMessage(
-                                _currentAssembly,
-                                _currentTest,
-                                _totalTestCount,
-                                _testCount,
-                                new LiveTestStatus[] { },
-                                new LiveTestStatus[] { }));
+                        new LiveTestStatusMessage(
+                            _currentAssembly,
+                            _currentTest,
+                            _totalTestCount,
+                            _testCount,
+                            new LiveTestStatus[] { },
+                            new LiveTestStatus[] { }));
                     _lastSend = DateTime.Now;
-                    return;
                 }
             }
         }

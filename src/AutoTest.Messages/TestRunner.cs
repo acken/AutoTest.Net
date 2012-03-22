@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AutoTest.Messages
 {
@@ -12,7 +9,8 @@ namespace AutoTest.Messages
         MSTest = 2,
         XUnit = 3,
         MSpec = 4,
-        MbUnit = 5
+        MbUnit = 5,
+        SimpleTesting = 6
     }
 
     public static class TestRunnerConverter

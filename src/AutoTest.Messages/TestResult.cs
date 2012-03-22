@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
+
 namespace AutoTest.Messages
 {
 	public class TestResult : ICustomBinarySerializable
@@ -142,7 +142,6 @@ namespace AutoTest.Messages
             }
         }
 
-		#region ICustomBinarySerializable implementation
 		public void WriteDataTo(BinaryWriter writer)
 		{
             writer.Write((int)_runner);
@@ -203,7 +202,6 @@ namespace AutoTest.Messages
 			}
 			_stackTrace = stackTrace.ToArray();
 		}
-		#endregion        
     }
 }
 

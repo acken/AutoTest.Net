@@ -1,4 +1,3 @@
-using System;
 namespace AutoTest.Core
 {
 	public class RunnerExe

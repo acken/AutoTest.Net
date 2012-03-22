@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoTest.Core.Configuration;
 using System.Diagnostics;
 using System.IO;
-using Castle.Core.Logging;
-using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
-using System.Reflection;
 using AutoTest.Core.FileSystem;
 using AutoTest.Messages;
 using AutoTest.TestRunners.Shared.AssemblyAnalysis;
@@ -17,9 +13,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
 {
     public class MSTestRunner : ITestRunner
     {
-        private IConfiguration _configuration;
-        private IAssemblyPropertyReader _assemblyReader;
-        private IFileSystemService _fsService;
+        private readonly IConfiguration _configuration;
+        private readonly IAssemblyPropertyReader _assemblyReader;
+        private readonly IFileSystemService _fsService;
 
         public MSTestRunner(IConfiguration configuration, IAssemblyPropertyReader referenceResolver, IFileSystemService fsService)
         {

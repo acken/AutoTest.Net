@@ -1,24 +1,20 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
 namespace AutoTest.Messages
 {
 	public class RunStartedMessage : IMessage, ICustomBinarySerializable
     {
-        private ChangedFile[] _files;
+	    public ChangedFile[] Files { get; private set; }
 
-        public ChangedFile[] Files { get { return _files; } }
-
-        public RunStartedMessage(ChangedFile[] files)
+	    public RunStartedMessage(ChangedFile[] files)
         {
-            _files = files;
+            Files = files;
         }
 
-		#region ICustomBinarySerializable implementation
-		public void WriteDataTo (BinaryWriter writer)
+        public void WriteDataTo (BinaryWriter writer)
 		{
-			writer.Write((int) _files.Length);
-			foreach (var file in _files)
+			writer.Write((int) Files.Length);
+			foreach (var file in Files)
 				file.WriteDataTo(writer);
 		}
 
@@ -32,9 +28,9 @@ namespace AutoTest.Messages
 				file.SetDataFrom(reader);
 				files.Add(file);
 			}
-			_files = files.ToArray();
+			Files = files.ToArray();
 		}
-		#endregion
-}
+		
+    }
 }
 
