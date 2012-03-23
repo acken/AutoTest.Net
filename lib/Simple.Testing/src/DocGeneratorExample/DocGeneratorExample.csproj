@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DocGeneratorExample</RootNamespace>
     <AssemblyName>DocGeneratorExample</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -48,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Simple.Testing.ClientFramework\Simple.Testing.ClientFramework.csproj">
+      <Project>{AFE5EA9F-2829-4D63-9850-34803552C793}</Project>
+      <Name>Simple.Testing.ClientFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Simple.Testing.Example\Simple.Testing.Example.csproj">
       <Project>{A245A823-1DA4-4086-A265-158DC379B446}</Project>
       <Name>Simple.Testing.Example</Name>
@@ -56,6 +61,9 @@
       <Project>{A6E67E2A-2A26-4016-BE26-D6F3141729D9}</Project>
       <Name>Simple.Testing.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

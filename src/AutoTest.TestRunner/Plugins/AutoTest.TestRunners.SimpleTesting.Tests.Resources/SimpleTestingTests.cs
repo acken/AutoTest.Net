@@ -1,4 +1,5 @@
-﻿using Simple.Testing.Framework;
+﻿using System;
+using Simple.Testing.ClientFramework;
 
 namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
 {
@@ -7,7 +8,7 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
     {
         public void Foo()
         {
-            
+
         }
     }
 
@@ -25,7 +26,36 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
                                }
                        };
         }
+        
+        [MightyMooseIgnore]
+        public Specification a_failing_test()
+        {
+            return new QuerySpecification<Foo, int>
+                       {
+                           On = () => new Foo(),
+                           When = x => x.Bar(),
+                           Expect =
+                               {
+                                   q => q == 15
+                               }
+                       };
+        }
+
+        [MightyMooseIgnore]
+        public Specification a_failing_test_with_exception()
+        {
+            return new QuerySpecification<Foo, int>
+            {
+                On = () => { throw new Exception(); },
+                When = x => x.Bar(),
+                Expect =
+                               {
+                                   q => q == 15
+                               }
+            };
+        }
     }
+
 
     public class Foo
     {
@@ -34,4 +64,25 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
             return 12;
         }
     }
+
+    public class MightyMooseIgnoreAttribute : Attribute { }
+    namespace more
+    {
+        public class MoreSimpleTestingTests
+        {
+            public Specification a_passing_test()
+            {
+                return new QuerySpecification<Foo, int>
+                           {
+                               On = () => new Foo(),
+                               When = x => x.Bar(),
+                               Expect =
+                                   {
+                                       q => q == 12
+                                   }
+                           };
+            }
+        }
+    }
+
 }

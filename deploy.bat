@@ -31,6 +31,7 @@ IF NOT EXIST %DEPLOYDIR% (
 	mkdir %DEPLOYDIR%\TestRunners\MSTest
 	mkdir %DEPLOYDIR%\TestRunners\MSpec
 	mkdir %DEPLOYDIR%\TestRunners\MbUnit
+     mkdir %DEPLOYDIR%\TestRunners\SimpleTesting
   ) ELSE (
 	IF NOT EXIST %DEPLOYDIR%\TestRunners\NUnit (
 		mkdir %DEPLOYDIR%\TestRunners\NUnit
@@ -56,6 +57,11 @@ IF NOT EXIST %DEPLOYDIR% (
 		mkdir %DEPLOYDIR%\TestRunners\MbUnit
 	) ELSE (
 		del %DEPLOYDIR%\TestRunners\MbUnit\* /Q
+	)
+	IF NOT EXIST %DEPLOYDIR%\TestRunners\SimpleTesting (
+		mkdir %DEPLOYDIR%\TestRunners\SimpleTesting
+	) ELSE (
+		del %DEPLOYDIR%\TestRunners\SimpleTesting\* /Q
 	)
 	del %DEPLOYDIR%\TestRunners\* /Q
   )
@@ -96,6 +102,13 @@ copy %BINARYDIR%\AutoTest.TestRunners.MSpec.dll %DEPLOYDIR%\TestRunners\MSpec\Au
 
 copy %BINARYDIR%\AutoTest.TestRunners.MbUnit.dll %DEPLOYDIR%\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll
 copy %BINARYDIR%\Gallio.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.dll
+
+copy %BINARYDIR%\AutoTest.TestRunners.SimpleTesting.dll %DEPLOYDIR%\TestRunners\SimpleTesting\AutoTest.TestRunners.SimpleTesting.dll
+copy %BINARYDIR%\Simple.Testing.Framework.dll %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.Framework.dll
+copy %BINARYDIR%\Simple.Testing.ClientFramework.dll %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.ClientFramework.dll
+copy %BINARYDIR%\PowerAssert.dll %DEPLOYDIR%\TestRunners\SimpleTesting\PowerAssert.dll
+
+
 copy %DIR%\lib\Gallio\Gallio.XmlSerializers.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.XmlSerializers.dll
 copy %BINARYDIR%\mbunit.config %DEPLOYDIR%\TestRunners\MbUnit\mbunit.config
 

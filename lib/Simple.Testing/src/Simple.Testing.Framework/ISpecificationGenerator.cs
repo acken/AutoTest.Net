@@ -2,7 +2,7 @@
 
 namespace Simple.Testing.Framework
 {
-    internal interface ISpecificationGenerator
+    public interface ISpecificationGenerator
     {
         IEnumerable<SpecificationToRun> GetSpecifications();
     }

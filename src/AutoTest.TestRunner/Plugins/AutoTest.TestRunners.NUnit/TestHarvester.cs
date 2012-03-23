@@ -12,7 +12,7 @@ namespace AutoTest.TestRunners.NUnit
     class TestHarvester : MarshalByRefObject, EventListener
     {
         private string currentAssembly = "Run started was never called";
-        private List<AutoTest.TestRunners.Shared.Results.TestResult> _results = new List<AutoTest.TestRunners.Shared.Results.TestResult>();
+        private List<Shared.Results.TestResult> _results = new List<Shared.Results.TestResult>();
         private ITestFeedbackProvider _channel;
 
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Results { get { return _results; } }

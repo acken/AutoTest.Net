@@ -1,4 +1,4 @@
-﻿using Simple.Testing.Framework;
+﻿using Simple.Testing.ClientFramework;
 
 namespace Simple.Testing.Example
 {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using PowerAssert;
+using Simple.Testing.ClientFramework;
 
 namespace Simple.Testing.Framework
 {

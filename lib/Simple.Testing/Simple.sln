@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Testing.Framework.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Testing.Runner", "src\Simple.Testing.Runner\Simple.Testing.Runner.csproj", "{415B71AE-58D4-4DC3-AD50-6E816DB647A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Testing.ClientFramework", "Simple.Testing.ClientFramework\Simple.Testing.ClientFramework.csproj", "{AFE5EA9F-2829-4D63-9850-34803552C793}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +120,21 @@ Global
 		{415B71AE-58D4-4DC3-AD50-6E816DB647A2}.Release|Mixed Platforms.Build.0 = Release|x86
 		{415B71AE-58D4-4DC3-AD50-6E816DB647A2}.Release|x86.ActiveCfg = Release|x86
 		{415B71AE-58D4-4DC3-AD50-6E816DB647A2}.Release|x86.Build.0 = Release|x86
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.NuPackRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.NuPackRelease|Any CPU.Build.0 = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.NuPackRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.NuPackRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.NuPackRelease|x86.ActiveCfg = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AFE5EA9F-2829-4D63-9850-34803552C793}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
