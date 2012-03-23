@@ -12,8 +12,8 @@ namespace AutoTest.TestRunners.NUnit
 {
     public class Runner : IAutoTestNetTestRunner
     {
-        private ITestFeedbackProvider _channel = null;
-        private Func<string, IReflectionProvider> _reflectionProviderFactory = (assembly) => { return Reflect.On(assembly); };
+        private ITestFeedbackProvider _channel;
+        private Func<string, IReflectionProvider> _reflectionProviderFactory = assembly => Reflect.On(assembly);
 
         public string Identifier { get { return "NUnit"; } }
 

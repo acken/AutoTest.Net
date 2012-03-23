@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Simple.Testing.Framework</RootNamespace>
     <AssemblyName>Simple.Testing.Framework</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ISpecificationGenerator.cs" />
+    <Compile Include="NamedMethodsGenerator.cs" />
+    <Compile Include="OnTypeGenerator.cs" />
     <Compile Include="RootGenerator.cs" />
     <Compile Include="extensions.cs" />
     <Compile Include="PartialApplyicationVisitor.cs" />
@@ -49,12 +51,17 @@
     <Compile Include="RunResult.cs" />
     <Compile Include="SimpleRunner.cs" />
     <Compile Include="SpecificationRunner.cs" />
-    <Compile Include="SpecificationTemplates.cs" />
+    <Compile Include="SpecificationToRun.cs" />
+    <Compile Include="TypeReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\lib\powerassert\powerassert\PowerAssert\PowerAssertForked.csproj">
       <Project>{7E9D2DB4-78FE-41BD-9566-15F68D42E4D9}</Project>
       <Name>PowerAssertForked</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Simple.Testing.ClientFramework\Simple.Testing.ClientFramework.csproj">
+      <Project>{AFE5EA9F-2829-4D63-9850-34803552C793}</Project>
+      <Name>Simple.Testing.ClientFramework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

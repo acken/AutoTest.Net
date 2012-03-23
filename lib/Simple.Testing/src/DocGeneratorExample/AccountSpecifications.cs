@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Simple.Testing.Framework;
+using Simple.Testing.ClientFramework;
 
 namespace DocGeneratorExample
 {

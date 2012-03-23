@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Simple.Testing.Framework;
+using Simple.Testing.ClientFramework;
 
 namespace Simple.Testing.Example
 {
@@ -17,7 +17,7 @@ namespace Simple.Testing.Example
         public IEnumerable<Specification> when_adding_numbers()
         {
             return AddingTestData().Select(x =>
-                       new QuerySpecification<Calculator, int>
+                       (Specification) new QuerySpecification<Calculator, int>
                         {
                             Name = "when adding numbers '" + x.Name + "'",
                             On = () => new Calculator(),
