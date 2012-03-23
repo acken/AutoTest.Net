@@ -99,18 +99,10 @@ namespace AutoTest.Core.BuildRunners
         private BuildRunResults optimisticBuild(string[] changedProjects, RunInfo[] projectList, RunReport runReport)
         {
             var projectWithIssues = new List<string>();
-            _runCache
+            projectWithIssues.AddRange(_runCache
                 .Errors
                 .GroupBy(x => x.Key)
-                .Select(x => x.Key);
-            _runCache
-                .Errors
-                .GroupBy(x => x.Key)
-                .Select(x => x.Key).ToList()
-                .ForEach(x => {
-                    if (!projectWithIssues.Contains(x))
-                        projectWithIssues.Add(x);
-                });
+                .Select(x => x.Key));
             var builtProjects = new List<RunInfo>();
             var indirectlyBuilt = new List<string>();
             foreach (var file in projectList)
