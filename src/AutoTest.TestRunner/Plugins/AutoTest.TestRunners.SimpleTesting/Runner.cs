@@ -45,21 +45,25 @@ namespace AutoTest.TestRunners.SimpleTesting
         {
             using (var locator = _reflectionProviderFactory(assembly))
             {
-                var fixture = locator.LocateClass(member);
+                var spec = locator.LocateMethod(member);
+                if (spec == null)
+                    return false;
+                var fixture = locator.LocateClass(locator.GetParentType(member));
                 if (fixture == null)
                     return false;
-                
-                var specFound =
-                    fixture.Methods.Any(x => x.ReturnType.StartsWith("Simple.Testing.ClientFramework.Specification"));
-                var enumerableFound = fixture.Methods.Any(q => q.ReturnType.StartsWith("IEnumerable<Simple.Testing.ClientFramework.Specification>"));
-                return !fixture.IsAbstract && (specFound || enumerableFound);
-
+                return isTest(fixture, spec);
             }
         }
 
         public bool ContainsTestsFor(string assembly, string member)
         {
-            return IsTest(assembly, member);
+            using (var locator = _reflectionProviderFactory(assembly))
+            {
+                var fixture = locator.LocateClass(member);
+                if (fixture == null)
+                    return false;
+                return fixture.Methods.Any(x => isTest(fixture, x));
+            }
         }
 
         public bool ContainsTestsFor(string assembly)
@@ -68,6 +72,13 @@ namespace AutoTest.TestRunners.SimpleTesting
             {
                 return parser.GetReferences().Count(x => x.FullName.StartsWith("Simple.Testing")) > 0;
             }
+        }
+
+        private bool isTest(SimpleClass fixture, SimpleMethod method)
+        {
+            var specFound = method.ReturnType.StartsWith("Simple.Testing.ClientFramework.Specification");
+            var enumerableFound = method.ReturnType.StartsWith("IEnumerable<Simple.Testing.ClientFramework.Specification>");
+            return !fixture.IsAbstract && (specFound || enumerableFound);
         }
 
         public bool Handles(string identifier)

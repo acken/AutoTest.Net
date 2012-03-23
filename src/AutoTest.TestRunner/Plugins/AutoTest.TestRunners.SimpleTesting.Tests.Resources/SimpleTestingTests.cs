@@ -18,7 +18,7 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
         {
             return new QuerySpecification<Foo, int>
                        {
-                           On = () => new Foo(),
+                           On = () => { return new Foo(); },
                            When = x => x.Bar(),
                            Expect =
                                {

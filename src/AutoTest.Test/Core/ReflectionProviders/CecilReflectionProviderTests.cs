@@ -54,6 +54,15 @@ namespace AutoTest.Test.Core.ReflectionProviders
             var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod");
             Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.SomeMethod", method.Fullname);
         }
+
+        [Test]
+        public void Should_find_returns_types_as_nested_classes()
+        {
+            var locator = new CecilReflectionProvider(Assembly.GetExecutingAssembly().Location);
+            var method = locator.LocateMethod("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.ReturningMethod");
+            Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass+MyNestedNestedClass.ReturningMethod", method.Fullname);
+            Assert.AreEqual("AutoTest.Test.Core.ReflectionProviders.BaseClass+MyNestedClass", method.ReturnType);
+        }
     }
     
     [MyAttribute]
@@ -70,6 +79,11 @@ namespace AutoTest.Test.Core.ReflectionProviders
             {
                 public void SomeMethod()
                 {
+                }
+
+                public MyNestedClass ReturningMethod()
+                {
+                    return null;
                 }
             }
         }

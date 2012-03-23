@@ -16,14 +16,14 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests
         public void I_can_haz_simpletesting_test()
         {
             var runner = new Runner();
-            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.SimpleTesting.Tests.Resources.SimpleTestingTests"), Is.True);
+            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.SimpleTesting.Tests.Resources.SimpleTestingTests.a_passing_test"), Is.True);
         }
 
         [Test]
         public void When_handed_a_non_simpletesting_test_it_will_not_recognize_it()
         {
             var runner = new Runner();
-            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.SimpleTesting.Tests.Resources.SomeClass"), Is.False);
+            Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.SimpleTesting.Tests.Resources.SomeClass.Foo"), Is.False);
         }
 
         [Test]

@@ -145,7 +145,7 @@ namespace AutoTest.Core.ReflectionProviders
                 type.Methods.Select(x => new SimpleMethod(
                     type.QualifiedName() + "." + x.Name,
                     getAttributes(x.CustomAttributes),
-                    x.IsAbstract, x.ReturnType.ToString())),
+                    x.IsAbstract, x.ReturnType.QualifiedName())),
                     type.IsAbstract);
         }
 
@@ -188,9 +188,17 @@ namespace AutoTest.Core.ReflectionProviders
                 var retType = method.ReturnType;
                 var fullName = typeFullname + "." + method.Name;
                 if (fullName.Equals(typeName))
-                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract, retType.ToString());
+                    return new SimpleMethod(fullName, getAttributes(method.CustomAttributes), method.IsAbstract, retType.QualifiedName());
             }
             return null;
+        }
+    }
+
+    public static class TypeReferenceExtensions
+    {
+        public static string QualifiedName(this TypeReference me)
+        {
+            return me.ToString().Replace('/', '+');
         }
     }
 

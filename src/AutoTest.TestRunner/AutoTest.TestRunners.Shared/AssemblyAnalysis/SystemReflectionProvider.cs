@@ -106,6 +106,12 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                                     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                                 };
             //TODO GFY WTF why do we not use the resolver?
+            // The only reason we pull a resolver out is so that we
+            // can have a using statement
+            // The assembly resovler binds up the AppDomain resolve
+            // event. We need to manually handle dependency resolves
+            // as the dll are in various different directories.
+            // Because of the using it will unbind the event.
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 try
