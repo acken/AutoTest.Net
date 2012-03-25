@@ -18,7 +18,7 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
         {
             return new QuerySpecification<Foo, int>
                        {
-                           On = () => { return new Foo(); },
+                           On = () => new Foo(),
                            When = x => x.Bar(),
                            Expect =
                                {
@@ -70,6 +70,21 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests.Resources
     {
         public class MoreSimpleTestingTests
         {
+            public class Nested
+            {
+                public Specification a_passing_test()
+                {
+                    return new QuerySpecification<Foo, int>
+                    {
+                        On = () => new Foo(),
+                        When = x => x.Bar(),
+                        Expect =
+                                   {
+                                       q => q == 12
+                                   }
+                    };
+                }   
+            }
             public Specification a_passing_test()
             {
                 return new QuerySpecification<Foo, int>

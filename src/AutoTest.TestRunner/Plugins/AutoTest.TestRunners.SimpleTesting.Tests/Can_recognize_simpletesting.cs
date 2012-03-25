@@ -124,7 +124,27 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests
             Assert.That(result.First().TestDisplayName == "a_failing_test_with_exception");
         }
 
+        [Test]
+        public void can_all_tests_in_a_class()
+        {
+            var runner = new Runner();
+            var options = new AssemblyOptions(getAssembly());
+            options.AddMember("AutoTest.TestRunners.SimpleTesting.Tests.Resources.SimpleTestingTests");
+            var settings = new RunSettings(options, new string[] { }, null);
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(3));
+        }
 
+        [Test]                                                                                       
+        public void can_all_tests_in_a_nested_class()
+        {
+            var runner = new Runner();
+            var options = new AssemblyOptions(getAssembly());
+            options.AddMember("AutoTest.TestRunners.SimpleTesting.Tests.Resources.more.MoreSimpleTestingTests+Nested");
+            var settings = new RunSettings(options, new string[] { }, null);
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(1));
+        }
 
         //[Test]
         //public void When_told_to_run_a_test_that_passes_it_reports_a_passing_result()
