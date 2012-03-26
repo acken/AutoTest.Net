@@ -25,7 +25,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         {
             _list.Add(getItem("Assembly1"));
             _newList.Add(getItem("Assembly2"));
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).Count, Is.EqualTo(2));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             var item = getItem("Assembly1");
             _list.Add(item);
             _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).Count, Is.EqualTo(1));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing test"));
             item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new test"));
             _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
         }
         
         [Test]
@@ -59,7 +59,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             item = getItem("Assembly1");
             item.AddTestsToRun(getTest(AutoTest.Messages.TestRunner.MSTest, "Existing test"));
             _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetTests().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             item.AddMembersToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing member"));
             item.AddMembersToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new member"));
             _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetMembers().Count(), Is.EqualTo(2));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetMembers().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
             item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new namespace"));
             _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeWith(_newList).ElementAt(0).GetNamespaces().Count(), Is.EqualTo(2));
+            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetNamespaces().Count(), Is.EqualTo(2));
         }
 
         private TestToRun[] getTest(AutoTest.Messages.TestRunner runner, string test)

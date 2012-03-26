@@ -17,31 +17,17 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         }
     }
 
-	public class RunInfo
+	public class RunInfo : TestRunInfo
 	{
-        private List<TestToRun> _testsToRun;
-        private List<TestToRun> _membersToRun;
-        private List<TestToRun> _namespacesToRun;
-        private List<TestRunner> _onlyRunTestsFor;
-        private List<TestRunner> _rerunAllWhenFinishedFor;
-
-		public Project Project { get; private set; }
         public string TemporaryBuildProject { get; private set; }
 		public bool ShouldBeBuilt { get; private set; }
-		public string Assembly { get; private set; }
 		public bool IsChanged { get; private set; }
 		
 		public RunInfo(Project project)
+            : base(project, null)
 		{
-			Project = project;
             TemporaryBuildProject = null;
 			ShouldBeBuilt = false;
-			Assembly = null;
-            _testsToRun = new List<TestToRun>();
-            _membersToRun = new List<TestToRun>();
-            _namespacesToRun = new List<TestToRun>();
-            _onlyRunTestsFor = new List<TestRunner>();
-            _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
 
         public void BuildTemporaryProject(string project)
@@ -58,72 +44,21 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             ShouldBeBuilt = false;
         }
-		
-		public void SetAssembly(string assembly)
-		{
-			Assembly = assembly;
-		}
-
-        public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
-        {
-            if (_onlyRunTestsFor.Contains(TestRunner.Any))
-                return true;
-            return _onlyRunTestsFor.Contains(runner);
-        }
-
-        public void ShouldOnlyRunSpcifiedTestsFor(TestRunner runner)
-        {
-            if (!_onlyRunTestsFor.Exists(r => r.Equals(runner)))
-                _onlyRunTestsFor.Add(runner);
-        }
-
-        public bool RerunAllTestWhenFinishedFor(TestRunner runner)
-        {
-            if (_rerunAllWhenFinishedFor.Contains(TestRunner.Any))
-                return true;
-            return _rerunAllWhenFinishedFor.Contains(runner);
-        }
-
-        public void ShouldRerunAllTestWhenFinishedFor(TestRunner runner)
-        {
-            if (!_rerunAllWhenFinishedFor.Contains(runner))
-                _rerunAllWhenFinishedFor.Add(runner);
-        }
 
 		public void Changed()
 		{
 			IsChanged = true;
 		}
 
-        public void AddTestsToRun(TestRunner runner, string test) { _testsToRun.Add(new TestToRun(runner, test)); }
-        public void AddTestsToRun(TestRunner runner, IEnumerable<string> tests)
-        { 
-            foreach (var test in tests)
-                _testsToRun.Add(new TestToRun(runner, test));
-        }
-        public void AddTestsToRun(TestToRun[] tests) { _testsToRun.AddRange(tests); }
-        public TestToRun[] GetTests() { return _testsToRun.ToArray(); }
-        public string[] GetTestsFor(TestRunner runner) { return getRunItemsFor(runner, _testsToRun); }
-
-        public void AddMembersToRun(TestToRun[] members) { _membersToRun.AddRange(members); }
-        public TestToRun[] GetMembers() { return _membersToRun.ToArray(); }
-        public string[] GetMembersFor(TestRunner runner) { return getRunItemsFor(runner, _membersToRun); }
-
-        public void AddNamespacesToRun(TestToRun[] namespaces) { _namespacesToRun.AddRange(namespaces); }
-        public TestToRun[] GetNamespaces() { return _namespacesToRun.ToArray(); }
-        public string[] GetNamespacesFor(TestRunner runner) { return getRunItemsFor(runner, _namespacesToRun); }
-
-        private string[] getRunItemsFor(TestRunner runner, List<TestToRun> runList)
+        public RunInfo Clone()
         {
-            var query = from t in runList
-                        where t.Runner.Equals(runner) || t.Runner.Equals(TestRunner.Any)
-                        select t.Test;
-            return query.ToArray();
-        }
-
-        public TestRunInfo CloneToTestRunInfo()
-        {
-            var runInfo = new TestRunInfo(Project, Assembly);
+            var runInfo = new RunInfo(Project);
+            runInfo.SetAssembly(Assembly);
+            BuildTemporaryProject(TemporaryBuildProject);
+            if (ShouldBeBuilt)
+                runInfo.ShouldBuild();
+            if (IsChanged)
+                runInfo.Changed();
             runInfo.AddTestsToRun(GetTests());
             runInfo.AddMembersToRun(GetMembers());
             runInfo.AddNamespacesToRun(GetNamespaces());
@@ -132,6 +67,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             foreach (var runner in _rerunAllWhenFinishedFor)
                 runInfo.ShouldRerunAllTestWhenFinishedFor(runner);
             return runInfo;
+        }
+
+        public TestRunInfo CloneToTestRunInfo()
+        {
+            return this.Clone();
         }
 	}
 }

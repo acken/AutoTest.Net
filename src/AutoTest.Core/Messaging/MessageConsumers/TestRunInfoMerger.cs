@@ -14,28 +14,35 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _list = list.ToList();
         }
 
-        public List<RunInfo> MergeWith(List<RunInfo> list)
+        public List<RunInfo> MergeByAssembly(IEnumerable<RunInfo> list)
         {
-            addUnexisting(list);
-            mergeExisting(list);
+            addUnexisting(list.ToList(), (x, y) => x.Assembly.Equals(y.Assembly));
+            mergeExisting(list.ToList(), (x, y) => x.Assembly.Equals(y.Assembly));
             return _list;
         }
 
-        private void mergeExisting(List<RunInfo> list)
+        public List<RunInfo> MergeByProject(IEnumerable<RunInfo> list)
         {
-            addNewEntries(list, (info) => { return info.GetTests().ToList(); }, (info, test) => { info.AddTestsToRun(new TestToRun[] { test }); });
-            addNewEntries(list, (info) => { return info.GetMembers().ToList(); }, (info, member) => { info.AddMembersToRun(new TestToRun[] { member }); });
-            addNewEntries(list, (info) => { return info.GetNamespaces().ToList(); }, (info, ns) => { info.AddNamespacesToRun(new TestToRun[] { ns }); });
+            addUnexisting(list.ToList(), (x, y) => x.Project.Key.Equals(y.Project.Key));
+            mergeExisting(list.ToList(), (x, y) => x.Project.Key.Equals(y.Project.Key));
+            return _list;
         }
 
-        public void addNewEntries(List<RunInfo> list, Func<RunInfo, List<TestToRun>> getItems, Action<RunInfo, TestToRun> addItem)
+        private void mergeExisting(List<RunInfo> list, Func<RunInfo, RunInfo, bool> match)
         {
-            list.Where(x => exists(x)).ToList().ForEach(x => getItems.Invoke(x).ForEach(t => addIfNew(x, t, getItems, addItem)));
+            addNewEntries(list, (info) => { return info.GetTests().ToList(); }, (info, test) => { info.AddTestsToRun(new TestToRun[] { test }); }, match);
+            addNewEntries(list, (info) => { return info.GetMembers().ToList(); }, (info, member) => { info.AddMembersToRun(new TestToRun[] { member }); }, match);
+            addNewEntries(list, (info) => { return info.GetNamespaces().ToList(); }, (info, ns) => { info.AddNamespacesToRun(new TestToRun[] { ns }); }, match);
         }
 
-        private void addIfNew(RunInfo x, TestToRun t, Func<RunInfo, List<TestToRun>> getItems, Action<RunInfo, TestToRun> addItem)
+        public void addNewEntries(List<RunInfo> list, Func<RunInfo, List<TestToRun>> getItems, Action<RunInfo, TestToRun> addItem, Func<RunInfo, RunInfo, bool> match)
         {
-            var current = _list.Where(y => y.Assembly.Equals(x.Assembly)).First();
+            list.Where(x => exists(x, match)).ToList().ForEach(x => getItems.Invoke(x).ForEach(t => addIfNew(x, t, getItems, addItem, match)));
+        }
+
+        private void addIfNew(RunInfo x, TestToRun t, Func<RunInfo, List<TestToRun>> getItems, Action<RunInfo, TestToRun> addItem, Func<RunInfo, RunInfo, bool> match)
+        {
+            var current = _list.Where(y => match(y, x)).First();
             if (!testExists(t, getItems, current))
                 addItem(current, t);
         }
@@ -50,15 +57,15 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return a.Runner.Equals(b.Runner) && a.Test.Equals(b.Test);
         }
 
-        private void addUnexisting(List<RunInfo> list)
+        private void addUnexisting(List<RunInfo> list, Func<RunInfo, RunInfo, bool> match)
         {
-            list.Where(x => !exists(x)).ToList()
+            list.Where(x => !exists(x, match)).ToList()
                 .ForEach(x => _list.Add(x));
         }
 
-        private bool exists(RunInfo x)
+        private bool exists(RunInfo x, Func<RunInfo, RunInfo, bool> match)
         {
-            return _list.Exists(y => y.Assembly.Equals(x.Assembly));
+            return _list.Exists(y => match(y, x));
         }
     }
 }

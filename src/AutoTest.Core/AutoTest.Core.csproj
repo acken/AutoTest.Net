@@ -154,7 +154,6 @@
     <Compile Include="Caching\Projects\ProjectType.cs" />
     <Compile Include="Caching\Projects\ProjectParser.cs" />
     <Compile Include="Messaging\MessageConsumers\RemovedTestsLocator.cs" />
-    <Compile Include="Messaging\MessageConsumers\RunInfoMerger.cs" />
     <Compile Include="Messaging\MessageConsumers\SolutionChangeConsumer.cs" />
     <Compile Include="Messaging\MessageConsumers\TestRunInfoMerger.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />

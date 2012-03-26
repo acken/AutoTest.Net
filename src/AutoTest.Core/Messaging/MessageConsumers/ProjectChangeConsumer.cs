@@ -119,7 +119,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private RunInfo[] mergeWithAbortedBuilds(RunInfo[] list)
         {
-            return new RunInfoMerger(list).MergeWith(_abortedBuilds).ToArray();
+            return new TestRunInfoMerger(list).MergeByProject(_abortedBuilds.Where(x => x.ShouldBeBuilt)).ToArray();
         }
 
         private void markAllAsBuilt(RunInfo[] list)
@@ -139,7 +139,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
             var preProcessed = preProcessTestRun(projectList);
-            preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeWith(_abortedTestRuns).ToArray());
+            preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
             runPreProcessedTestRun(preProcessed, runReport);
 		}
 

@@ -46,7 +46,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			    informParticipants(message);
                 var runInfos = getRunInfos(message);
                 var preProcessed = preProcess(runInfos);
-                preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeWith(_abortedTestRuns).ToArray());
+                preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
                 foreach (var runner in _testRunners)
                 {
                     runTest(runner, preProcessed, runReport);

@@ -25,7 +25,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
         public void When_item_does_not_exist_in_target_it_should_add()
         {
             _newList.Add(getRunInfo("NewProject"));
-            Assert.That(new RunInfoMerger(_list).MergeWith(_newList).Count, Is.EqualTo(1));
+            Assert.That(new TestRunInfoMerger(_list).MergeByProject(_newList).Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -34,15 +34,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             var info = getRunInfo("NewProject");
             _list.Add(info);
             _newList.Add(info);
-            Assert.That(new RunInfoMerger(_list).MergeWith(_newList).Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void It_should_only_add_run_infos_set_to_build()
-        {
-            _newList.Add(getRunInfo("NewProject1"));
-            _newList.Add(getNotBuiltRunInfo("NewProject2"));
-            Assert.That(new RunInfoMerger(_list).MergeWith(_newList).Count, Is.EqualTo(1));
+            Assert.That(new TestRunInfoMerger(_list).MergeByProject(_newList).Count, Is.EqualTo(1));
         }
 
         private RunInfo getRunInfo(string key)
@@ -50,11 +42,6 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             var info = new RunInfo(new Project(key, new ProjectDocument(ProjectType.CSharp)));
             info.ShouldBuild();
             return info;
-        }
-
-        private RunInfo getNotBuiltRunInfo(string key)
-        {
-            return new RunInfo(new Project(key, new ProjectDocument(ProjectType.CSharp)));
         }
     }
 }

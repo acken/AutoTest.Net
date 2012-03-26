@@ -7,11 +7,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 {
 	public class TestRunInfo
 	{
-		private List<TestToRun> _testsToRun;
-        private List<TestToRun> _membersToRun;
-        private List<TestToRun> _namespacesToRun;
-        private List<TestRunner> _onlyRunTestsFor;
-        private List<TestRunner> _rerunAllWhenFinishedFor;
+		protected List<TestToRun> _testsToRun;
+        protected List<TestToRun> _membersToRun;
+        protected List<TestToRun> _namespacesToRun;
+        protected List<TestRunner> _onlyRunTestsFor;
+        protected List<TestRunner> _rerunAllWhenFinishedFor;
 		
 		public Project Project { get; private set; }
 		public string Assembly { get; private set; }
@@ -26,6 +26,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _onlyRunTestsFor = new List<TestRunner>();
             _rerunAllWhenFinishedFor = new List<TestRunner>();
 		}
+
+        public void SetAssembly(string assembly)
+        {
+            Assembly = assembly;
+        }
 
         public bool OnlyRunSpcifiedTestsFor(TestRunner runner)
         {
@@ -58,14 +63,17 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             return _rerunAllWhenFinishedFor.Count > 0;
         }
 
+        public void AddTestsToRun(TestRunner runner, string test) { _testsToRun.AddRange(new TestToRun[] { new TestToRun(runner, test), }); }
         public void AddTestsToRun(TestToRun[] tests) { _testsToRun.AddRange(tests); }
         public TestToRun[] GetTests() { return _testsToRun.ToArray(); }
         public string[] GetTestsFor(TestRunner runner) { return getRunItemsFor(runner, _testsToRun); }
 
+        public void AddMembersToRun(TestRunner runner, string member) { _membersToRun.AddRange(new TestToRun[] { new TestToRun(runner, member), }); }
         public void AddMembersToRun(TestToRun[] members) { _membersToRun.AddRange(members); }
         public TestToRun[] GetMembers() { return _membersToRun.ToArray(); }
         public string[] GetMembersFor(TestRunner runner) { return getRunItemsFor(runner, _membersToRun); }
 
+        public void AddNamespacesToRun(TestRunner runner, string ns) { _namespacesToRun.AddRange(new TestToRun[] { new TestToRun(runner, ns), }); }
         public void AddNamespacesToRun(TestToRun[] namespaces) { _namespacesToRun.AddRange(namespaces); }
         public TestToRun[] GetNamespaces() { return _namespacesToRun.ToArray(); }
         public string[] GetNamespacesFor(TestRunner runner) { return getRunItemsFor(runner, _namespacesToRun); }
