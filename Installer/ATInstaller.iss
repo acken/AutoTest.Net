@@ -7,14 +7,14 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{DE3A8FE7-5918-471A-BF59-84C2C3328CCF}
 AppName=AutoTest.Net
-AppVersion=1.3.1
-AppVerName=AutoTest.Net 1.3.1
+AppVersion=1.3.2
+AppVerName=AutoTest.Net 1.3.2
 AppPublisher=AutoTest.Net
 DefaultDirName={pf}\AutoTest.Net
 DefaultGroupName=AutoTest.Net
 LicenseFile=..\ReleaseBinaries\AutoTest.License.txt
 OutputDir=..\ReleaseBinaries\Installer
-OutputBaseFilename=AutoTest.Net-v1.3.1
+OutputBaseFilename=AutoTest.Net-v1.3.2
 Compression=lzma
 SolidCompression=yes
 Uninstallable=yes
@@ -99,14 +99,40 @@ Root: HKLM; Subkey: "SOFTWARE\Microsoft\VisualStudio\9.0\AutomationOptions\LookI
 
 [Run]
 Filename:"{dotnet20}\RegAsm.exe"; Parameters: /codebase AutoTest.VSAddin.dll;WorkingDir: {app}; StatusMsg: "Registering Controls ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2011 addin ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2010 addin ..."; Flags: runhidden;
-Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Installing 2008 addin ..."; Flags: runhidden;
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\9.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2008Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2010Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runasoriginaluser runhidden; Check: IfVS2011Installed()
 
 [UninstallRun]
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\9.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2008Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2010Installed();
+Filename:"{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}devenv.exe"; Parameters: /ResetAddin AutoTest.VSAddin.Connect /command File.Exit;WorkingDir: {app}; StatusMsg: "Resetting addin ..."; Flags: runhidden; Check: IfVS2011Installed()
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.11.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2011 addin ..."; Flags: runhidden;
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.10.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2010 addin ..."; Flags: runhidden;
 Filename:"{app}\VSMenuKiller.exe"; Parameters: VisualStudio.DTE.9.0 MenuBar AutoTest.Net;WorkingDir: {app}; StatusMsg: "Removing 2008 addin ..."; Flags: runhidden;
 Filename:"{dotnet20}\RegAsm.exe"; Parameters: /unregister AutoTest.VSAddin.dll; WorkingDir: {app}; StatusMsg: "Unregistering Controls ..."; Flags: runhidden;
 
 [Code]
+Function IfVS2011Installed() : Boolean;
+var
+  sPath: String;
+begin
+  sPath := ExpandConstant('{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\11.0,InstallDir}');
+  Result := FileExists(sPath + 'devenv.exe')
+end;
+
+Function IfVS2010Installed() : Boolean;
+var
+  sPath: String;
+begin
+  sPath := ExpandConstant('{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\10.0,InstallDir}');
+  Result := FileExists(sPath + 'devenv.exe')
+end;
+
+Function IfVS2008Installed() : Boolean;
+var
+  sPath: String;
+begin
+  sPath := ExpandConstant('{reg:HKLM\SOFTWARE\Microsoft\VisualStudio\9.0,InstallDir}');
+  Result := FileExists(sPath + 'devenv.exe')
+end;

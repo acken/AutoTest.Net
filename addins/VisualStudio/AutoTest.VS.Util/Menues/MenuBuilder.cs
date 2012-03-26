@@ -20,27 +20,27 @@ namespace AutoTest.VS.Util.Menues
             _addin = addin;
         }
 
-        public void AddMenuBar(string name, string caption)
+        public void AddMenuBar(string name)
         {
             //Place the command on the tools menu.
             //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
             CommandBar menuBarCommandBar = ((CommandBars)_application.CommandBars)["MenuBar"];
+            CommandBarControl toolsControl;
             var commands = (Commands2)_application.Commands;
-            
-            CommandBarControl toolsControl = getCommandBarControl(menuBarCommandBar.Controls, name);
+
             try
             {
-                if (toolsControl == null)
-                {
-                    var command = (CommandBar) commands.AddCommandBar(name, vsCommandBarType.vsCommandBarTypeMenu, menuBarCommandBar, 30);
-                    toolsControl = getCommandBarControl(menuBarCommandBar.Controls, name);
-                    toolsControl.Caption = caption;
-                }
-                toolsControl.Enabled = true;
+                toolsControl = menuBarCommandBar.Controls[name];
             }
-            catch (Exception ex)
+            catch
             {
+                var command =
+                    (CommandBar)
+                    commands.AddCommandBar(name, vsCommandBarType.vsCommandBarTypeMenu, menuBarCommandBar, 31);
+                toolsControl = menuBarCommandBar.Controls[name];
             }
+            toolsControl.Enabled = true;
+            CommandBarPopup toolsPopup = (CommandBarPopup)toolsControl;
         }
 
         public bool MenuExists(string name)
@@ -95,30 +95,22 @@ namespace AutoTest.VS.Util.Menues
             }
         }
 
-        public void CreateMenuItem(string commandBar, string popup, string caption, string description, string bindings, int place, string commandName, bool hasSeparator, int icon)
+        public void CreateMenuItem(string commandBar, string popup, string caption, string description, string bindings, int place, string commandName, bool separator, int icon)
         {
             try
             {
                 var commands = (Commands2)_application.Commands;
-                var editorCommandBar = ((CommandBars)_application.CommandBars)[commandBar];
-                var editPopUp = getPopup(editorCommandBar.Controls, popup);
-                var item = getCommandBarControl(editPopUp.Controls, caption);
-                if (item != null)
-                {
-                    item.BeginGroup = hasSeparator;
-                    return;
-                }
-                Command command = getCommand(commands, commandName);
-                if (command == null)
-                    command = commands.AddNamedCommand2(_addin, commandName, caption, description, false, icon, ref _contextGUIDS, (int)vsCommandStatus.vsCommandStatusSupported, (int)vsCommandStyle.vsCommandStylePictAndText);
+                var cBars = (CommandBars)_application.CommandBars;
+                var editorCommandBar = cBars[commandBar];
+                var editPopUp = (CommandBarPopup)editorCommandBar.Controls[popup];
+                var command = commands.AddNamedCommand2(_addin, commandName, caption, description, true, icon, ref _contextGUIDS, (int)vsCommandStatus.vsCommandStatusSupported, (int)vsCommandStyle.vsCommandStylePictAndText);
                 command.AddControl(editPopUp.CommandBar, place);
-                item = getCommandBarControl(editPopUp.Controls, caption);
-                item.BeginGroup = hasSeparator;
-
+                var item = getCommandBarControl(editPopUp.Controls, caption);
+                item.BeginGroup = separator;
                 if (bindings != null)
                     command.Bindings = bindings;
             }
-            catch
+            catch (Exception ex)
             {
             }
         }
