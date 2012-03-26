@@ -342,6 +342,12 @@ namespace AutoTest.Test.Core.Configuration
             _config.MSBuildAdditionalParameters.ShouldEqual("more params");
         }
 
+        [Test]
+        public void Should_get_msbuild_parallel_build_count()
+        {
+            Assert.That(_config.MSBuildParallelBuildCount, Is.EqualTo(3));
+        }
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))

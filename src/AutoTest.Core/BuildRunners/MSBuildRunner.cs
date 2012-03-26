@@ -31,6 +31,8 @@ namespace AutoTest.Core.BuildRunners
             var arguments = string.Format("\"{0}\" /property:OutDir={1};IntermediateOutputPath={2}", solution, outdir, Path.Combine(outdir, "_tmpIntermediateAT") + Path.DirectorySeparatorChar);
             if (rebuild)
                 arguments += " /target:rebuild";
+            if (_configuration.MSBuildParallelBuildCount > 1)
+                arguments += " /maxcpucount:" + _configuration.MSBuildParallelBuildCount.ToString();
             return runBuild(buildExecutable, arguments, solution, abortIfTrue);
         }
 

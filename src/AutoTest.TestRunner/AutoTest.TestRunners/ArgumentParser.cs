@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace AutoTest.TestRunners
 {
-    class Arguments
+    public class Arguments
     {
         public string InputFile { get; set; }
         public string OutputFile { get; set; }
@@ -17,7 +17,7 @@ namespace AutoTest.TestRunners
         public bool CompatabilityMode { get; set; }
     }
 
-    class ArgumentParser
+    public class ArgumentParser
     {
         private string[] _arguments;
         private Arguments _parsedArgument;

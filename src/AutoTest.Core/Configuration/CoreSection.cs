@@ -32,6 +32,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<CodeEditor> CodeEditor { get; private set; }
         public ConfigItem<bool> DebuggingEnabled { get; private set; }
         public ConfigItem<string> MSBuildAdditionalParameters { get; private set; }
+        public ConfigItem<int> MSBuildParallelBuildCount { get; private set; } 
 		public ConfigItem<string> GrowlNotify { get; private set; }
 		public ConfigItem<bool> NotifyOnRunStarted { get; private set; }
 		public ConfigItem<bool> NotifyOnRunCompleted { get; private set; }
@@ -63,6 +64,7 @@ namespace AutoTest.Core.Configuration
             CodeEditor = new ConfigItem<CodeEditor>(new CodeEditor("", ""));
             DebuggingEnabled = new ConfigItem<bool>(false);
             MSBuildAdditionalParameters = new ConfigItem<string>("");
+            MSBuildParallelBuildCount = new ConfigItem<int>(0);
 			GrowlNotify = new ConfigItem<string>(null);
 			NotifyOnRunStarted = new ConfigItem<bool>(true);
 			NotifyOnRunCompleted = new ConfigItem<bool>(true);
@@ -96,6 +98,7 @@ namespace AutoTest.Core.Configuration
             CodeEditor = getCodeEditor();
             DebuggingEnabled = getBoolItem("configuration/Debugging", false);
             MSBuildAdditionalParameters = getValueItem("configuration/MSBuildAdditionalParameters", "");
+            MSBuildParallelBuildCount = getIntItem("configuration/MSBuildParallelBuildCount", 0);
 			GrowlNotify = getValueItem("configuration/growlnotify", null);
 			NotifyOnRunStarted = getBoolItem("configuration/notify_on_run_started", true);
 			NotifyOnRunCompleted = getBoolItem("configuration/notify_on_run_completed", true);

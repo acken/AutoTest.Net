@@ -102,7 +102,7 @@ namespace AutoTest.UI
             if ((e.Shift && e.KeyCode != Keys.Enter && e.KeyCode != Keys.H) || e.Control || e.Alt)
                 return;
 
-            if ( e.KeyCode == Keys.J || e.KeyCode == Keys.Down)
+            if ( e.KeyCode == Keys.J || e.KeyCode == Keys.Down || e.KeyCode.Equals(Keys.F8))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -111,7 +111,7 @@ namespace AutoTest.UI
                 _line++;
                 positionArrow();
             }
-            else if (e.KeyCode == Keys.K || e.KeyCode == Keys.Up)
+            else if (e.KeyCode == Keys.K || e.KeyCode == Keys.Up || (e.Shift && e.KeyCode.Equals(Keys.F8)))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;

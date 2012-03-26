@@ -13,7 +13,7 @@ namespace AutoTest.TestRunners.Shared.Targeting
         x86
     }
 
-    class TargetedRun
+    public class TargetedRun
     {
         private List<RunnerOptions> _runOptions = new List<RunnerOptions>();
 

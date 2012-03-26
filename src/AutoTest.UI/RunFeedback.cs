@@ -613,18 +613,22 @@ namespace AutoTest.UI
                         linkLabelSystemMessages_LinkClicked(this, new LinkLabelLinkClickedEventArgs(new LinkLabel.Link(0, 1)));
                     return;
                 }
-                if (e.KeyCode.Equals(Keys.K))
+                if (e.KeyCode.Equals(Keys.K) || (e.Shift && e.KeyCode.Equals(Keys.F8)))
                 {
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     SendKeys.Send("{UP}");
+                    if (e.KeyCode.Equals(Keys.F8))
+                        listViewFeedback_DoubleClick(this, new EventArgs());
                     return;
                 }
-                if (e.KeyCode.Equals(Keys.J))
+                if (e.KeyCode.Equals(Keys.J) || (e.KeyCode.Equals(Keys.F8)))
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
                     SendKeys.Send("{DOWN}");
+                    if (e.KeyCode.Equals(Keys.F8))
+                        listViewFeedback_DoubleClick(this, new EventArgs());
                 }
             }
             catch

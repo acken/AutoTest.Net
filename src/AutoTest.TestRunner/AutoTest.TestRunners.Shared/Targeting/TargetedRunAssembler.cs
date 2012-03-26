@@ -7,7 +7,7 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners.Shared.Targeting
 {
-    class TargetedRunAssembler
+    public class TargetedRunAssembler
     {
         private RunOptions _options;
         private IAssemblyPropertyReader _locator;

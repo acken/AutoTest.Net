@@ -43,6 +43,7 @@ namespace AutoTest.Core.Configuration
         }
 
         public string MSBuildAdditionalParameters { get; private set; }
+        public int MSBuildParallelBuildCount { get; private set; }
 		public string GrowlNotify { get; private set; }
 		public bool NotifyOnRunStarted { get; private set; }
 		public bool NotifyOnRunCompleted { get; private set; }
@@ -165,6 +166,8 @@ namespace AutoTest.Core.Configuration
 				_debuggingEnabled = core.DebuggingEnabled.Value;
             if (core.MSBuildAdditionalParameters.WasReadFromConfig)
                 MSBuildAdditionalParameters = mergeValueItem(core.MSBuildAdditionalParameters, "");
+            if (core.MSBuildParallelBuildCount.WasReadFromConfig)
+                MSBuildParallelBuildCount = mergeValueItem(core.MSBuildParallelBuildCount, 0);
 			if (core.GrowlNotify.WasReadFromConfig)
 				GrowlNotify = mergeValueItem(core.GrowlNotify, null);
 			if (core.NotifyOnRunStarted.WasReadFromConfig)
@@ -220,6 +223,7 @@ namespace AutoTest.Core.Configuration
                 _codeEditor = core.CodeEditor.Value;
                 _debuggingEnabled = core.DebuggingEnabled.Value;
                 MSBuildAdditionalParameters = core.MSBuildAdditionalParameters.Value;
+                MSBuildParallelBuildCount = core.MSBuildParallelBuildCount.Value;
 				GrowlNotify = core.GrowlNotify.Value;
 				NotifyOnRunStarted = core.NotifyOnRunStarted.Value;
 				NotifyOnRunCompleted = core.NotifyOnRunCompleted.Value;
@@ -265,6 +269,13 @@ namespace AutoTest.Core.Configuration
 				return defaultValue;
 			return settingToMerge.Value;
 		}
+
+        private int mergeValueItem(ConfigItem<int> settingToMerge, int defaultValue)
+        {
+            if (settingToMerge.ShouldExclude)
+                return defaultValue;
+            return settingToMerge.Value;
+        }
 		
 		private void mergeCodeEditor(ConfigItem<CodeEditor> settingToMerge)
 		{

@@ -33,6 +33,9 @@
 
   <!-- Additional parameters to msbuild command line (Optional) -->
   <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
+
+  <!-- Additional parameters to msbuild command line (Optional) -->
+  <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
   
   <!-- To change the default resycle size of the logs (1024000 = 1M) Set the number of bytes you -->
   <!-- want the logs to roll at here -->
