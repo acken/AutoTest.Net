@@ -193,6 +193,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     }
 				}
 			}
+            if (_exit)
+                return;
             _abortedTestRuns.Clear();
 		}
 

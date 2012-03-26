@@ -14,6 +14,7 @@ namespace AutoTest.Core.Caching
 
     public class ProjectFile
     {
+        private int i = 3;
         public string File { get; private set; }
         public FileType Type { get; private set; }
         public string Project { get; private set; }

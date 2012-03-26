@@ -75,18 +75,18 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
             Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetMembers().Count(), Is.EqualTo(2));
         }
 
-        [Test]
-        public void When_assembly_exists_with_different_namespaces_it_should_merge_with_existing()
-        {
-            var item = getItem("Assembly1");
-            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
-            _list.Add(item);
-            item = getItem("Assembly1");
-            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
-            item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new namespace"));
-            _newList.Add(item);
-            Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetNamespaces().Count(), Is.EqualTo(2));
-        }
+        //[Test]
+        //public void When_assembly_exists_with_different_namespaces_it_should_merge_with_existing()
+        //{
+        //    var item = getItem("Assembly1");
+        //    item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
+        //    _list.Add(item);
+        //    item = getItem("Assembly1");
+        //    item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "Existing namespace"));
+        //    item.AddNamespacesToRun(getTest(AutoTest.Messages.TestRunner.NUnit, "A new namespace"));
+        //    _newList.Add(item);
+        //    Assert.That(new TestRunInfoMerger(_list).MergeByAssembly(_newList).ElementAt(0).GetNamespaces().Count(), Is.EqualTo(2));
+        //}
 
         private TestToRun[] getTest(AutoTest.Messages.TestRunner runner, string test)
         {
