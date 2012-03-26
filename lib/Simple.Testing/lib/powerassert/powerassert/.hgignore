@@ -1,7 +1,0 @@
-glob:*.user
-glob:*/bin
-glob:*/obj
-glob:_*
-glob:*.suo
-glob:PowerAssert/release/lib
-glob:*.nupkg
