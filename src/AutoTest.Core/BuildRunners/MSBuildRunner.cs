@@ -46,6 +46,8 @@ namespace AutoTest.Core.BuildRunners
             var arguments = string.Format("\"{0}\"", projectPath) + properties;
 			if (project.Value.RequiresRebuild)
 				arguments += " /target:rebuild";
+            if (File.Exists(_configuration.SolutionToBuild))
+                arguments += " /property:SolutionDir=" + Path.GetDirectoryName(_configuration.SolutionToBuild) + ";";
             var target = projectPath;
             return runBuild(buildExecutable, arguments, target, abortIfTrue);
         }
