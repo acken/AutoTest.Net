@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace Microsoft.VisualStudio.QualityTools.UnitTestFramework
+namespace Microsoft.VisualStudio.TestTools.UnitTesting
 {
     [Serializable]
     public class AssertInconclusiveException : UnitTestAssertException

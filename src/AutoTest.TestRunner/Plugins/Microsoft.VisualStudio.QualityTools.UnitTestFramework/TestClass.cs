@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class ClassCleanupAttribute : Attribute
+    public sealed class TestClassAttribute : Attribute
     {
     }
 }
