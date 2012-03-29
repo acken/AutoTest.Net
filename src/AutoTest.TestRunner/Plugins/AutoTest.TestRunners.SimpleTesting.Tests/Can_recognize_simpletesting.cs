@@ -62,7 +62,7 @@ namespace AutoTest.TestRunners.SimpleTesting.Tests
             var options = new AssemblyOptions(getAssembly());
             var settings = new RunSettings(options, new string[] { }, null);
             var result = runner.Run(settings);
-            Assert.That(result.Count(), Is.EqualTo(4));
+            Assert.That(result.Count(), Is.EqualTo(5));
         }
 
         [Test]
