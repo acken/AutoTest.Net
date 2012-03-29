@@ -61,8 +61,12 @@ namespace AutoTest.TestRunners
                 // A proxy to the object is returned.
                 ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(Assembly.GetExecutingAssembly().Location, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
 
+                // Prepare assemblies
+                Logger.Write("Preparing resolver");
+                runtime.SetupResolver(_shouldLog);
+
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_shouldLog, _plugin, _id, new RunSettings(_assembly, _categories.ToArray(), _pipeName)));
+                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray(), _pipeName)));
             }
             catch (Exception ex)
             {
