@@ -4,7 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// The IConstraintExpression interface is implemented by all

@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 	// TODO Needs tests
 	/// <summary>
@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
 	/// This allows testing whether a string is contained in a collection
 	/// or as a substring of another string using the same syntax.
 	/// </summary>
-	public class ContainsConstraint : Constraint
+    public class ContainsConstraint : Constraint
 	{
 		object expected;
 		Constraint realConstraint;

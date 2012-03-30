@@ -6,7 +6,7 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// AttributeExistsConstraint tests for the presence of a

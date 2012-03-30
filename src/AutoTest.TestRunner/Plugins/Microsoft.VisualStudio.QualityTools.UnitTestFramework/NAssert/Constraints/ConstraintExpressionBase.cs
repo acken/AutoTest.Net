@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// ConstraintExpressionBase is the abstract base class for the 

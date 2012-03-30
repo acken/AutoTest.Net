@@ -6,7 +6,7 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// Modes in which the tolerance value for a comparison can

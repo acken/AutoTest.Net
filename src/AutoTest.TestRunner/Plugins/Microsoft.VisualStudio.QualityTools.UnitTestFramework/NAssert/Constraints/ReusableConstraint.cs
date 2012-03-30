@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// ReusableConstraint wraps a resolved constraint so that it

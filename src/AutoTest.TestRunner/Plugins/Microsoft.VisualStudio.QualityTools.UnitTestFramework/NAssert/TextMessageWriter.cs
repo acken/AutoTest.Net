@@ -7,9 +7,9 @@
 using System;
 using System.Collections;
 using System.Globalization;
-using NUnit.Framework.Constraints;
+using NAssert.Constraints;
 
-namespace NUnit.Framework
+namespace NAssert
 {
 	/// <summary>
 	/// TextMessageWriter writes constraint descriptions and messages

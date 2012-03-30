@@ -71,6 +71,10 @@ Source: "..\ReleaseBinaries\TestRunners\MbUnit\Gallio.dll"; DestDir: "{app}\Test
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\Gallio.XmlSerializers.dll"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\TestRunners\MbUnit\mbunit.config"; DestDir: "{app}\TestRunners\MbUnit"; Flags: ignoreversion
 
+Source: "..\ReleaseBinaries\Worst.Testing.Framework.Ever.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\NUnit.License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\Worst.Testing.Framework.Ever.License.txt"; DestDir: "{app}"; Flags: ignoreversion
+
 Source: "..\ReleaseBinaries\Castle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Castle.Facilities.Logging.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Castle.license.txt"; DestDir: "{app}"; Flags: ignoreversion

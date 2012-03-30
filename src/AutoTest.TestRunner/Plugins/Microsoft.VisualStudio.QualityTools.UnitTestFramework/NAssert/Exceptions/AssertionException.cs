@@ -4,7 +4,7 @@
 // copyright ownership at http://nunit.org.
 // ****************************************************************
 
-namespace NUnit.Framework 
+namespace NAssert 
 {
 	using System;
 	using System.Runtime.Serialization;
@@ -14,7 +14,7 @@ namespace NUnit.Framework
 	/// </summary>
 	/// 
 	[Serializable]
-	public class AssertionException : System.Exception
+    public class AssertionException : System.Exception
 	{
 		/// <param name="message">The error message that explains 
 		/// the reason for the exception</param>

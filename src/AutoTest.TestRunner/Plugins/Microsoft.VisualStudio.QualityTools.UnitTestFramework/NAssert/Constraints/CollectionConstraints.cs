@@ -12,7 +12,7 @@ using System.Text;
 using System.Collections.Generic;
 #endif
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     #region CollectionConstraint
     /// <summary>

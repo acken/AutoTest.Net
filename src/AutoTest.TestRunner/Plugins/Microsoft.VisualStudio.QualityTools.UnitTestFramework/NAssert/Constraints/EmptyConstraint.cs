@@ -7,14 +7,14 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 	/// <summary>
 	/// EmptyConstraint tests a whether a string or collection is empty,
 	/// postponing the decision about which test is applied until the
 	/// type of the actual argument is known.
 	/// </summary>
-	public class EmptyConstraint : Constraint
+    public class EmptyConstraint : Constraint
 	{
 		private Constraint RealConstraint
 		{

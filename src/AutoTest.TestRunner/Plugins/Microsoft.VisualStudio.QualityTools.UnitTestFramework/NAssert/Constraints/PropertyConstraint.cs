@@ -8,7 +8,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// PropertyExistsConstraint tests that a named property
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
 	/// PropertyConstraint extracts a named property and uses
     /// its value as the actual value for a chained constraint.
 	/// </summary>
-	public class PropertyConstraint : PrefixConstraint
+    public class PropertyConstraint : PrefixConstraint
 	{
 		private string name;
 		private object propValue;

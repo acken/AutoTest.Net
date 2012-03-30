@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.VisualStudio.TestTools.UnitTesting</RootNamespace>
-    <AssemblyName>Microsoft.VisualStudio.QualityTools.UnitTestFramework</AssemblyName>
+    <AssemblyName>Worst.Testing.Framework.Ever</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -99,9 +99,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClass.cs" />
     <Compile Include="TestCleanupAttribute.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="TestInitializeAttribute.cs" />
     <Compile Include="TestMethodAttribute.cs" />
     <Compile Include="UnitTestAssertException.cs" />
+    <Compile Include="UnitTestOutcome.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

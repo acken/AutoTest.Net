@@ -8,7 +8,7 @@ using System;
 using System.Collections;
 using System.IO;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// EmptyDirectoryConstraint is used to test that a directory is empty

@@ -6,12 +6,12 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 	/// <summary>
 	/// The Numerics class contains common operations on numeric values.
 	/// </summary>
-	public class Numerics
+    public class Numerics
 	{
 		#region Numeric Type Recognition
 		/// <summary>

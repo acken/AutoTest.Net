@@ -4,7 +4,7 @@
 // copyright ownership at http://nunit.org.
 // ****************************************************************
 
-namespace NUnit.Framework 
+namespace NAssert 
 {
 	using System;
 	using System.Runtime.Serialization;
@@ -13,7 +13,7 @@ namespace NUnit.Framework
 	/// Thrown when an assertion failed.
 	/// </summary>
 	[Serializable]
-	public class IgnoreException : System.Exception
+    public class IgnoreException : System.Exception
 	{
 		/// <param name="message"></param>
 		public IgnoreException (string message) : base(message) 

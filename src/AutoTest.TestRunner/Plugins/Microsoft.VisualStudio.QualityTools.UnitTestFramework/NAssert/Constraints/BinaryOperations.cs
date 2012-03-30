@@ -6,7 +6,7 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 	/// <summary>
 	/// BinaryConstraint is the abstract base of all constraints
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// AndConstraint succeeds only if both members succeed.
     /// </summary>
-	public class AndConstraint : BinaryConstraint
+    public class AndConstraint : BinaryConstraint
     {
         private enum FailurePoint
         {

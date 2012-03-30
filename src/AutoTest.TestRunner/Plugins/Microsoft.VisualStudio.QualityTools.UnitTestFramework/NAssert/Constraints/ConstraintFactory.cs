@@ -15,7 +15,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// Helper class with properties and methods that supply

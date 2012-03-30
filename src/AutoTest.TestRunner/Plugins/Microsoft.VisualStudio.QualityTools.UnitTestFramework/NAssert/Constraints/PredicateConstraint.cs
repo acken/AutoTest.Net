@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// Predicate constraint wraps a Predicate in a constraint,

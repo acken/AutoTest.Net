@@ -6,7 +6,7 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     #region ThrowsConstraint
     /// <summary>
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Constraints
     /// ThrowsNothingConstraint tests that a delegate does not
     /// throw an exception.
     /// </summary>
-	public class ThrowsNothingConstraint : Constraint
+    public class ThrowsNothingConstraint : Constraint
 	{
 		private Exception caughtException;
 

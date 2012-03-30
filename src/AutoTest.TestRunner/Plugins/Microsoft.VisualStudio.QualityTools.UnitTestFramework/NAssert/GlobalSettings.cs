@@ -6,13 +6,13 @@
 
 using System;
 
-namespace NUnit.Framework
+namespace NAssert
 {
 	/// <summary>
 	/// GlobalSettings is a place for setting default values used
 	/// by the framework in performing asserts.
 	/// </summary>
-	public class GlobalSettings
+    public class GlobalSettings
 	{
 		/// <summary>
 		/// Default tolerance for floating point equality

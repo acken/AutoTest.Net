@@ -8,14 +8,14 @@ using System;
 using System.IO;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     #region PathConstraint
     /// <summary>
 	/// PathConstraint serves as the abstract base of constraints
 	/// that operate on paths and provides several helper methods.
 	/// </summary>
-	public abstract class PathConstraint : Constraint
+    public abstract class PathConstraint : Constraint
 	{
         private static readonly char[] DirectorySeparatorChars = new char[] { '\\', '/' };
 
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
 	/// Summary description for SamePathConstraint.
 	/// </summary>
-	public class SamePathConstraint : PathConstraint
+    public class SamePathConstraint : PathConstraint
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SamePathConstraint"/> class.
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// SubPathConstraint tests that the actual path is under the expected path
     /// </summary>
-	public class SubPathConstraint : PathConstraint
+    public class SubPathConstraint : PathConstraint
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SubPathConstraint"/> class.
@@ -286,7 +286,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// SamePathOrUnderConstraint tests that one path is under another
     /// </summary>
-	public class SamePathOrUnderConstraint : PathConstraint
+    public class SamePathOrUnderConstraint : PathConstraint
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SamePathOrUnderConstraint"/> class.

@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Collections.Generic;
 #endif
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
     /// <summary>
     /// ComparisonAdapter class centralizes all comparisons of

@@ -15,9 +15,9 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using NUnit.Framework.Constraints;
+using NAssert.Constraints;
 
-namespace NUnit.Framework
+namespace NAssert
 {
     /// <summary>
     /// Delegate used by tests that execute code and

@@ -111,6 +111,7 @@ namespace AutoTest.Core.Configuration
                                     .Forward<IPreProcessTestruns>()
                                     .Forward<IConsumerOf<RunFinishedMessage>>()
                                     .ImplementedBy<OnDemanTestrunPreprocessor>().LifeStyle.Singleton)
+                .Register(Component.For<IPreProcessBuildruns>().ImplementedBy<MSTestCrossPlatformPreProcessor>().LifeStyle.Singleton)
                 .Register(Component.For<IBuildSessionRunner>().ImplementedBy<BuildSessionRunner>());
 
             if (defaultConfigurationLocator == null)

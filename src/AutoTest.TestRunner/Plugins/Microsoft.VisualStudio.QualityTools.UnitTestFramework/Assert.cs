@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using NAssert = NUnit.Framework.Assert;
+using NUnitAssert = NAssert.Assert;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting
 {
@@ -8,27 +8,27 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
     {
         public static void AreEqual(object expected, object actual)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual));
         }
 
         public static void AreEqual<T>(T expected, T actual)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual));
         }
         
         public static void AreEqual(double expected, double actual, double delta)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta));
         }
         
         public static void AreEqual(float expected, float actual, float delta)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta));
         }
         
         public static void AreEqual(object expected, object actual, string message)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, message));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, message));
         }
         
         public static void AreEqual(string expected, string actual, bool ignoreCase)
@@ -38,53 +38,53 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         
         public static void AreEqual<T>(T expected, T actual, string message)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, message));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, message));
         }
         
         public static void AreEqual(double expected, double actual, double delta, string message)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta, message));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta, message));
         }
         
         public static void AreEqual(float expected, float actual, float delta, string message)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta, message));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta, message));
         }
         
         public static void AreEqual(object expected, object actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, message, parameters));
         }
         
         public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreEqual(expected.ToLower(), actual.ToLower()));
+                toMSException(() => NUnitAssert.AreEqual(expected.ToLower(), actual.ToLower()));
             else
-                toMSException(() => NAssert.AreEqual(expected, actual));
+                toMSException(() => NUnitAssert.AreEqual(expected, actual));
         }
         
         public static void AreEqual(string expected, string actual, bool ignoreCase, string message)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreEqual(expected.ToLower(), actual.ToLower(), message));
+                toMSException(() => NUnitAssert.AreEqual(expected.ToLower(), actual.ToLower(), message));
             else
-                toMSException(() => NAssert.AreEqual(expected, actual, message));
+                toMSException(() => NUnitAssert.AreEqual(expected, actual, message));
         }
         
         public static void AreEqual<T>(T expected, T actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, message, parameters));
         }
         
         public static void AreEqual(double expected, double actual, double delta, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta, message, parameters));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta, message, parameters));
         }
         
         public static void AreEqual(float expected, float actual, float delta, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreEqual(expected, actual, delta, message, parameters));
+            toMSException(() => NUnitAssert.AreEqual(expected, actual, delta, message, parameters));
         }
         
         public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture, string message)
@@ -95,9 +95,9 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         public static void AreEqual(string expected, string actual, bool ignoreCase, string message, params object[] parameters)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreEqual(expected.ToLower(), actual.ToLower(), message, parameters));
+                toMSException(() => NUnitAssert.AreEqual(expected.ToLower(), actual.ToLower(), message, parameters));
             else
-                toMSException(() => NAssert.AreEqual(expected, actual, message, parameters));
+                toMSException(() => NUnitAssert.AreEqual(expected, actual, message, parameters));
         }
         
         public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture, string message, params object[] parameters)
@@ -107,12 +107,12 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         
         public static void AreNotEqual(object notExpected, object actual)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual));
         }
         
         public static void AreNotEqual<T>(T notExpected, T actual)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual));
         }
         
         public static void AreNotEqual(double notExpected, double actual, double delta)
@@ -130,20 +130,20 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         
         public static void AreNotEqual(object notExpected, object actual, string message)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual, message));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message));
         }
         
         public static void AreNotEqual(string notExpected, string actual, bool ignoreCase)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower()));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower()));
             else
-                toMSException(() => NAssert.AreNotEqual(notExpected, actual));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual));
         }
         
         public static void AreNotEqual<T>(T notExpected, T actual, string message)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual, message));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message));
         }
         
         public static void AreNotEqual(double notExpected, double actual, double delta, string message)
@@ -158,7 +158,7 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         
         public static void AreNotEqual(object notExpected, object actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message, parameters));
         }
         
         public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, CultureInfo culture)
@@ -169,14 +169,14 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, string message)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower(), message));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower(), message));
             else
-                toMSException(() => NAssert.AreNotEqual(notExpected, actual, message));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message));
         }
         
         public static void AreNotEqual<T>(T notExpected, T actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreNotEqual(notExpected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message, parameters));
         }
         
         public static void AreNotEqual(double notExpected, double actual, double delta, string message, params object[] parameters)
@@ -209,9 +209,9 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, string message, params object[] parameters)
         {
             if (ignoreCase)
-                toMSException(() => NAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower(), message, parameters));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected.ToLower(), actual.ToLower(), message, parameters));
             else
-                toMSException(() => NAssert.AreNotEqual(notExpected, actual, message, parameters));
+                toMSException(() => NUnitAssert.AreNotEqual(notExpected, actual, message, parameters));
         }
         
         public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, CultureInfo culture, string message, params object[] parameters)
@@ -221,152 +221,152 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
         
         public static void AreNotSame(object notExpected, object actual)
         {
-            toMSException(() => NAssert.AreNotSame(notExpected, actual));
+            toMSException(() => NUnitAssert.AreNotSame(notExpected, actual));
         }
         
         public static void AreNotSame(object notExpected, object actual, string message)
         {
-            toMSException(() => NAssert.AreNotSame(notExpected, actual, message));
+            toMSException(() => NUnitAssert.AreNotSame(notExpected, actual, message));
         }
         
         public static void AreNotSame(object notExpected, object actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreNotSame(notExpected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreNotSame(notExpected, actual, message, parameters));
         }
         
         public static void AreSame(object expected, object actual)
         {
-            toMSException(() => NAssert.AreSame(expected, actual));
+            toMSException(() => NUnitAssert.AreSame(expected, actual));
         }
         
         public static void AreSame(object expected, object actual, string message)
         {
-            toMSException(() => NAssert.AreSame(expected, actual, message));
+            toMSException(() => NUnitAssert.AreSame(expected, actual, message));
         }
         
         public static void AreSame(object expected, object actual, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.AreSame(expected, actual, message, parameters));
+            toMSException(() => NUnitAssert.AreSame(expected, actual, message, parameters));
         }
         
         public static void Fail()
         {
-            toMSException(() => NAssert.Fail());
+            toMSException(() => NUnitAssert.Fail());
         }
         
         public static void Fail(string message)
         {
-            toMSException(() => NAssert.Fail(message));
+            toMSException(() => NUnitAssert.Fail(message));
         }
         
         public static void Fail(string message, params object[] parameters)
         {
-            toMSException(() => NAssert.Fail(message, parameters));
+            toMSException(() => NUnitAssert.Fail(message, parameters));
         }
         
         public static void Inconclusive()
         {
-            toMSInconclusive(() => NAssert.Inconclusive());
+            toMSInconclusive(() => NUnitAssert.Inconclusive());
         }
         
         public static void Inconclusive(string message)
         {
-            toMSInconclusive(() => NAssert.Inconclusive(message));
+            toMSInconclusive(() => NUnitAssert.Inconclusive(message));
         }
         
         public static void Inconclusive(string message, params object[] parameters)
         {
-            toMSInconclusive(() => NAssert.Inconclusive(message, parameters));
+            toMSInconclusive(() => NUnitAssert.Inconclusive(message, parameters));
         }
         
         public static void IsFalse(bool condition)
         {
-            toMSException(() => NAssert.IsFalse(condition));
+            toMSException(() => NUnitAssert.IsFalse(condition));
         }
         
         public static void IsFalse(bool condition, string message)
         {
-            toMSException(() => NAssert.IsFalse(condition, message));
+            toMSException(() => NUnitAssert.IsFalse(condition, message));
         }
         
         public static void IsFalse(bool condition, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsFalse(condition, message, parameters));
+            toMSException(() => NUnitAssert.IsFalse(condition, message, parameters));
         }
         
         public static void IsInstanceOfType(object value, Type expectedType)
         {
-            toMSException(() => NAssert.IsInstanceOf(expectedType, value));
+            toMSException(() => NUnitAssert.IsInstanceOf(expectedType, value));
         }
         
         public static void IsInstanceOfType(object value, Type expectedType, string message)
         {
-            toMSException(() => NAssert.IsInstanceOf(expectedType, value, message));
+            toMSException(() => NUnitAssert.IsInstanceOf(expectedType, value, message));
         }
         
         public static void IsInstanceOfType(object value, Type expectedType, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsInstanceOf(expectedType, value, message, parameters));
+            toMSException(() => NUnitAssert.IsInstanceOf(expectedType, value, message, parameters));
         }
         
         public static void IsNotInstanceOfType(object value, Type wrongType)
         {
-            toMSException(() => NAssert.IsNotInstanceOf(wrongType, value));
+            toMSException(() => NUnitAssert.IsNotInstanceOf(wrongType, value));
         }
         
         public static void IsNotInstanceOfType(object value, Type wrongType, string message)
         {
-            toMSException(() => NAssert.IsNotInstanceOf(wrongType, value, message));
+            toMSException(() => NUnitAssert.IsNotInstanceOf(wrongType, value, message));
         }
         
         public static void IsNotInstanceOfType(object value, Type wrongType, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsNotInstanceOf(wrongType, value, message, parameters));
+            toMSException(() => NUnitAssert.IsNotInstanceOf(wrongType, value, message, parameters));
         }
         
         public static void IsNotNull(object value)
         {
-            toMSException(() => NAssert.IsNotNull(value));
+            toMSException(() => NUnitAssert.IsNotNull(value));
         }
         
         public static void IsNotNull(object value, string message)
         {
-            toMSException(() => NAssert.IsNotNull(value, message));
+            toMSException(() => NUnitAssert.IsNotNull(value, message));
         }
         
         public static void IsNotNull(object value, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsNotNull(value, message, parameters));
+            toMSException(() => NUnitAssert.IsNotNull(value, message, parameters));
         }
         
         public static void IsNull(object value)
         {
-            toMSException(() => NAssert.IsNull(value));
+            toMSException(() => NUnitAssert.IsNull(value));
         }
         
         public static void IsNull(object value, string message)
         {
-            toMSException(() => NAssert.IsNull(value, message));
+            toMSException(() => NUnitAssert.IsNull(value, message));
         }
         
         public static void IsNull(object value, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsNull(value, message, parameters));
+            toMSException(() => NUnitAssert.IsNull(value, message, parameters));
         }
         
         public static void IsTrue(bool condition)
         {
-            toMSException(() => NAssert.IsTrue(condition));
+            toMSException(() => NUnitAssert.IsTrue(condition));
         }
         
         public static void IsTrue(bool condition, string message)
         {
-            toMSException(() => NAssert.IsTrue(condition, message));
+            toMSException(() => NUnitAssert.IsTrue(condition, message));
         }
         
         public static void IsTrue(bool condition, string message, params object[] parameters)
         {
-            toMSException(() => NAssert.IsTrue(condition, message, parameters));
+            toMSException(() => NUnitAssert.IsTrue(condition, message, parameters));
         }
         
         public static string ReplaceNullChars(string input)

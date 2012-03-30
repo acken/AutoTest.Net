@@ -12,7 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 #endif
 using System.Xml.Serialization;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 #if !NETCF
     #region BinarySerializableConstraint

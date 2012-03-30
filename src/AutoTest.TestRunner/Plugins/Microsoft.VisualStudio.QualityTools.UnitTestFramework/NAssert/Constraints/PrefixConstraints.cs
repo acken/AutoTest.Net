@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 	#region PrefixConstraint
 	/// <summary>
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
 	/// NotConstraint negates the effect of some other constraint
 	/// </summary>
-	public class NotConstraint : PrefixConstraint
+    public class NotConstraint : PrefixConstraint
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:NotConstraint"/> class.
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Constraints
 	/// AllItemsConstraint applies another constraint to each
 	/// item in a collection, succeeding if they all succeed.
 	/// </summary>
-	public class AllItemsConstraint : PrefixConstraint
+    public class AllItemsConstraint : PrefixConstraint
 	{
 		/// <summary>
 		/// Construct an AllItemsConstraint on top of an existing constraint
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Constraints
 	/// SomeItemsConstraint applies another constraint to each
 	/// item in a collection, succeeding if any of them succeeds.
 	/// </summary>
-	public class SomeItemsConstraint : PrefixConstraint
+    public class SomeItemsConstraint : PrefixConstraint
 	{
 		/// <summary>
 		/// Construct a SomeItemsConstraint on top of an existing constraint

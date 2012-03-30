@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -88,6 +88,7 @@
     <Compile Include="Core\BuildRunners\BuildMessageTest.cs" />
     <Compile Include="Core\BuildRunners\BuildRunResultTest.cs" />
     <Compile Include="Core\BuildRunners\MSBuildOutputParserTest.cs" />
+    <Compile Include="Core\BuildRunners\MSTestSwitcharooTests.cs" />
     <Compile Include="Core\Caching\Crawlers\SolutionCrawlerTest.cs" />
     <Compile Include="Core\Caching\Fakes\FakeStackLine.cs" />
     <Compile Include="Core\Caching\Projects\ProjectReferenceParserTests.cs" />

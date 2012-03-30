@@ -82,6 +82,8 @@
     <Compile Include="BuildRunners\IAssemblyChangedProvider.cs" />
     <Compile Include="BuildRunners\IPreProcessBuildruns.cs" />
     <Compile Include="BuildRunners\MSBuildOutputParser.cs" />
+    <Compile Include="BuildRunners\MSTestCrossPlatformPreProcessor.cs" />
+    <Compile Include="BuildRunners\MSTestSwitcharoo.cs" />
     <Compile Include="BuildRunners\NullBuildPreProcessor.cs" />
     <Compile Include="Caching\Crawlers\ISolutionParser.cs" />
     <Compile Include="Caching\Crawlers\SolutionCrawler.cs" />

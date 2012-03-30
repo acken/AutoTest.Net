@@ -9,7 +9,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace NUnit.Framework.Constraints
+namespace NAssert.Constraints
 {
 
     /// <summary>Helper routines for working with floating point numbers</summary>
