@@ -33,6 +33,11 @@ namespace AutoTest.Core.BuildRunners
                                     if (switcher.IsGuyInCloset(project))
                                     {
                                         var tmpProject = getTempProject(x.Project.Key);
+                                        // We can do this because we know they are ordered in the right order
+                                        _tmpProjects.ForEach(y => 
+                                            project = project
+                                                .Replace("\\" + Path.GetFileName(getOriginalProject(y)), "\\" + Path.GetFileName(y))
+                                                .Replace("\"" + Path.GetFileName(getOriginalProject(y)), "\"" + Path.GetFileName(y)));
                                         File.WriteAllText(tmpProject, switcher.PerformSwitch(project));
                                         _tmpProjects.Add(tmpProject);
                                         x.BuildTemporaryProject(tmpProject);
