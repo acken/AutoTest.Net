@@ -10,13 +10,23 @@ using AutoTest.Core.Caching;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages.FileStorage;
+using FSWatcher;
 
 namespace AutoTest.Core.FileSystem
 {
+    enum FileChangeType
+    {
+        DirectoryCreated,
+        DirectoryDeleted,
+        FileCreated,
+        FileChanged,
+        FileDeleted
+    }
+
     public class DirectoryWatcher : IDirectoryWatcher
     {
         private readonly IMessageBus _bus;
-        private readonly FileSystemWatcher _watcher;
+        private FSWatcher.Watcher _watcher;
 		private IHandleDelayedConfiguration _delayedConfigurer;
         private IWatchPathLocator _watchPathLocator;
 		private IApplicatonLauncher _launcer;
@@ -47,18 +57,6 @@ namespace AutoTest.Core.FileSystem
             _cache = cache;
             _rebuildMarker = rebuildMarker;
             _solutionHanlder = solutionHanlder;
-            _watcher = new FileSystemWatcher
-                           {
-                               NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
-                               IncludeSubdirectories = true,
-                               Filter = "*.*",
-                           };
-            
-            _watcher.Changed += WatcherChangeHandler;
-            _watcher.Created += WatcherChangeHandler;
-            _watcher.Deleted += WatcherChangeHandler;
-            _watcher.Renamed += WatcherChangeHandler;
-            _watcher.Error += WatcherErrorHandler;
             if (!_configuration.StartPaused)
                 Resume();
         }
@@ -89,11 +87,22 @@ namespace AutoTest.Core.FileSystem
 			initializeTimer();
 			setupPreProcessors();
             setWatchPath(path);
-            _watcher.EnableRaisingEvents = true;
+            startWatcher(path);
             if (_configuration.StartPaused)
                 Pause();
             else
                 Resume();
+        }
+
+        private void startWatcher(string path)
+        {
+            _watcher = new Watcher(path,
+                (dir) => WatcherChangeHandler(dir),
+                (dir) => WatcherChangeHandler(dir),
+                (file) => WatcherChangeHandler(file),
+                (file) => WatcherChangeHandler(file),
+                (file) => WatcherChangeHandler(file));
+            _watcher.Watch();
         }
 
         private void setWatchPath(string path)
@@ -102,7 +111,6 @@ namespace AutoTest.Core.FileSystem
                 path = _watchPathLocator.Locate(path);
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
-            _watcher.Path = path;
 			_launcer.Initialize(path);
         }
 		
@@ -143,17 +151,11 @@ namespace AutoTest.Core.FileSystem
                 _configuration.DisableLogging();
 		}
 
-        private void WatcherChangeHandler(object sender, FileSystemEventArgs e)
+        private void WatcherChangeHandler(string path)
         {
             if (_paused)
                 return;
-            addToBuffer(new ChangedFile(e.FullPath));
-        }
-
-        void WatcherErrorHandler(object sender, ErrorEventArgs e)
-        {
-            Debug.WriteDebug("FileSystemWatcher failed to handle changes");
-            Debug.WriteDebug(e.GetException().ToString());
+            addToBuffer(new ChangedFile(path));
         }
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -235,7 +237,7 @@ namespace AutoTest.Core.FileSystem
         /// </summary>
         public void Dispose()
         {
-            _watcher.Dispose();
+            _watcher.StopWatching();
         }
     }
 }
