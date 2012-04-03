@@ -356,7 +356,7 @@ namespace AutoTest.Test.Core.Configuration
         public void Shoud_not_contain_build_pre_processors()
         {
             var preProcessors = _locator.LocateAll<IPreProcessBuildruns>();
-            preProcessors.Length.ShouldEqual(2);
+            preProcessors.Length.ShouldEqual(3);
         }
 
         [Test]

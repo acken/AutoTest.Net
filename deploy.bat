@@ -108,9 +108,12 @@ copy %BINARYDIR%\Simple.Testing.Framework.dll %DEPLOYDIR%\TestRunners\SimpleTest
 copy %BINARYDIR%\Simple.Testing.ClientFramework.dll %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.ClientFramework.dll
 copy %BINARYDIR%\PowerAssert.dll %DEPLOYDIR%\TestRunners\SimpleTesting\PowerAssert.dll
 
-
 copy %DIR%\lib\Gallio\Gallio.XmlSerializers.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.XmlSerializers.dll
 copy %BINARYDIR%\mbunit.config %DEPLOYDIR%\TestRunners\MbUnit\mbunit.config
+
+copy %BINARYDIR%\Worst.Testing.Framework.Ever.dll %DEPLOYDIR%\Worst.Testing.Framework.Ever.dll
+copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\Worst.Testing.Framework.Ever.License.txt %DEPLOYDIR%\Worst.Testing.Framework.Ever.License.txt
+copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\NUnit.License.txt %DEPLOYDIR%\NUnit.License.txt
 
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
