@@ -115,6 +115,7 @@ copy %BINARYDIR%\Worst.Testing.Framework.Ever.dll %DEPLOYDIR%\Worst.Testing.Fram
 copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\Worst.Testing.Framework.Ever.License.txt %DEPLOYDIR%\Worst.Testing.Framework.Ever.License.txt
 copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\NUnit.License.txt %DEPLOYDIR%\NUnit.License.txt
 
+copy %BINARYDIR%\FSWatcher.dll %DEPLOYDIR%\FSWatcher.dll
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
 copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt

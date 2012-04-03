@@ -75,6 +75,7 @@ Source: "..\ReleaseBinaries\Worst.Testing.Framework.Ever.dll"; DestDir: "{app}";
 Source: "..\ReleaseBinaries\NUnit.License.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Worst.Testing.Framework.Ever.License.txt"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "..\ReleaseBinaries\FSWatcher.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Castle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Castle.Facilities.Logging.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\Castle.license.txt"; DestDir: "{app}"; Flags: ignoreversion

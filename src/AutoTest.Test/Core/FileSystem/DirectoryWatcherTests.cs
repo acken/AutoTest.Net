@@ -17,6 +17,7 @@ using AutoTest.Messages.FileStorage;
 namespace AutoTest.Test.Core
 {
     [TestFixture]
+    [Category("slow")]
     public class DirectoryWatcherTests
     {
         private string _file;
