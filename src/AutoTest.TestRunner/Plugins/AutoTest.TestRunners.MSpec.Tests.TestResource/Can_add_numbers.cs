@@ -10,7 +10,7 @@ namespace AutoTest.TestRunners.MSpec.Tests.TestResource
     public class Can_add_numbers
     {
         static int sum = 0;
-
+        
         Because of = () => sum = 2 + 2;
 
         It results_in_4 = () => sum.Equals(4);
