@@ -86,7 +86,7 @@ namespace AutoTest.Core.FileSystem
 			mergeLocalConfig(path);
 			initializeTimer();
 			setupPreProcessors();
-            setWatchPath(path);
+            path = setWatchPath(path);
             startWatcher(path);
             if (_configuration.StartPaused)
                 Pause();
@@ -105,13 +105,14 @@ namespace AutoTest.Core.FileSystem
             _watcher.Watch();
         }
 
-        private void setWatchPath(string path)
+        private string setWatchPath(string path)
         {
             if (_isWatchingSolution && _configuration.UseLowestCommonDenominatorAsWatchPath)
                 path = _watchPathLocator.Locate(path);
             Debug.WriteDebug("Watching {0}, IsWatchingSolution = {1}, UseLowestCommonDenominatorAsWatchPath = {2}", path, _isWatchingSolution, _configuration.UseLowestCommonDenominatorAsWatchPath);
             _bus.Publish(new InformationMessage(string.Format("Starting AutoTest.Net and watching \"{0}\" and all subdirectories.", path)));
 			_launcer.Initialize(path);
+            return path;
         }
 		
 		private void setupPreProcessors()
