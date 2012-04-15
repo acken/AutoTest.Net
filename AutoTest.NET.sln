@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.Simple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.VisualStudio.QualityTools.UnitTestFramework", "src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\Microsoft.VisualStudio.QualityTools.UnitTestFramework.csproj", "{712F063F-2F83-4E42-89A7-1EA114F539A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTest.TestRunners.MSpec.Tests.TestResource", "src\AutoTest.TestRunner\Plugins\AutoTest.TestRunners.MSpec.Tests.TestResource\AutoTest.TestRunners.MSpec.Tests.TestResource.csproj", "{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = AutoTest.NET.vsmdi
@@ -360,6 +362,16 @@ Global
 		{712F063F-2F83-4E42-89A7-1EA114F539A1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{712F063F-2F83-4E42-89A7-1EA114F539A1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{712F063F-2F83-4E42-89A7-1EA114F539A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -397,6 +409,7 @@ Global
 		{D4655401-9406-4E3B-B347-BF09715FB6CD} = {3B4A0917-8A55-46A0-A5ED-6AA5E853DFF5}
 		{68BA6298-D4EC-4A02-905E-1AF3C0EB2C76} = {3B4A0917-8A55-46A0-A5ED-6AA5E853DFF5}
 		{849CF95D-A213-4CCE-B598-C328FE398FBC} = {D4655401-9406-4E3B-B347-BF09715FB6CD}
+		{5EEF8AED-7FE2-4929-8C27-79FBA466BA17} = {D4655401-9406-4E3B-B347-BF09715FB6CD}
 		{D6647114-59E5-4811-8C0D-6BBA3D4A68F5} = {5FA46723-32D9-4512-9D8A-ECD4B27F0102}
 		{96B0635D-C7E7-40F1-981D-89D1FC4BDC49} = {5FA46723-32D9-4512-9D8A-ECD4B27F0102}
 		{7C78B8BD-C1F7-4F36-AC77-9510E67E8F48} = {D6647114-59E5-4811-8C0D-6BBA3D4A68F5}

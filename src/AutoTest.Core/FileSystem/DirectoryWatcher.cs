@@ -237,7 +237,8 @@ namespace AutoTest.Core.FileSystem
         /// </summary>
         public void Dispose()
         {
-            _watcher.StopWatching();
+            if (_watcher != null)
+                _watcher.StopWatching();
         }
     }
 }

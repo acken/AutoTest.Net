@@ -57,7 +57,6 @@ namespace AutoTest.Test.Core
             _pathLocator.Stub(x => x.Locate(_watchDirectory)).Return(_watchDirectory);
 			_localConfig = new PathTranslator(_watchDirectory).Translate(Path.Combine(_watchDirectory, "AutoTest.config"));
 			File.WriteAllText(_localConfig, "<configuration></configuration>");
-            _watcher.Watch(_watchDirectory);
         }
 
         [TearDown]
@@ -90,18 +89,18 @@ namespace AutoTest.Test.Core
             configuration.Stub(x => x.IgnoreFile).Return("");
             configuration.Stub(c => c.WatchAllFiles).Return(true);
 			validator.Stub(v => v.GetIgnorePatterns()).Return("");
+            validator.Stub(v => v.ShouldPublish("")).IgnoreArguments().Return(true).Repeat.Any();
 			configuration.Stub(c => c.FileChangeBatchDelay).Return(50);
             var watcher = new DirectoryWatcher(messageBus, validator, configuration, MockRepository.GenerateMock<IHandleDelayedConfiguration>(), _pathLocator, _launcer, _cahce, _rebuildMarker, _slnConsumer);
             var file = Path.GetFullPath("watcher_test_changes_once.txt");
 			var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
-            Thread.Sleep(500);
-
-            validator.Stub(v => v.ShouldPublish("")).IgnoreArguments().Return(true).Repeat.Any();
+            Thread.Sleep(1000);
+            
             // Write twice
             File.WriteAllText(file, "meh ");
             using (var writer = new StreamWriter(file, true)) { writer.WriteLine("some text"); }
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
             
             messageBus.AssertWasCalled(
                 m => m.Publish<FileChangeMessage>(
@@ -118,6 +117,7 @@ namespace AutoTest.Test.Core
         [Test]
         public void Should_not_publish_event_when_validator_invalidates_change()
         {
+            _watcher.Watch(_watchDirectory);
             _validator.Stub(v => v.ShouldPublish("")).IgnoreArguments().Return(false);
             File.Create(_file).Dispose();
             Thread.Sleep(100);
@@ -127,6 +127,7 @@ namespace AutoTest.Test.Core
 		[Test]
 		public void Should_reload_configuration_with_local_config()
 		{
+            _watcher.Watch(_watchDirectory);
 			_configuration.AssertWasCalled(c => c.Reload(_localConfig));
 		}
 
@@ -168,12 +169,12 @@ namespace AutoTest.Test.Core
             var file = Path.GetFullPath("not_detection_when_paused.txt");
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
             watcher.Pause();
             watcher.Resume();
 
             File.WriteAllText(file, "meh ");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(new FileChangeMessage()), m => m.IgnoreArguments());
         }
@@ -237,10 +238,10 @@ namespace AutoTest.Test.Core
             watcher.Watch(watchDirectory);
             watcher.Pause();
             watcher.Resume();
-            Thread.Sleep(500);
+            Thread.Sleep(1500);
 
             File.WriteAllText(file, "meh ");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(new FileChangeMessage()), m => m.IgnoreArguments());
         }
@@ -261,12 +262,12 @@ namespace AutoTest.Test.Core
             _cahce.Stub(c => c.Get<Project>(file)).Return(new Project("", new ProjectDocument(ProjectType.VisualBasic)));
             var watchDirectory = Path.GetDirectoryName(file);
             watcher.Watch(watchDirectory);
+            Thread.Sleep(1500);
             watcher.Pause();
             watcher.Resume();
-            Thread.Sleep(500);
 
             File.WriteAllText(file, "meh ");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 			
 			Assert.That(messageBus.Message, Is.Not.Null);
             //messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(new FileChangeMessage()), m => m.IgnoreArguments());
@@ -313,10 +314,10 @@ namespace AutoTest.Test.Core
             watcher.Watch(watchDirectory);
             watcher.Pause();
             watcher.Resume();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             File.WriteAllText(file, "meh ");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(new FileChangeMessage()), m => m.IgnoreArguments());
         }
@@ -338,10 +339,10 @@ namespace AutoTest.Test.Core
             watcher.Watch(watchDirectory);
             watcher.Pause();
             watcher.Resume();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             File.WriteAllText(file, "meh ");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             messageBus.AssertWasCalled(m => m.Publish<FileChangeMessage>(new FileChangeMessage()), m => m.IgnoreArguments());
         }

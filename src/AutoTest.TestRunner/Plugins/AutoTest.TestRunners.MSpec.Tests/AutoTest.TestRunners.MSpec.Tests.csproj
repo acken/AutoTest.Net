@@ -68,6 +68,10 @@
       <Project>{7D34AABB-DD67-4826-AD89-75D91A1375F5}</Project>
       <Name>AutoTest.TestRunners.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AutoTest.TestRunners.MSpec.Tests.TestResource\AutoTest.TestRunners.MSpec.Tests.TestResource.csproj">
+      <Project>{5EEF8AED-7FE2-4929-8C27-79FBA466BA17}</Project>
+      <Name>AutoTest.TestRunners.MSpec.Tests.TestResource</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AutoTest.TestRunners.MSpec\AutoTest.TestRunners.MSpec.csproj">
       <Project>{68BA6298-D4EC-4A02-905E-1AF3C0EB2C76}</Project>
       <Name>AutoTest.TestRunners.MSpec</Name>
