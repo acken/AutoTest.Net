@@ -37,7 +37,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             if (testName == null)
                 return;
-            Logger.Write("{0}...", testName);
+            Logger.WriteChunk("\t{0}...", testName);
             _channel.Send("Test started:" + testName);
         }
 
@@ -45,16 +45,16 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             if (result == null)
             {
-                Logger.Write("Testresult was null");
+                Logger.Write(" - Testresult was null");
                 return;
             }
             var xml = result.ToXml();
             if (xml == null)
             {
-                Logger.Write("Could not generate xml from " + result.TestName);
+                Logger.Write(" - Could not generate xml from " + result.TestName);
                 return;
             }
-            Logger.Write("{0} {1}", result.TestFixture, result.State.ToString());
+            Logger.Write(" - {0}", result.State.ToString());
             _channel.Send(xml);
         }
     }

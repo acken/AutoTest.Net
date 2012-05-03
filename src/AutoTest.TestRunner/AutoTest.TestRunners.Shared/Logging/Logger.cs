@@ -25,6 +25,16 @@ namespace AutoTest.TestRunners.Shared.Logging
         {
             _instance.Write(message, args);
         }
+		
+		public static void WriteChunk(string message)
+		{
+			_instance.WriteChunk(message);
+		}
+        
+		public static void WriteChunk(string message, params object[] args)
+		{
+			_instance.WriteChunk(message, args);
+		}
 
         public static void Write(Exception ex)
         {

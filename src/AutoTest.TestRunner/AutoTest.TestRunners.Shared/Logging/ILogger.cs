@@ -9,6 +9,8 @@ namespace AutoTest.TestRunners.Shared.Logging
     {
         void Write(string message);
         void Write(string message, params object[] args);
+		void WriteChunk(string message);
+        void WriteChunk(string message, params object[] args);
         void Write(Exception ex);
     }
 }

@@ -14,6 +14,14 @@ namespace AutoTest.TestRunners.Shared.Logging
         public void Write(string message, params object[] args)
         {
         }
+		
+		public void WriteChunk(string message)
+		{
+		}
+        
+		public void WriteChunk(string message, params object[] args)
+		{
+		}
 
         public void Write(Exception ex)
         {
