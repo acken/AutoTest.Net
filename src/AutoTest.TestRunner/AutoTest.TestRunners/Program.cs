@@ -119,6 +119,7 @@ namespace AutoTest.TestRunners
             var message = getException((Exception)args.ExceptionObject);
 
             // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
+			// Yean, seriously. When user code throws background exceptions we want them to know.
             if (!_arguments.CompatabilityMode && !args.ExceptionObject.GetType().Equals(typeof(System.AppDomainUnloadedException)))
             {
                 var finalOutput = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test.", TestState.Panic,
