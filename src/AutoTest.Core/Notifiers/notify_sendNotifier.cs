@@ -50,7 +50,7 @@ namespace AutoTest.Core.Notifiers
 					icon += "/Icons/circleFAIL.png";
 					break;
 			}
-			string args = "\"AutoTest.Net\" \"" + msg + "\" --icon=\"" + icon + "\"";
+			string args = "\"AutoTest.Net\" \"" + msg + "\" --icon=\"" + icon + "\" --urgency=critical";
 			var process = new Process();
             process.StartInfo = new ProcessStartInfo("notify-send", args);
 			process.StartInfo.CreateNoWindow = true;
