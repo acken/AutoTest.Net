@@ -15,6 +15,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         private List<PipeClient> _pipeClients = new List<PipeClient>();
         private Stack<byte[]> _messages = new Stack<byte[]>();
         private bool _exit = false;
+		private Thread _serverThread;
 
         public PipeJunction(string pipeName)
         {
@@ -23,10 +24,9 @@ namespace AutoTest.TestRunners.Shared.Communication
             _server = new NamedPipeServerStream(pipeName, PipeDirection.Out);
             var connect = new Thread(() => _server.WaitForConnection());
             _pipes.Add(connect);
-            var server = new Thread(startServer);
-            _pipes.Add(server);
+            _serverThread = new Thread(startServer);
             connect.Start();
-            server.Start();
+            _serverThread.Start();
         }
 
         public void Combine(string pipe)
@@ -57,7 +57,7 @@ namespace AutoTest.TestRunners.Shared.Communication
                 {
                     if (!_server.IsConnected || _messages.Count == 0)
                     {
-                        Thread.Sleep(15);
+                        Thread.Sleep(10);
                         continue;
                     }
                     var bytes = _messages.Pop();
@@ -66,13 +66,15 @@ namespace AutoTest.TestRunners.Shared.Communication
                     buffer[buffer.Length - 1] = 0;
                     _server.Write(buffer, 0, buffer.Length);
                 }
+				
                 foreach (var client in _pipeClients)
                 {
                     if (client != null)
                         client.Disconnect();
                 }
-                if (_server.IsConnected)
-                    _server.Disconnect();
+				
+				disconnectServer();
+                
                 // Make sure we kill the waiting threads so the app can quit
                 _pipes.ForEach(x => x.Join());
             }
@@ -81,10 +83,20 @@ namespace AutoTest.TestRunners.Shared.Communication
             }
         }
 
+		private void disconnectServer()
+		{
+			// Disconnecting the server faults in mono
+			if (Environment.OSVersion.Platform == PlatformID.Unix ||
+				Environment.OSVersion.Platform == PlatformID.MacOSX)
+				return;
+			if (_server.IsConnected)
+				_server.Disconnect();
+		}
+
         public void Dispose()
         {
             _exit = true;
-            Thread.Sleep(20);
+            _serverThread.Join();
         }
     }
 }

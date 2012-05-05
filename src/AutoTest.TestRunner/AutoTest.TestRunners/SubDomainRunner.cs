@@ -54,6 +54,7 @@ namespace AutoTest.TestRunners
                 };
 
                 // Create the child AppDomain used for the service tool at runtime.
+                Logger.Write("");
                 Logger.Write("Starting sub domain");
                 childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
 

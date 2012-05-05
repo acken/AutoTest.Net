@@ -26,10 +26,6 @@ namespace AutoTest.TestRunners
         [STAThread]
         static void Main(string[] args)
         {
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp15F1.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmp4463.tmp", "--startsuspended", "--silent" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmpCC98.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpA3BA.tmp" };
-            //args = new string[] { @"--input=C:\Users\ack\AppData\Local\Temp\tmp639.tmp", @"--output=C:\Users\ack\AppData\Local\Temp\tmpB02D.tmp" };
-            //args = new string[] { @"--input=C:\Users\n06261\AppData\Local\Temp\tmp1BF9.tmp", @"--output=C:\Users\n06261\AppData\Local\Temp\tmpB02D.tmp", "--logging" };
             _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
@@ -68,7 +64,6 @@ namespace AutoTest.TestRunners
                     thread.Abort();
                 Thread.Sleep(100);
             }
-
         }
 
         private static void writeHeader()
@@ -119,6 +114,7 @@ namespace AutoTest.TestRunners
             var message = getException((Exception)args.ExceptionObject);
 
             // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
+			// Yeah, seriously. When user code throws background exceptions we want them to know.
             if (!_arguments.CompatabilityMode && !args.ExceptionObject.GetType().Equals(typeof(System.AppDomainUnloadedException)))
             {
                 var finalOutput = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test.", TestState.Panic,
