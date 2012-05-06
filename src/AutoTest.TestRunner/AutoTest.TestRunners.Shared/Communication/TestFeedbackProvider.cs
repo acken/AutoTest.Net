@@ -10,6 +10,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 {
     public interface ITestFeedbackProvider
     {
+		void RunStarted();
         void TestStarted(string testName);
         void TestFinished(TestResult result);
 		void RunFinished(int testsRan);
@@ -17,6 +18,10 @@ namespace AutoTest.TestRunners.Shared.Communication
 
     public class NullTestFeedbackProvider : ITestFeedbackProvider
     {
+		public void RunStarted()
+		{
+		}
+
         public void TestFinished(TestResult result)
         {
         }
@@ -38,6 +43,11 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             _channel = channel;
         }
+		
+		public void RunStarted()
+		{
+			_channel.Send("Run started");
+		}
 
         public void TestStarted(string testName)
         {

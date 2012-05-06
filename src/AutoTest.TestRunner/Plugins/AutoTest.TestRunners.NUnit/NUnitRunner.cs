@@ -66,6 +66,7 @@ namespace AutoTest.TestRunners.NUnit
             TestResult result = null;
             try
             {
+				_channel.RunStarted();
 				var harvester = new TestHarvester(_channel);
                 result = _testRunner.Run(harvester, testFilter);
 				_channel.RunFinished(harvester.Results.Count());
