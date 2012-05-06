@@ -70,7 +70,6 @@ namespace AutoTest.TestRunners
 				while (isRunning)
 					Thread.Sleep(10);
 				client.Disconnect();
-				Console.WriteLine("Exiting");
             }
             catch
             {

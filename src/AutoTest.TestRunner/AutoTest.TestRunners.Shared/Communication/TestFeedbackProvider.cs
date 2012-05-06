@@ -12,6 +12,7 @@ namespace AutoTest.TestRunners.Shared.Communication
     {
         void TestStarted(string testName);
         void TestFinished(TestResult result);
+		void RunFinished(int testsRan);
     }
 
     public class NullTestFeedbackProvider : ITestFeedbackProvider
@@ -23,6 +24,10 @@ namespace AutoTest.TestRunners.Shared.Communication
         public void TestStarted(string testName)
         {
         }
+		
+		public void RunFinished(int testsRan)
+		{
+		}
     }
 
     public class TestFeedbackProvider : ITestFeedbackProvider
@@ -58,5 +63,11 @@ namespace AutoTest.TestRunners.Shared.Communication
             Logger.Write(" - {0}", result.State.ToString());
             _channel.Send(xml);
         }
+
+		public void RunFinished(int testsRan)
+		{
+			Logger.Write("Ran {0} tests", testsRan);
+			_channel.Send("Run finished:" + testsRan.ToString());
+		}
     }
 }

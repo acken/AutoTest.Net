@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using NUnit.Core;
 using NUnit.Util;
@@ -67,7 +68,7 @@ namespace AutoTest.TestRunners.NUnit
             {
 				var harvester = new TestHarvester(_channel);
                 result = _testRunner.Run(harvester, testFilter);
-				// TODO Add run finished message (total time (ms), number of tests
+				_channel.RunFinished(harvester.Results.Count());
             }
             catch (Exception ex)
             {

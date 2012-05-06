@@ -30,7 +30,7 @@ namespace AutoTest.TestRunners
 				var client = new SocketClient();
 				client.Connect(new ConnectionOptions("127.0.0.1", 8090), (meh) => {});
 				client.Send(args[0]);
-				Console.WriteLine("Sent " + args[0]);
+				Console.Write("");
 				return;
 			}
 
@@ -114,7 +114,6 @@ namespace AutoTest.TestRunners
 						continue;
 					foreach (var assembly in run.Assemblies)
 					{
-						WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
 						var process = new SubDomainRunner(
 							plugin,
 							run.ID,
@@ -146,6 +145,8 @@ namespace AutoTest.TestRunners
 			UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
+			// TODO Fix this (all test result should be sent through feedback channel)
+
 
             // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
 			// Yeah, seriously. When user code throws background exceptions we want them to know.

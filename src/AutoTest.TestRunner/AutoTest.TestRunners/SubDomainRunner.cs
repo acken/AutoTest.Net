@@ -96,7 +96,6 @@ namespace AutoTest.TestRunners
                 if (handle != null)
                     handle.Set();
                 unloadDomain(childDomain);
-                Program.WriteNow("Finished running tests for " + _assembly.Assembly);
             }
         }
 
