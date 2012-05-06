@@ -9,6 +9,7 @@ using System.Threading;
 using System.IO;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners
 {
@@ -19,17 +20,24 @@ namespace AutoTest.TestRunners
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
         private bool _shouldLog = false;
-        private string _pipeName;
+        private ConnectionOptions _connectOptions;
         private bool _compatibilityMode;
 
-        public SubDomainRunner(Plugin plugin, string id, IEnumerable<string> categories, AssemblyOptions assembly, bool shouldLog, string pipeName, bool compatibilityMode)
+        public SubDomainRunner(
+			Plugin plugin,
+			string id,
+			IEnumerable<string> categories,
+			AssemblyOptions assembly,
+			bool shouldLog,
+			ConnectionOptions connectOptions,
+			bool compatibilityMode)
         {
             _plugin = plugin;
             _id = id;
             _categories = categories;
             _assembly = assembly;
             _shouldLog = shouldLog;
-            _pipeName = pipeName;
+            _connectOptions = connectOptions;
             _compatibilityMode = compatibilityMode;
         }
 
@@ -60,14 +68,23 @@ namespace AutoTest.TestRunners
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
-                ITestRunner runtime = (ITestRunner)childDomain.CreateInstanceFromAndUnwrap(Assembly.GetExecutingAssembly().Location, typeof(TestRunner).FullName); //typeof(TestRunner).Assembly.FullName, typeof(TestRunner).FullName);
+                ITestRunner runtime = (ITestRunner)childDomain
+					.CreateInstanceFromAndUnwrap(
+						Assembly.GetExecutingAssembly().Location,
+						typeof(TestRunner).FullName);
 
                 // Prepare assemblies
                 Logger.Write("Preparing resolver");
                 runtime.SetupResolver(_shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(runtime.Run(_plugin, _id, new RunSettings(_assembly, _categories.ToArray(), _pipeName)));
+                Program.AddResults(
+					runtime.Run(
+						_plugin,
+						_id,
+						new RunSettings(_assembly,
+						_categories.ToArray(),
+						_connectOptions)));
             }
             catch (Exception ex)
             {

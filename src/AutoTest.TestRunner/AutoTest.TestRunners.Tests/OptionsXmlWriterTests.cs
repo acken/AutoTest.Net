@@ -17,7 +17,7 @@ namespace AutoTest.TestRunners.Tests
         [Test]
         public void Should_produce_xml()
         {
-            var plugins = new List<Plugin>();
+            /*var plugins = new List<Plugin>();
             var options = new RunOptions();
             plugins.Add(new Plugin(@"C:\Some\Path\Assembly.dll", "This.Is.Full.Type.Name.For.Class.Implementing.IAutoTestNetTestRunner"));
             plugins.Add(new Plugin(@"C:\Some\Path\Assembly.dll", "Some.Class.Name"));
@@ -43,7 +43,8 @@ namespace AutoTest.TestRunners.Tests
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var original = File.ReadAllText(file).Replace("\r\n", "\n");
             var generated = File.ReadAllText(Path.Combine(path, "TestOptionsCorrected.xml")).Replace("\r\n", "\n");
-            Assert.That(original, Is.EqualTo(generated));
+            Assert.That(original, Is.EqualTo(generated));*/
+			Assert.Fail("Fix this");
         }
     }
 }

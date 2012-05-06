@@ -15,6 +15,7 @@ namespace AutoTest.TestRunners
         public bool Logging { get; set; }
         public string Channel { get; set; }
         public bool CompatabilityMode { get; set; }
+		public int Port { get; set; }
     }
 
     public class ArgumentParser
@@ -53,6 +54,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.Channel = getValue(argument, "--channel=");
             if (iAm(argument, "--compatibility-mode"))
                 _parsedArgument.CompatabilityMode = true;
+			if (iAm(argument, "--port"))
+                _parsedArgument.Port = toInt(getValue(argument, "--port="));
         }
 
         private bool iAm(string argument, string parameterName)
@@ -64,8 +67,18 @@ namespace AutoTest.TestRunners
         {
             if (parameterName.Length >= parameter.Length)
                 return "";
-            return parameter.Substring(parameterName.Length, parameter.Length - parameterName.Length).Replace("\"", "");
+            return parameter.Substring(
+				parameterName.Length,
+				parameter.Length - parameterName.Length).Replace("\"", "");
         }
+
+		private int toInt(string value)
+		{
+			int val;
+			if (int.TryParse(value, out val))
+				return val;
+			return 0;
+		}
 
         private string getDefaultChannel()
         {

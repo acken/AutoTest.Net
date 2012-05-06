@@ -11,7 +11,6 @@ namespace AutoTest.TestRunners.Shared.Options
 {
     public class OptionsXmlReader
     {
-        private string _file;
         private List<Plugin> _plugins = new List<Plugin>();
         private RunOptions _options = null;
         private XmlDocument _xml = null;
@@ -23,22 +22,21 @@ namespace AutoTest.TestRunners.Shared.Options
         public RunOptions Options { get { return _options; } }
         public bool IsValid { get; private set; }
 
-        public OptionsXmlReader(string file)
+        public OptionsXmlReader()
         {
-            _file = file;
             IsValid = false;
         }
 
-        public void Parse()
+        public void ParseFile(string file)
         {
-            if (!File.Exists(_file))
+            if (!File.Exists(file))
             {
                 _plugins = null;
                 return;
             }
 
             _options = new RunOptions();
-            using (var reader = new XmlTextReader(_file))
+            using (var reader = new XmlTextReader(file))
             {
                 while (reader.Read())
                 {
@@ -50,46 +48,66 @@ namespace AutoTest.TestRunners.Shared.Options
                         getCategory(reader);
                     else if (reader.Name.Equals("test_assembly"))
                         getAssembly(reader);
-                    else if (reader.Name.Equals("test") && reader.NodeType != XmlNodeType.EndElement)
-                        getTest(reader);
-                    else if (reader.Name.Equals("member") && reader.NodeType != XmlNodeType.EndElement)
-                        getMember(reader);
-                    else if (reader.Name.Equals("namespace") && reader.NodeType != XmlNodeType.EndElement)
-                        getNamespace(reader);
                 }
             }
             IsValid = true;
         }
 
-        private void getNamespace(XmlTextReader reader)
+		public static TestRunOptions ParseOptions(string xml)
+		{
+			var options = new TestRunOptions();
+			using (var reader = XmlReader.Create(new StringReader(xml)))
+			{
+				while (reader.Read())
+				{
+					if (reader.Name.Equals("test_run") && reader.NodeType != XmlNodeType.EndElement)
+                        getRun(reader, options);
+					else if (reader.Name.Equals("test") && reader.NodeType != XmlNodeType.EndElement)
+						getTest(reader, options);
+					else if (reader.Name.Equals("member") && reader.NodeType != XmlNodeType.EndElement)
+						getMember(reader, options);
+					else if (reader.Name.Equals("namespace") && reader.NodeType != XmlNodeType.EndElement)
+						getNamespace(reader, options);
+				}
+
+			}
+			return options;
+		}
+
+        private static void getNamespace(XmlReader reader, TestRunOptions options)
         {
             reader.Read();
-            if (!_currentAssembly.Namespaces.Contains(reader.Value))
-                _currentAssembly.AddNamespace(reader.Value);
+            if (!options.Namespaces.Contains(reader.Value))
+                options.AddNamespace(reader.Value);
         }
 
-        private void getMember(XmlTextReader reader)
+        private static void getMember(XmlReader reader, TestRunOptions options)
         {
             reader.Read();
-            if (!_currentAssembly.Members.Contains(reader.Value))
-                _currentAssembly.AddMember(reader.Value);
+            if (!options.Members.Contains(reader.Value))
+                options.AddMember(reader.Value);
+        }
+
+		private static void getRun(XmlReader reader, TestRunOptions options)
+        {
+            options.HasBeenVerified(reader.GetAttribute("verified") == "true");
         }
 
         private void getAssembly(XmlTextReader reader)
         {
-            if (reader.IsEmptyElement)
-                _currentRunner.AddAssembly(new AssemblyOptions(reader.GetAttribute("name")).HasBeenVerified(reader.GetAttribute("verified") == "true"));
+			if (reader.IsEmptyElement)
+                _currentRunner.AddAssembly(new AssemblyOptions(reader.GetAttribute("name")));
             else if (reader.NodeType == XmlNodeType.EndElement)
                 _currentRunner.AddAssembly(_currentAssembly);
             else
-                _currentAssembly = new AssemblyOptions(reader.GetAttribute("name")).HasBeenVerified(reader.GetAttribute("verified") == "true");
+                _currentAssembly = new AssemblyOptions(reader.GetAttribute("name"));
         }
 
-        private void getTest(XmlTextReader reader)
+        private static void getTest(XmlReader reader, TestRunOptions options)
         {
             reader.Read();
-            if (!_currentAssembly.Tests.Contains(reader.Value))
-                _currentAssembly.AddTest(reader.Value);
+            if (!options.Tests.Contains(reader.Value))
+                options.AddTest(reader.Value);
         }
 
         private void getCategory(XmlTextReader reader)
@@ -129,102 +147,5 @@ namespace AutoTest.TestRunners.Shared.Options
             if (_plugins.FirstOrDefault(x => x.Assembly.Equals(assembly) && x.Type.Equals(type)) == null)
                 _plugins.Add(new Plugin(assembly, type));
         }
-
-        private void openDocument()
-        {
-            try
-            {
-                _xml = new XmlDocument();
-                _xml.Load(_file);
-            }
-            catch (Exception ex)
-            {
-                _xml = null;
-                Console.WriteLine("Could not load run options: \"{0}\"", ex.Message);
-            }
-        }
-
-        //private void parsePlugins()
-        //{
-        //    var nodes = _xml.SelectNodes("run/plugin");
-        //    foreach (XmlNode node in nodes)
-        //    {
-        //        XmlNode typeNode = node.Attributes.GetNamedItem("type");
-        //        string type = null;
-        //        if (typeNode != null)
-        //            type = typeNode.InnerXml;
-        //        var assembly = node.InnerXml;
-        //        _plugins.Add(new Plugin(assembly, type));
-        //    }
-        //}
-
-        //private void parseOptions()
-        //{
-        //    _options = new RunOptions();
-        //    var nodes = _xml.SelectNodes("run/runner");
-        //    foreach (XmlNode node in nodes)
-        //    {
-        //        XmlNode idNode = node.Attributes.GetNamedItem("id");
-        //        string id = null;
-        //        if (idNode != null)
-        //            id = idNode.InnerXml;
-        //        var runner = new RunnerOptions(id);
-        //        runner.AddCategories(getCategories(node));
-        //        runner.AddAssemblies(getAssemblies(node));
-        //        _options.AddTestRun(runner);
-        //    }
-        //}
-
-        //private string[] getCategories(XmlNode parent)
-        //{
-        //    var categories = new List<string>();
-        //    var nodes = parent.SelectNodes("categories/ignore_category");
-        //    foreach (XmlNode node in nodes)
-        //        categories.Add(node.InnerXml);
-        //    return categories.ToArray();
-        //}
-
-        //private AssemblyOptions[] getAssemblies(XmlNode parent)
-        //{
-        //    var assemblies = new List<AssemblyOptions>();
-        //    var nodes = parent.SelectNodes("test_assembly");
-        //    foreach (XmlNode node in nodes)
-        //    {
-        //        XmlNode nameNode = node.Attributes.GetNamedItem("name");
-        //        string name = null;
-        //        if (nameNode != null)
-        //            name = nameNode.InnerXml;
-        //        var assembly = new AssemblyOptions(name);
-        //        assembly.AddTests(getTests(node));
-        //        assembly.AddMembers(getMembers(node));
-        //        assembly.AddNamespaces(getNamespaces(node));
-        //        assemblies.Add(assembly);
-        //    }
-        //    return assemblies.ToArray();
-        //}
-
-        //private string[] getTests(XmlNode parent)
-        //{
-        //    return getStringList(parent, "tests/test");
-        //}
-
-        //private string[] getMembers(XmlNode parent)
-        //{
-        //    return getStringList(parent, "members/member");
-        //}
-
-        //private string[] getNamespaces(XmlNode parent)
-        //{
-        //    return getStringList(parent, "namespaces/namespace");
-        //}
-
-        //private string[] getStringList(XmlNode parent, string xpath)
-        //{
-        //    var list = new List<string>();
-        //    var nodes = parent.SelectNodes(xpath);
-        //    foreach (XmlNode node in nodes)
-        //        list.Add(node.InnerXml);
-        //    return list.ToArray();
-        //}
     }
 }

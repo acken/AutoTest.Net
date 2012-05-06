@@ -67,5 +67,14 @@ namespace AutoTest.TestRunners.Tests
             var arguments = parser.Parse();
             Assert.That(arguments.Channel, Is.EqualTo("AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString()));
         }
+		
+		[Test]
+        public void Should_get_default_port()
+        {
+			int i = 3;
+            var parser = new ArgumentParser(new string[] { "--port=15" });
+            var arguments = parser.Parse();
+            Assert.That(arguments.Port, Is.EqualTo(15));
+        }
     }
 }

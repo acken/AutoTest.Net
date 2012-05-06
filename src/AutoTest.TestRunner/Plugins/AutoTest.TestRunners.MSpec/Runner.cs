@@ -70,7 +70,16 @@ namespace AutoTest.TestRunners.MSpec
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
-        public IEnumerable<TestResult> Run(RunSettings settings)
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
+
+		// TODO Fix this
+        /*public IEnumerable<TestResult> Run(RunSettings settings)
         {
             var assembly = getAssembly(settings.Assembly.Assembly);
 
@@ -143,7 +152,7 @@ namespace AutoTest.TestRunners.MSpec
                 _results[_results.Count - 1].AddStackLines(getStackLines(ex));
                 return null;
             }
-        }
+        }*/
 
         private string getAssemblySignature(string assembly)
         {

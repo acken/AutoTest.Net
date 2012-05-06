@@ -9,20 +9,21 @@ namespace AutoTest.TestRunners.NUnit
 {
     class NUnitOptionsParser
     {
-        private RunSettings _runnerSettings;
+        private TestRunOptions _runnerSettings;
+		private string[] _ignoreCategories;
         private List<Options> _options = new List<Options>();
 
         public IEnumerable<Options> Options { get { return _options; } }
 
-        public NUnitOptionsParser(RunSettings settings)
+        public NUnitOptionsParser(TestRunOptions settings, string[] ignoreCategories)
         {
             _runnerSettings = settings;
+			_ignoreCategories = ignoreCategories;
         }
 
         public void Parse()
         {
             var options = new Options(
-                    _runnerSettings.Assembly.Assembly,
                     getCategories(),
                     getTests()
                 );
@@ -32,7 +33,7 @@ namespace AutoTest.TestRunners.NUnit
         private string getCategories()
         {
             var categories = "";
-            foreach (var category in _runnerSettings.IgnoreCategories)
+            foreach (var category in _ignoreCategories)
                 categories += categories.Length.Equals(0) ? category : string.Format(",{0}", category);
             return categories;
         }
@@ -40,7 +41,7 @@ namespace AutoTest.TestRunners.NUnit
         private string getTests()
         {
             var tests = "";
-            var item = _runnerSettings.Assembly;
+            var item = _runnerSettings;
             foreach (var test in item.Tests)
                 tests += tests.Length.Equals(0) ? test : string.Format(",{0}", test);
             foreach (var member in item.Members)
@@ -53,13 +54,11 @@ namespace AutoTest.TestRunners.NUnit
 
     class Options
     {
-        public string Assembly { get; private set; }
         public string Categories { get; private set; }
         public string Tests { get; private set; }
 
-        public Options(string assembly, string categories, string tests)
+        public Options(string categories, string tests)
         {
-            Assembly = assembly;
             Categories = categories;
             Tests = tests;
         }

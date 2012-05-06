@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace AutoTest.TestRunners.XUnit.Tests
 {
-    interface ITestRunner
+    /*interface ITestRunner
     {
         IEnumerable<TestResult> Run(Plugin plugin, RunSettings settings);
     }
@@ -23,7 +23,7 @@ namespace AutoTest.TestRunners.XUnit.Tests
         {
             return plugin.New().Run(settings);
         }
-    }
+    }*/
 
     [TestFixture]
     public class RunnerTests

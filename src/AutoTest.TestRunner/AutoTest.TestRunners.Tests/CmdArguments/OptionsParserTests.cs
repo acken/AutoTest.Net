@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
     {
         private OptionsXmlReader _parser;
 
-        [SetUp]
+        /*[SetUp]
         public void SetUp()
         {
             _parser = new OptionsXmlReader(getPath("TestOptions.xml"));
@@ -27,12 +27,14 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(path, relativePath);
-        }
+        }*/
 
         [Test]
         public void When_file_does_not_exist_plugins_should_be_null()
         {
-            var parser = new OptionsXmlReader("");
+			Assert.Fail("Fix these");
+		}
+            /*var parser = new OptionsXmlReader("");
             parser.Parse();
             Assert.That(parser.Plugins, Is.Null);
             Assert.That(parser.IsValid, Is.False);
@@ -130,6 +132,6 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
 
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Namespaces.ElementAt(0), Is.EqualTo("testassembly.somenamespace1"));
             Assert.That(_parser.Options.TestRuns.ElementAt(0).Assemblies.ElementAt(0).Namespaces.ElementAt(1), Is.EqualTo("testassembly.somenamespace2"));
-        }
+        }*/
     }
 }

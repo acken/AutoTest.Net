@@ -22,7 +22,11 @@ namespace AutoTest.TestRunners.NUnit.Tests
     {
         public IEnumerable<TestResult> Run(Plugin plugin, RunSettings options)
         {
-            return plugin.New().Run(options);
+			// TODO Fix this
+			/*var runner = plugin.New();
+			runner.Initialize(options.Assembly.Assembly);
+            return .Run(options);*/
+			return null;
         }
     }
 

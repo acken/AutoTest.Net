@@ -13,7 +13,8 @@ namespace AutoTest.TestRunners.XUnit
     {
         public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings, ITestFeedbackProvider channel)
         {
-            var logger = new XUnitLogger(channel);
+			//TODO Fix this
+            /*var logger = new XUnitLogger(channel);
             XunitProject project = new XunitProject();
 
             var runner = settings.Assembly;
@@ -70,7 +71,8 @@ namespace AutoTest.TestRunners.XUnit
                     }
                 }
             }
-            return logger.Results;
+            return logger.Results;*/
+            return null;
         }
     }
 }

@@ -45,9 +45,12 @@ namespace AutoTest.TestRunners.Tests.Plugins
             return true;
         }
 
-        IEnumerable<Shared.Results.TestResult> Shared.IAutoTestNetTestRunner.Run(RunSettings settings)
-        {
-            return null;
-        }
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
     }
 }

@@ -135,8 +135,17 @@ namespace AutoTest.TestRunners.MbUnit
         {
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
-
-        public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings)
+		
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
+		
+		//TODO Fix this
+        /*public IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> Run(RunSettings settings)
         {
             if (!_isInitialized)
                 return new AutoTest.TestRunners.Shared.Results.TestResult[] { getNotInitializedResult(settings) };
@@ -226,7 +235,7 @@ namespace AutoTest.TestRunners.MbUnit
                     return Shared.Results.TestState.Failed;
             }
             return Shared.Results.TestState.Panic;
-        }
+        }*/
 
         private List<Test> getTests(string assembly)
         {

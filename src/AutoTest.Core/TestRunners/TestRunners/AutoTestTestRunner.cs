@@ -179,7 +179,8 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly);
-                assembly.HasBeenVerified(true);
+				// TODO fix
+                /*assembly.HasBeenVerified(true);
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 DebugLog.Debug.WriteDetail("Found {0} tests for assembly", assembly.Tests.Count());
                 assembly.AddMembers(info.GetMembersFor(testRunner));
@@ -188,7 +189,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 DebugLog.Debug.WriteDetail("Found {0} namespaces for assembly", assembly.Namespaces.Count());
                 DebugLog.Debug.WriteDetail("Run only specified tests for runner {0} is {1}", testRunner, info.OnlyRunSpcifiedTestsFor(testRunner));
                 if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0 && assembly.Members.Count() == 0 && assembly.Namespaces.Count() == 0)
-                    continue;
+                    continue;*/
 				DebugLog.Debug.WriteDetail("Adding assembly");
                 runner.AddAssembly(assembly);
             }
@@ -219,10 +220,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void setTotalTestCount()
         {
-            if (_options.TestRuns.Count(x => x.Assemblies.Count(y => (y.Members.Count() > 0 || y.Namespaces.Count() > 0)) > 0) > 0)
+			// TODO Fix
+            /*if (_options.TestRuns.Count(x => x.Assemblies.Count(y => (y.Members.Count() > 0 || y.Namespaces.Count() > 0)) > 0) > 0)
                 _totalTestCount = -1;
             else
-                _totalTestCount = _options.TestRuns.Sum(x => x.Assemblies.Sum(y => y.Tests.Count()));
+                _totalTestCount = _options.TestRuns.Sum(x => x.Assemblies.Sum(y => y.Tests.Count()));*/
 
         }
 

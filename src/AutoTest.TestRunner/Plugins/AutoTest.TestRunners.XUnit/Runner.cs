@@ -67,11 +67,20 @@ namespace AutoTest.TestRunners.XUnit
         {
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
-
-        public IEnumerable<TestResult> Run(RunSettings settings)
+		
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
+		
+		// TODO Fix this
+        /*public IEnumerable<TestResult> Run(RunSettings settings)
         {
             var runner = new XUnitRunner();
             return runner.Run(settings, _channel);
-        }
+        }*/
     }
 }

@@ -8,6 +8,7 @@ using AutoTest.TestRunners.Shared.Options;
 using AutoTest.TestRunners.Shared.Plugins;
 using AutoTest.TestRunners.Shared.Errors;
 using System.IO;
+using System.Threading;
 using System.Reflection;
 using AutoTest.TestRunners.Shared.Logging;
 using AutoTest.TestRunners.Shared.Communication;
@@ -41,22 +42,35 @@ namespace AutoTest.TestRunners
             {
                 if (runner == null)
                     return _results;
-                using (var server = new PipeServer(settings.PipeName))
-                {
-                    Logger.Write("Matching plugin identifier ({0}) to test identifier ({1})", runner.Identifier, id);
-                    if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
-                        return _results;
-                    Logger.Write("Checking whether assembly contains tests for {0}", id);
-                    if (!settings.Assembly.IsVerified && !runner.ContainsTestsFor(settings.Assembly.Assembly))
-                        return _results;
-                    Logger.Write("Initializing channel");
-                    runner.SetLiveFeedbackChannel(new TestFeedbackProvider(server));
-                    var newCurrent = Path.GetDirectoryName(settings.Assembly.Assembly);
-                    Logger.Write("Setting current directory to " + newCurrent);
-                    Environment.CurrentDirectory = newCurrent;
-                    Logger.Write("Starting test run");
-                    resultSet = runner.Run(settings);
-                }
+				var isRunning = true;
+				var client = new SocketClient();
+				client.Connect(settings.ConnectOptions, (message) => {
+					if (message == "load-assembly") {
+						Logger.Write(
+							"Matching plugin identifier ({0}) to test identifier ({1})",
+							runner.Identifier, id);
+						if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
+							return;
+						Logger.Write("Initializing channel");
+						runner.SetLiveFeedbackChannel(new TestFeedbackProvider(client));
+						var newCurrent = Path.GetDirectoryName(settings.Assembly.Assembly);
+						Logger.Write("Setting current directory to " + newCurrent);
+						Environment.CurrentDirectory = newCurrent;
+						runner.Prepare(settings.Assembly.Assembly, new string[] {});
+					} else if (message == "run-all") {
+						runTests(runner, new TestRunOptions());
+					} else if (message == "exit") {
+						isRunning = false;
+					} else {
+						var options = OptionsXmlReader.ParseOptions(message);
+						runTests(runner, options);
+					}
+				});
+				client.Send("RunnerID:" + settings.Assembly.Assembly + "|" + id.ToLower());
+				while (isRunning)
+					Thread.Sleep(10);
+				client.Disconnect();
+				Console.WriteLine("Exiting");
             }
             catch
             {
@@ -67,8 +81,32 @@ namespace AutoTest.TestRunners
                 Environment.CurrentDirectory = currentDirectory;
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
             }
-            return resultSet;
+			if (resultSet == null)
+				return _results;
+			else
+	            return resultSet;
         }
+
+		private void runTests(IAutoTestNetTestRunner runner, TestRunOptions options)
+		{
+			var verified = options.IsVerified ? "verified" : "unverified";
+			Logger.Write(
+				"Running {4} tests for {0} " +
+				"(tests:{1},members:{2}, namespaces:{3})",
+				runner.Identifier,
+				options.Tests.Count(),
+				options.Members.Count(),
+				options.Namespaces.Count(),
+				verified);
+			/*if (!options.IsVerified &&
+				!runner.ContainsTestsFor(settings.Assembly.Assembly))
+			{
+				return;
+			}*/
+			var start = DateTime.Now;
+			runner.RunTest(options);
+			Logger.Write("Tests finished in {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+		}
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
@@ -81,7 +119,10 @@ namespace AutoTest.TestRunners
             }
             foreach (var directory in _directories)
             {
-                var file = Directory.GetFiles(directory).Where(f => isMissingAssembly(args, f)).Select(x => x).FirstOrDefault();
+                var file = Directory
+					.GetFiles(directory)
+					.Where(f => isMissingAssembly(args, f))
+					.Select(x => x).FirstOrDefault();
                 if (file == null)
                     continue;
                 return Assembly.LoadFrom(file);

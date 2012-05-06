@@ -63,22 +63,26 @@ namespace AutoTest.TestRunners.Shared.Options
     [Serializable]
     public class AssemblyOptions
     {
-        private List<string> _tests = new List<string>();
-        private List<string> _members = new List<string>();
-        private List<string> _namespaces = new List<string>();
-
-        public bool IsVerified { get; private set; }
         public string Assembly { get; private set; }
-        public IEnumerable<string> Tests { get { return _tests; } }
-        public IEnumerable<string> Members { get { return _members; } }
-        public IEnumerable<string> Namespaces { get { return _namespaces; } }
 
         public AssemblyOptions(string assembly)
         {
             Assembly = assembly;
         }
+    }
 
-        public AssemblyOptions HasBeenVerified(bool verified)
+	public class TestRunOptions
+	{
+		private List<string> _tests = new List<string>();
+        private List<string> _members = new List<string>();
+        private List<string> _namespaces = new List<string>();
+
+        public bool IsVerified { get; private set; }
+        public IEnumerable<string> Tests { get { return _tests; } }
+        public IEnumerable<string> Members { get { return _members; } }
+        public IEnumerable<string> Namespaces { get { return _namespaces; } }
+
+        public TestRunOptions HasBeenVerified(bool verified)
         {
             IsVerified = verified;
             return this;
@@ -90,5 +94,5 @@ namespace AutoTest.TestRunners.Shared.Options
         public void AddMembers(string[] members) { _members.AddRange(members); }
         public void AddNamespace(string ns) { _namespaces.Add(ns); }
         public void AddNamespaces(string[] namespaces) { _namespaces.AddRange(namespaces); }
-    }
+	}
 }

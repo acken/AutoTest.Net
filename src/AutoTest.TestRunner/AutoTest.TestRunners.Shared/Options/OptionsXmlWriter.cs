@@ -43,11 +43,11 @@ namespace AutoTest.TestRunners.Shared.Options
                     {
                         writer.WriteStartElement("test_assembly");
                         writer.WriteAttributeString("name", assembly.Assembly);
-                        if (assembly.IsVerified)
+                        /*if (assembly.IsVerified)
                             writer.WriteAttributeString("verified", "true");
                         writeStringList(writer, assembly.Tests, "tests", "test");
                         writeStringList(writer, assembly.Members, "members", "member");
-                        writeStringList(writer, assembly.Namespaces, "namespaces", "namespace");
+                        writeStringList(writer, assembly.Namespaces, "namespaces", "namespace");*/
                         writer.WriteEndElement();
                     }
                     writer.WriteEndElement();

@@ -33,14 +33,16 @@ namespace AutoTest.TestRunners.MSTest.Extensions
 
         private static bool shouldRun(string methodName, RunSettings settings)
         {
-            var assembly = settings.Assembly;
+			// TODO Fix this
+			return false;
+            /*var assembly = settings.Assembly;
             if (assembly.Tests.Contains(methodName))
                 return true;
             if (assembly.Members.Any(x => methodName.StartsWith(x)))
                 return true;
             if (assembly.Namespaces.Any(x => methodName.StartsWith(x)))
                 return true;
-            return false;
+            return false;*/
         }
     }
 }

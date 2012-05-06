@@ -5,19 +5,21 @@ using NUnit.Util;
 using NUnit.Core.Filters;
 using AutoTest.TestRunners.Shared.Errors;
 using AutoTest.TestRunners.Shared.Communication;
+using AutoTest.TestRunners.Shared.Options;
 
 namespace AutoTest.TestRunners.NUnit
 {
-    class NUnitRunner
+    class NUnitRunner : IDisposable
     {
         private readonly ITestFeedbackProvider _channel;
+		private TestRunner _testRunner;
 
         public NUnitRunner(ITestFeedbackProvider channel)
         {
             _channel = channel;
         }
 
-        public void Initialize()
+        public void Initialize(string assembly)
         {
             var settingsService = new SettingsService();
             ServiceManager.Services.AddService(settingsService);
@@ -28,42 +30,44 @@ namespace AutoTest.TestRunners.NUnit
             ServiceManager.Services.AddService(new TestAgency());
             
             ServiceManager.Services.InitializeServices();
+			
+			var package = createPackage(assembly);
+            _testRunner = new DefaultTestRunnerFactory()
+				.MakeTestRunner(package);
+
+			_testRunner.Load(package);
+            if (_testRunner.Test == null) {
+                _testRunner.Unload();
+                _channel.TestFinished(ErrorHandler.GetError("NUnit", "Unable to locate fixture"));
+				return;
+            }
         }
 
-		public IEnumerable<Shared.Results.TestResult> Execute(Options options)
+		public void Execute(Options options)
 		{
-            var package = createPackage(options);
-            using (var testRunner = new DefaultTestRunnerFactory().MakeTestRunner(package))
-            {
-                return runTests(options, package, testRunner);
-            }
+            runTests(options);
 		}
 
-        private IEnumerable<Shared.Results.TestResult> runTests(Options options, TestPackage package, TestRunner testRunner)
-        {
-            testRunner.Load(package);
-            if (testRunner.Test == null)
-            {
-                testRunner.Unload();
-                return new[] { ErrorHandler.GetError("NUnit", "Unable to locate fixture") };
-            }
+		public void Dispose()
+		{
+			_testRunner.Dispose();
+		}
 
-            var harvester = new TestHarvester(_channel);
+        private void runTests(Options options)
+        {   
             var testFilter = getTestFilter(options);
             string savedDirectory = Environment.CurrentDirectory;
-            var result = run(testRunner, harvester, testFilter, savedDirectory);
-
-            if (result != null)
-                return harvester.Results;
-            return harvester.Results;
+            run(testFilter, savedDirectory);
         }
 
-        private TestResult run(TestRunner testRunner, TestHarvester harvester, TestFilter testFilter, string savedDirectory)
+        private void run(TestFilter testFilter, string savedDirectory)
         {
             TestResult result = null;
             try
             {
-                result = testRunner.Run(harvester, testFilter);
+				var harvester = new TestHarvester(_channel);
+                result = _testRunner.Run(harvester, testFilter);
+				// TODO Add run finished message (total time (ms), number of tests
             }
             catch (Exception ex)
             {
@@ -73,7 +77,6 @@ namespace AutoTest.TestRunners.NUnit
             {
                 Environment.CurrentDirectory = savedDirectory;
             }
-            return result;
         }
 
         private TestFilter getTestFilter(Options options)
@@ -99,11 +102,11 @@ namespace AutoTest.TestRunners.NUnit
             return testFilter;
         }
         
-        private TestPackage createPackage(Options options)
+        private TestPackage createPackage(string assembly)
         {
             const ProcessModel processModel = ProcessModel.Default;
             
-            var package = new TestPackage(options.Assembly);
+            var package = new TestPackage(assembly);
             var domainUsage = DomainUsage.Single;
 			package.TestName = null;
             

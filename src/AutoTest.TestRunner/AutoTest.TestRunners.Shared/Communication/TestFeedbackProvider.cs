@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoTest.TestRunners.Shared.Results;
 using AutoTest.TestRunners.Shared.Logging;
+using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -26,9 +27,9 @@ namespace AutoTest.TestRunners.Shared.Communication
 
     public class TestFeedbackProvider : ITestFeedbackProvider
     {
-        private PipeServer _channel;
+        private SocketClient _channel;
 
-        public TestFeedbackProvider(PipeServer channel)
+        public TestFeedbackProvider(SocketClient channel)
         {
             _channel = channel;
         }
