@@ -54,7 +54,7 @@ while [ "1" = "1" ]; do
 		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:run-all"
 	fi
 	if [ "$input_var" = "single" ]; then
-		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:<test_run verified=\"true\"><tests><test>AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_test</test></tests></test_run>"
+		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:<test_run verified=\"false\"><tests><test>AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_test</test></tests></test_run>"
 	fi
 done
 

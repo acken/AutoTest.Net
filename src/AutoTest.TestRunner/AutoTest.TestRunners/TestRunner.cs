@@ -31,6 +31,7 @@ namespace AutoTest.TestRunners
 
         public void Run(Plugin plugin, string id, RunSettings settings)
         {
+			var testAssembly = settings.Assembly.Assembly;
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
             Logger.Debug("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
@@ -56,12 +57,12 @@ namespace AutoTest.TestRunners
 						Environment.CurrentDirectory = newCurrent;
 						runner.Prepare(settings.Assembly.Assembly, new string[] {});
 					} else if (message == "run-all") {
-						runTests(runner, new TestRunOptions());
+						runTests(runner, testAssembly, new TestRunOptions());
 					} else if (message == "exit") {
 						isRunning = false;
 					} else {
 						var options = OptionsXmlReader.ParseOptions(message);
-						runTests(runner, options);
+						runTests(runner, testAssembly, options);
 					}
 				});
 				client.Send("RunnerID:" + settings.Assembly.Assembly + "|" + id.ToLower());
@@ -80,7 +81,7 @@ namespace AutoTest.TestRunners
             }
         }
 
-		private void runTests(IAutoTestNetTestRunner runner, TestRunOptions options)
+		private void runTests(IAutoTestNetTestRunner runner, string testAssembly, TestRunOptions options)
 		{
 			var verified = options.IsVerified ? "verified" : "unverified";
 			Logger.Debug(
@@ -91,12 +92,12 @@ namespace AutoTest.TestRunners
 				options.Members.Count(),
 				options.Namespaces.Count(),
 				verified);
-			/*if (!options.IsVerified &&
-				!runner.ContainsTestsFor(settings.Assembly.Assembly))
-			{
-				return;
-			}*/
 			var start = DateTime.Now;
+			options = getTestRunsFor(runner, testAssembly, options);
+			if (options == null) {
+				Logger.Debug("Found no matching tests");
+				return;
+			}
 			runner.RunTest(options);
 			Logger.Debug("Tests finished in {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
 		}
@@ -122,6 +123,35 @@ namespace AutoTest.TestRunners
             }
             _assemblyCache.Add(args.Name, "NotFound");
             return null;
+        }
+
+		private TestRunOptions getTestRunsFor(IAutoTestNetTestRunner instance, string asm, TestRunOptions run)
+        {
+            if (run.IsVerified)
+                return run;
+
+            var newRun = new TestRunOptions();
+			if (!instance.ContainsTestsFor(asm))
+				return null;
+
+			newRun
+				.AddNamespaces(
+				run.Namespaces
+				.Where(x => instance.ContainsTestsFor(asm, x)).ToArray());
+			newRun
+				.AddMembers(
+				run.Members
+				.Where(x => instance.ContainsTestsFor(asm, x)).ToArray());
+			newRun
+				.AddTests(
+				run.Tests
+				.Where(x => instance.IsTest(asm, x)).ToArray());
+
+			// If original runs had tests but non belonged to this run report no tests
+			if (run.Namespaces.Count() > 0 || run.Members.Count() > 0 || run.Tests.Count() > 0 &&
+				(newRun.Namespaces.Count() + newRun.Members.Count() + newRun.Tests.Count() == 0))
+				return null;
+            return newRun;
         }
 
         private bool isMissingAssembly(ResolveEventArgs args, string f)

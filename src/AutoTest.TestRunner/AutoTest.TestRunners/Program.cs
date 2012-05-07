@@ -116,7 +116,7 @@ namespace AutoTest.TestRunners
 													x.ID.ToLower().Equals("any") ||
 													instance.Handles(x.ID)))
 				{
-					var run = getTestRunsFor(instance, currentRuns);
+					var run = currentRuns;
 					if (run == null)
 						continue;
 					foreach (var assembly in run.Assemblies)
@@ -249,39 +249,6 @@ namespace AutoTest.TestRunners
             Write("\t\t<namespace>testassembly.somenamespace1</namespace>");
             Write("\t</namespaces>");
             Write("</test_run>");
-        }
-
-        private static RunnerOptions getTestRunsFor(IAutoTestNetTestRunner instance, RunnerOptions run)
-        {
-            if (run.ID.ToLower() != "any")
-                return run;
-
-            var newRun = new RunnerOptions(run.ID);
-            newRun.AddCategories(run.Categories.ToArray());
-            foreach (var asm in run.Assemblies)
-            {
-				// TODO Fix this
-                /*if (!asm.IsVerified && !instance.ContainsTestsFor(asm.Assembly))
-                    continue;
-                var assembly = new AssemblyOptions(asm.Assembly);
-                assembly
-					.AddNamespaces(
-					asm.Namespaces
-					.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly
-					.AddMembers(
-					asm.Members
-					.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly
-					.AddTests(
-					asm.Tests
-					.Where(x => asm.IsVerified || instance.IsTest(asm.Assembly, x)).ToArray());
-                if (hasNoTests(asm) || hasTests(assembly))
-                    newRun.AddAssembly(assembly);*/
-            }
-            if (newRun.Assemblies.Count() == 0)
-                return null;
-            return newRun;
         }
 
         private static bool hasTests(AssemblyOptions asm)

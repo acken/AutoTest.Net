@@ -155,7 +155,10 @@ namespace AutoTest.TestRunners.Shared.Communication
 				// Send messages ment for this runner that was sent before it got initialized
 				lock (_unsentMessages)
 				{
-					var messages = _unsentMessages.Where(x => x.StartsWith(client.ID + ":")).ToList();
+					var messages = _unsentMessages
+						.Where(x => 
+							x.StartsWith(client.ID + ":") ||
+							x.StartsWith(stripPluginID(client.ID) + "|any:")).ToList();
 					messages.ForEach(x => Send(stripReceiver(x), client.ID));
 					messages.RemoveAll(x => x.StartsWith(client.ID + ":"));
 				}
@@ -185,13 +188,24 @@ namespace AutoTest.TestRunners.Shared.Communication
 				lock (_unsentMessages)
 				{
 					var clients = _clients
-						.Where(x => x.IsRunner && message.StartsWith(x.ID + ":")).ToList();
+						.Where(x => 
+							x.IsRunner &&
+							(message.StartsWith(x.ID + ":") ||
+							 message.StartsWith(stripPluginID(x.ID) + "|any:"))).ToList();
 					if (clients.Count > 0)
 						clients.ForEach(x => Send(stripReceiver(message), x.ID));
 					else
 						_unsentMessages.Add(message);
 				}
 			}
+		}
+
+		private string stripPluginID(string message)
+		{
+			if (message.IndexOf("|") == -1)
+				return message;
+			var end = message.IndexOf("|");
+			return message.Substring(0, end);
 		}
 
 		private string stripReceiver(string message)
