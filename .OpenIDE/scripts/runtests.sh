@@ -39,7 +39,7 @@ cp $NUNIT_TESTS_DIR/* $RUNDIR/TestAssembly
 cd $RUNDIR
 echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><run><runner id=\"NUnit\"><test_assembly name=\""$RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll\" /></runner></run>" > $RUNDIR/input.xml
 
-mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --port=8090 & # --logging --silent
+mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --port=8090 --logging & # --silent
 
 sleep 0.2
 
