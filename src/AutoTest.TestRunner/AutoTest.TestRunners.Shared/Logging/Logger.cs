@@ -16,7 +16,7 @@ namespace AutoTest.TestRunners.Shared.Logging
             _instance = logger;
         }
 
-        public static void Write(string message)
+		public static void Write(string message)
         {
             _instance.Write(message);
         }
@@ -36,9 +36,29 @@ namespace AutoTest.TestRunners.Shared.Logging
 			_instance.WriteChunk(message, args);
 		}
 
-        public static void Write(Exception ex)
+        public static void Debug(string message)
         {
-            _instance.Write(ex);
+            _instance.Debug(message);
+        }
+
+        public static void Debug(string message, params object[] args)
+        {
+            _instance.Debug(message, args);
+        }
+		
+		public static void DebugChunk(string message)
+		{
+			_instance.DebugChunk(message);
+		}
+        
+		public static void DebugChunk(string message, params object[] args)
+		{
+			_instance.DebugChunk(message, args);
+		}
+
+        public static void Debug(Exception ex)
+        {
+            _instance.Debug(ex);
         }
     }
 }

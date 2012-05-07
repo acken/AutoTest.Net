@@ -22,10 +22,9 @@ namespace AutoTest.TestRunners
         private List<string> _directories = new List<string>();
         private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
 
-        public void SetupResolver(bool startLogger)
+        public void SetupResolver(bool silent, bool startLogger)
         {
-            if (startLogger)
-                Logger.SetLogger(new ConsoleLogger());
+            Logger.SetLogger(new ConsoleLogger(!silent, startLogger));
             _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
@@ -35,7 +34,7 @@ namespace AutoTest.TestRunners
             IEnumerable<TestResult> resultSet = null;
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
-            Logger.Write("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
+            Logger.Debug("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
             var runner = getRunner(plugin);
             var currentDirectory = Environment.CurrentDirectory;
             try
@@ -46,15 +45,15 @@ namespace AutoTest.TestRunners
 				var client = new SocketClient();
 				client.Connect(settings.ConnectOptions, (message) => {
 					if (message == "load-assembly") {
-						Logger.Write(
+						Logger.Debug(
 							"Matching plugin identifier ({0}) to test identifier ({1})",
 							runner.Identifier, id);
 						if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
 							return;
-						Logger.Write("Initializing channel");
+						Logger.Debug("Initializing channel");
 						runner.SetLiveFeedbackChannel(new TestFeedbackProvider(client));
 						var newCurrent = Path.GetDirectoryName(settings.Assembly.Assembly);
-						Logger.Write("Setting current directory to " + newCurrent);
+						Logger.Debug("Setting current directory to " + newCurrent);
 						Environment.CurrentDirectory = newCurrent;
 						runner.Prepare(settings.Assembly.Assembly, new string[] {});
 					} else if (message == "run-all") {
@@ -89,7 +88,7 @@ namespace AutoTest.TestRunners
 		private void runTests(IAutoTestNetTestRunner runner, TestRunOptions options)
 		{
 			var verified = options.IsVerified ? "verified" : "unverified";
-			Logger.Write(
+			Logger.Debug(
 				"Running {4} tests for {0} " +
 				"(tests:{1},members:{2}, namespaces:{3})",
 				runner.Identifier,
@@ -104,7 +103,7 @@ namespace AutoTest.TestRunners
 			}*/
 			var start = DateTime.Now;
 			runner.RunTest(options);
-			Logger.Write("Tests finished in {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
+			Logger.Debug("Tests finished in {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds);
 		}
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

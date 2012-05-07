@@ -36,8 +36,7 @@ namespace AutoTest.TestRunners
 
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
-            if (_arguments.Logging)
-                Logger.SetLogger(new ConsoleLogger());
+            Logger.SetLogger(new ConsoleLogger(!_arguments.Silent, !_arguments.Silent && _arguments.Logging));
             writeHeader();
             if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
             {
@@ -119,7 +118,8 @@ namespace AutoTest.TestRunners
 							run.ID,
 							run.Categories,
 							assembly,
-							_arguments.Logging,
+							_arguments.Silent,
+							!_arguments.Silent && _arguments.Logging,
 							new ConnectionOptions(server.Server, server.Port),
 							_arguments.CompatabilityMode);
 						var runner = new Thread(() => process.Run(null));

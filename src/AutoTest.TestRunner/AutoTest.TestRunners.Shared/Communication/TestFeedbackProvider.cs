@@ -61,13 +61,13 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             if (result == null)
             {
-                Logger.Write(" - Testresult was null");
+                Logger.Debug(" - Testresult was null");
                 return;
             }
             var xml = result.ToXml();
             if (xml == null)
             {
-                Logger.Write(" - Could not generate xml from " + result.TestName);
+                Logger.Debug(" - Could not generate xml from " + result.TestName);
                 return;
             }
             Logger.Write(" - {0}", result.State.ToString());

@@ -20,6 +20,7 @@ namespace AutoTest.TestRunners
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
         private bool _shouldLog = false;
+		private bool _silent = false;
         private ConnectionOptions _connectOptions;
         private bool _compatibilityMode;
 
@@ -28,6 +29,7 @@ namespace AutoTest.TestRunners
 			string id,
 			IEnumerable<string> categories,
 			AssemblyOptions assembly,
+			bool silent,
 			bool shouldLog,
 			ConnectionOptions connectOptions,
 			bool compatibilityMode)
@@ -37,6 +39,7 @@ namespace AutoTest.TestRunners
             _categories = categories;
             _assembly = assembly;
             _shouldLog = shouldLog;
+			_silent = silent;
             _connectOptions = connectOptions;
             _compatibilityMode = compatibilityMode;
         }
@@ -62,8 +65,8 @@ namespace AutoTest.TestRunners
                 };
 
                 // Create the child AppDomain used for the service tool at runtime.
-                Logger.Write("");
-                Logger.Write("Starting sub domain");
+                Logger.Debug("");
+                Logger.Debug("Starting sub domain");
                 childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
 
                 // Create an instance of the runtime in the second AppDomain. 
@@ -74,8 +77,8 @@ namespace AutoTest.TestRunners
 						typeof(TestRunner).FullName);
 
                 // Prepare assemblies
-                Logger.Write("Preparing resolver");
-                runtime.SetupResolver(_shouldLog);
+                Logger.Debug("Preparing resolver");
+                runtime.SetupResolver(_silent, _shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
                 Program.AddResults(
@@ -109,7 +112,7 @@ namespace AutoTest.TestRunners
                 }
                 catch (Exception ex)
                 {
-                    Logger.Write(ex);
+                    Logger.Debug(ex);
                 }
             }
         }

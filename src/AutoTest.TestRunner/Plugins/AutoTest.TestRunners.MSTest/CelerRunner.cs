@@ -198,13 +198,13 @@ namespace AutoTest.TestRunners.MSTest
         private void log(string text, params object[] args)
         {
             if (_logger == null) return;
-            _logger.Write(text, args);
+            _logger.Debug(text, args);
         }
 
         private void log(Exception ex, params object[] args)
         {
             if (_logger == null) return;
-            _logger.Write(ex);
+            _logger.Debug(ex);
         }
     }
 }

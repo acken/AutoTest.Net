@@ -32,7 +32,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
             }
             catch (Exception ex)
             {
-                Logging.Logger.Write(ex);
+                Logging.Logger.Debug(ex);
             }
         }
 
@@ -120,7 +120,7 @@ namespace AutoTest.TestRunners.Shared.AssemblyAnalysis
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logger.Write(ex);
+                    Logging.Logger.Debug(ex);
                 }
             }
         }
