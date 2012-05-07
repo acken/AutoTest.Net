@@ -11,5 +11,6 @@ namespace AutoTest.TestRunners.Shared
         void ProcessStart(string commandline);
         void TestStarted(string signature);
         void TestFinished(TestResult result);
+		void ProcessEnd(int count);
     }
 }

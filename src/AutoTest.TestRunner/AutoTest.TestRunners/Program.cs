@@ -154,8 +154,6 @@ namespace AutoTest.TestRunners
 			UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
-			// TODO Fix this (all test result should be sent through feedback channel)
-
 
             // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
 			// Yeah, seriously. When user code throws background exceptions we want them to know.
@@ -249,20 +247,6 @@ namespace AutoTest.TestRunners
             Write("\t\t<namespace>testassembly.somenamespace1</namespace>");
             Write("\t</namespaces>");
             Write("</test_run>");
-        }
-
-        private static bool hasTests(AssemblyOptions asm)
-        {
-			// TODO Fix this
-            //return asm.Namespaces.Count() != 0 || asm.Members.Count() != 0 || asm.Tests.Count() != 0;
-			return false;
-        }
-
-        private static bool hasNoTests(AssemblyOptions asm)
-        {
-			// TODO Fix this
-            //return asm.Namespaces.Count() == 0 && asm.Members.Count() == 0 && asm.Tests.Count() == 0;
-			return false;
         }
 		
         private static IEnumerable<Plugin> getPlugins(OptionsXmlReader parser)

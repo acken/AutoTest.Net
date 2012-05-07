@@ -12,7 +12,6 @@ namespace AutoTest.TestRunners
         public bool StartSuspended { get; set; }
         public bool Silent { get; set; }
         public bool Logging { get; set; }
-        public string Channel { get; set; }
         public bool CompatabilityMode { get; set; }
 		public int Port { get; set; }
     }
@@ -32,8 +31,6 @@ namespace AutoTest.TestRunners
             _parsedArgument = new Arguments();
             foreach (var argument in _arguments)
                 parse(argument);
-            if (_parsedArgument.Channel == null)
-                _parsedArgument.Channel = getDefaultChannel();
             return _parsedArgument;
         }
 
@@ -47,8 +44,6 @@ namespace AutoTest.TestRunners
                 _parsedArgument.Silent = true;
             if (iAm(argument, "--logging"))
                 _parsedArgument.Logging = true;
-            if (iAm(argument, "--channel"))
-                _parsedArgument.Channel = getValue(argument, "--channel=");
             if (iAm(argument, "--compatibility-mode"))
                 _parsedArgument.CompatabilityMode = true;
 			if (iAm(argument, "--port"))
@@ -76,10 +71,5 @@ namespace AutoTest.TestRunners
 				return val;
 			return 0;
 		}
-
-        private string getDefaultChannel()
-        {
-            return "AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString();
-        }
     }
 }

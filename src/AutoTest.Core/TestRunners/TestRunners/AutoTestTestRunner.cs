@@ -179,7 +179,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly);
-				// TODO fix
+				// TODO Fix this
                 /*assembly.HasBeenVerified(true);
                 assembly.AddTests(info.GetTestsFor(testRunner));
                 DebugLog.Debug.WriteDetail("Found {0} tests for assembly", assembly.Tests.Count());
@@ -286,5 +286,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 }
             }
         }
+
+		public void ProcessEnd(int count)
+		{			
+		}
     }
 }

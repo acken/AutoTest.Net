@@ -43,22 +43,6 @@ namespace AutoTest.TestRunners.Tests
             var arguments = parser.Parse();
             Assert.That(arguments.Logging, Is.True);
         }
-
-        [Test]
-        public void Should_parse_channel()
-        {
-            var parser = new ArgumentParser(new string[] { "--channel=\"Some Channel\"" });
-            var arguments = parser.Parse();
-            Assert.That(arguments.Channel, Is.EqualTo("Some Channel"));
-        }
-
-        [Test]
-        public void Should_get_default_channel()
-        {
-            var parser = new ArgumentParser(new string[] { "--silent" });
-            var arguments = parser.Parse();
-            Assert.That(arguments.Channel, Is.EqualTo("AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString()));
-        }
 		
 		[Test]
         public void Should_get_default_port()

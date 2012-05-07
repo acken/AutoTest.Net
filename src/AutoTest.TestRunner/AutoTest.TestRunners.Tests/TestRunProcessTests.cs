@@ -59,5 +59,10 @@ namespace AutoTest.TestRunners.Tests
         {
             throw new NotImplementedException();
         }
+
+		public void ProcessEnd(int count)
+		{
+
+		}
     }
 }
