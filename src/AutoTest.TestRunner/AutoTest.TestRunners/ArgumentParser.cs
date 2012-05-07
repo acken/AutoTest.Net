@@ -9,7 +9,6 @@ namespace AutoTest.TestRunners
     public class Arguments
     {
         public string InputFile { get; set; }
-        public string OutputFile { get; set; }
         public bool StartSuspended { get; set; }
         public bool Silent { get; set; }
         public bool Logging { get; set; }
@@ -42,8 +41,6 @@ namespace AutoTest.TestRunners
         {
             if (iAm(argument, "--input="))
                 _parsedArgument.InputFile = getValue(argument, "--input=");
-            if (iAm(argument, "--output="))
-                _parsedArgument.OutputFile = getValue(argument, "--output=");
             if (iAm(argument, "--startsuspended"))
                 _parsedArgument.StartSuspended = true;
             if (iAm(argument, "--silent"))

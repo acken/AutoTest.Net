@@ -29,9 +29,8 @@ namespace AutoTest.TestRunners
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
 
-        public IEnumerable<TestResult> Run(Plugin plugin, string id, RunSettings settings)
+        public void Run(Plugin plugin, string id, RunSettings settings)
         {
-            IEnumerable<TestResult> resultSet = null;
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
             Logger.Debug("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
@@ -40,7 +39,7 @@ namespace AutoTest.TestRunners
             try
             {
                 if (runner == null)
-                    return _results;
+                    return;
 				var isRunning = true;
 				var client = new SocketClient();
 				client.Connect(settings.ConnectOptions, (message) => {
@@ -79,10 +78,6 @@ namespace AutoTest.TestRunners
                 Environment.CurrentDirectory = currentDirectory;
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
             }
-			if (resultSet == null)
-				return _results;
-			else
-	            return resultSet;
         }
 
 		private void runTests(IAutoTestNetTestRunner runner, TestRunOptions options)

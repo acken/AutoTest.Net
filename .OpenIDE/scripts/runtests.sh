@@ -43,7 +43,7 @@ mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --port=8090 &
 
 sleep 0.2
 
-mono AutoTest.TestRunner.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:load-assembly"
+mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:load-assembly"
 
 while [ "1" = "1" ]; do
 	read input_var
@@ -51,12 +51,12 @@ while [ "1" = "1" ]; do
 		break
 	fi
 	if [ "$input_var" = "all" ]; then
-		mono AutoTest.TestRunner.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:run-all"
+		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:run-all"
 	fi
 	if [ "$input_var" = "single" ]; then
-		mono AutoTest.TestRunner.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:<test_run verified=\"true\"><tests><test>AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_test</test></tests></test_run>"
+		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:<test_run verified=\"true\"><tests><test>AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_test</test></tests></test_run>"
 	fi
 done
 
-mono AutoTest.TestRunner.exe exit
+mono AutoTest.TestRunner.exe "127.0.0.1" 8090 exit
 

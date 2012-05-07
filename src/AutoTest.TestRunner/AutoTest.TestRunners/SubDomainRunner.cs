@@ -81,18 +81,17 @@ namespace AutoTest.TestRunners
                 runtime.SetupResolver(_silent, _shouldLog);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
-                Program.AddResults(
-					runtime.Run(
-						_plugin,
-						_id,
-						new RunSettings(_assembly,
-						_categories.ToArray(),
-						_connectOptions)));
+				runtime.Run(
+					_plugin,
+					_id,
+					new RunSettings(_assembly,
+					_categories.ToArray(),
+					_connectOptions));
             }
             catch (Exception ex)
             {
                 if (!_compatibilityMode)
-                    Program.AddResults(ErrorHandler.GetError("Any", ex));
+                    Program.Channel.TestFinished(ErrorHandler.GetError("Any", ex));
             }
             finally
             {

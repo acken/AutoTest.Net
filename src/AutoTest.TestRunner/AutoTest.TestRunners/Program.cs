@@ -19,32 +19,39 @@ namespace AutoTest.TestRunners
     class Program
     {
         private static Arguments _arguments;
-        private static List<TestResult> _results = new List<TestResult>();
         private static List<Thread> _haltedThreads = new List<Thread>();
+		private static SocketClient _client = new SocketClient();
+
+		public static ITestFeedbackProvider Channel;
         
         [STAThread]
         static void Main(string[] args)
         {
-			if (args.Length == 1)
+			if (!args.Any(x => x.StartsWith("--input=")) &&
+				args.Length == 3)
 			{
-				var client = new SocketClient();
-				client.Connect(new ConnectionOptions("127.0.0.1", 8090), (meh) => {});
-				client.Send(args[0]);
-				Console.Write("");
+				int port;
+				if (int.TryParse(args[1], out port)) {
+					var client = new SocketClient();
+					client.Connect(new ConnectionOptions(args[0], port), (meh) => {});
+					client.Send(args[2]);
+					Console.Write("");
+				}
 				return;
 			}
 
+			Channel = new TestFeedbackProvider(_client);
             var parser = new ArgumentParser(args);
-            _arguments = parser.Parse();
+			_arguments = parser.Parse();
             Logger.SetLogger(new ConsoleLogger(!_arguments.Silent, !_arguments.Silent && _arguments.Logging));
             writeHeader();
-            if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
+            if (!File.Exists(_arguments.InputFile))
             {
                 printUseage();
                 return;
             }
-            Write("Test run options:");
-            Write(File.ReadAllText(_arguments.InputFile));
+            Logger.Debug("Test run options:");
+            Logger.Debug(File.ReadAllText(_arguments.InputFile));
             if (_arguments.StartSuspended)
                 Console.ReadLine();
             tryRunTests();
@@ -83,7 +90,7 @@ namespace AutoTest.TestRunners
                     prepareRunners(options);
                 } catch (Exception ex) {
                     try {
-                        _results.Add(ErrorHandler.GetError("Init", ex));
+                        Channel.TestFinished(ErrorHandler.GetError("Init", ex));
                     } catch {
                         Console.WriteLine(ex.ToString());
                     }
@@ -97,6 +104,7 @@ namespace AutoTest.TestRunners
 			var runners = new List<Thread>();
 			var server = new TcpServer();
 			server.Start(_arguments.Port);
+			_client.Connect(new ConnectionOptions(server.Server, server.Port), (msg) => {});
 			Console.WriteLine("Listening on: {0}:{1}", server.Server, server.Port);
 			foreach (var plugin in getPlugins(options))
 			{
@@ -130,6 +138,7 @@ namespace AutoTest.TestRunners
 			}
 
 			runners.ForEach(x => x.Join());
+			_client.Disconnect();
 		}
 
 		private static OptionsXmlReader parseOptions() {
@@ -164,21 +173,11 @@ namespace AutoTest.TestRunners
                     "runner or set the <TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode> " +
 					"configuration option in AutoTest.Net." +
 					Environment.NewLine + Environment.NewLine + message);
-                AddResults(finalOutput);
+                Channel.TestFinished(finalOutput);
             }
 
             if (args.IsTerminating)
-            {
-                var writer = new ResultsXmlWriter(_results);
-                writer.Write(_arguments.OutputFile);
-                Write(" ");
-                if (File.Exists(_arguments.OutputFile))
-                {
-                    Write("Test run result:");
-                    Write(File.ReadAllText(_arguments.OutputFile));
-                }
                 Environment.Exit(-1);
-            }
 
             Thread.CurrentThread.IsBackground = true;
             Thread.CurrentThread.Name = "Dead thread";
@@ -198,11 +197,11 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file " +
+            Write("Start runner syntax: AutoTest.TestRunner.exe --input=options_file " +
 				"[--startsuspended] [--silent] [--logging] [--compatibility-mode] [--port=PORT]");
+			Write("Send message syntax: IP PORT MESSAGE");
             Write("");
-            Write("Options format");
-            Write("<=====================================================>");
+			Write("Options file format");
             Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
             Write("<run>");
             Write("\t<!--It can contain 0-n plugins. If 0 the runner will load all available plugins-->");
@@ -216,22 +215,40 @@ namespace AutoTest.TestRunners
             Write("\t\t\t<ignore_category>IgnoreCategory</ignore_category>");
             Write("\t\t</categories>");
             Write("\t\t<!--It can contain 1-n assemblies to test.-->");
-            Write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\">");
-            Write("\t\t\t<!--It can contain 0-n tests-->");
-            Write("\t\t\t<tests>");
-            Write("\t\t\t\t<test>testassembly.class.test1</test>");
-            Write("\t\t\t</tests>");
-            Write("\t\t\t<!--It can contain 0-n members-->");
-            Write("\t\t\t<members>");
-            Write("\t\t\t\t<member>testassembly.class2</member>");
-            Write("\t\t\t</members>");
-            Write("\t\t\t<!--It can contain 0-n namespaces-->");
-            Write("\t\t\t<namespaces>");
-            Write("\t\t\t\t<namespace>testassembly.somenamespace1</namespace>");
-            Write("\t\t\t</namespaces>");
-            Write("\t\t</test_assembly>");
+            Write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\" />");
             Write("\t</runner>");
             Write("</run>");
+			Write("");
+			Write("");
+            Write("<===================== Commands for a running test runner instance ======================>");
+			Write("When communicating with a running instance of a test runner you will use a socket endpoint");
+			Write("using null terminated text commands. You will recieve test feedback from the same tcp ");
+			Write("channel. Assembly and test runner information from the options file is used to launch ");
+			Write("idle runners. The runner id is [assembly full path]|[plugin name in lower case].");
+			Write("");
+			Write("<== Command string format: RUNNERID:MESSAGE ==>");
+			Write("Initializing the runner (load-assembly): /my/path/myasm.dll|nunit:load-assembly");
+			Write("Run all tests (run-all): /my/path/myasm.dll|nunit:run-all");
+			Write("Run tests (test run xml): /my/path/myasm.dll|nunit:XML");
+			Write("Exit runner (exit): /my/path/myasm.dll|nunit:exit");
+			Write("Exit all runner (exit): exit");
+			Write("");
+			Write("Test run format");
+			Write("<!--If verified=true the runner will not verify that tests belong to framework-->");
+			Write("<test_run verified=\"true\">");
+			Write("\t<!--It can contain 0-n tests-->");
+            Write("\t<tests>");
+            Write("\t\t<test>testassembly.class.test1</test>");
+            Write("\t</tests>");
+            Write("\t<!--It can contain 0-n members-->");
+            Write("\t<members>");
+            Write("\t\t<member>testassembly.class2</member>");
+            Write("\t</members>");
+            Write("\t<!--It can contain 0-n namespaces-->");
+            Write("\t<namespaces>");
+            Write("\t\t<namespace>testassembly.somenamespace1</namespace>");
+            Write("\t</namespaces>");
+            Write("</test_run>");
         }
 
         private static RunnerOptions getTestRunsFor(IAutoTestNetTestRunner instance, RunnerOptions run)
@@ -280,23 +297,7 @@ namespace AutoTest.TestRunners
             //return asm.Namespaces.Count() == 0 && asm.Members.Count() == 0 && asm.Tests.Count() == 0;
 			return false;
         }
-
-        public static void AddResults(IEnumerable<TestResult> results)
-        {
-            lock(_results)
-            {
-                _results.AddRange(results);
-            }
-        }
-
-        public static void AddResults(TestResult result)
-        {
-            lock (_results)
-            {
-                _results.Add(result);
-            }
-        }
-
+		
         private static IEnumerable<Plugin> getPlugins(OptionsXmlReader parser)
         {
             if (parser.Plugins.Count() == 0)

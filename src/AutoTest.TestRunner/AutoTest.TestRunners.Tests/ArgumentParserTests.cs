@@ -21,14 +21,6 @@ namespace AutoTest.TestRunners.Tests
         }
 
         [Test]
-        public void Should_parse_output_file()
-        {
-            var parser = new ArgumentParser(new string[] { "--output=\"C:\\somewhere\\something.meh\"" });
-            var arguments = parser.Parse();
-            Assert.That(arguments.OutputFile, Is.EqualTo("C:\\somewhere\\something.meh"));
-        }
-
-        [Test]
         public void Should_parse_start_suspended()
         {
             var parser = new ArgumentParser(new string[] { "--startsuspended" });
