@@ -104,8 +104,11 @@ namespace AutoTest.TestRunners
 			var runners = new List<Thread>();
 			var server = new TcpServer();
 			server.Start(_arguments.Port);
+			var serverInfo = string.Format("{0}:{1}", server.Server, server.Port);
+			Console.WriteLine("Listening on: {0}", serverInfo);
+			if (_arguments.ConnectionInfo != null)
+				File.WriteAllText(_arguments.ConnectionInfo, serverInfo);
 			_client.Connect(new ConnectionOptions(server.Server, server.Port), (msg) => {});
-			Console.WriteLine("Listening on: {0}:{1}", server.Server, server.Port);
 			foreach (var plugin in getPlugins(options))
 			{
 				var instance = plugin.New();
@@ -139,6 +142,8 @@ namespace AutoTest.TestRunners
 
 			runners.ForEach(x => x.Join());
 			_client.Disconnect();
+			if (_arguments.ConnectionInfo != null && File.Exists(_arguments.ConnectionInfo))
+				File.Delete(_arguments.ConnectionInfo);
 		}
 
 		private static OptionsXmlReader parseOptions() {
@@ -196,7 +201,8 @@ namespace AutoTest.TestRunners
         private static void printUseage()
         {
             Write("Start runner syntax: AutoTest.TestRunner.exe --input=options_file " +
-				"[--startsuspended] [--silent] [--logging] [--compatibility-mode] [--port=PORT]");
+				  "[--connectioninfo=file_to_write_connect_info_to] " +
+				  "[--startsuspended] [--silent] [--logging] [--compatibility-mode] [--port=PORT]");
 			Write("Send message syntax: IP PORT MESSAGE");
             Write("");
 			Write("Options file format");

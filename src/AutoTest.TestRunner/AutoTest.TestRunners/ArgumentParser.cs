@@ -14,6 +14,7 @@ namespace AutoTest.TestRunners
         public bool Logging { get; set; }
         public bool CompatabilityMode { get; set; }
 		public int Port { get; set; }
+		public string ConnectionInfo { get; set; }
     }
 
     public class ArgumentParser
@@ -48,6 +49,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.CompatabilityMode = true;
 			if (iAm(argument, "--port"))
                 _parsedArgument.Port = toInt(getValue(argument, "--port="));
+			if (iAm(argument, "--connectioninfo="))
+                _parsedArgument.ConnectionInfo = getValue(argument, "--connectioninfo=");
         }
 
         private bool iAm(string argument, string parameterName)

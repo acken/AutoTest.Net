@@ -15,6 +15,68 @@ using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared
 {
+	public class TestClient
+	{
+		private SocketClient _client = new SocketClient();
+		private string _currentRunner;
+		private int _testsRan = -1;
+		private List<Results.TestResult> _results = new List<Results.TestResult>();
+
+		public bool IsConnected {
+			get {
+				if (_client == null)
+					return false;
+				return _client.IsConnected;
+			}
+		}
+
+		public TestClient(string host, int port)
+		{
+			_client.Connect(new ConnectionOptions(host, port), handleMessage);
+		}
+
+		public void Load(string assembly, string runner)
+		{
+			_client.Send(string.Format("{0}|{1}:load-assembly", assembly, runner.ToLower()));
+		}
+
+		public List<Results.TestResult> RunTests(
+			string assembly,
+			string runner,
+			Action<string> runningTest,
+			Action<Results.TestResult> testFinished)
+		{
+			_currentRunner = string.Format("{0}|{1}:", assembly, runner.ToLower());
+			_testsRan = -1;
+			_results.Clear();
+			_client.Send(string.Format("{0}|{1}:run-all", assembly, runner.ToLower()));
+			while (_testsRan == -1 || _testsRan != _results.Count)
+				Thread.Sleep(5);
+			return _results;
+		}
+
+		public void Exit()
+		{
+			_client.SendAndWait("exit");
+		}
+
+		private void handleMessage(string message)
+		{
+			if (message.StartsWith(_currentRunner + "Run finished:")) {
+				_testsRan = int.Parse(getMessage(message, _currentRunner + "Run finished:"));
+			} else if (message.StartsWith(_currentRunner + "Run started:")) {
+				_testsRan = _testsRan;
+			} else if (message.StartsWith(_currentRunner + "<?xml")) {
+				_results.Add(Results.TestResult.FromXml(getMessage(message, _currentRunner)));
+			}
+		}
+
+		private string getMessage(string message, string prefix)
+		{
+			return message.Substring(prefix.Length, message.Length - prefix.Length);
+		}
+	}
+
     class TestProcess
     {
         private ITestRunProcessFeedback _feedback;
@@ -29,6 +91,8 @@ namespace AutoTest.TestRunners.Shared
         private string _input;
         private string _output;
         private PipeClient _pipeClient = null;
+
+		public TestClient Client;
 
         public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
@@ -84,9 +148,8 @@ namespace AutoTest.TestRunners.Shared
 
         private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
-            var channel = Guid.NewGuid().ToString();
-            var listener = startChannelListener(channel);
-            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", _input, _output, channel);
+            //var listener = startChannelListener(channel);
+            var arguments = string.Format("--input=\"{0}\" --logging", _input);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
@@ -95,6 +158,8 @@ namespace AutoTest.TestRunners.Shared
                 arguments += " --compatibility-mode";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
+			var connectionFile = Path.GetTempFileName();
+			arguments += " --connectioninfo=\"" + connectionFile + "\"";
             _proc = new Process();
             _proc.StartInfo = startInfo;
 			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
@@ -112,17 +177,26 @@ namespace AutoTest.TestRunners.Shared
             _proc.StartInfo.CreateNoWindow = true;
             _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
             _proc.Start();
-            var abortListener = new System.Threading.Thread(listenForAborts);
-            abortListener.Start();
-            _proc.WaitForExit();
-            closeClient();
-            if (listener != null)
-                listener.Join();
-            abortListener.Join();
-            if (aborted())
-                return;
-            var results = getResults(_output);
-            TestRunProcess.AddResults(results);
+
+			while (!File.Exists(connectionFile) || File.ReadAllText(connectionFile).Length == 0)
+				Thread.Sleep(10);
+			
+			var content = File.ReadAllText(connectionFile);
+			Console.WriteLine(content);
+			var chunks = content.Split(new[] { ":" }, StringSplitOptions.None);
+			Client = new TestClient(chunks[0], int.Parse(chunks[1]));
+
+            //var abortListener = new System.Threading.Thread(listenForAborts);
+            //abortListener.Start();
+            //_proc.WaitForExit();
+            //closeClient();
+            //if (listener != null)
+            //    listener.Join();
+            //abortListener.Join();
+            //if (aborted())
+            //    return;
+            //var results = getResults(_output);
+            //TestRunProcess.AddResults(results);
         }
 
         private Thread startChannelListener(string channel)

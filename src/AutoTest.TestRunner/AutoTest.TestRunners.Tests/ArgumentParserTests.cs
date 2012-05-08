@@ -47,10 +47,17 @@ namespace AutoTest.TestRunners.Tests
 		[Test]
         public void Should_get_default_port()
         {
-			int i = 3;
             var parser = new ArgumentParser(new string[] { "--port=15" });
             var arguments = parser.Parse();
             Assert.That(arguments.Port, Is.EqualTo(15));
+        }
+
+		[Test]
+        public void Should_get_connection_info_file()
+        {
+            var parser = new ArgumentParser(new string[] { "--connectioninfo=/info/file" });
+            var arguments = parser.Parse();
+            Assert.That(arguments.ConnectionInfo, Is.EqualTo("/info/file"));
         }
     }
 }

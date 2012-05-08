@@ -50,7 +50,7 @@ namespace AutoTest.TestRunners
 							runner.Identifier, id);
 						if (!runner.Identifier.ToLower().Equals(id.ToLower()) && !id.ToLower().Equals("any"))
 							return;
-						Logger.Debug("Initializing channel");
+						Logger.Debug("Loading assembly " + settings.Assembly.Assembly);
 						runner.SetLiveFeedbackChannel(new TestFeedbackProvider(client));
 						var newCurrent = Path.GetDirectoryName(settings.Assembly.Assembly);
 						Logger.Debug("Setting current directory to " + newCurrent);

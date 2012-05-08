@@ -52,7 +52,11 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 
-        public TestRunProcess WrapTestProcessWith(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> processWrapper)
+        public TestRunProcess WrapTestProcessWith(
+			Action<
+				AutoTest.TestRunners.Shared.Targeting.Platform,
+				Version,
+				Action<ProcessStartInfo, bool>> processWrapper)
 		{
             _processWrapper = processWrapper;
 			return this;
@@ -63,6 +67,25 @@ namespace AutoTest.TestRunners.Shared
             _compatabilityMode = true;
             return this;
         }
+
+		public TestClient Prepare(RunOptions options)
+		{
+			_results = new List<TestResult>();
+            var workers = new List<Thread>();
+            var testRuns = getTargetedRuns(options);
+            foreach (var target in testRuns)
+            {
+                var process = new TestProcess(target, _feedback);
+				if (_processWrapper != null)
+                    process.WrapTestProcessWith(_processWrapper);
+                if (_compatabilityMode)
+                    process.RunInCompatibilityMode();
+                process.AbortWhen(_abortWhen);
+				process.Start();
+				return process.Client;
+            }
+			return null;
+		}
 
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {

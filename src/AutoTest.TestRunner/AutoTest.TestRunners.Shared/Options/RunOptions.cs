@@ -12,14 +12,16 @@ namespace AutoTest.TestRunners.Shared.Options
 
         public IEnumerable<RunnerOptions> TestRuns { get { return _runners; } }
 
-        public void AddTestRun(RunnerOptions runner)
+        public RunOptions AddTestRun(RunnerOptions runner)
         {
             _runners.Add(runner);
+			return this;
         }
 
-        public void AddTestRun(IEnumerable<RunnerOptions> runners)
+        public RunOptions AddTestRun(IEnumerable<RunnerOptions> runners)
         {
             _runners.AddRange(runners);
+			return this;
         }
     }
 
@@ -39,24 +41,28 @@ namespace AutoTest.TestRunners.Shared.Options
             ID = id;
         }
 
-        public void AddAssembly(AssemblyOptions options)
+        public RunnerOptions AddAssembly(AssemblyOptions options)
         {
             _assemblies.Add(options);
+			return this;
         }
 
-        public void AddAssemblies(AssemblyOptions[] options)
+        public RunnerOptions AddAssemblies(AssemblyOptions[] options)
         {
             _assemblies.AddRange(options);
+			return this;
         }
 
-        public void AddCategory(string category)
+        public RunnerOptions AddCategory(string category)
         {
             _categories.Add(category);
+			return this;
         }
 
-        public void AddCategories(string[] categories)
+        public RunnerOptions AddCategories(string[] categories)
         {
             _categories.AddRange(categories);
+			return this;
         }
     }
 

@@ -18,6 +18,7 @@ fi
 
 RUNDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestRunners/bin/RunTests
 ATDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestRunners/bin/AutoTest.Net
+CONSOLEDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestConsole/bin/AutoTest.Net
 
 NUNIT_DIR=$(pwd)/src/AutoTest.TestRunner/Plugins/AutoTest.TestRunners.NUnit/bin/AutoTest.Net
 NUNIT_TESTS_DIR=$(pwd)/src/AutoTest.TestRunner/Plugins/AutoTest.TestRunners.NUnit.Tests/bin/AutoTest.Net
@@ -35,8 +36,13 @@ cp $NUNIT_DIR/AutoTest.TestRunners.NUnit* $RUNDIR/TestRunners/NUnit
 rm $RUNDIR/TestRunners/NUnit/*.mm.dll
 cp $NUNIT_DIR/nunit* $RUNDIR/TestRunners/NUnit
 cp $NUNIT_TESTS_DIR/* $RUNDIR/TestAssembly
+cp $CONSOLEDIR/AutoTest.TestConsole.* $RUNDIR
 
 cd $RUNDIR
+
+mono AutoTest.TestConsole.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll"
+exit
+
 echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><run><runner id=\"NUnit\"><test_assembly name=\""$RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll\" /></runner></run>" > $RUNDIR/input.xml
 
 mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --port=8090 --logging & # --silent

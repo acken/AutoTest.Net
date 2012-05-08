@@ -128,6 +128,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 							actual = Encoding.UTF8.GetString(data, 0, data.Length);
 						else
 						    actual = Encoding.UTF8.GetString(data, 0, data.Length - (_messageTermination.Length - 1));
+
 						if (!isInternalMessage(stream, actual)) {
 							forward(stream, actual);
 						}
@@ -157,6 +158,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 				{
 					var messages = _unsentMessages
 						.Where(x => 
+							x == "exit" ||
 							x.StartsWith(client.ID + ":") ||
 							x.StartsWith(stripPluginID(client.ID) + "|any:")).ToList();
 					messages.ForEach(x => Send(stripReceiver(x), client.ID));
@@ -173,6 +175,10 @@ namespace AutoTest.TestRunners.Shared.Communication
 
 		private void exitAll()
 		{
+			// Queue in unsent messages to stop runners currently spawning
+			lock (_unsentMessages) {
+				_unsentMessages.Add("exit");
+			}
 			_clients
 				.Where(x => x.IsRunner).ToList()
 				.ForEach(x => Send("exit", x.ID));
@@ -190,7 +196,8 @@ namespace AutoTest.TestRunners.Shared.Communication
 					var clients = _clients
 						.Where(x => 
 							x.IsRunner &&
-							(message.StartsWith(x.ID + ":") ||
+							(message == "exit" ||
+							 message.StartsWith(x.ID + ":") ||
 							 message.StartsWith(stripPluginID(x.ID) + "|any:"))).ToList();
 					if (clients.Count > 0)
 						clients.ForEach(x => Send(stripReceiver(message), x.ID));
@@ -210,6 +217,8 @@ namespace AutoTest.TestRunners.Shared.Communication
 
 		private string stripReceiver(string message)
 		{
+			if (message.IndexOf(":") == -1)
+				return message;
 			var start = message.IndexOf(":") + 1;
 			return message.Substring(start, message.Length - start);
 		}
