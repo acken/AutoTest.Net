@@ -19,16 +19,16 @@ namespace AutoTest.TestConsole
 								new AssemblyOptions(assembly)
 							)
 					);
-			var client = runner.Prepare(options);
-			client.Load(assembly, "NUnit");
+			var process = runner.Prepare(options);
+			var client = process.CreateClient(assembly, "NUnit", () => false);
+			client.Load();
 			var result = client.RunTests(
-				assembly,
-				"NUnit",
 				(name) => Console.Write("\tRunning " + name),
 				(test) => Console.WriteLine(" => " + 
 											test.State.ToString() +
 											" (" +
 											test.DurationInMilliseconds.ToString() + ")"));
+			Console.WriteLine("Ran {0} tests", result.Count);
 			client.Exit();
 		}
 	}

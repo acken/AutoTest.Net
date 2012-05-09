@@ -68,33 +68,31 @@ namespace AutoTest.TestRunners.Shared
             return this;
         }
 
-		public TestClient Prepare(RunOptions options)
+		public TestSession Prepare(RunOptions options)
 		{
-			_results = new List<TestResult>();
-            var workers = new List<Thread>();
+			var processes = new List<TestProcess>();
             var testRuns = getTargetedRuns(options);
             foreach (var target in testRuns)
             {
-                var process = new TestProcess(target, _feedback);
+                var process = new TestProcessLauncher(target, _feedback);
 				if (_processWrapper != null)
                     process.WrapTestProcessWith(_processWrapper);
                 if (_compatabilityMode)
                     process.RunInCompatibilityMode();
                 process.AbortWhen(_abortWhen);
-				process.Start();
-				return process.Client;
+				processes.Add(process.Start());
             }
-			return null;
+			return new TestSession(processes);
 		}
 
         public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
         {
             _results = new List<TestResult>();
-            var workers = new List<Thread>();
+            /*var workers = new List<Thread>();
             var testRuns = getTargetedRuns(options);
             foreach (var target in testRuns)
             {
-                var process = new TestProcess(target, _feedback);
+                var process = new TestProcessLauncher(target, _feedback);
 				if (_processWrapper != null)
                     process.WrapTestProcessWith(_processWrapper);
                 if (_compatabilityMode)
@@ -105,7 +103,7 @@ namespace AutoTest.TestRunners.Shared
                 workers.Add(thread);
             }
             foreach (var worker in workers)
-                worker.Join();
+                worker.Join();*/
             return _results;
         }
 
