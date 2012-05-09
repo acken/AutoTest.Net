@@ -19,6 +19,8 @@ namespace AutoTest.TestRunners.Shared
 	{
 		private SocketClient _client = new SocketClient();
 		private string _currentRunner;
+		private Action<string> _onTestStart;
+		private Action<Results.TestResult> _onTestFinished;
 		private int _testsRan = -1;
 		private List<Results.TestResult> _results = new List<Results.TestResult>();
 
@@ -43,9 +45,11 @@ namespace AutoTest.TestRunners.Shared
 		public List<Results.TestResult> RunTests(
 			string assembly,
 			string runner,
-			Action<string> runningTest,
+			Action<string> testStart,
 			Action<Results.TestResult> testFinished)
 		{
+			_onTestStart = testStart;
+			_onTestFinished = testFinished;
 			_currentRunner = string.Format("{0}|{1}:", assembly, runner.ToLower());
 			_testsRan = -1;
 			_results.Clear();
@@ -66,8 +70,12 @@ namespace AutoTest.TestRunners.Shared
 				_testsRan = int.Parse(getMessage(message, _currentRunner + "Run finished:"));
 			} else if (message.StartsWith(_currentRunner + "Run started:")) {
 				_testsRan = _testsRan;
+			} else if (message.StartsWith(_currentRunner + "Test started:")) {
+				_onTestStart(getMessage(message, _currentRunner + "Test started:"));
 			} else if (message.StartsWith(_currentRunner + "<?xml")) {
-				_results.Add(Results.TestResult.FromXml(getMessage(message, _currentRunner)));
+				var result = Results.TestResult.FromXml(getMessage(message, _currentRunner));
+				_results.Add(result);
+				_onTestFinished(result);
 			}
 		}
 
@@ -149,7 +157,7 @@ namespace AutoTest.TestRunners.Shared
         private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
             //var listener = startChannelListener(channel);
-            var arguments = string.Format("--input=\"{0}\" --logging", _input);
+            var arguments = string.Format("--input=\"{0}\" --silent", _input);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)

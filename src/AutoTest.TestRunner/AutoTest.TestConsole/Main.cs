@@ -20,13 +20,15 @@ namespace AutoTest.TestConsole
 							)
 					);
 			var client = runner.Prepare(options);
-			System.Threading.Thread.Sleep(3000);
 			client.Load(assembly, "NUnit");
 			var result = client.RunTests(
 				assembly,
 				"NUnit",
-				(name) => Console.Write("Running " + name),
-				(test) => Console.WriteLine(" => " + test.State.ToString()));
+				(name) => Console.Write("\tRunning " + name),
+				(test) => Console.WriteLine(" => " + 
+											test.State.ToString() +
+											" (" +
+											test.DurationInMilliseconds.ToString() + ")"));
 			client.Exit();
 		}
 	}
