@@ -118,7 +118,24 @@ namespace AutoTest.TestRunners.Shared
 			_client.Send(string.Format("{0}load-assembly", _runnerID));
 		}
 
+		public List<Results.TestResult> RunAllTests(
+			Action<string> testStart,
+			Action<Results.TestResult> testFinished)
+		{
+			return runTests("run-all", testStart, testFinished);
+		}
+
 		public List<Results.TestResult> RunTests(
+			TestRunOptions options,
+			Action<string> testStart,
+			Action<Results.TestResult> testFinished)
+		{
+			var message = OptionsXmlWriter.WriteOptions(options);
+			return runTests(message, testStart, testFinished);
+		}
+
+		private List<Results.TestResult> runTests(
+			string message,
 			Action<string> testStart,
 			Action<Results.TestResult> testFinished)
 		{
@@ -126,7 +143,7 @@ namespace AutoTest.TestRunners.Shared
 			_onTestFinished = testFinished;
 			_testsRan = -1;
 			_results.Clear();
-			_client.Send(string.Format("{0}run-all", _runnerID));
+			_client.Send(string.Format("{0}{1}", _runnerID, message));
 			while (!_abortQuery() && ( _testsRan == -1 || _testsRan != _results.Count))
 				Thread.Sleep(5);
 			return _results;

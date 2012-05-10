@@ -43,11 +43,6 @@ namespace AutoTest.TestRunners.Shared.Options
                     {
                         writer.WriteStartElement("test_assembly");
                         writer.WriteAttributeString("name", assembly.Assembly);
-                        /*if (assembly.IsVerified)
-                            writer.WriteAttributeString("verified", "true");
-                        writeStringList(writer, assembly.Tests, "tests", "test");
-                        writeStringList(writer, assembly.Members, "members", "member");
-                        writeStringList(writer, assembly.Namespaces, "namespaces", "namespace");*/
                         writer.WriteEndElement();
                     }
                     writer.WriteEndElement();
@@ -55,6 +50,23 @@ namespace AutoTest.TestRunners.Shared.Options
                 writer.WriteEndElement();
             }
         }
+
+		public static string WriteOptions(TestRunOptions options)
+		{
+			var settings = new XmlWriterSettings();
+			settings.OmitXmlDeclaration = true;
+			var sb = new StringBuilder();
+            using (var writer = XmlTextWriter.Create(sb, settings))
+            {
+                writer.WriteStartElement("test_run");
+				writer.WriteAttributeString("verified", options.IsVerified.ToString().ToLower());
+				writeStringList(writer, options.Tests, "tests", "test");
+				writeStringList(writer, options.Members, "members", "member");
+				writeStringList(writer, options.Namespaces, "namespaces", "namespace");
+                writer.WriteEndElement();
+            }
+			return sb.ToString();
+		}
 
         private static void writeStringList(XmlWriter writer, IEnumerable<string> list, string mainTag, string nodeTag)
         {

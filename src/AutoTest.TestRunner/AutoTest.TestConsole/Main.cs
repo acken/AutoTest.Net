@@ -23,6 +23,8 @@ namespace AutoTest.TestConsole
 			var client = process.CreateClient(assembly, "NUnit", () => false);
 			client.Load();
 			var result = client.RunTests(
+				new TestRunOptions()
+					.AddTest("AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_inherited_fixture"),
 				(name) => Console.Write("\tRunning " + name),
 				(test) => Console.WriteLine(" => " + 
 											test.State.ToString() +

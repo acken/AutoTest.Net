@@ -94,11 +94,33 @@ namespace AutoTest.TestRunners.Shared.Options
             return this;
         }
 
-        public void AddTest(string test) { _tests.Add(test); }
-        public void AddTests(string[] tests) { _tests.AddRange(tests); }
-        public void AddMember(string member) { _members.Add(member); }
-        public void AddMembers(string[] members) { _members.AddRange(members); }
-        public void AddNamespace(string ns) { _namespaces.Add(ns); }
-        public void AddNamespaces(string[] namespaces) { _namespaces.AddRange(namespaces); }
+        public TestRunOptions AddTest(string test) {
+			_tests.Add(test);
+			return this;
+		}
+
+        public TestRunOptions AddTests(string[] tests) {
+			_tests.AddRange(tests);
+			return this;
+		}
+        public TestRunOptions AddMember(string member) { 
+			_members.Add(member);
+			return this;
+		}
+
+        public TestRunOptions AddMembers(string[] members) { 
+			_members.AddRange(members);
+			return this;
+		}
+
+        public TestRunOptions AddNamespace(string ns) { 
+			_namespaces.Add(ns); 
+			return this;
+		}
+
+        public TestRunOptions AddNamespaces(string[] namespaces) { 
+			_namespaces.AddRange(namespaces);
+			return this;
+		}
 	}
 }
