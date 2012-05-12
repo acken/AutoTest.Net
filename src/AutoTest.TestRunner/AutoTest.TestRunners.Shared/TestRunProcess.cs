@@ -85,28 +85,6 @@ namespace AutoTest.TestRunners.Shared
 			return new TestSession(processes);
 		}
 
-        public IEnumerable<TestResult> ProcessTestRuns(RunOptions options)
-        {
-            _results = new List<TestResult>();
-            /*var workers = new List<Thread>();
-            var testRuns = getTargetedRuns(options);
-            foreach (var target in testRuns)
-            {
-                var process = new TestProcessLauncher(target, _feedback);
-				if (_processWrapper != null)
-                    process.WrapTestProcessWith(_processWrapper);
-                if (_compatabilityMode)
-                    process.RunInCompatibilityMode();
-                process.AbortWhen(_abortWhen);
-                var thread = new Thread(new ThreadStart(process.Start));
-                thread.Start();
-                workers.Add(thread);
-            }
-            foreach (var worker in workers)
-                worker.Join();*/
-            return _results;
-        }
-
         private IEnumerable<TargetedRun> getTargetedRuns(RunOptions options)
         {
             var assembler = new TargetedRunAssembler(options, _locator, _runInParallel);

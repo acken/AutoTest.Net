@@ -15,13 +15,39 @@ using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared
 {
+	public class TestInstance
+	{
+		public string Assembly { get; private set; }
+		public string Runner { get; private set; }
+
+		public TestInstance(string assembly, string runner)
+		{
+			Assembly = assembly;
+			Runner = runner;
+		}
+	}
+
 	public class TestSession
 	{
 		private List<TestProcess> _processes = new List<TestProcess>();
 
-		public TestSession(IEnumerable<TestProcess> processes)
+		public TestInstance[] Instances {  
+			get { 
+				var runners = new List<TestInstance>();
+				foreach (var proc in _processes)
+					runners.AddRange(proc.GetRunners());
+				return runners.ToArray();
+			} 
+		}
+
+		internal TestSession(IEnumerable<TestProcess> processes)
 		{
 			_processes.AddRange(processes);
+		}
+
+		public TestClient CreateClient(TestInstance instance, Func<bool> abortQuery)
+		{
+			return CreateClient(instance.Assembly, instance.Runner, abortQuery);
 		}
 
 		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery)
@@ -39,7 +65,7 @@ namespace AutoTest.TestRunners.Shared
 		}
 	}
 
-	public class TestProcess
+	internal class TestProcess
 	{
 		private string _host;
 		private int _port;
@@ -60,6 +86,14 @@ namespace AutoTest.TestRunners.Shared
 				.Any(x =>
 					x.ID.ToLower() == runner.ToLower() &&
 					x.Assemblies.Any(y => y.Assembly == assembly));
+		}
+
+		public IEnumerable<TestInstance> GetRunners()
+		{
+			var runners = new List<TestInstance>();
+			foreach (var rnr in _options.Runners)
+				runners.AddRange(rnr.Assemblies.Select(x => new TestInstance(rnr.ID, x.Assembly)));
+			return runners;
 		}
 
 		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery)
