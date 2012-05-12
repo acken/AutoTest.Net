@@ -44,10 +44,13 @@ namespace AutoTest.TestRunners.Tests.Plugins
         {
             return true;
         }
-
-        public IEnumerable<Shared.Results.TestResult> Run(RunSettings settings)
-        {
-            return null;
-        }
+		
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
     }
 }

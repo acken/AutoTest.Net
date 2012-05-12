@@ -12,14 +12,16 @@ namespace AutoTest.TestRunners.Shared.Options
 
         public IEnumerable<RunnerOptions> TestRuns { get { return _runners; } }
 
-        public void AddTestRun(RunnerOptions runner)
+        public RunOptions AddTestRun(RunnerOptions runner)
         {
             _runners.Add(runner);
+			return this;
         }
 
-        public void AddTestRun(IEnumerable<RunnerOptions> runners)
+        public RunOptions AddTestRun(IEnumerable<RunnerOptions> runners)
         {
             _runners.AddRange(runners);
+			return this;
         }
     }
 
@@ -39,56 +41,86 @@ namespace AutoTest.TestRunners.Shared.Options
             ID = id;
         }
 
-        public void AddAssembly(AssemblyOptions options)
+        public RunnerOptions AddAssembly(AssemblyOptions options)
         {
             _assemblies.Add(options);
+			return this;
         }
 
-        public void AddAssemblies(AssemblyOptions[] options)
+        public RunnerOptions AddAssemblies(AssemblyOptions[] options)
         {
             _assemblies.AddRange(options);
+			return this;
         }
 
-        public void AddCategory(string category)
+        public RunnerOptions AddCategory(string category)
         {
             _categories.Add(category);
+			return this;
         }
 
-        public void AddCategories(string[] categories)
+        public RunnerOptions AddCategories(string[] categories)
         {
             _categories.AddRange(categories);
+			return this;
         }
     }
 
     [Serializable]
     public class AssemblyOptions
     {
-        private List<string> _tests = new List<string>();
-        private List<string> _members = new List<string>();
-        private List<string> _namespaces = new List<string>();
-
-        public bool IsVerified { get; private set; }
         public string Assembly { get; private set; }
-        public IEnumerable<string> Tests { get { return _tests; } }
-        public IEnumerable<string> Members { get { return _members; } }
-        public IEnumerable<string> Namespaces { get { return _namespaces; } }
 
         public AssemblyOptions(string assembly)
         {
             Assembly = assembly;
         }
+    }
 
-        public AssemblyOptions HasBeenVerified(bool verified)
+	public class TestRunOptions
+	{
+		private List<string> _tests = new List<string>();
+        private List<string> _members = new List<string>();
+        private List<string> _namespaces = new List<string>();
+
+        public bool IsVerified { get; private set; }
+        public IEnumerable<string> Tests { get { return _tests; } }
+        public IEnumerable<string> Members { get { return _members; } }
+        public IEnumerable<string> Namespaces { get { return _namespaces; } }
+
+        public TestRunOptions HasBeenVerified(bool verified)
         {
             IsVerified = verified;
             return this;
         }
 
-        public void AddTest(string test) { _tests.Add(test); }
-        public void AddTests(string[] tests) { _tests.AddRange(tests); }
-        public void AddMember(string member) { _members.Add(member); }
-        public void AddMembers(string[] members) { _members.AddRange(members); }
-        public void AddNamespace(string ns) { _namespaces.Add(ns); }
-        public void AddNamespaces(string[] namespaces) { _namespaces.AddRange(namespaces); }
-    }
+        public TestRunOptions AddTest(string test) {
+			_tests.Add(test);
+			return this;
+		}
+
+        public TestRunOptions AddTests(string[] tests) {
+			_tests.AddRange(tests);
+			return this;
+		}
+        public TestRunOptions AddMember(string member) { 
+			_members.Add(member);
+			return this;
+		}
+
+        public TestRunOptions AddMembers(string[] members) { 
+			_members.AddRange(members);
+			return this;
+		}
+
+        public TestRunOptions AddNamespace(string ns) { 
+			_namespaces.Add(ns); 
+			return this;
+		}
+
+        public TestRunOptions AddNamespaces(string[] namespaces) { 
+			_namespaces.AddRange(namespaces);
+			return this;
+		}
+	}
 }

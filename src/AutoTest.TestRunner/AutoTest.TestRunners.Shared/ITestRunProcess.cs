@@ -6,6 +6,6 @@ namespace AutoTest.TestRunners.Shared
 {
     public interface ITestRunProcess
     {
-        IEnumerable<TestResult> ProcessTestRuns(RunOptions options);
+        TestSession Prepare(RunOptions options);
     }
 }

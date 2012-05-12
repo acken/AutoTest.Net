@@ -12,12 +12,13 @@ if [ "$2" = "get-command-definitions" ]; then
 	# 	param|"Param description" end
 	# end
 
-	echo "Deploys and launches the AutoTest.Net testrunner (AutoTest.TestRunner.exe)"
+	echo "Deploys and launches the AutoTest.Net testrunner (AutoTest.TestRunner.exe). Available commands when running are all, single and ext"
 	exit
 fi
 
 RUNDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestRunners/bin/RunTests
 ATDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestRunners/bin/AutoTest.Net
+CONSOLEDIR=$(pwd)/src/AutoTest.TestRunner/AutoTest.TestConsole/bin/AutoTest.Net
 
 NUNIT_DIR=$(pwd)/src/AutoTest.TestRunner/Plugins/AutoTest.TestRunners.NUnit/bin/AutoTest.Net
 NUNIT_TESTS_DIR=$(pwd)/src/AutoTest.TestRunner/Plugins/AutoTest.TestRunners.NUnit.Tests/bin/AutoTest.Net
@@ -35,8 +36,33 @@ cp $NUNIT_DIR/AutoTest.TestRunners.NUnit* $RUNDIR/TestRunners/NUnit
 rm $RUNDIR/TestRunners/NUnit/*.mm.dll
 cp $NUNIT_DIR/nunit* $RUNDIR/TestRunners/NUnit
 cp $NUNIT_TESTS_DIR/* $RUNDIR/TestAssembly
+cp $CONSOLEDIR/AutoTest.TestConsole.* $RUNDIR
 
 cd $RUNDIR
+
+mono AutoTest.TestConsole.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll"
+exit
+
 echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><run><runner id=\"NUnit\"><test_assembly name=\""$RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll\" /></runner></run>" > $RUNDIR/input.xml
 
-mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --logging
+mono AutoTest.TestRunner.exe --input=input.xml --output=output.xml --port=8090 --logging & # --silent
+
+sleep 0.2
+
+mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:load-assembly"
+
+while [ "1" = "1" ]; do
+	read input_var
+	if [ "$input_var" = "exit" ]; then
+		break
+	fi
+	if [ "$input_var" = "all" ]; then
+		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:run-all"
+	fi
+	if [ "$input_var" = "single" ]; then
+		mono AutoTest.TestRunner.exe "127.0.0.1" 8090 $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll|nunit:<test_run verified=\"false\"><tests><test>AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_test</test></tests></test_run>"
+	fi
+done
+
+mono AutoTest.TestRunner.exe "127.0.0.1" 8090 exit
+

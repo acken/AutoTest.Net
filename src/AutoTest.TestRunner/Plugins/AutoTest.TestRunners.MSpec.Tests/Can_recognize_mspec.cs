@@ -13,7 +13,9 @@ namespace AutoTest.TestRunners.MSpec.Tests
         [Test]
         public void I_can_haz_mspec_test()
         {
-            var runner = new Runner();
+			Assert.Fail("Fix this");
+		}
+            /*var runner = new Runner();
             Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"), Is.True);
         }
 
@@ -157,6 +159,6 @@ namespace AutoTest.TestRunners.MSpec.Tests
         private static string getAssembly()
         {
             return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "AutoTest.TestRunners.MSpec.Tests.TestResource.dll");
-        }
+        }*/
     }
 }

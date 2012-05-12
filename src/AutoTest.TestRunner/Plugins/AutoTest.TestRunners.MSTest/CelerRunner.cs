@@ -120,7 +120,8 @@ namespace AutoTest.TestRunners.MSTest
 
         private IEnumerable<MethodInfo> getTests(RunSettings settings)
         {
-            try
+			// TODO Fix this
+            /*try
             {
                 var assembly = Assembly.Load(getAssemblySignature(settings.Assembly.Assembly));
                 //var assembly = Assembly.LoadFrom(settings.Assembly.Assembly);
@@ -152,7 +153,8 @@ namespace AutoTest.TestRunners.MSTest
                 _results.Add(new TestResult(Identifier, settings.Assembly.Assembly, "", 0, "Error while preparing runner", TestState.Panic, getMessage(ex)));
                 _results[_results.Count - 1].AddStackLines(getStackLines(ex));
                 return null;
-            }
+            }*/
+			return null;
         }
 
         private string getMessage(Exception ex)
@@ -196,13 +198,13 @@ namespace AutoTest.TestRunners.MSTest
         private void log(string text, params object[] args)
         {
             if (_logger == null) return;
-            _logger.Write(text, args);
+            _logger.Debug(text, args);
         }
 
         private void log(Exception ex, params object[] args)
         {
             if (_logger == null) return;
-            _logger.Write(ex);
+            _logger.Debug(ex);
         }
     }
 }

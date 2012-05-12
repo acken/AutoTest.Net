@@ -19,35 +19,42 @@ namespace AutoTest.TestRunners
     class Program
     {
         private static Arguments _arguments;
-        private static List<TestResult> _results = new List<TestResult>();
-        private static int _mainThreadID = 0;
         private static List<Thread> _haltedThreads = new List<Thread>();
+		private static SocketClient _client = new SocketClient();
+
+		public static ITestFeedbackProvider Channel;
         
         [STAThread]
         static void Main(string[] args)
         {
-            _mainThreadID = Thread.CurrentThread.ManagedThreadId;
+			if (!args.Any(x => x.StartsWith("--input=")) &&
+				args.Length == 3)
+			{
+				int port;
+				if (int.TryParse(args[1], out port)) {
+					var client = new SocketClient();
+					client.Connect(new ConnectionOptions(args[0], port), (meh) => {});
+					client.Send(args[2]);
+					Console.Write("");
+				}
+				return;
+			}
+
+			Channel = new TestFeedbackProvider(_client);
             var parser = new ArgumentParser(args);
-            _arguments = parser.Parse();
-            if (_arguments.Logging)
-                Logger.SetLogger(new ConsoleLogger());
+			_arguments = parser.Parse();
+            Logger.SetLogger(new ConsoleLogger(!_arguments.Silent, !_arguments.Silent && _arguments.Logging));
             writeHeader();
-            if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
+            if (!File.Exists(_arguments.InputFile))
             {
                 printUseage();
                 return;
             }
-            Write("Test run options:");
-            Write(File.ReadAllText(_arguments.InputFile));
+            Logger.Debug("Test run options:");
+            Logger.Debug(File.ReadAllText(_arguments.InputFile));
             if (_arguments.StartSuspended)
                 Console.ReadLine();
             tryRunTests();
-            Write(" ");
-            if (File.Exists(_arguments.OutputFile))
-            {
-                Write("Test run result:");
-                Write(File.ReadAllText(_arguments.OutputFile));
-            }
 
 			// We do this since NUnit threads some times keep staing in running mode even after finished.
             killHaltedThreads();
@@ -68,7 +75,7 @@ namespace AutoTest.TestRunners
 
         private static void writeHeader()
         {
-            Write("AutoTest.TestRunner v0.1");
+            Write("AutoTest.TestRunner v1.0");
             Write("Author - Svein Arne Ackenhausen");
             Write("AutoTest.TestRunner is a plugin based generic test runner. ");
             Write("");
@@ -77,67 +84,103 @@ namespace AutoTest.TestRunners
         private static void tryRunTests()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledExceptionHandler;
-            using (var junction = new PipeJunction(_arguments.Channel))
-            {
-                try
-                {
-                    var parser = new OptionsXmlReader(_arguments.InputFile);
-                    parser.Parse();
-                    if (!parser.IsValid)
-                        return;
-
-                    run(parser, junction);
-
-                    var writer = new ResultsXmlWriter(_results);
-                    writer.Write(_arguments.OutputFile);
-                }
-                catch (Exception ex)
-                {
-                    try
-                    {
-                        var result = new List<TestResult>();
-                        result.Add(ErrorHandler.GetError("Init", ex));
-                        var writer = new ResultsXmlWriter(result);
-                        writer.Write(_arguments.OutputFile);
-                    }
-                    catch
-                    {
+			var options = parseOptions();
+			if (options != null) {
+				try {
+                    prepareRunners(options);
+                } catch (Exception ex) {
+                    try {
+                        Channel.TestFinished(ErrorHandler.GetError("Init", ex));
+                    } catch {
                         Console.WriteLine(ex.ToString());
                     }
                 }
-            }
-            AppDomain.CurrentDomain.UnhandledException -= CurrentDomainUnhandledExceptionHandler;
-        }
+			}
+			AppDomain.CurrentDomain.UnhandledException -= CurrentDomainUnhandledExceptionHandler;
+		}
 
-        public static void CurrentDomainUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+		private static void prepareRunners(OptionsXmlReader options)
+		{
+			var runners = new List<Thread>();
+			var server = new TcpServer();
+			server.Start(_arguments.Port);
+			var serverInfo = string.Format("{0}:{1}", server.Server, server.Port);
+			Console.WriteLine("Listening on: {0}", serverInfo);
+			if (_arguments.ConnectionInfo != null)
+				File.WriteAllText(_arguments.ConnectionInfo, serverInfo);
+			_client.Connect(new ConnectionOptions(server.Server, server.Port), (msg) => {});
+			foreach (var plugin in getPlugins(options))
+			{
+				var instance = plugin.New();
+				foreach (var currentRuns in options 
+												.Options
+												.TestRuns
+												.Where(x =>
+													x.ID.ToLower().Equals("any") ||
+													instance.Handles(x.ID)))
+				{
+					var run = currentRuns;
+					if (run == null)
+						continue;
+					foreach (var assembly in run.Assemblies)
+					{
+						var process = new SubDomainRunner(
+							plugin,
+							run.ID,
+							run.Categories,
+							assembly,
+							_arguments.Silent,
+							!_arguments.Silent && _arguments.Logging,
+							new ConnectionOptions(server.Server, server.Port),
+							_arguments.CompatabilityMode);
+						var runner = new Thread(() => process.Run(null));
+						runners.Add(runner);
+						runner.Start();
+					}
+				}
+			}
+
+			runners.ForEach(x => x.Join());
+			_client.Disconnect();
+			if (_arguments.ConnectionInfo != null && File.Exists(_arguments.ConnectionInfo))
+				File.Delete(_arguments.ConnectionInfo);
+		}
+
+		private static OptionsXmlReader parseOptions() {
+			var parser = new OptionsXmlReader();
+			parser.ParseFile(_arguments.InputFile);
+			if (parser.IsValid)
+				return parser;
+			return null;
+		}
+
+        public static void CurrentDomainUnhandledExceptionHandler(
+			object sender,
+			UnhandledExceptionEventArgs args)
         {
             var message = getException((Exception)args.ExceptionObject);
 
             // TODO: Seriously!? Firgure out what thread is causing the app domain unload exception
 			// Yeah, seriously. When user code throws background exceptions we want them to know.
-            if (!_arguments.CompatabilityMode && !args.ExceptionObject.GetType().Equals(typeof(System.AppDomainUnloadedException)))
+            if (!_arguments.CompatabilityMode &&
+				!args.ExceptionObject.GetType().Equals(typeof(System.AppDomainUnloadedException)))
             {
-                var finalOutput = new TestResult("Any", "", "", 0, "An unhandled exception was thrown while running a test.", TestState.Panic,
-                        "This is usually caused by a background thread throwing an unhandled exception. " +
-                        "Most test runners run in clr 1 mode which hides these exceptions from you. If you still want to suppress these errors (not recommended) you can enable compatibility mode." + Environment.NewLine + Environment.NewLine +
-                        "To head on to happy land where fluffy bunnies roam freely painting green left right and center do so by passing the --compatibility-mode switch to the test " +
-                        "runner or set the <TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode> configuration option in " +
-                        "AutoTest.Net." + Environment.NewLine + Environment.NewLine + message);
-                AddResults(finalOutput);
+                var finalOutput = new TestResult("Any", "", "", 0, 
+					"An unhandled exception was thrown while running a test.", TestState.Panic,
+                    "This is usually caused by a background thread throwing an unhandled exception. " +
+                    "Most test runners run in clr 1 mode which hides these exceptions from you. " +
+					"If you still want to suppress these errors (not recommended) you can enable " +
+					"compatibility mode." + Environment.NewLine + Environment.NewLine +
+                    "To head on to happy land where fluffy bunnies roam freely painting green left " +
+					"right and center do so by passing the --compatibility-mode switch to the test " +
+                    "runner or set the <TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode> " +
+					"configuration option in AutoTest.Net." +
+					Environment.NewLine + Environment.NewLine + message);
+                Channel.TestFinished(finalOutput);
             }
 
             if (args.IsTerminating)
-            {
-                var writer = new ResultsXmlWriter(_results);
-                writer.Write(_arguments.OutputFile);
-                Write(" ");
-                if (File.Exists(_arguments.OutputFile))
-                {
-                    Write("Test run result:");
-                    Write(File.ReadAllText(_arguments.OutputFile));
-                }
                 Environment.Exit(-1);
-            }
 
             Thread.CurrentThread.IsBackground = true;
             Thread.CurrentThread.Name = "Dead thread";
@@ -145,12 +188,6 @@ namespace AutoTest.TestRunners
             {
                 _haltedThreads.Add(Thread.CurrentThread);
             }
-
-            /*if (Thread.CurrentThread.ManagedThreadId != _mainThreadID)
-            {
-                while (true)
-                    Thread.Sleep(TimeSpan.FromHours(1));
-            }*/
         }
 
         private static string getException(Exception ex)
@@ -163,110 +200,61 @@ namespace AutoTest.TestRunners
 
         private static void printUseage()
         {
-            Write("Syntax: AutoTest.TestRunner.exe --input=options_file --output=result_file [--startsuspended] [--silent] [--logging] [--compatibility-mode]");
+            Write("Start runner syntax: AutoTest.TestRunner.exe --input=options_file " +
+				  "[--connectioninfo=file_to_write_connect_info_to] " +
+				  "[--startsuspended] [--silent] [--logging] [--compatibility-mode] [--port=PORT]");
+			Write("Send message syntax: IP PORT MESSAGE");
             Write("");
-            Write("Options format");
-            Write("<=====================================================>");
+			Write("Options file format");
             Write("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
             Write("<run>");
             Write("\t<!--It can contain 0-n plugins. If 0 the runner will load all available plugins-->");
-            Write("\t<plugin type=\"Plugin.IAutoTestNetTestRunner.Implementation\">C:\\Some\\Path\\PluginAssembly.dll</plugin>");
-            Write("\t<!--It can contain 0-n runners. The id is what determines which runner will handle that run-->");
+            Write("\t<plugin type=\"Plugin.IAutoTestNetTestRunner.Implementation\">" +
+				"C:\\Some\\Path\\PluginAssembly.dll</plugin>");
+            Write("\t<!--It can contain 0-n runners. The id is what determines which runner " +
+				"will handle that run-->");
             Write("\t<runner id=\"NUnit\">");
             Write("\t\t<!--It can contain 0-n categories to ignore-->");
             Write("\t\t<categories>");
             Write("\t\t\t<ignore_category>IgnoreCategory</ignore_category>");
             Write("\t\t</categories>");
             Write("\t\t<!--It can contain 1-n assemblies to test.-->");
-            Write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\">");
-            Write("\t\t\t<!--It can contain 0-n tests-->");
-            Write("\t\t\t<tests>");
-            Write("\t\t\t\t<test>testassembly.class.test1</test>");
-            Write("\t\t\t</tests>");
-            Write("\t\t\t<!--It can contain 0-n members-->");
-            Write("\t\t\t<members>");
-            Write("\t\t\t\t<member>testassembly.class2</member>");
-            Write("\t\t\t</members>");
-            Write("\t\t\t<!--It can contain 0-n namespaces-->");
-            Write("\t\t\t<namespaces>");
-            Write("\t\t\t\t<namespace>testassembly.somenamespace1</namespace>");
-            Write("\t\t\t</namespaces>");
-            Write("\t\t</test_assembly>");
+            Write("\t\t<test_assembly name=\"C:\\my\\testassembly.dll\" />");
             Write("\t</runner>");
             Write("</run>");
+			Write("");
+			Write("");
+            Write("<===================== Commands for a running test runner instance ======================>");
+			Write("When communicating with a running instance of a test runner you will use a socket endpoint");
+			Write("using null terminated text commands. You will recieve test feedback from the same tcp ");
+			Write("channel. Assembly and test runner information from the options file is used to launch ");
+			Write("idle runners. The runner id is [assembly full path]|[plugin name in lower case].");
+			Write("");
+			Write("<== Command string format: RUNNERID:MESSAGE ==>");
+			Write("Initializing the runner (load-assembly): /my/path/myasm.dll|nunit:load-assembly");
+			Write("Run all tests (run-all): /my/path/myasm.dll|nunit:run-all");
+			Write("Run tests (test run xml): /my/path/myasm.dll|nunit:XML");
+			Write("Exit runner (exit): /my/path/myasm.dll|nunit:exit");
+			Write("Exit all runner (exit): exit");
+			Write("");
+			Write("Test run format");
+			Write("<!--If verified=true the runner will not verify that tests belong to framework-->");
+			Write("<test_run verified=\"true\">");
+			Write("\t<!--It can contain 0-n tests-->");
+            Write("\t<tests>");
+            Write("\t\t<test>testassembly.class.test1</test>");
+            Write("\t</tests>");
+            Write("\t<!--It can contain 0-n members-->");
+            Write("\t<members>");
+            Write("\t\t<member>testassembly.class2</member>");
+            Write("\t</members>");
+            Write("\t<!--It can contain 0-n namespaces-->");
+            Write("\t<namespaces>");
+            Write("\t\t<namespace>testassembly.somenamespace1</namespace>");
+            Write("\t</namespaces>");
+            Write("</test_run>");
         }
-
-        private static void run(OptionsXmlReader parser, PipeJunction junction)
-        {
-            foreach (var plugin in getPlugins(parser))
-            {
-                var instance = plugin.New();
-                foreach (var currentRuns in parser.Options.TestRuns.Where(x => x.ID.ToLower().Equals("any") || instance.Handles(x.ID)))
-                {
-                    var run = getTestRunsFor(instance, currentRuns);
-                    if (run == null)
-                        continue;
-                    foreach (var assembly in run.Assemblies)
-                    {
-                        WriteNow("Running tests for " + assembly.Assembly + " using " + plugin.Type);
-                        var pipeName = Guid.NewGuid().ToString();
-                        junction.Combine(pipeName);
-                        var process = new SubDomainRunner(plugin, run.ID, run.Categories, assembly, _arguments.Logging, pipeName, _arguments.CompatabilityMode);
-                        process.Run(null);
-                    }
-                }
-            }
-        }
-
-        private static RunnerOptions getTestRunsFor(IAutoTestNetTestRunner instance, RunnerOptions run)
-        {
-            if (run.ID.ToLower() != "any")
-                return run;
-
-            var newRun = new RunnerOptions(run.ID);
-            newRun.AddCategories(run.Categories.ToArray());
-            foreach (var asm in run.Assemblies)
-            {
-                if (!asm.IsVerified && !instance.ContainsTestsFor(asm.Assembly))
-                    continue;
-                var assembly = new AssemblyOptions(asm.Assembly);
-                assembly.AddNamespaces(asm.Namespaces.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly.AddMembers(asm.Members.Where(x => asm.IsVerified || instance.ContainsTestsFor(asm.Assembly, x)).ToArray());
-                assembly.AddTests(asm.Tests.Where(x => asm.IsVerified || instance.IsTest(asm.Assembly, x)).ToArray());
-                if (hasNoTests(asm) || hasTests(assembly))
-                    newRun.AddAssembly(assembly);
-            }
-            if (newRun.Assemblies.Count() == 0)
-                return null;
-            return newRun;
-        }
-
-        private static bool hasTests(AssemblyOptions asm)
-        {
-            return asm.Namespaces.Count() != 0 || asm.Members.Count() != 0 || asm.Tests.Count() != 0;
-        }
-
-        private static bool hasNoTests(AssemblyOptions asm)
-        {
-            return asm.Namespaces.Count() == 0 && asm.Members.Count() == 0 && asm.Tests.Count() == 0;
-        }
-
-        public static void AddResults(IEnumerable<TestResult> results)
-        {
-            lock(_results)
-            {
-                _results.AddRange(results);
-            }
-        }
-
-        public static void AddResults(TestResult result)
-        {
-            lock (_results)
-            {
-                _results.Add(result);
-            }
-        }
-
+		
         private static IEnumerable<Plugin> getPlugins(OptionsXmlReader parser)
         {
             if (parser.Plugins.Count() == 0)

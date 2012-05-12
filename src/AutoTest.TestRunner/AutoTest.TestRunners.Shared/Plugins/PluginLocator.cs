@@ -31,7 +31,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                                     Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                                 };
 
-            hitPaths.ToList().ForEach(x => Logger.Write("Hint path (new): " + x));
+            hitPaths.ToList().ForEach(x => Logger.Debug("Hint path (new): " + x));
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 try
@@ -41,7 +41,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                 }
                 catch (Exception ex)
                 {
-                    Logger.Write(ex);
+                    Logger.Debug(ex);
                     return null;
                 }
             }
@@ -75,7 +75,7 @@ namespace AutoTest.TestRunners.Shared.Plugins
                                     _path,
                                     Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
                                 };
-            hitPaths.ToList().ForEach(x => Logger.Write("Hint path (locate): " + x));
+            hitPaths.ToList().ForEach(x => Logger.Debug("Hint path (locate): " + x));
             using (var resolver = new AssemblyResolver(hitPaths))
             {
                 var currentDirectory = Environment.CurrentDirectory;

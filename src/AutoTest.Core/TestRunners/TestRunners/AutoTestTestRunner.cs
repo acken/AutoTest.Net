@@ -75,9 +75,71 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 runner.RunParallel();
             if (_configuration.TestRunnerCompatibilityMode)
                 runner.RunInCompatibilityMode();
-            var tests = runner.ProcessTestRuns(options);
+            var session = runner.Prepare(options);
+			
+			foreach (var rnr in options.TestRuns) {
+				foreach (var asm in rnr.Assemblies)
+					session.CreateClient(asm.Assembly, rnr.ID, abortWhen).Load();
+			}
+
+			var plugins = 
+				new PluginLocator().Locate()
+				.Select(x => x.New());
+			
+			var results = new List<TestRunResults>();
+			session.Instances.ToList()
+				.ForEach(x => {
+
+					var runAll = false;
+
+					var plugin = 
+						plugins.FirstOrDefault(y => y.Identifier.ToLower() == x.Runner.ToLower());
+					var testRunner = TestRunnerConverter.FromString(plugin.Identifier);
+					
+					if (plugin != null) {
+						var testRun = new TestRunOptions();
+						testRun.HasBeenVerified(true);
+						var infos = runInfos.Where(y => plugin.ContainsTestsFor(y.Assembly));
+						foreach (var info in  infos) {
+							testRun.AddTests(info.GetTestsFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} tests for assembly", testRun.Tests.Count());
+							testRun.AddMembers(info.GetMembersFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} members for assembly", testRun.Members.Count());
+							testRun.AddNamespaces(info.GetNamespacesFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} namespaces for assembly", testRun.Namespaces.Count());
+							DebugLog.Debug.WriteDetail(
+								"Run only specified tests for runner {0} is {1}",
+								testRunner,
+								info.OnlyRunSpcifiedTestsFor(testRunner));
+
+							if (info.OnlyRunSpcifiedTestsFor(testRunner)) {
+								runAll = true;
+								break;
+							}
+						}
+
+						if (runAll)
+							testRun = new TestRunOptions();
+
+						var client = session.CreateClient(x, abortWhen);
+						results.AddRange(
+							getResults(
+								client.RunTests(
+									testRun,
+									(test) => {
+									},
+									(result) => {
+									}),
+								runInfos));
+					}
+				});
+
+
             _handleRunnerFeedback = true;
-            return getResults(tests, runInfos).ToArray();
+			return results.ToArray();
         }
 
         private TestRunResults[] getResults(IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> tests, TestRunInfo[] runInfos)
@@ -179,16 +241,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				DebugLog.Debug.WriteDetail("Handling {0}", info.Assembly);
 				DebugLog.Debug.WriteDetail("About to add assembly");
                 var assembly = new AssemblyOptions(info.Assembly);
-                assembly.HasBeenVerified(true);
-                assembly.AddTests(info.GetTestsFor(testRunner));
-                DebugLog.Debug.WriteDetail("Found {0} tests for assembly", assembly.Tests.Count());
-                assembly.AddMembers(info.GetMembersFor(testRunner));
-                DebugLog.Debug.WriteDetail("Found {0} members for assembly", assembly.Members.Count());
-                assembly.AddNamespaces(info.GetNamespacesFor(testRunner));
-                DebugLog.Debug.WriteDetail("Found {0} namespaces for assembly", assembly.Namespaces.Count());
-                DebugLog.Debug.WriteDetail("Run only specified tests for runner {0} is {1}", testRunner, info.OnlyRunSpcifiedTestsFor(testRunner));
-                if (info.OnlyRunSpcifiedTestsFor(testRunner) && assembly.Tests.Count() == 0 && assembly.Members.Count() == 0 && assembly.Namespaces.Count() == 0)
-                    continue;
 				DebugLog.Debug.WriteDetail("Adding assembly");
                 runner.AddAssembly(assembly);
             }
@@ -219,10 +271,11 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
         private void setTotalTestCount()
         {
-            if (_options.TestRuns.Count(x => x.Assemblies.Count(y => (y.Members.Count() > 0 || y.Namespaces.Count() > 0)) > 0) > 0)
+			// TODO Fix
+            /*if (_options.TestRuns.Count(x => x.Assemblies.Count(y => (y.Members.Count() > 0 || y.Namespaces.Count() > 0)) > 0) > 0)
                 _totalTestCount = -1;
             else
-                _totalTestCount = _options.TestRuns.Sum(x => x.Assemblies.Sum(y => y.Tests.Count()));
+                _totalTestCount = _options.TestRuns.Sum(x => x.Assemblies.Sum(y => y.Tests.Count()));*/
 
         }
 
@@ -284,5 +337,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 }
             }
         }
+
+		public void ProcessEnd(int count)
+		{			
+		}
     }
 }

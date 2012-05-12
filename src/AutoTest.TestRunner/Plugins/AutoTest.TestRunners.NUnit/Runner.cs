@@ -13,6 +13,8 @@ namespace AutoTest.TestRunners.NUnit
     public class Runner : IAutoTestNetTestRunner
     {
         private ITestFeedbackProvider _channel;
+		private string[] _ignoreCategories;
+		private NUnitRunner _runner = null;
         private Func<string, IReflectionProvider> _reflectionProviderFactory = assembly => Reflect.On(assembly);
 
         public string Identifier { get { return "NUnit"; } }
@@ -67,16 +69,21 @@ namespace AutoTest.TestRunners.NUnit
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
 
-        public IEnumerable<TestResult> Run(RunSettings settings)
-        {
-            var runner = new NUnitRunner(_channel);
-            runner.Initialize();
-            var parser = new NUnitOptionsParser(settings);
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+			_runner = new NUnitRunner(_channel);
+            _runner.Initialize(assembly);
+			_ignoreCategories = ignoreCategories;
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+			if (_runner == null)
+				return;
+			var parser = new NUnitOptionsParser(options, _ignoreCategories);
             parser.Parse();
-            var results = new List<TestResult>();
             foreach (var option in parser.Options)
-                results.AddRange(runner.Execute(option));
-            return results;
-        }
+                _runner.Execute(option);
+		}
     }
 }

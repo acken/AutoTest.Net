@@ -21,14 +21,6 @@ namespace AutoTest.TestRunners.Tests
         }
 
         [Test]
-        public void Should_parse_output_file()
-        {
-            var parser = new ArgumentParser(new string[] { "--output=\"C:\\somewhere\\something.meh\"" });
-            var arguments = parser.Parse();
-            Assert.That(arguments.OutputFile, Is.EqualTo("C:\\somewhere\\something.meh"));
-        }
-
-        [Test]
         public void Should_parse_start_suspended()
         {
             var parser = new ArgumentParser(new string[] { "--startsuspended" });
@@ -51,21 +43,21 @@ namespace AutoTest.TestRunners.Tests
             var arguments = parser.Parse();
             Assert.That(arguments.Logging, Is.True);
         }
-
-        [Test]
-        public void Should_parse_channel()
+		
+		[Test]
+        public void Should_get_default_port()
         {
-            var parser = new ArgumentParser(new string[] { "--channel=\"Some Channel\"" });
+            var parser = new ArgumentParser(new string[] { "--port=15" });
             var arguments = parser.Parse();
-            Assert.That(arguments.Channel, Is.EqualTo("Some Channel"));
+            Assert.That(arguments.Port, Is.EqualTo(15));
         }
 
-        [Test]
-        public void Should_get_default_channel()
+		[Test]
+        public void Should_get_connection_info_file()
         {
-            var parser = new ArgumentParser(new string[] { "--silent" });
+            var parser = new ArgumentParser(new string[] { "--connectioninfo=/info/file" });
             var arguments = parser.Parse();
-            Assert.That(arguments.Channel, Is.EqualTo("AutoTest.TestRunner." + Process.GetCurrentProcess().Id.ToString()));
+            Assert.That(arguments.ConnectionInfo, Is.EqualTo("/info/file"));
         }
     }
 }

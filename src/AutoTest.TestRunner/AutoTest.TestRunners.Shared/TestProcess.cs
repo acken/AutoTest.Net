@@ -15,7 +15,202 @@ using AutoTest.TestRunners.Shared.Communication;
 
 namespace AutoTest.TestRunners.Shared
 {
-    class TestProcess
+	public class TestInstance
+	{
+		public string Assembly { get; private set; }
+		public string Runner { get; private set; }
+
+		public TestInstance(string assembly, string runner)
+		{
+			Assembly = assembly;
+			Runner = runner;
+		}
+	}
+
+	public class TestSession
+	{
+		private List<TestProcess> _processes = new List<TestProcess>();
+
+		public TestInstance[] Instances {  
+			get { 
+				var runners = new List<TestInstance>();
+				foreach (var proc in _processes)
+					runners.AddRange(proc.GetRunners());
+				return runners.ToArray();
+			} 
+		}
+
+		internal TestSession(IEnumerable<TestProcess> processes)
+		{
+			_processes.AddRange(processes);
+		}
+
+		public TestClient CreateClient(TestInstance instance, Func<bool> abortQuery)
+		{
+			return CreateClient(instance.Assembly, instance.Runner, abortQuery);
+		}
+
+		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery)
+		{
+			var proc = _processes
+				.FirstOrDefault(x => x.Hosts(assembly, runner));
+			if (proc == null)
+				return null;
+			return proc.CreateClient(assembly, runner, abortQuery);
+		}
+
+		public void Kill()
+		{
+			_processes.ForEach(x => x.Kill());
+		}
+	}
+
+	internal class TestProcess
+	{
+		private string _host;
+		private int _port;
+		private Process _proc;
+		private TargetedRun _options;
+
+		public TestProcess(Process proc, TargetedRun options, string host, int port)
+		{
+			_proc = proc;
+			_options = options;
+			_host = host;
+			_port = port;
+		}
+
+		public bool Hosts(string assembly, string runner)
+		{
+			return _options.Runners
+				.Any(x =>
+					x.ID.ToLower() == runner.ToLower() &&
+					x.Assemblies.Any(y => y.Assembly == assembly));
+		}
+
+		public IEnumerable<TestInstance> GetRunners()
+		{
+			var runners = new List<TestInstance>();
+			foreach (var rnr in _options.Runners)
+				runners.AddRange(rnr.Assemblies.Select(x => new TestInstance(rnr.ID, x.Assembly)));
+			return runners;
+		}
+
+		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery)
+		{
+			return new TestClient(
+				_host,
+				_port,
+				assembly,
+				runner,
+				() => 
+					_proc == null ||
+					_proc.HasExited ||
+					abortQuery());
+		}
+
+		public void Kill()
+		{
+            if (_proc == null)
+                return;
+            if (!_proc.HasExited)
+            	_proc.Kill();
+		}
+	}
+
+	public class TestClient
+	{
+		private SocketClient _client = new SocketClient();
+		private string _assembly;
+		private string _runner;
+		private string _runnerID;
+		private Func<bool> _abortQuery;
+		private Action<string> _onTestStart;
+		private Action<Results.TestResult> _onTestFinished;
+		private int _testsRan = -1;
+		private List<Results.TestResult> _results = new List<Results.TestResult>();
+
+		public bool IsConnected {
+			get {
+				if (_client == null)
+					return false;
+				return _client.IsConnected;
+			}
+		}
+
+		public TestClient(string host, int port, string assembly, string runner, Func<bool> abortQuery)
+		{
+			_assembly = assembly;
+			_runner = runner;
+			_runnerID = string.Format("{0}|{1}:", _assembly, _runner.ToLower());
+			_abortQuery = abortQuery;
+			_client.Connect(new ConnectionOptions(host, port), handleMessage);
+		}
+
+		public void Load()
+		{
+			_client.Send(string.Format("{0}load-assembly", _runnerID));
+		}
+
+		public List<Results.TestResult> RunAllTests(
+			Action<string> testStart,
+			Action<Results.TestResult> testFinished)
+		{
+			return runTests("run-all", testStart, testFinished);
+		}
+
+		public List<Results.TestResult> RunTests(
+			TestRunOptions options,
+			Action<string> testStart,
+			Action<Results.TestResult> testFinished)
+		{
+			var message = OptionsXmlWriter.WriteOptions(options);
+			return runTests(message, testStart, testFinished);
+		}
+
+		private List<Results.TestResult> runTests(
+			string message,
+			Action<string> testStart,
+			Action<Results.TestResult> testFinished)
+		{
+			_onTestStart = testStart;
+			_onTestFinished = testFinished;
+			_testsRan = -1;
+			_results.Clear();
+			_client.Send(string.Format("{0}{1}", _runnerID, message));
+			while (!_abortQuery() && ( _testsRan == -1 || _testsRan != _results.Count))
+				Thread.Sleep(5);
+			return _results;
+		}
+
+		public void Exit()
+		{
+			if (!_abortQuery())
+				_client.SendAndWait("exit");
+		}
+
+		private void handleMessage(string message)
+		{
+			if (message.StartsWith(_runnerID + "Run finished:")) {
+				_testsRan = int.Parse(getMessage(message, _runnerID + "Run finished:"));
+			} else if (message.StartsWith(_runnerID + "Run started:")) {
+				_testsRan = _testsRan;
+			} else if (message.StartsWith(_runnerID + "Test started:")) {
+				_onTestStart(getMessage(message, _runnerID + "Test started:"));
+			} else if (message.StartsWith(_runnerID + "<?xml")) {
+				var result = Results.TestResult.FromXml(getMessage(message, _runnerID));
+				_results.Add(result);
+				_onTestFinished(result);
+			}
+		}
+
+		private string getMessage(string message, string prefix)
+		{
+			return message.Substring(prefix.Length, message.Length - prefix.Length);
+		}
+	}
+
+    class TestProcessLauncher
     {
         private ITestRunProcessFeedback _feedback;
         private TargetedRun _targetedRun;
@@ -24,54 +219,59 @@ namespace AutoTest.TestRunners.Shared
         private Func<bool> _abortWhen = null;
         private Action<Platform, Version, Action<ProcessStartInfo, bool>> _processWrapper = null;
         private bool _compatabilityMode = false;
-        private Process _proc = null;
         private string _executable;
         private string _input;
         private string _output;
         private PipeClient _pipeClient = null;
 
-        public TestProcess(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
+        public TestProcessLauncher(TargetedRun targetedRun, ITestRunProcessFeedback feedback)
         {
             _targetedRun = targetedRun;
             _feedback = feedback;
         }
 
-        public TestProcess RunParallel()
+        public TestProcessLauncher RunParallel()
         {
             _runInParallel = true;
             return this;
         }
 
-        public TestProcess StartSuspended()
+        public TestProcessLauncher StartSuspended()
         {
             _startSuspended = true;
             return this;
         }
 
-        public TestProcess AbortWhen(Func<bool> abortWhen)
+        public TestProcessLauncher AbortWhen(Func<bool> abortWhen)
         {
             _abortWhen = abortWhen;
             return this;
         }
 
-        public TestProcess WrapTestProcessWith(Action<Platform, Version, Action<ProcessStartInfo, bool>> processWrapper)
+        public TestProcessLauncher WrapTestProcessWith(Action<Platform, Version, Action<ProcessStartInfo, bool>> processWrapper)
         {
             _processWrapper = processWrapper;
             return this;
         }
 
-        public TestProcess RunInCompatibilityMode()
+        public TestProcessLauncher RunInCompatibilityMode()
         {
             _compatabilityMode = true;
             return this;
         }
 		 
-        public void Start()
+		private TestProcess _currentProcess = null;
+		private object _processLock = new object();
+        public TestProcess Start()
         {
-            _executable = getExecutable();
-            _input = createInputFile();
-            _output = Path.GetTempFileName();
-            runProcess();
+			lock (_processLock) {
+				_currentProcess = null;
+				_executable = getExecutable();
+				_input = createInputFile();
+				_output = Path.GetTempFileName();
+				runProcess();
+				return _currentProcess;
+			}
         }
 
         private void runProcess()
@@ -84,9 +284,8 @@ namespace AutoTest.TestRunners.Shared
 
         private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
-            var channel = Guid.NewGuid().ToString();
-            var listener = startChannelListener(channel);
-            var arguments = string.Format("--input=\"{0}\" --output=\"{1}\" --silent --channel=\"{2}\"", _input, _output, channel);
+            //var listener = startChannelListener(channel);
+            var arguments = string.Format("--input=\"{0}\" --silent", _input);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
@@ -95,34 +294,46 @@ namespace AutoTest.TestRunners.Shared
                 arguments += " --compatibility-mode";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
-            _proc = new Process();
-            _proc.StartInfo = startInfo;
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+			var connectionFile = Path.GetTempFileName();
+			arguments += " --connectioninfo=\"" + connectionFile + "\"";
+            var proc = new Process();
+            proc.StartInfo = startInfo;
+			if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
+				Environment.OSVersion.Platform == PlatformID.Unix)
 			{
-				_proc.StartInfo.FileName = "mono";
-				_proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
+				proc.StartInfo.FileName = "mono";
+				proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
 			}
 			else
 			{
-            	_proc.StartInfo.FileName = _executable;
-				_proc.StartInfo.Arguments = arguments;
+            	proc.StartInfo.FileName = _executable;
+				proc.StartInfo.Arguments = arguments;
 			}
-            _proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            _proc.StartInfo.UseShellExecute = !doNotshellExecute;
-            _proc.StartInfo.CreateNoWindow = true;
-            _proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
-            _proc.Start();
-            var abortListener = new System.Threading.Thread(listenForAborts);
-            abortListener.Start();
-            _proc.WaitForExit();
-            closeClient();
-            if (listener != null)
-                listener.Join();
-            abortListener.Join();
-            if (aborted())
-                return;
-            var results = getResults(_output);
-            TestRunProcess.AddResults(results);
+            proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            proc.StartInfo.UseShellExecute = !doNotshellExecute;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
+            proc.Start();
+
+			while (!File.Exists(connectionFile) || File.ReadAllText(connectionFile).Length == 0)
+				Thread.Sleep(10);
+			
+			var content = File.ReadAllText(connectionFile);
+			Console.WriteLine(content);
+			var chunks = content.Split(new[] { ":" }, StringSplitOptions.None);
+			_currentProcess = new TestProcess(proc, _targetedRun, chunks[0], int.Parse(chunks[1]));
+
+            //var abortListener = new System.Threading.Thread(listenForAborts);
+            //abortListener.Start();
+            //_proc.WaitForExit();
+            //closeClient();
+            //if (listener != null)
+            //    listener.Join();
+            //abortListener.Join();
+            //if (aborted())
+            //    return;
+            //var results = getResults(_output);
+            //TestRunProcess.AddResults(results);
         }
 
         private Thread startChannelListener(string channel)
@@ -164,7 +375,8 @@ namespace AutoTest.TestRunners.Shared
         {
             if (_abortWhen == null)
                 return;
-            if (_proc == null)
+			// TODO Fix this
+            /*if (_proc == null)
                 return;
             while (!_proc.HasExited)
             {
@@ -175,7 +387,7 @@ namespace AutoTest.TestRunners.Shared
                     return;
                 }
                 System.Threading.Thread.Sleep(10);
-            }
+            }*/
         }
 
         private void closeClient()

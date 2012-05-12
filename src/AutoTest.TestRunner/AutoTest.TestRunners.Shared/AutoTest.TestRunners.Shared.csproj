@@ -123,6 +123,8 @@
     <Compile Include="Targeting\TestProcessSelector.cs" />
     <Compile Include="TestProcess.cs" />
     <Compile Include="TestRunProcess.cs" />
+    <Compile Include="Communication\TcpServer.cs" />
+    <Compile Include="Communication\SocketClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />

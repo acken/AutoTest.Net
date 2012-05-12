@@ -74,10 +74,19 @@ namespace AutoTest.TestRunners.MSTest
         {
             return Identifier.ToLower().Equals(identifier.ToLower());
         }
-
-        public IEnumerable<TestResult> Run(RunSettings settings)
+		
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
+		
+		// TODO Fix this
+        /*public IEnumerable<TestResult> Run(RunSettings settings)
         {
             return new CelerRunner(_logger, _reflectionProviderFactory, _channel).Run(settings);
-        }
+        }*/
     }
 }

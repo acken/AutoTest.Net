@@ -85,9 +85,17 @@ namespace AutoTest.TestRunners.SimpleTesting
         {
             return identifier.ToLower().Equals(Identifier.ToLower());
         }
-
-
-        public IEnumerable<TestResult> Run(RunSettings settings)
+		
+		public void Prepare(string assembly, string[] ignoreCategories)
+		{
+		}
+		
+		public void RunTest(TestRunOptions options)
+		{
+		}
+		
+		// TODO Fix this
+        /*public IEnumerable<TestResult> Run(RunSettings settings)
         {
             _results = new List<TestResult>();
             var assembly = getAssembly(settings.Assembly.Assembly);
@@ -104,8 +112,8 @@ namespace AutoTest.TestRunners.SimpleTesting
             }
             return _results;
         }
-
-        private IEnumerable<TestResult> runTests(RunSettings settings, Assembly assembly)
+		
+		private IEnumerable<TestResult> runTests(RunSettings settings, Assembly assembly)
         {
             if (shouldRunAllTests(settings))
             {
@@ -231,7 +239,7 @@ namespace AutoTest.TestRunners.SimpleTesting
                     yield return BuildTestResult(res);
                 }
             }
-        }
+        }*/
 
         private TestResult BuildTestResult(RunResult res)
         {
@@ -266,10 +274,12 @@ namespace AutoTest.TestRunners.SimpleTesting
 
         private bool shouldRunAllTests(RunSettings settings)
         {
-            return
+			return false;
+			// TODO Fix this
+            /*return
                 !settings.Assembly.Tests.Any() &&
                 !settings.Assembly.Members.Any() &&
-                !settings.Assembly.Namespaces.Any();
+                !settings.Assembly.Namespaces.Any();*/
         }
 
         private Assembly getAssembly(string assembly)

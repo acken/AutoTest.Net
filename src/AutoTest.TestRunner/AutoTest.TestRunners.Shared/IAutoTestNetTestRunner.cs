@@ -24,6 +24,9 @@ namespace AutoTest.TestRunners.Shared
         bool ContainsTestsFor(string assembly);
 
         bool Handles(string identifier);
-        IEnumerable<TestResult> Run(RunSettings settings);
+        
+		void Prepare(string assembly, string[] ignoreCategories);
+		
+		void RunTest(TestRunOptions options);
     }
 }
