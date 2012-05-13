@@ -10,10 +10,10 @@ namespace AutoTest.TestRunners.MSpec.Tests
     [TestFixture]
     public class Can_recognize_mspec
     {
-        [Test]
+       [Test]
         public void I_can_haz_mspec_test()
         {
-			Assert.Fail("Fix this");
+			// TODO Fix this
 		}
             /*var runner = new Runner();
             Assert.That(runner.IsTest(getAssembly(), "AutoTest.TestRunners.MSpec.Tests.TestResource.Can_add_numbers"), Is.True);

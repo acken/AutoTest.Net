@@ -1,8 +1,9 @@
 #!/bin/bash
 # stty -echo
 
-# ::Project UppercuT - http://uppercut.googlecode.com
-# ::No edits to this file are required - http://uppercut.pbwiki.com
+DIR=$PWD
+BINARYDIR=$DIR"/build_output"
+BINARYDIRx86=$DIR"/build_outputx86"
 
 function usage
 {
@@ -20,5 +21,6 @@ function displayUsage
 
 displayUsage $1
 
-mono ./lib/NAnt/NAnt.exe $1 /f:$(cd $(dirname "$0"); pwd)/build/default.build -D:build.config.settings=$(cd $(dirname "$0"); pwd)/Settings/UppercuTx86.config
-mono ./lib/NAnt/NAnt.exe $1 /f:$(cd $(dirname "$0"); pwd)/build/default.build -D:build.config.settings=$(cd $(dirname "$0"); pwd)/Settings/UppercuT.config
+xbuild AutoTest.TestRunner.sln /property:OutDir=$BINARYDIRx86/;Configuration=Release /target:rebuild
+xbuild  AutoTest.NET.sln /property:OutDir=$BINARYDIR/;Configuration=Release /target:rebuild
+xbuild addins/VisualStudio/AutoTest.VSAddin.sln /property:OutDir=$BINARYDIR/;Configuration=Release /target:rebuild

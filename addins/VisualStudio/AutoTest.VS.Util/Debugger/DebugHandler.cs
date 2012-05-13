@@ -42,7 +42,8 @@ namespace AutoTest.VS.Util.Debugger
                 var options = new RunOptions();
                 var runner = new RunnerOptions(getTestRunner(TestRunnerConverter.ToString(test.Test.Runner), test.Assembly, test.Test.Name));
                 var asm = new AssemblyOptions(test.Assembly);
-                asm.AddTest(test.Test.Name);
+                // TODO Fix this
+                //asm.AddTest(test.Test.Name);
                 runner.AddAssembly(asm);
                 options.AddTestRun(runner);
                 AutoTest.Core.DebugLog.Debug.WriteDebug(string.Format("Starting {0}", command));

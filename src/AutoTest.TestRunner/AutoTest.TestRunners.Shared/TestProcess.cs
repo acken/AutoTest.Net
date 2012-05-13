@@ -92,7 +92,7 @@ namespace AutoTest.TestRunners.Shared
 		{
 			var runners = new List<TestInstance>();
 			foreach (var rnr in _options.Runners)
-				runners.AddRange(rnr.Assemblies.Select(x => new TestInstance(rnr.ID, x.Assembly)));
+				runners.AddRange(rnr.Assemblies.Select(x => new TestInstance(x.Assembly, rnr.ID)));
 			return runners;
 		}
 
