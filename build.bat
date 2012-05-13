@@ -1,8 +1,5 @@
 @echo off
 
-::Project UppercuT - http://uppercut.googlecode.com
-::No edits to this file are required - http://uppercut.pbwiki.com
-
 if '%2' NEQ '' goto usage
 if '%3' NEQ '' goto usage
 if '%1' == '/?' goto usage
@@ -11,12 +8,29 @@ if '%1' == '?' goto usage
 if '%1' == '/help' goto usage
 
 SET DIR=%~d0%~p0%
-SET NANT="%DIR%lib\Nant\nant.exe"
-SET build.config.settings="%DIR%settings\UppercuT.config"
-SET buildx86.config.settings="%DIR%settings\UppercuTx86.config"
+SET BINARYDIRx86="%DIR%build_outputx86"
+SET BINARYDIR="%DIR%build_output"
 
-%NANT% %1 /f:.\build\default.build -D:build.config.settings=%buildx86.config.settings%
-%NANT% %1 /f:.\build\default.build -D:build.config.settings=%build.config.settings%
+IF NOT EXIST %BINARYDIRx86% (
+	mkdir %BINARYDIRx86%
+) ELSE (
+	del %BINARYDIRx86%\* /Q
+)
+IF NOT EXIST %BINARYDIR% (
+	mkdir %BINARYDIR%
+) ELSE (
+	del %BINARYDIR%\* /Q
+)
+
+%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.TestRunner.sln /property:OutDir=%BINARYDIRx86%\;Configuration=Release /target:rebuild
+
+if %ERRORLEVEL% NEQ 0 goto errors
+
+%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.NET.sln /property:OutDir=%BINARYDIR%\;Configuration=Release /target:rebuild
+
+if %ERRORLEVEL% NEQ 0 goto errors
+
+%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe addins\VisualStudio\AutoTest.VSAddin.sln /property:OutDir=%BINARYDIR%\;Configuration=Release /target:rebuild
 
 if %ERRORLEVEL% NEQ 0 goto errors
 

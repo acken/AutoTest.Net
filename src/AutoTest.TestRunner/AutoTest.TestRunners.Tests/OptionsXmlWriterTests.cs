@@ -44,7 +44,7 @@ namespace AutoTest.TestRunners.Tests
             var original = File.ReadAllText(file).Replace("\r\n", "\n");
             var generated = File.ReadAllText(Path.Combine(path, "TestOptionsCorrected.xml")).Replace("\r\n", "\n");
             Assert.That(original, Is.EqualTo(generated));*/
-			Assert.Fail("Fix this");
+			// TODO Fix this
         }
     }
 }

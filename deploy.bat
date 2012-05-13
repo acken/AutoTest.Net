@@ -1,8 +1,8 @@
 @echo off
 
 SET DIR=%~d0%~p0%
-SET BINARYDIR="%DIR%build_outputAnyCPU\AutoTest.NET"
-SET BINARYDIRx86="%DIR%build_outputx86\AutoTest.TestRunner"
+SET BINARYDIR="%DIR%build_output"
+SET BINARYDIRx86="%DIR%build_outputx86"
 SET DEPLOYDIR="%DIR%ReleaseBinaries"
 SET CASTLEDIR="%DIR%lib\Castle.Windsor"
 SET MSPEC4DIR="%DIR%lib\MSpec"

@@ -68,18 +68,20 @@ namespace AutoTest.Core.TestRunners.TestRunners
             AutoTestRunnerFeedback feedback = null;
             if (_handleRunnerFeedback)
                 feedback = new AutoTestRunnerFeedback(_runCache, _bus, options);
-            var runner = new TestRunProcess(feedback)
-				.WrapTestProcessWith(processWrapper)
+            var runner = new TestRunProcess(feedback);
+				/*.WrapTestProcessWith(processWrapper)
                 .AbortWhen(abortWhen);
             if (_configuration.RunAssembliesInParallel)
                 runner.RunParallel();
             if (_configuration.TestRunnerCompatibilityMode)
-                runner.RunInCompatibilityMode();
+                runner.RunInCompatibilityMode();*/
             var session = runner.Prepare(options);
 			
 			foreach (var rnr in options.TestRuns) {
-				foreach (var asm in rnr.Assemblies)
+				foreach (var asm in rnr.Assemblies) {
+                    DebugLog.Debug.WriteDebug("Loading runner {1} for {0}", asm.Assembly, rnr.ID);
 					session.CreateClient(asm.Assembly, rnr.ID, abortWhen).Load();
+                }
 			}
 
 			var plugins = 
@@ -89,7 +91,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var results = new List<TestRunResults>();
 			session.Instances.ToList()
 				.ForEach(x => {
-
+                    DebugLog.Debug.WriteDebug("Testing {0} - {1}", x.Runner, x.Assembly);
 					var runAll = false;
 
 					var plugin = 
@@ -97,6 +99,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 					var testRunner = TestRunnerConverter.FromString(plugin.Identifier);
 					
 					if (plugin != null) {
+                        DebugLog.Debug.WriteDebug("Plugin found");
 						var testRun = new TestRunOptions();
 						testRun.HasBeenVerified(true);
 						var infos = runInfos.Where(y => plugin.ContainsTestsFor(y.Assembly));
@@ -130,15 +133,20 @@ namespace AutoTest.Core.TestRunners.TestRunners
 								client.RunTests(
 									testRun,
 									(test) => {
+                                        DebugLog.Debug.WriteDebug("\tTesting {0}", test);
 									},
 									(result) => {
+                                        DebugLog.Debug.WriteDebug("\tTesting {0} - {1}", result.TestDisplayName, result.State);
 									}),
 								runInfos));
 					}
 				});
 
-
+            session.Kill();
             _handleRunnerFeedback = true;
+            DebugLog.Debug.WriteDebug("Result contains {0} records", results.Count);
+            foreach (var set in results)
+                DebugLog.Debug.WriteDebug("Resultset for {1} contains {0} tests", set.All.Count(), set.Assembly);
 			return results.ToArray();
         }
 

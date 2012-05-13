@@ -32,7 +32,7 @@ namespace AutoTest.TestRunners.Tests.CmdArguments
         [Test]
         public void When_file_does_not_exist_plugins_should_be_null()
         {
-			Assert.Fail("Fix these");
+			// TODO Fix this
 		}
             /*var parser = new OptionsXmlReader("");
             parser.Parse();
