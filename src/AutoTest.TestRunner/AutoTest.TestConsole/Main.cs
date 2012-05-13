@@ -20,9 +20,10 @@ namespace AutoTest.TestConsole
 							)
 					);
 			var process = runner.Prepare(options);
-			var client = process.CreateClient(assembly, "NUnit", () => false);
-			client.Load();
-			var result = client.RunTests(
+			process.CreateClient(assembly, "nunit", () => false).Load();
+			//var client = process.CreateClient(assembly, "nunit", () => false);
+			//client.Load();
+			var result = process.CreateClient(assembly, "nunit", () => false).RunTests(
 				new TestRunOptions()
 					.AddTest("AutoTest.TestRunners.NUnit.Tests.RunnerTests.Should_recognize_inherited_fixture"),
 				(name) => Console.Write("\tRunning " + name),
@@ -31,7 +32,7 @@ namespace AutoTest.TestConsole
 											" (" +
 											test.DurationInMilliseconds.ToString() + ")"));
 			Console.WriteLine("Ran {0} tests", result.Count);
-			client.Exit();
+			process.CreateClient(assembly, "nunit", () => false).Exit();
 		}
 	}
 }
