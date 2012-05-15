@@ -44,7 +44,7 @@ namespace AutoTest.VS.Util
                 foreach (CodeParameter2 param in justfunction.Parameters)
                 {
                     if (!first) all += ",";
-                    var type = param.Type.AsFullName;
+                    var type = GetTypeName(param.Type);
                     if (param.Type.TypeKind == vsCMTypeRef.vsCMTypeRefArray)
                         type = getArray(param.Type);
                     type = GenericNameMangler.MangleParameterName(type);
