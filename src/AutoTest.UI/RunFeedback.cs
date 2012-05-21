@@ -192,10 +192,6 @@ namespace AutoTest.UI
         public void SetProgress(bool on, string information, ImageStates imageState)
         {
             _progressUpdatedExternally = on;
-            var state = _lastInternalState;
-            //TODO WTF this sets state and doesnt use it?
-            if (on)
-                state = ImageStates.Progress;
             setProgress(imageState, information, true, null);
         }
 

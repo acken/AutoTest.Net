@@ -234,14 +234,24 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public void TestStarted(string signature)
         {
             _currentTest = signature;
+            if (DateTime.Now > _lastSend.AddMilliseconds(150))
+                {
+                    _bus.Publish(
+                        new LiveTestStatusMessage(
+                            _currentAssembly,
+                            _currentTest,
+                            _totalTestCount,
+                            _testCount,
+                            new LiveTestStatus[] { },
+                            new LiveTestStatus[] { }));
+                    _lastSend = DateTime.Now;
+                }
         }
 
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
         {
             lock (_padLock)
             {
-                if (_lastSend == DateTime.MinValue)
-                    _lastSend = DateTime.Now;
                 _currentAssembly = result.Assembly;
                 _testCount++;
                 if (result.State == TestState.Passed && _runCache.Failed.Count(x => x.Value.Name.Equals(result.TestName)) != 0)
@@ -266,19 +276,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
                             _totalTestCount,
                             _testCount,
                             new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
-                            new LiveTestStatus[] { }));
-                    _lastSend = DateTime.Now;
-                    return;
-                }
-                if (DateTime.Now > _lastSend.AddSeconds(1))
-                {
-                    _bus.Publish(
-                        new LiveTestStatusMessage(
-                            _currentAssembly,
-                            _currentTest,
-                            _totalTestCount,
-                            _testCount,
-                            new LiveTestStatus[] { },
                             new LiveTestStatus[] { }));
                     _lastSend = DateTime.Now;
                 }

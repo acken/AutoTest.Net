@@ -74,9 +74,6 @@ namespace AutoTest.TestRunners.Shared.Communication
                 }
 				
 				disconnectServer();
-                
-                // Make sure we kill the waiting threads so the app can quit
-                _pipes.ForEach(x => x.Join());
             }
             catch
             {

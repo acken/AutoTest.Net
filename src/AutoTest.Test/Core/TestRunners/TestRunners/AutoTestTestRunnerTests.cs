@@ -50,19 +50,19 @@ namespace AutoTest.Test.Core.TestRunners.TestRunners
 
         [Test]
         [Category("slow")]
-        public void Should_publish_status_every_second()
+        public void Should_publish_status_every_150ms()
         {
             _cache.Stub(x => x.Failed).Return(new TestItem[] { });
 
             var test = new AutoTest.TestRunners.Shared.Results.TestResult("", "", "", 0, "Passing test", AutoTest.TestRunners.Shared.Results.TestState.Passed, "");
-            _feedback.TestFinished(test);
-            _feedback.TestFinished(test);
-            _feedback.TestFinished(test);
-            _feedback.TestFinished(test);
-            _feedback.TestFinished(test);
-            _feedback.TestFinished(test);
-            Thread.Sleep(1100);
-            _feedback.TestFinished(test);
+            _feedback.TestStarted("");
+            _feedback.TestStarted("");
+            _feedback.TestStarted("");
+            _feedback.TestStarted("");
+            _feedback.TestStarted("");
+            _feedback.TestStarted("");
+            Thread.Sleep(70);
+            _feedback.TestStarted("");
 
             _bus.AssertWasCalled(x => x.Publish<LiveTestStatusMessage>(null), x => x.IgnoreArguments());
         }
