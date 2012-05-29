@@ -11,7 +11,7 @@ namespace AutoTest.Test.Core.FileSystem
 		public void When_no_relative_path_it_should_return_passed_path()
 		{
             var path = "/some/reference/path";
-            if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX)
+            if (OS.IsWindows)
                 path = @"C:\some\reference\path";
 			Assert.That(new PathParser(".ignorefile").ToAbsolute(path), Is.EqualTo(Path.Combine(path, ".ignorefile")));
 		}
@@ -21,7 +21,7 @@ namespace AutoTest.Test.Core.FileSystem
 		{
             var path = "/some/reference/path";
             var relative = "/some/reference";
-            if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX)
+            if (OS.IsWindows)
             {
                 path = @"C:\some\reference\path";
                 relative = @"C:\some\reference";

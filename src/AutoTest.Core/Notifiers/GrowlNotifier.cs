@@ -82,7 +82,7 @@ namespace AutoTest.Core.Notifiers
             }
             //icon = icon.Replace(" ", "%20");
 			string args;
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+			if (OS.IsOSX)
 				args = string.Format("--image \"{0}\" --title \"AutoTest.Net\" --message \"{1}\"", icon, msg);
 			else
             	args = string.Format("/t:\"AutoTest.Net\" /i:\"{0}\" \"{1}\"", icon, msg);

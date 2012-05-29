@@ -83,8 +83,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 		private void disconnectServer()
 		{
 			// Disconnecting the server faults in mono
-			if (Environment.OSVersion.Platform == PlatformID.Unix ||
-				Environment.OSVersion.Platform == PlatformID.MacOSX)
+			if (OS.IsPosix)
 				return;
 			if (_server.IsConnected)
 				_server.Disconnect();

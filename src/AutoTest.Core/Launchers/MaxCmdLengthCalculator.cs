@@ -6,7 +6,7 @@ namespace AutoTest.Core
 	{
 		public double GetLength()
 		{
-			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix) || (Environment.OSVersion.Platform.Equals(PlatformID.Unix)))
+			if (OS.IsPosix)
 				return getEnvironmentConfiguredLength();
 			else
 				return 8000;

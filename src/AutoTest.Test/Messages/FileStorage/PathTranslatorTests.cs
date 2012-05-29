@@ -30,8 +30,8 @@ namespace AutoTest.Test.Messages.FileStorage
                 .Translate(format("/home/ack/src/MySolution/Project/Project.csproj"));
             var file = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/Project/Project.csproj"));
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/MySolution_" + resultHash + "/Project_" + fileHash + "/Project.csproj")));
@@ -46,8 +46,8 @@ namespace AutoTest.Test.Messages.FileStorage
         {
             var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/Project/Project.csproj"));
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/MySolution_" + resultHash + "/Project_" + fileHash + "/Project.csproj")));
@@ -59,7 +59,7 @@ namespace AutoTest.Test.Messages.FileStorage
             var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/SomeFileOnRoot.txt"));
 			
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/MySolution_" + resultHash + "/SomeFileOnRoot.txt")));
@@ -70,7 +70,7 @@ namespace AutoTest.Test.Messages.FileStorage
         {
             var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/AutoTest.config"));
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/Configuration/MySolution_" + resultHash + "/AutoTest.config")));
@@ -101,8 +101,8 @@ namespace AutoTest.Test.Messages.FileStorage
         {
             var directory = new PathTranslator(format("/StorageLocation"), format("/home/ack/src/MySolution/SomeSolution.sln"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/Project/bin/autotest.net/projectmm_cache.bin"));
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "3cc7aa37453f484476369d12180e2a0a" : "c39a9a2c31917ec0f174c8bde0fdb00a";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "3cc7aa37453f484476369d12180e2a0a" : "c39a9a2c31917ec0f174c8bde0fdb00a";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/Cache/MySolution_" + resultHash + "/projectmm_cache_" + fileHash + "/projectmm_cache.bin")));
@@ -113,8 +113,8 @@ namespace AutoTest.Test.Messages.FileStorage
         {
             var directory = new PathTranslator(format("/StorageLocation/"), format("/home/ack/src/MySolution"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/Project/Project.csproj"));
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/MySolution_" + resultHash + "/Project_" + fileHash + "/Project.csproj")));
@@ -126,8 +126,8 @@ namespace AutoTest.Test.Messages.FileStorage
             var directory = new PathTranslator(format("/StorageLocation/"), format("/home/ack/src/MySolution"), _directoryExists, _createDirectory)
                 .Translate(format("/home/ack/src/MySolution/Project/Project.csproj"));
 
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "8ea3519034d6d6a404a6e174b03615e1" : "f1d7213851ba028add97b0669af210b6";
 			
             Assert.That(_createdDirectories, Contains.Item(format("/StorageLocation")));
             Assert.That(_createdDirectories, Contains.Item(format("/StorageLocation/MySolution_" + resultHash)));
@@ -140,8 +140,8 @@ namespace AutoTest.Test.Messages.FileStorage
             var directory = new PathTranslator(format("/StorageLocation/"), format("/home/ack/src/MySolution/ASolution.sln"), _directoryExists, _createDirectory)
                 .Translate(format("/home/some/other/location/Project/Project.csproj"));
 			
-			var resultHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
-			var fileHash = Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX ? "4fba365c1b1e9fb388685dd707a8dd5a" : "c1657f5a6230c5e986018dd389088a6e";
+			var resultHash = OS.IsPosix ? "089916fa47d570a46efee1a1c04d77bc" : "cdd8fcbb3e82fce3dc5b40e585a4949d";
+			var fileHash = OS.IsPosix ? "4fba365c1b1e9fb388685dd707a8dd5a" : "c1657f5a6230c5e986018dd389088a6e";
             Assert.That(
                 directory,
                 Is.EqualTo(format("/StorageLocation/MySolution_" + resultHash + "/Project_" + fileHash + "/Project.csproj")));

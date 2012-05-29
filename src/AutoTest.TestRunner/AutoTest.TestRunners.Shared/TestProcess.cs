@@ -97,7 +97,7 @@ namespace AutoTest.TestRunners.Shared
                 _feedback.ProcessStart(_executable + " " + arguments);
             _proc = new Process();
             _proc.StartInfo = startInfo;
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+			if (OS.IsPosix)
 			{
 				_proc.StartInfo.FileName = "mono";
 				_proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
@@ -127,7 +127,7 @@ namespace AutoTest.TestRunners.Shared
 
         private Thread startChannelListener(string channel)
         {
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+			if (OS.IsPosix)
 				return null;
             var thread = new Thread(
                 (x) => 

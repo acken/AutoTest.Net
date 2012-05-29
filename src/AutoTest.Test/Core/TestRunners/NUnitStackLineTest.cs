@@ -10,7 +10,7 @@ namespace AutoTest.Test.Core.TestRunners
 	{
 		protected string adjustToEnvironment(string text)
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+			if (OS.IsPosix)
 			{
 				text = text.Replace("C:\\", "/");
 				text = text.Replace("\\", "/");
