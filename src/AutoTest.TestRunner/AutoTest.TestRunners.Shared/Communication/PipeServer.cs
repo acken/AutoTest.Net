@@ -14,7 +14,7 @@ namespace AutoTest.TestRunners.Shared.Communication
         private List<Thread> _activeThreads = new List<Thread>();
         private bool _exit = false;
         private Stack<string> _unsentMessages = new Stack<string>();
-		private bool _isSupported = Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix;
+		private bool _isSupported = OS.IsWindows;
 
         public PipeServer(string name)
         {

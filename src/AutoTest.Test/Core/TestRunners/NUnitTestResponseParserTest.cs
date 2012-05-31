@@ -125,7 +125,7 @@ namespace AutoTest.Test.Core.TestRunners
             _parser.Result[0].Failed[0].StackTrace[1].Method.ShouldEqual("DoDoTransferAgent.Engine.UnitTests.UBL.PaycheckWriterTests.Should_build_xml()");
             _parser.Result[0].Failed[0].StackTrace[1].LineNumber.ShouldEqual(44);
 			
-			if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
+			if (OS.IsWindows)
             	_parser.Result[0].Failed[0].StackTrace[0].File.ShouldEqual(@"c:\Users\ack\src\DoDoTransferAgent\DoDoTransferAgent.Engine.UnitTests\UBL\PaycheckWriterTests.cs");
 			else
 				_parser.Result[0].Failed[0].StackTrace[1].File.ShouldEqual(@"/Users/ack/src/DoDoTransferAgent/DoDoTransferAgent.Engine.UnitTests/UBL/PaycheckWriterTests.cs");

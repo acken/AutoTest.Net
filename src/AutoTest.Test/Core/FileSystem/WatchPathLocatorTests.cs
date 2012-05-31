@@ -53,7 +53,7 @@ namespace AutoTest.Test.Core.FileSystem
 
         private string getRoot()
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+            if (OS.IsPosix)
                 return Path.DirectorySeparatorChar.ToString();
             else
                 return "C:\\";

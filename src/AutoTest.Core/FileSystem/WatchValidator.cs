@@ -123,7 +123,7 @@ namespace AutoTest.Core.FileSystem
 
         private string getFromEnvironment(string pattern)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            if (OS.IsUnix)
                 return pattern;
             return pattern.ToLower();
         }

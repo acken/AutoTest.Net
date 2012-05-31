@@ -144,7 +144,7 @@ namespace AutoTest.TestRunners.NUnit.Tests
         //    Assert.That(results.ElementAt(2).StackLines.Count(), Is.EqualTo(0));
 
         //    // For some reason NUnit can't seems to locate filename and line number on windows when stacktrace only shows method name
-        //    if (Environment.OSVersion.Platform.Equals(PlatformID.Unix) || Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
+        //    if (OS.IsPosix)
         //    {
         //        Assert.IsTrue(File.Exists(results.ElementAt(0).StackLines.ElementAt(0).File), "Did not find " + results.ElementAt(0).StackLines.ElementAt(0).File);
         //        Assert.That(results.ElementAt(0).StackLines.ElementAt(0).Line, Is.EqualTo(23));

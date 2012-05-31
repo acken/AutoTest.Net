@@ -53,11 +53,7 @@ namespace AutoTest.Test.Core.BuildRunners
 		
 		private bool isWindows()
 		{
-			return Environment.OSVersion.Platform == PlatformID.Win32NT ||
-					Environment.OSVersion.Platform == PlatformID.Win32S ||
-					Environment.OSVersion.Platform == PlatformID.Win32Windows ||
-					Environment.OSVersion.Platform == PlatformID.WinCE ||
-					Environment.OSVersion.Platform == PlatformID.Xbox;
+			return OS.IsWindows;
 		}
 
         [Test]

@@ -109,6 +109,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="OperatingSystem\OS.cs" />
     <Compile Include="Options\OptionsXmlReader.cs" />
     <Compile Include="Options\OptionsXmlWriter.cs" />
     <Compile Include="Options\RunSettings.cs" />

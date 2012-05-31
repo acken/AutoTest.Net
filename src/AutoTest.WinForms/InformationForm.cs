@@ -107,7 +107,7 @@ namespace AutoTest.WinForms
         {
             linkLabelInfo.MaximumSize = new Size(Width - (linkLabelInfo.Left + _rightSpacing), 0);
 			// This is truely horrendous but it does the job for now
-			if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
+			if (OS.IsPosix)
 			{
 				linkLabelInfo.Top = Height - (linkLabelInfo.Height + _infoBottomSpacing + 100);
 				informationList.Height = linkLabelInfo.Top - (informationList.Top + _listBottomSpacing);
