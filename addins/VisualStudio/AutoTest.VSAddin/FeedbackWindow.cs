@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using AutoTest.Core.Messaging;
+using AutoTest.Messages;
 using EnvDTE80;
 using AutoTest.VS.Util.Debugger;
 using EnvDTE;
@@ -14,6 +16,7 @@ namespace AutoTest.VSAddin
     public partial class FeedbackWindow : UserControl
     {
         private DTE2 _application;
+        private IMessageBus _bus;
 
         public event EventHandler<UI.DebugTestArgs> DebugTest;
 
@@ -25,6 +28,11 @@ namespace AutoTest.VSAddin
         public void SetApplication(DTE2 application)
         {
             _application = application;
+        }
+
+        public void SetMessageBus(IMessageBus bus)
+        {
+            _bus = bus;
         }
 
         public void Consume(object message)
@@ -91,6 +99,11 @@ namespace AutoTest.VSAddin
         private void FeedbackWindow_Resize(object sender, EventArgs e)
         {
             runFeedback.Resize();
+        }
+
+        private void runFeedback_CancelRun(object sender, EventArgs e)
+        {
+            _bus.Publish(new AbortMessage(""));
         }
     }
 }

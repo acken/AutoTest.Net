@@ -29,7 +29,7 @@ namespace AutoTest.UI
         public event EventHandler<GoToReferenceArgs> GoToReference;
         public event EventHandler<GoToTypeArgs> GoToType;
         public event EventHandler<DebugTestArgs> DebugTest;
-        public event EventHandler ShowSystemWindow;
+        public event EventHandler CancelRun;
 
         public bool CanGoToTypes { get; set; }
         public bool CanDebug { get; set; }
@@ -177,6 +177,7 @@ namespace AutoTest.UI
                 clearRunnerTypeAnyItems();
                 setProgress(ImageStates.Progress, "processing changes...", false, null);
                 _isRunning = true;
+                organizeListItemBehaviors(listViewFeedback.SelectedItems);
             }, text);
         }
 
@@ -236,6 +237,7 @@ namespace AutoTest.UI
                     generateSummary(i.Report);
                 }
                 _isRunning = false;
+                organizeListItemBehaviors(listViewFeedback.SelectedItems);
             }, msg);
         }
 
@@ -498,7 +500,7 @@ namespace AutoTest.UI
         {
             using (var handler = new ListItemBehaviourHandler(this))
             {
-                handler.Organize(collection);
+                handler.Organize(collection, _isRunning);
             }
         }
 
@@ -525,9 +527,10 @@ namespace AutoTest.UI
             {
                 // TODO: Add this again when type cache is faster
                 if (CanGoToTypes)
-                    goToType(testItem.Assembly, testItem.Test.Name);
-                else
-                    goToReference(testItem.Test.StackTrace[0].File, testItem.Test.StackTrace[0].LineNumber, 0);
+                    if (goToType(testItem.Assembly, testItem.Test.Name))
+                        return;
+
+                goToReference(testItem.Test.StackTrace[0].File, testItem.Test.StackTrace[0].LineNumber, 0);
             }
         }
 
@@ -537,11 +540,13 @@ namespace AutoTest.UI
                 GoToReference(this, new GoToReferenceArgs(new CodePosition(file, lineNumber, column)));
         }
 
-        private void goToType(string assembly, string typename)
+        private bool goToType(string assembly, string typename)
         {
             var type = typename.Replace("+", ".");
+            var args = new GoToTypeArgs(assembly, type);
             if (GoToType != null)
-                GoToType(this, new GoToTypeArgs(assembly, type));
+                GoToType(this, args);
+            return args.Handled;
         }
 
         private void generateSummary(RunReport report)
@@ -601,11 +606,11 @@ namespace AutoTest.UI
                     return;
                 }
 
-                if (e.KeyCode.Equals(Keys.S))
+                if (e.KeyCode.Equals(Keys.A))
                 {
                     e.SuppressKeyPress = true;
                     e.Handled = true;
-                    if (linkLabelSystemMessages.Visible)
+                    if (linkLabelCancelRun.Visible)
                         linkLabelSystemMessages_LinkClicked(this, new LinkLabelLinkClickedEventArgs(new LinkLabel.Link(0, 1)));
                     return;
                 }
@@ -685,8 +690,8 @@ namespace AutoTest.UI
 
         private void linkLabelSystemMessages_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (ShowSystemWindow != null)
-                ShowSystemWindow(this, new EventArgs());
+            if (CancelRun != null)
+                CancelRun(this, new EventArgs());
         }
 
         private void RunFeedback_Resize(object sender, EventArgs e)
@@ -708,6 +713,7 @@ namespace AutoTest.UI
 
     public class GoToTypeArgs : EventArgs
     {
+        public bool Handled = true;
         public string Assembly { get; private set; }
         public string TypeName { get; private set; }
         public GoToTypeArgs(string assembly, string typename) { Assembly = assembly; TypeName = typename; }

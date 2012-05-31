@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.linkLabelSystemMessages = new System.Windows.Forms.LinkLabel();
+            this.linkLabelCancelRun = new System.Windows.Forms.LinkLabel();
             this._toolTipProvider = new System.Windows.Forms.ToolTip(this.components);
             this.linkLabelErrorDescription = new System.Windows.Forms.LinkLabel();
             this.linkLabelTestDetails = new System.Windows.Forms.LinkLabel();
@@ -48,17 +48,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
             this.SuspendLayout();
             // 
-            // linkLabelSystemMessages
+            // linkLabelCancelRun
             // 
-            this.linkLabelSystemMessages.AutoSize = true;
-            this.linkLabelSystemMessages.LinkColor = System.Drawing.Color.Black;
-            this.linkLabelSystemMessages.Location = new System.Drawing.Point(302, 6);
-            this.linkLabelSystemMessages.Name = "linkLabelSystemMessages";
-            this.linkLabelSystemMessages.Size = new System.Drawing.Size(108, 13);
-            this.linkLabelSystemMessages.TabIndex = 13;
-            this.linkLabelSystemMessages.TabStop = true;
-            this.linkLabelSystemMessages.Text = "System Messages (S)";
-            this.linkLabelSystemMessages.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSystemMessages_LinkClicked);
+            this.linkLabelCancelRun.AutoSize = true;
+            this.linkLabelCancelRun.LinkColor = System.Drawing.Color.Blue;
+            this.linkLabelCancelRun.Location = new System.Drawing.Point(302, 6);
+            this.linkLabelCancelRun.Name = "linkLabelCancelRun";
+            this.linkLabelCancelRun.Size = new System.Drawing.Size(71, 13);
+            this.linkLabelCancelRun.TabIndex = 13;
+            this.linkLabelCancelRun.TabStop = true;
+            this.linkLabelCancelRun.Text = "Abort Run (A)";
+            this.linkLabelCancelRun.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkLabelCancelRun.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelSystemMessages_LinkClicked);
             // 
             // linkLabelErrorDescription
             // 
@@ -192,7 +193,7 @@
             this.Controls.Add(this.pictureBoxRed);
             this.Controls.Add(this.pictureBoxWorking);
             this.Controls.Add(this.pictureMoose);
-            this.Controls.Add(this.linkLabelSystemMessages);
+            this.Controls.Add(this.linkLabelCancelRun);
             this.Controls.Add(this.linkLabelErrorDescription);
             this.Controls.Add(this.linkLabelTestDetails);
             this.Controls.Add(this.linkLabelDebugTest);
@@ -211,7 +212,7 @@
 
         #endregion
 
-        public System.Windows.Forms.LinkLabel linkLabelSystemMessages;
+        public System.Windows.Forms.LinkLabel linkLabelCancelRun;
         public System.Windows.Forms.ToolTip _toolTipProvider;
         public System.Windows.Forms.LinkLabel linkLabelErrorDescription;
         public System.Windows.Forms.LinkLabel linkLabelTestDetails;
