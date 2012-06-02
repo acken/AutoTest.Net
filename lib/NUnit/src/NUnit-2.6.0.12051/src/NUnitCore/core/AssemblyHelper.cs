@@ -22,7 +22,7 @@ namespace NUnit.Core
         {
             string uri = assembly.CodeBase;
             
-            if (IsFileUri(uri))
+            if (IsFileUri(uri) && !typeof(AssemblyHelper).Assembly.Location.Contains("#"))
                 return GetAssemblyPathFromFileUri(uri);
             else
                 return assembly.Location;

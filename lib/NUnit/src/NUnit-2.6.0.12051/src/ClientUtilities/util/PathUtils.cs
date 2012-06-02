@@ -184,7 +184,7 @@ namespace NUnit.Util
 			string uri = assembly.CodeBase;
 
 			// If it wasn't loaded locally, use the Location
-			if ( !uri.StartsWith( Uri.UriSchemeFile ) )
+			if ( !uri.StartsWith( Uri.UriSchemeFile ) || assembly.Location.Contains("#"))
 				return assembly.Location;
 
 			return GetAssemblyPathFromFileUri( uri );
