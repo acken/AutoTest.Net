@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.DebugLog;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Messages;
 using System.Reflection;
@@ -24,8 +25,10 @@ namespace AutoTest.Core.BuildRunners
                                  if (File.Exists(x.TemporaryBuildProject))
                                  {
                                      var project = File.ReadAllText(x.TemporaryBuildProject);
-                                     if (switcher.IsGuyInCloset(project))
+                                     if (switcher.IsGuyInCloset(project)) {
                                          File.WriteAllText(x.TemporaryBuildProject, switcher.PerformSwitch(project));
+                                         Debug.WriteDebug("Switched to our mstest impl. for {0}", x.TemporaryBuildProject);
+                                     }
                                  }
                                  else
                                  {
@@ -51,6 +54,7 @@ namespace AutoTest.Core.BuildRunners
                                              File.WriteAllText(tmpProject, switcher.PerformSwitch(project));
                                              _tmpProjects.Add(tmpProject);
                                              x.BuildTemporaryProject(tmpProject);
+                                             Debug.WriteDebug("Switched to our mstest impl. for {0}", x.Project.Key);
                                          }
                                      }
                                  }

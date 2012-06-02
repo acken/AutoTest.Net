@@ -33,20 +33,22 @@
             // 
             // runFeedback
             // 
-            this.runFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.runFeedback.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.runFeedback.CanDebug = true;
             this.runFeedback.CanGoToTypes = true;
             this.runFeedback.ListViewWidthOffset = 0;
             this.runFeedback.Location = new System.Drawing.Point(0, 0);
             this.runFeedback.Name = "runFeedback";
             this.runFeedback.ShowIcon = true;
+            this.runFeedback.ShowRunInformation = true;
             this.runFeedback.Size = new System.Drawing.Size(413, 101);
             this.runFeedback.TabIndex = 0;
             this.runFeedback.GoToReference += new System.EventHandler<AutoTest.UI.GoToReferenceArgs>(this.runFeedback_GoToReference);
             this.runFeedback.GoToType += new System.EventHandler<AutoTest.UI.GoToTypeArgs>(this.runFeedback_GoToType);
             this.runFeedback.DebugTest += new System.EventHandler<AutoTest.UI.DebugTestArgs>(this.runFeedback_DebugTest);
+            this.runFeedback.CancelRun += new System.EventHandler(this.runFeedback_CancelRun);
             // 
             // FeedbackWindow
             // 

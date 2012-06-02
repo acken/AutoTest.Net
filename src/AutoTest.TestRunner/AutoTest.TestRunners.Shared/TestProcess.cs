@@ -322,12 +322,12 @@ namespace AutoTest.TestRunners.Shared
 				arguments += " --silent";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
+
 			var connectionFile = Path.GetTempFileName();
 			arguments += " --connectioninfo=\"" + connectionFile + "\"";
             var proc = new Process();
             proc.StartInfo = startInfo;
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
-				Environment.OSVersion.Platform == PlatformID.Unix)
+			if (OS.IsPosix)
 			{
 				proc.StartInfo.FileName = "mono";
 				proc.StartInfo.Arguments =  " --debug " + _executable + " " + arguments;
@@ -366,7 +366,7 @@ namespace AutoTest.TestRunners.Shared
 
         private Thread startChannelListener(string channel)
         {
-			if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+			if (OS.IsPosix)
 				return null;
             var thread = new Thread(
                 (x) => 

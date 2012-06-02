@@ -14,7 +14,7 @@ namespace AutoTest.UI
         public ListItemBehaviourHandler(RunFeedback control)
         {
             _control = control;
-            addControl(_control.linkLabelSystemMessages);
+            addControl(_control.linkLabelCancelRun);
             if (control.CanDebug)
                 addControl(_control.linkLabelDebugTest);
             addControl(_control.linkLabelTestDetails);
@@ -26,37 +26,43 @@ namespace AutoTest.UI
             _controls.Add(new KeyValuePair<string, Control>(control.Name, control));
         }
 
-        public void Organize(ListView.SelectedListViewItemCollection selectedItems)
+        public void Organize(ListView.SelectedListViewItemCollection selectedItems, bool isRunning)
         {
             if (selectedItems == null)
-                onNothing();
+                onNothing(isRunning);
             else if (selectedItems.Count != 1)
-                onNothing();
+                onNothing(isRunning);
             else if (selectedItems[0].Tag.GetType() == typeof(CacheBuildMessage))
-                onBuildMessage((CacheBuildMessage)selectedItems[0].Tag);
+                onBuildMessage((CacheBuildMessage)selectedItems[0].Tag, isRunning);
             else if (selectedItems[0].Tag.GetType() == typeof(CacheTestMessage))
-                onTestMessage((CacheTestMessage)selectedItems[0].Tag);
+                onTestMessage((CacheTestMessage)selectedItems[0].Tag, isRunning);
         }
 
-        private void onBuildMessage(CacheBuildMessage cacheBuildMessage)
+        private void onBuildMessage(CacheBuildMessage cacheBuildMessage, bool isRunning)
         {
-            displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name });
-            //displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name, _control.linkLabelSystemMessages.Name });
+            if (isRunning)
+                displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name, _control.linkLabelCancelRun.Name });
+            else
+                displayAndOrder(new string[] { _control.linkLabelErrorDescription.Name });
+            
         }
 
-        private void onTestMessage(CacheTestMessage cacheTestMessage)
+        private void onTestMessage(CacheTestMessage cacheTestMessage, bool isRunning)
         {
             var controls = new List<string>();
             controls.Add(_control.linkLabelTestDetails.Name);
             controls.Add(_control.linkLabelDebugTest.Name);
-            //controls.Add(_control.linkLabelSystemMessages.Name);
+            if (isRunning)
+                controls.Add(_control.linkLabelCancelRun.Name);
             displayAndOrder(controls.ToArray());
         }
 
-        private void onNothing()
+        private void onNothing(bool isRunning)
         {
-            displayAndOrder(new string[] { });
-            //displayAndOrder(new string[] { _control.linkLabelSystemMessages.Name });
+            if (isRunning)
+                displayAndOrder(new string[] { _control.linkLabelCancelRun.Name });
+            else
+                displayAndOrder(new string[] { });
         }
 
         private void displayAndOrder(string[] controlsToShow)

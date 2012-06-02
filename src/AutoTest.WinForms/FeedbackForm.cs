@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using AutoTest.Core.Launchers;
+using AutoTest.Core.Messaging;
 using AutoTest.Messages;
 using AutoTest.Core.DebugLog;
 
@@ -9,11 +10,13 @@ namespace AutoTest.WinForms
     public partial class FeedbackForm : Form, IOverviewForm, IMessageForwarder
     {
         private IApplicatonLauncher _launcher;
+        private IMessageBus _bus;
         private string _watchToken = null;
 
-        public FeedbackForm(IApplicatonLauncher launcher)
+        public FeedbackForm(IApplicatonLauncher launcher, IMessageBus bus)
         {
             _launcher = launcher;
+            _bus = bus;
             InitializeComponent();
             runFeedback.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Listening for changes"));
         }
@@ -60,6 +63,11 @@ namespace AutoTest.WinForms
                     }
                 }
             }
+        }
+
+        private void runFeedback_CancelRun(object sender, EventArgs e)
+        {
+            _bus.Publish(new AbortMessage(""));
         }
     }
 }

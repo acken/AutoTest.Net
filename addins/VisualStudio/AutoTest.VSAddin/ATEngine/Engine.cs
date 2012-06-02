@@ -79,6 +79,7 @@ namespace AutoTest.VSAddin.ATEngine
             _watcher = BootStrapper.Services.Locate<IDirectoryWatcher>();
             _watcher.Watch(_watchToken);
             _window.DebugTest += new EventHandler<UI.DebugTestArgs>(_window_DebugTest);
+            _window.SetMessageBus(BootStrapper.Services.Locate<IMessageBus>());
             setCustomOutputPath();
             _window.Clear();
         }

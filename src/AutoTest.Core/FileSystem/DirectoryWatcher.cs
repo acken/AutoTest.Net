@@ -32,8 +32,7 @@ namespace AutoTest.Core.FileSystem
 		private IApplicatonLauncher _launcer;
         private System.Timers.Timer _batchTimer;
         private bool _timerIsRunning = false;
-        private List<ChangedFile> _buffer = new List<ChangedFile>();
-        private object _padLock = new object();
+        private Stack<ChangedFile> _buffer = new Stack<ChangedFile>();
         private IWatchValidator _validator;
 		private IConfiguration _configuration;
         private ICache _cache;
@@ -161,18 +160,16 @@ namespace AutoTest.Core.FileSystem
 
         private void _batchTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lock (_padLock)
+            Debug.AboutToPublishFileChanges(_buffer.Count);
+            var fileChange = new FileChangeMessage();
+            while (_buffer.Count > 0)
             {
-                if (_buffer.Count > 0)
-                {
-                    Debug.AboutToPublishFileChanges(_buffer.Count);
-                    var fileChange = new FileChangeMessage();
-                    fileChange.AddFile(_buffer.ToArray());
-                    _bus.Publish(fileChange);
-                }
-                _buffer.Clear();
-                stopTimer();
+                var file = _buffer.Pop();
+                fileChange.AddFile(file);
             }
+            if (fileChange.Files.Length > 0)
+                _bus.Publish(fileChange);
+            stopTimer();
         }
 
         private void addToBuffer(ChangedFile file)
@@ -189,14 +186,8 @@ namespace AutoTest.Core.FileSystem
             if (!_validator.ShouldPublish(getRelativePath(file.FullName)))
                 return;
 
-            lock (_padLock)
-            {
-                if (_buffer.FindIndex(0, f => f.FullName.Equals(file.FullName)) < 0)
-                {
-                    _buffer.Add(file);
-                    reStartTimer();
-                }
-            }
+            _buffer.Push(file);
+            reStartTimer();
         }
 
         private bool isProjectFile(string file)

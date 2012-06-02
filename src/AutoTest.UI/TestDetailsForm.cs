@@ -8,13 +8,13 @@ namespace AutoTest.UI
     public partial class TestDetailsForm : Form
     {
         private readonly Action<string, int> _goToLink;
-        private readonly Action<string, string> _goToType;
+        private readonly Func<string, string, bool> _goToType;
         private string _currentText = "";
         private int _line;
         private int _lineHeight;
         private List<Link> _links = new List<Link>();
 
-        public TestDetailsForm(Action<string, int> gotToLink, Action<string, string> goToType, int x, int y, string message, string caption, List<Link> links, int maxWidth)
+        public TestDetailsForm(Action<string, int> gotToLink, Func<string, string, bool> goToType, int x, int y, string message, string caption, List<Link> links, int maxWidth)
         {
             InitializeComponent();
             SuspendLayout();

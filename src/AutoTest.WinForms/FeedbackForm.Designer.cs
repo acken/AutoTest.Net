@@ -47,6 +47,7 @@
             this.runFeedback.Size = new System.Drawing.Size(937, 216);
             this.runFeedback.TabIndex = 0;
             this.runFeedback.GoToReference += new System.EventHandler<AutoTest.UI.GoToReferenceArgs>(this.runFeedback_GoToReference);
+            this.runFeedback.CancelRun += new System.EventHandler(this.runFeedback_CancelRun);
             // 
             // FeedbackForm
             // 

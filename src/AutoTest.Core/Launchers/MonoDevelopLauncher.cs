@@ -15,7 +15,7 @@ namespace AutoTest.Core.Launchers
 			Socket listener = null;
 			try
 			{
-				if (Environment.OSVersion.Platform.Equals(PlatformID.Unix))
+				if (OS.IsPosix)
 				{
 					endPoint = getUnixEndPoint();
 					listener = getUnixListener();

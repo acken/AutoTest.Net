@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading;
 using AutoTest.Messages;
 using AutoTest.Core.DebugLog;
 using AutoTest.Core.Messaging;
@@ -143,9 +144,41 @@ namespace AutoTest.Core.BuildRunners
                     Path.GetDirectoryName(project.GetAssembly(_configuration.CustomOutputPath)),
                     Path.GetFileName(source));
             if (source != destination)
-                _fs.CopyFile(source, destination);
+            {
+                retryCopy(source, destination, 10);
+                retryCopy(extension(source, ".pdb"), extension(destination, ".pdb"), 10);
+                retryCopy(extension(source, ".mdb"), extension(destination, ".mdb"), 10);
+            }
             foreach (var reference in project.Value.ReferencedBy)
                 copyAssembly(reference, source);
+        }
+
+        private string extension(string source, string extension)
+        {
+            var dir = Path.GetDirectoryName(source);
+            var filename = Path.GetFileNameWithoutExtension(source);
+            return Path.Combine(dir, filename + extension);
+        }
+
+        private void retryCopy(string source, string destination, int retries)
+        {
+            if (!_fs.FileExists(source))
+                return;
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    _fs.CopyFile(source, destination);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteDebug("Failed to copy file {0} to {1}", source, destination);
+                    Debug.WriteException(ex);
+                    Thread.Sleep(100);
+                }
+            }
+            throw new Exception("Failed to copy optimistic assemblies");
         }
 
         private BuildRunResults buildProjects(RunInfo[] projectList, RunReport runReport)

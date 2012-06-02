@@ -347,18 +347,18 @@ namespace AutoTest.Core.TestRunners.TestRunners
         public void TestStarted(string signature)
         {
             _currentTest = signature;
-			if (DateTime.Now > _lastSend.AddMilliseconds(300))
-            {
-				_bus.Publish(
-					new LiveTestStatusMessage(
-						_currentAssembly,
-						_currentTest,
-						_totalTestCount,
-						_testCount,
-						new LiveTestStatus[] { },
-						new LiveTestStatus[] { }));
-				_lastSend = DateTime.Now;
-			}
+            if (DateTime.Now > _lastSend.AddMilliseconds(150))
+                {
+                    _bus.Publish(
+                        new LiveTestStatusMessage(
+                            _currentAssembly,
+                            _currentTest,
+                            _totalTestCount,
+                            _testCount,
+                            new LiveTestStatus[] { },
+                            new LiveTestStatus[] { }));
+                    _lastSend = DateTime.Now;
+                }
         }
 
         public void TestFinished(AutoTest.TestRunners.Shared.Results.TestResult result)
@@ -391,7 +391,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
                             new LiveTestStatus[] { new LiveTestStatus(result.Assembly, AutoTestTestRunner.ConvertResult(result)) },
                             new LiveTestStatus[] { }));
                     _lastSend = DateTime.Now;
-                    return;
                 }
             }
         }

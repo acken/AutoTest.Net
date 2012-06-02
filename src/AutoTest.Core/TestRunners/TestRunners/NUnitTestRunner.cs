@@ -152,7 +152,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			var separator = getArgumentSeparator();
 			string framework = "";
 			// only use framework for windows as the default runner on linux has no framework parameter
-			if (!Environment.OSVersion.Platform.Equals(PlatformID.Unix) && !Environment.OSVersion.Platform.Equals(PlatformID.MacOSX))
+			if (OS.IsWindows)
 			{
 				if (exe.Version.Length > 0)
 					framework = string.Format(" {0}framework:{1}", separator, exe.Version);
@@ -189,11 +189,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 		
 		private string getArgumentSeparator()
 		{
-			if (System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32NT) ||
-			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32S) ||
-			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Win32Windows) ||
-			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.WinCE) ||
-			    System.Environment.OSVersion.Platform.Equals(System.PlatformID.Xbox))
+			if (OS.IsWindows)
 			{
 				return "/";
 			}

@@ -157,6 +157,7 @@
     <Compile Include="Messaging\MessageConsumers\TestRunInfoMerger.cs" />
     <Compile Include="Notifiers\GrowlNotifier.cs" />
     <Compile Include="Notifiers\SnarlNotifier.cs" />
+    <Compile Include="OperatingSystem\OS.cs" />
     <Compile Include="Presenters\MessageProxy.cs" />
     <Compile Include="Presenters\InformationFeedbackPresenter.cs" />
     <Compile Include="Presenters\IInformationFeedbackPresenter.cs" />
