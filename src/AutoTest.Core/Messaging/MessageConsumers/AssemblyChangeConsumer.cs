@@ -22,6 +22,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private bool _isRunning = false;
         private bool _exit = false;
         private List<RunInfo> _abortedTestRuns = new List<RunInfo>();
+		private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>>  _testWrapper = null;
 
         public bool IsRunning { get { return _isRunning; } }
 
@@ -43,10 +44,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var runReport = new RunReport();
             try
             {
+				_testWrapper = getWrapper();
 			    informParticipants(message);
                 var runInfos = getRunInfos(message);
                 var preProcessed = preProcess(runInfos);
-                preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
+                preProcessed = new PreProcessedTesRuns(new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
                 foreach (var runner in _testRunners)
                 {
                     runTest(runner, preProcessed, runReport);
@@ -72,6 +74,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             _isRunning = false;
 		}
 
+		private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> getWrapper()
+		{
+			Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> wrapper = null;
+			foreach (var preProcessor in _preProcessors)
+				wrapper = preProcessor.FetchWrapper(wrapper);
+			return wrapper;
+		}
+
         public void Consume(AbortMessage message)
         {
             Terminate();
@@ -91,7 +101,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private PreProcessedTesRuns preProcess(RunInfo[] runInfos)
         {
-            var preProcessed = new PreProcessedTesRuns(null, runInfos);
+            var preProcessed = new PreProcessedTesRuns(runInfos);
             foreach (var preProcessor in _preProcessors)
                 preProcessed = preProcessor.PreProcess(preProcessed);
             return preProcessed;
@@ -131,14 +141,20 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 			}
             if (testRunInfos.Count == 0)
 				return;
-            var results = runner.RunTests(testRunInfos.ToArray(), preProcessed.ProcessWrapper, () => { return _exit; });
+			runner.Prepare(
+				_cache.GetAll<Project>()
+					.Select(x => x.GetAssembly(_config.CustomOutputPath)).ToArray(),
+				_testWrapper,
+				() => { return _exit; });
+			runner.LoadAssemblies();
+            var results = runner.RunTests(testRunInfos.ToArray());
             if (_exit)
                 return;
 			mergeReport(results, report, testRunInfos.ToArray());
-            reRunTests(runner, report, testRunInfos, preProcessed.ProcessWrapper);
+            reRunTests(runner, report, testRunInfos);
 		}
 
-        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> processWrapper)
+        private void reRunTests(ITestRunner runner, RunReport report, List<TestRunInfo> testRunInfos)
         {
             var rerunInfos = new List<TestRunInfo>();
             foreach (var info in testRunInfos)
@@ -149,7 +165,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             if (rerunInfos.Count > 0)
             {
                 Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                var results = runner.RunTests(testRunInfos.ToArray(), processWrapper, () => { return _exit; });
+                var results = runner.RunTests(testRunInfos.ToArray());
                 mergeReport(results, report, testRunInfos.ToArray());
             }
         }

@@ -11,6 +11,14 @@ namespace AutoTest.TestRunners.Shared.Logging
 
         public static ILogger Instance { get { return _instance; } }
 
+		public static ILogger PickFromArguments(bool silent, string logFile, bool logging)
+		{
+			if (logFile == null)
+				return new ConsoleLogger(!silent, !silent && logging);
+			else
+				return new FileLogger(!silent, logFile);
+		}
+
         public static void SetLogger(ILogger logger)
         {
             _instance = logger;

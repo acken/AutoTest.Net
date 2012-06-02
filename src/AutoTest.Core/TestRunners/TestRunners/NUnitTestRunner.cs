@@ -40,8 +40,23 @@ namespace AutoTest.Core.TestRunners.TestRunners
 
             return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("nunit.framework")) > 0;
 		}
+		
+		private Func<bool> _abortWhen;
+		public void Prepare(
+			string[] assemblies,
+			Action<AutoTest.TestRunners.Shared.Targeting.Platform,
+				   Version,
+				   Action<ProcessStartInfo, bool>> processWrapper,
+				   Func<bool> abortWhen)
+		{
+			_abortWhen = abortWhen;
+		}
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> processWrapper, Func<bool> abortWhen)
+		public void LoadAssemblies()
+		{
+		}
+
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
 			var results = new List<TestRunResults>();
 			// Get a list of the various nunit executables specified pr. framework version

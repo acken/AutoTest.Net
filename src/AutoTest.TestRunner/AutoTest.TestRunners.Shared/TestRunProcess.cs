@@ -18,8 +18,10 @@ namespace AutoTest.TestRunners.Shared
         private ITestRunProcessFeedback _feedback = null;
         private bool _runInParallel = false;
         private Func<bool> _abortWhen = null;
+		private string _logFile = null;
         private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> _processWrapper = null;
         private bool _compatabilityMode = false;
+		private Action<string> _logger = (s) => {};
 
         public static void AddResults(IEnumerable<TestResult> results)
         {
@@ -33,6 +35,12 @@ namespace AutoTest.TestRunners.Shared
         {
             _locator = new AssemblyPropertyReader();
         }
+
+		public TestRunProcess SetInternalLoggerTo(Action<string> logger)
+		{
+			_logger = logger;
+			return this;
+		}
 
         public TestRunProcess(ITestRunProcessFeedback feedback)
         {
@@ -67,22 +75,40 @@ namespace AutoTest.TestRunners.Shared
             _compatabilityMode = true;
             return this;
         }
+		
+		public TestRunProcess LogTo(string fileName)
+		{
+			_logFile = fileName;
+			return this;
+		}
 
 		public TestSession Prepare(RunOptions options)
 		{
 			var processes = new List<TestProcess>();
-            var testRuns = getTargetedRuns(options);
-            foreach (var target in testRuns)
+            var testRuns = getTargetedRuns(options).ToArray();
+			var threads = new List<Thread>();
+            for (int i = 0; i < testRuns.Length; i++)
             {
-                var process = new TestProcessLauncher(target, _feedback);
-				if (_processWrapper != null)
-                    process.WrapTestProcessWith(_processWrapper);
-                if (_compatabilityMode)
-                    process.RunInCompatibilityMode();
-                process.AbortWhen(_abortWhen);
-				processes.Add(process.Start());
+				var thread = new Thread((nr) => {
+					var target = testRuns[(int)nr];
+					var process = new TestProcessLauncher(target, _feedback);
+					if (_processWrapper != null)
+						process.WrapTestProcessWith(_processWrapper);
+					if (_compatabilityMode)
+						process.RunInCompatibilityMode();
+					process
+						.AbortWhen(_abortWhen)
+						.LogTo(_logFile);
+					var testProc = process.Start();
+					lock (processes) {
+						processes.Add(testProc);
+					}
+				});
+				threads.Add(thread);
+				thread.Start(i);
             }
-			return new TestSession(processes);
+			threads.ForEach(x => x.Join());
+			return new TestSession(processes, _logger);
 		}
 
         private IEnumerable<TargetedRun> getTargetedRuns(RunOptions options)

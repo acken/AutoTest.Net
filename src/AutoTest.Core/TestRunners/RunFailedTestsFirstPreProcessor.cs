@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using AutoTest.Messages;
 using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.Caching.RunResultCache;
@@ -13,6 +14,11 @@ namespace AutoTest.Core.TestRunners
 		{
 			_resultCache = resultCache;
 		}
+		
+		public Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> FetchWrapper(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> wrapper)
+		{
+			return wrapper;
+		}
 
         public PreProcessedTesRuns PreProcess(PreProcessedTesRuns preProcessed)
 		{
@@ -24,7 +30,7 @@ namespace AutoTest.Core.TestRunners
 				info.ShouldOnlyRunSpcifiedTestsFor(TestRunner.Any);
                 info.ShouldRerunAllTestWhenFinishedFor(TestRunner.Any);
 			}
-            return new PreProcessedTesRuns(preProcessed.ProcessWrapper, details);
+            return new PreProcessedTesRuns(details);
 		}
 
 		public void RunFinished (TestRunResults[] results)

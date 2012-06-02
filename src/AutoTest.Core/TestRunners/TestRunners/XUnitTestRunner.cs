@@ -40,7 +40,22 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return _assemblyReader.GetReferences(assembly).Count(x => x.Name.Equals("xunit")) > 0;
 		}
 
-        public TestRunResults[] RunTests(TestRunInfo[] runInfos, Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<ProcessStartInfo, bool>> processWrapper, Func<bool> abortWhen)
+		private Func<bool> _abortWhen;
+		public void Prepare(
+			string[] assemblies,
+			Action<AutoTest.TestRunners.Shared.Targeting.Platform,
+				   Version,
+				   Action<ProcessStartInfo, bool>> processWrapper,
+				   Func<bool> abortWhen)
+		{
+			_abortWhen = abortWhen;
+		}
+
+		public void LoadAssemblies()
+		{
+		}
+
+        public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
 			var results = new List<TestRunResults>();
 			foreach (var runInfo in runInfos)

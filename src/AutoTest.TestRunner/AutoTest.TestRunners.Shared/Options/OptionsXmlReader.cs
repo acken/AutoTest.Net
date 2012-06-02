@@ -6,6 +6,7 @@ using AutoTest.TestRunners.Shared;
 using System.IO;
 using System.Xml;
 using AutoTest.TestRunners.Shared.Plugins;
+using AutoTest.TestRunners.Shared.Logging
 
 namespace AutoTest.TestRunners.Shared.Options
 {
@@ -55,21 +56,27 @@ namespace AutoTest.TestRunners.Shared.Options
 
 		public static TestRunOptions ParseOptions(string xml)
 		{
-			var options = new TestRunOptions();
-			using (var reader = XmlReader.Create(new StringReader(xml)))
-			{
-				while (reader.Read())
+			try {
+				var options = new TestRunOptions();
+				using (var reader = XmlReader.Create(new StringReader(xml)))
 				{
-					if (reader.Name.Equals("test_run") && reader.NodeType != XmlNodeType.EndElement)
-                        getRun(reader, options);
-					else if (reader.Name.Equals("test") && reader.NodeType != XmlNodeType.EndElement)
-						getTest(reader, options);
-					else if (reader.Name.Equals("member") && reader.NodeType != XmlNodeType.EndElement)
-						getMember(reader, options);
-					else if (reader.Name.Equals("namespace") && reader.NodeType != XmlNodeType.EndElement)
-						getNamespace(reader, options);
-				}
+					while (reader.Read())
+					{
+						if (reader.Name.Equals("test_run") && reader.NodeType != XmlNodeType.EndElement)
+							getRun(reader, options);
+						else if (reader.Name.Equals("test") && reader.NodeType != XmlNodeType.EndElement)
+							getTest(reader, options);
+						else if (reader.Name.Equals("member") && reader.NodeType != XmlNodeType.EndElement)
+							getMember(reader, options);
+						else if (reader.Name.Equals("namespace") && reader.NodeType != XmlNodeType.EndElement)
+							getNamespace(reader, options);
+					}
 
+				}
+			} catch (Exception ex) {
+				options = null;
+				Logger.Debug("Could not parse test run options " + xml);
+				Logger.Debug(ex);
 			}
 			return options;
 		}

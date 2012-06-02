@@ -22,9 +22,10 @@ namespace AutoTest.TestRunners
         private List<string> _directories = new List<string>();
         private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
 
-        public void SetupResolver(bool silent, bool startLogger)
+        public void SetupResolver(Arguments args)
         {
-            Logger.SetLogger(new ConsoleLogger(!silent, startLogger));
+            Logger.SetLogger(
+				Logger.PickFromArguments(args.Silent, args.FileLogging, args.Logging));
             _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }

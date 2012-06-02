@@ -227,6 +227,11 @@ namespace AutoTest.Core.TestRunners
             var dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             return Path.Combine(dir, chunk);
         }
+		
+		public Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> FetchWrapper(Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> wrapper)
+		{
+			return wrapper;
+		}
 
         RunInfo[] IPreProcessBuildruns.PreProcess(RunInfo[] details)
         {
@@ -287,7 +292,7 @@ namespace AutoTest.Core.TestRunners
                     runDetails.Add(detail);
             }
             _addToNextRun.Clear();
-            return new PreProcessedTesRuns(preProcessed.ProcessWrapper, runDetails.ToArray());
+            return new PreProcessedTesRuns(runDetails.ToArray());
         }
 
         void IPreProcessTestruns.RunFinished(TestRunResults[] results)

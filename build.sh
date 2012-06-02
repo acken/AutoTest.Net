@@ -1,9 +1,24 @@
 #!/bin/bash
 # stty -echo
 
+# Break on errors
+set -e
+
 DIR=$PWD
 BINARYDIR=$DIR"/build_output"
 BINARYDIRx86=$DIR"/build_outputx86"
+
+if [ ! -d $BINARYDIR ]; then
+	mkdir $BINARYDIR
+else
+	rm -rf $BINARYDIR/*
+fi
+
+if [ ! -d $BINARYDIRx86 ]; then
+	mkdir $BINARYDIRx86
+else
+	rm -rf $BINARYDIRx86/*
+fi
 
 function usage
 {
@@ -21,6 +36,5 @@ function displayUsage
 
 displayUsage $1
 
-xbuild AutoTest.TestRunner.sln /property:OutDir=$BINARYDIRx86/;Configuration=Release /target:rebuild
-xbuild  AutoTest.NET.sln /property:OutDir=$BINARYDIR/;Configuration=Release /target:rebuild
-xbuild addins/VisualStudio/AutoTest.VSAddin.sln /property:OutDir=$BINARYDIR/;Configuration=Release /target:rebuild
+xbuild AutoTest.TestRunner.sln /property:OutDir=$BINARYDIRx86/;Configuration=Release
+xbuild  AutoTest.NET.sln /property:OutDir=$BINARYDIR/;Configuration=Release

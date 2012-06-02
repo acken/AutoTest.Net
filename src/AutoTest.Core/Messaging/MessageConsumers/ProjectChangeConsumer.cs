@@ -24,6 +24,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private IMessageBus _bus;
         private IGenerateBuildList _listGenerator;
         private IBuildSessionRunner _buildRunner;
+		private ICache _cache;
         private IConfiguration _configuration;
         private ITestRunner[] _testRunners;
 		private IDetermineIfAssemblyShouldBeTested _testAssemblyValidator;
@@ -32,13 +33,15 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         private ILocateRemovedTests _removedTestLocator;
         private List<RunInfo> _abortedBuilds = new List<RunInfo>();
         private List<RunInfo> _abortedTestRuns = new List<RunInfo>();
+		private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>>  _testWrapper = null;
 
         public bool IsRunning { get { return _isRunning; } }
 
-        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildSessionRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator)
+        public ProjectChangeConsumer(IMessageBus bus, IGenerateBuildList listGenerator, IConfiguration configuration, IBuildSessionRunner buildRunner, ITestRunner[] testRunners, IDetermineIfAssemblyShouldBeTested testAssemblyValidator, IOptimizeBuildConfiguration buildOptimizer, IPreProcessTestruns[] preProcessors, ILocateRemovedTests removedTestLocator, ICache cache)
         {
             _bus = bus;
             _listGenerator = listGenerator;
+			_cache = cache;
             _configuration = configuration;
             _buildRunner = buildRunner;
             _testRunners = testRunners;
@@ -85,9 +88,17 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             var runReport = new RunReport();
             try
             {
+				Debug.WriteDebug("Initializing test runner");
+				_testWrapper = getWrapper();
+				var allAssemblies = _cache.GetAll<Project>()
+					.Select(x => x.GetAssembly(_configuration.CustomOutputPath)).ToArray();
+				_testRunners.ToList()
+					.ForEach(x => x.Prepare(allAssemblies, _testWrapper, () => { return _exit; }));
+
                 Debug.WriteDebug("Starting project change run");
                 var changedProjects = getListOfChangedProjects(message);
                 var list = getPrioritizedList(changedProjects);
+                Debug.WriteDebug("Building projects");
                 if (!_buildRunner.Build(changedProjects, list, runReport, () => { return _exit; }))
                     return runReport;
                 if (_exit)
@@ -99,6 +110,10 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 else
                     _abortedBuilds.Clear();
                 markAllAsBuilt(list);
+				Debug.WriteDebug("Builds done");
+				_testRunners.ToList()
+					.ForEach(x => x.LoadAssemblies());
+				Debug.WriteDebug("Running tests");
                 testAll(list, runReport);
             }
             catch (Exception ex)
@@ -108,6 +123,14 @@ namespace AutoTest.Core.Messaging.MessageConsumers
             }
             return runReport;
         }
+
+		private Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> getWrapper()
+		{
+			Action<AutoTest.TestRunners.Shared.Targeting.Platform, Version, Action<System.Diagnostics.ProcessStartInfo, bool>> wrapper = null;
+			foreach (var preProcessor in _preProcessors)
+				wrapper = preProcessor.FetchWrapper(wrapper);
+			return wrapper;
+		}
 
         private RunInfo[] getPrioritizedList(string[] changedProjects)
         {
@@ -139,7 +162,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
             var preProcessed = preProcessTestRun(projectList);
-            preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
+            preProcessed = new PreProcessedTesRuns(new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
             runPreProcessedTestRun(preProcessed, runReport);
 		}
 
@@ -166,7 +189,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				if (runInfos.Count > 0)
 				{
                     Debug.WriteDebug("Running tests for runner " + runner.GetType().ToString());
-					runTests(runner, runInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
+					runTests(runner, runInfos.ToArray(), _testWrapper, runReport);
                     if (_exit)
                     {
                         _abortedTestRuns.Clear();
@@ -183,7 +206,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     if (rerunInfos.Count > 0)
                     {
                         Debug.WriteDebug("Rerunning all tests for runner " + runner.GetType().ToString());
-                        runTests(runner, rerunInfos.ToArray(), preProcessed.ProcessWrapper, runReport);
+                        runTests(runner, rerunInfos.ToArray(), _testWrapper, runReport);
                         if (_exit)
                         {
                             _abortedTestRuns.Clear();
@@ -200,7 +223,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         private PreProcessedTesRuns preProcessTestRun(RunInfo[] runInfos)
         {
-            var preProcessed = new PreProcessedTesRuns(null, runInfos);
+            var preProcessed = new PreProcessedTesRuns(runInfos);
             foreach (var preProcessor in _preProcessors)
                 preProcessed = preProcessor.PreProcess(preProcessed);
             return preProcessed;
@@ -251,7 +274,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
         {
             try
             {
-                return testRunner.RunTests(runInfos, processWrapper, () => { return _exit; });
+                return testRunner.RunTests(runInfos);
             }
             catch (Exception ex)
             {

@@ -125,6 +125,7 @@
     <Compile Include="TestRunProcess.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="Communication\SocketClient.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />

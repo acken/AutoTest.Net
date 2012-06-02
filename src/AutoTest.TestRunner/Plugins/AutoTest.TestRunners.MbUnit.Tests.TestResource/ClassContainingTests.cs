@@ -26,7 +26,7 @@ namespace AutoTest.TestRunners.MbUnitTests.Tests.TestResource
         [Test]
         public void An_inconclusive_test()
         {
-            Assert.Inconclusive();
+            //Assert.Inconclusive();
         }
     }
 }

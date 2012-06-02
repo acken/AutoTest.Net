@@ -134,7 +134,7 @@ namespace AutoTest.UI
             else if (message.GetType() == typeof(LiveTestStatusMessage))
                 handle((LiveTestStatusMessage)message);
             else if (message.GetType() == typeof(RunStartedMessage))
-                runStarted("Detected file changes...");
+                runStarted();
             else if (message.GetType() == typeof(RunFinishedMessage))
                 runFinished((RunFinishedMessage)message);
             else if (message.GetType() == typeof(RunInformationMessage))
@@ -165,19 +165,21 @@ namespace AutoTest.UI
             }, liveTestStatusMessage);
         }
 
-        private void runStarted(string text)
+        private void runStarted()
         {
             _syncContext.Post(x =>
             {
                 if (!ShowRunInformation)
                     x = "processing changes...";
-                printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
+				if (x != "")
+	                printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
                 generateSummary(null);
                 organizeListItemBehaviors(null);
                 clearRunnerTypeAnyItems();
-                setProgress(ImageStates.Progress, "processing changes...", false, null);
+				if (x != "")
+                	setProgress(ImageStates.Progress, "processing changes...", false, null);
                 _isRunning = true;
-            }, text);
+            }, "");
         }
 
         public void SetProgress(bool on, string information, string picture)
@@ -274,7 +276,7 @@ namespace AutoTest.UI
                             text = string.Format("building {0}", Path.GetFileName(message.Project));
                         break;
                     case InformationType.TestRun:
-                        text = "testing...";
+                        text = "";
                         break;
                     case InformationType.PreProcessing:
                         if (ShowRunInformation)

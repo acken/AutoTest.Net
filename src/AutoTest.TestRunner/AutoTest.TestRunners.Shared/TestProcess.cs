@@ -30,6 +30,7 @@ namespace AutoTest.TestRunners.Shared
 	public class TestSession
 	{
 		private List<TestProcess> _processes = new List<TestProcess>();
+		private Action<string> _logger = (s) => {};
 
 		public TestInstance[] Instances {  
 			get { 
@@ -40,9 +41,10 @@ namespace AutoTest.TestRunners.Shared
 			} 
 		}
 
-		internal TestSession(IEnumerable<TestProcess> processes)
+		internal TestSession(IEnumerable<TestProcess> processes, Action<string> logger)
 		{
 			_processes.AddRange(processes);
+			_logger = logger;
 		}
 
 		public TestClient CreateClient(TestInstance instance, Func<bool> abortQuery)
@@ -56,7 +58,7 @@ namespace AutoTest.TestRunners.Shared
 				.FirstOrDefault(x => x.Hosts(assembly, runner));
 			if (proc == null)
 				return null;
-			return proc.CreateClient(assembly, runner, abortQuery);
+			return proc.CreateClient(assembly, runner, abortQuery, _logger);
 		}
 
 		public void Kill()
@@ -96,7 +98,7 @@ namespace AutoTest.TestRunners.Shared
 			return runners;
 		}
 
-		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery)
+		public TestClient CreateClient(string assembly, string runner, Func<bool> abortQuery, Action<string> logger)
 		{
 			return new TestClient(
 				_host,
@@ -106,7 +108,8 @@ namespace AutoTest.TestRunners.Shared
 				() => 
 					_proc == null ||
 					_proc.HasExited ||
-					abortQuery());
+					abortQuery(),
+				logger);
 		}
 
 		public void Kill()
@@ -129,6 +132,7 @@ namespace AutoTest.TestRunners.Shared
 		private Action<Results.TestResult> _onTestFinished;
 		private int _testsRan = -1;
 		private List<Results.TestResult> _results = new List<Results.TestResult>();
+		private Action<string> _logger = (s) => {};
 
 		public bool IsConnected {
 			get {
@@ -138,12 +142,14 @@ namespace AutoTest.TestRunners.Shared
 			}
 		}
 
-		public TestClient(string host, int port, string assembly, string runner, Func<bool> abortQuery)
+		public TestClient(string host, int port, string assembly, string runner, Func<bool> abortQuery, Action<string> logger)
 		{
+			_client.LogTo(logger);
 			_assembly = assembly;
 			_runner = runner;
 			_runnerID = string.Format("{0}|{1}:", _assembly, _runner.ToLower());
 			_abortQuery = abortQuery;
+			_logger = logger;
 			_client.Connect(new ConnectionOptions(host, port), handleMessage);
 		}
 
@@ -191,16 +197,27 @@ namespace AutoTest.TestRunners.Shared
 
 		private void handleMessage(string message)
 		{
-			if (message.StartsWith(_runnerID + "Run finished:")) {
-				_testsRan = int.Parse(getMessage(message, _runnerID + "Run finished:"));
-			} else if (message.StartsWith(_runnerID + "Run started:")) {
-				_testsRan = _testsRan;
-			} else if (message.StartsWith(_runnerID + "Test started:")) {
-				_onTestStart(getMessage(message, _runnerID + "Test started:"));
-			} else if (message.StartsWith(_runnerID + "<?xml")) {
-				var result = Results.TestResult.FromXml(getMessage(message, _runnerID));
-				_results.Add(result);
-				_onTestFinished(result);
+			if (message == null)
+				return;
+			try
+			{
+				if (message.StartsWith(_runnerID + "Run finished:")) {
+					_testsRan = int.Parse(getMessage(message, _runnerID + "Run finished:"));
+				} else if (message.StartsWith(_runnerID + "Run started:")) {
+					_testsRan = _testsRan;
+				} else if (message.StartsWith(_runnerID + "Test started:")) {
+					_onTestStart(getMessage(message, _runnerID + "Test started:"));
+				} else if (message.StartsWith(_runnerID + "<?xml")) {
+					var result = Results.TestResult.FromXml(getMessage(message, _runnerID));
+					if (result == null)
+						return;
+					_results.Add(result);
+					_onTestFinished(result);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger(ex.ToString());
 			}
 		}
 
@@ -217,6 +234,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _runInParallel = false;
         private bool _startSuspended = false;
         private Func<bool> _abortWhen = null;
+		private string _logFile = null;
         private Action<Platform, Version, Action<ProcessStartInfo, bool>> _processWrapper = null;
         private bool _compatabilityMode = false;
         private string _executable;
@@ -259,6 +277,12 @@ namespace AutoTest.TestRunners.Shared
             _compatabilityMode = true;
             return this;
         }
+
+		public TestProcessLauncher LogTo(string fileName)
+		{
+			_logFile = fileName;
+			return this;
+		}
 		 
 		private TestProcess _currentProcess = null;
 		private object _processLock = new object();
@@ -285,13 +309,17 @@ namespace AutoTest.TestRunners.Shared
         private void run(ProcessStartInfo startInfo, bool doNotshellExecute)
         {
             //var listener = startChannelListener(channel);
-            var arguments = string.Format("--input=\"{0}\" --silent", _input);
+            var arguments = string.Format("--input=\"{0}\"", _input);
             if (_runInParallel)
                 arguments += " --run_assemblies_parallel";
             if (_startSuspended)
                 arguments += " --startsuspended";
             if (_compatabilityMode)
                 arguments += " --compatibility-mode";
+			if (_logFile != null)
+				arguments += " --logging=" + _logFile;
+			else
+				arguments += " --silent";
             if (_feedback != null)
                 _feedback.ProcessStart(_executable + " " + arguments);
 			var connectionFile = Path.GetTempFileName();

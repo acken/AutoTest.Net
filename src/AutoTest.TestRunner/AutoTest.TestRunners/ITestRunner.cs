@@ -11,7 +11,7 @@ namespace AutoTest.TestRunners
 {
     interface ITestRunner
     {
-        void SetupResolver(bool silent, bool startLogger);
+        void SetupResolver(Arguments args);
         void Run(Plugin plugin, string id, RunSettings settings);
     }
 }

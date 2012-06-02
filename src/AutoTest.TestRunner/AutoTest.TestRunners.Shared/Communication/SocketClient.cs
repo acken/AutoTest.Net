@@ -5,6 +5,7 @@ using System.Collections;
 using System.Text;
 using System.Threading;
 using System.Linq;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -32,12 +33,18 @@ namespace AutoTest.TestRunners.Shared.Communication
 		private Action<string> _onMessage;
 		class MessageArgs : EventArgs { public string Message { get; set; } }
 		private event EventHandler<MessageArgs> _messageReceived;
+		private Action<string> _logger = (s) => {};
 		
 		public bool IsConnected { get; private set; }
 		
 		public SocketClient()
 		{
 			IsConnected = false;
+		}
+
+		public SocketClient LogTo(Action<string> logger) {
+			_logger = logger;
+			return this;
 		}
 
         public void Connect(ConnectionOptions options, Action<string> onMessage)
@@ -58,8 +65,9 @@ namespace AutoTest.TestRunners.Shared.Communication
 	            _stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, _stream);
 				IsConnected = true;
 			} 
-			catch 
+			catch (Exception ex)
 			{
+				Logger.Debug(ex);
                 Reconnect(retryCount);
 			}
         }
@@ -199,14 +207,17 @@ namespace AutoTest.TestRunners.Shared.Communication
 					byte[] toSend = Encoding.UTF8.GetBytes(message).Concat(new byte[] { 0x0 }).ToArray();
                     _stream.BeginWrite(toSend, 0, toSend.Length, WriteCompleted, _stream);
                 }
-                catch
+                catch (Exception ex)
                 {
+					Logger.Debug(ex);
                 }
             }
         }
 
         private void WriteError(Exception ex)
         {
+			Logger.Debug(ex);
+			_logger(ex.ToString());
         }
 	}
 }

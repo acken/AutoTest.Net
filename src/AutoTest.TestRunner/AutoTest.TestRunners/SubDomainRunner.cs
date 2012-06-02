@@ -19,8 +19,7 @@ namespace AutoTest.TestRunners
         private string _id;
         private IEnumerable<string> _categories;
         private AssemblyOptions _assembly;
-        private bool _shouldLog = false;
-		private bool _silent = false;
+		private Arguments _arguments;
         private ConnectionOptions _connectOptions;
         private bool _compatibilityMode;
 
@@ -29,8 +28,7 @@ namespace AutoTest.TestRunners
 			string id,
 			IEnumerable<string> categories,
 			AssemblyOptions assembly,
-			bool silent,
-			bool shouldLog,
+			Arguments arguments,
 			ConnectionOptions connectOptions,
 			bool compatibilityMode)
         {
@@ -38,8 +36,7 @@ namespace AutoTest.TestRunners
             _id = id;
             _categories = categories;
             _assembly = assembly;
-            _shouldLog = shouldLog;
-			_silent = silent;
+            _arguments = arguments;
             _connectOptions = connectOptions;
             _compatibilityMode = compatibilityMode;
         }
@@ -78,7 +75,7 @@ namespace AutoTest.TestRunners
 
                 // Prepare assemblies
                 Logger.Debug("Preparing resolver");
-                runtime.SetupResolver(_silent, _shouldLog);
+                runtime.SetupResolver(_arguments);
 
                 // start the runtime.  call will marshal into the child runtime appdomain
 				runtime.Run(

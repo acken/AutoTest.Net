@@ -65,7 +65,7 @@ namespace AutoTest.Test.Core.TestRunners
 
             var testRunInfos = new[] { info1, info2 };
 
-            _runner.RunTests(testRunInfos, null, null);
+            _runner.RunTests(testRunInfos);
 
             _commandLineBuilder.AssertWasCalled(x => x.Build(null),
                                                 o => o.IgnoreArguments().Repeat.Twice());
@@ -105,7 +105,7 @@ namespace AutoTest.Test.Core.TestRunners
 
             var testRunInfos = new[] { info1, info2 };
 
-            _runner.RunTests(testRunInfos, null, null);
+            _runner.RunTests(testRunInfos);
 
             _fileSystem.AssertWasCalled(x => x.FileExists("c:\\runner 1.exe"));
             _fileSystem.AssertWasCalled(x => x.FileExists("c:\\runner 2.exe"));
@@ -140,7 +140,7 @@ namespace AutoTest.Test.Core.TestRunners
 
             var testRunInfos = new[] { info1, info2 };
 
-            _runner.RunTests(testRunInfos, null, null);
+            _runner.RunTests(testRunInfos);
 
             _externalProcess.AssertWasNotCalled(
                 x => x.CreateAndWaitForExit(Arg<string>.Matches(y => y == "c:\\runner 1.exe"),

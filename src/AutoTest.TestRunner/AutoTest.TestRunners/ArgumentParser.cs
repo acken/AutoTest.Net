@@ -6,12 +6,14 @@ using System.Diagnostics;
 
 namespace AutoTest.TestRunners
 {
+	[Serializable]
     public class Arguments
     {
         public string InputFile { get; set; }
         public bool StartSuspended { get; set; }
         public bool Silent { get; set; }
         public bool Logging { get; set; }
+		public string FileLogging { get; set; }
         public bool CompatabilityMode { get; set; }
 		public int Port { get; set; }
 		public string ConnectionInfo { get; set; }
@@ -45,6 +47,8 @@ namespace AutoTest.TestRunners
                 _parsedArgument.Silent = true;
             if (iAm(argument, "--logging"))
                 _parsedArgument.Logging = true;
+			if (iAm(argument, "--logging="))
+                _parsedArgument.FileLogging = getValue(argument, "--logging=");
             if (iAm(argument, "--compatibility-mode"))
                 _parsedArgument.CompatabilityMode = true;
 			if (iAm(argument, "--port"))

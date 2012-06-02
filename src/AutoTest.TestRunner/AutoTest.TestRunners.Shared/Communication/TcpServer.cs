@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Linq;
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Communication
 {
@@ -102,8 +103,9 @@ namespace AutoTest.TestRunners.Shared.Communication
                 if (ClientConnected != null)
 					ClientConnected(this, new EventArgs());
             }
-            catch
+            catch (Exception ex)
             {
+				Logger.Debug(ex);
             }
             finally
             {
@@ -141,8 +143,9 @@ namespace AutoTest.TestRunners.Shared.Communication
                 }
                 stream.Stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, stream);
             }
-            catch
+            catch (Exception ex)
             {
+				Logger.Debug(ex);
                 disconnect(stream);
             }
         }
@@ -314,8 +317,9 @@ namespace AutoTest.TestRunners.Shared.Communication
             {
                 client.Stream.EndWrite(result);
             }
-            catch
+            catch (Exception ex)
             {
+				Logger.Debug(ex);
                 disconnect(client);
             }
         }

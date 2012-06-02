@@ -43,7 +43,8 @@ namespace AutoTest.TestRunners
 			Channel = new TestFeedbackProvider(_client);
             var parser = new ArgumentParser(args);
 			_arguments = parser.Parse();
-            Logger.SetLogger(new ConsoleLogger(!_arguments.Silent, !_arguments.Silent && _arguments.Logging));
+            Logger.SetLogger(
+				Logger.PickFromArguments(_arguments.Silent, _arguments.FileLogging, _arguments.Logging));
             writeHeader();
             if (!File.Exists(_arguments.InputFile))
             {
@@ -129,8 +130,7 @@ namespace AutoTest.TestRunners
 							run.ID,
 							run.Categories,
 							assembly,
-							_arguments.Silent,
-							!_arguments.Silent && _arguments.Logging,
+							_arguments,
 							new ConnectionOptions(server.Server, server.Port),
 							_arguments.CompatabilityMode);
 						var runner = new Thread(() => process.Run(null));
@@ -202,7 +202,8 @@ namespace AutoTest.TestRunners
         {
             Write("Start runner syntax: AutoTest.TestRunner.exe --input=options_file " +
 				  "[--connectioninfo=file_to_write_connect_info_to] " +
-				  "[--startsuspended] [--silent] [--logging] [--compatibility-mode] [--port=PORT]");
+				  "[--startsuspended] [--silent] [--logging] [--logging=FILENAME] " +
+				  "[--compatibility-mode] [--port=PORT]");
 			Write("Send message syntax: IP PORT MESSAGE");
             Write("");
 			Write("Options file format");
