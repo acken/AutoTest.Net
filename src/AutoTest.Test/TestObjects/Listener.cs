@@ -106,33 +106,6 @@ namespace AutoTest.Test.TestObjects
         }
     }
 
-    internal class BlockingConsumer : IBlockingConsumerOf<BlockingMessage>
-    {
-        public static int SleepTime { get; set; }
-
-        #region IBlockingConsumerOf<BlockingMessage> Members
-
-        public void Consume(BlockingMessage message)
-        {
-            message.Consumed = true;
-            Thread.Sleep(SleepTime);
-        }
-
-        #endregion
-    }
-
-    internal class BlockingConsumer2 : IBlockingConsumerOf<BlockingMessage2>
-    {
-        #region IBlockingConsumerOf<BlockingMessage2> Members
-
-        public void Consume(BlockingMessage2 message)
-        {
-            message.Consumed = true;
-        }
-
-        #endregion
-    }
-
     internal class OverridingConsumer : IOverridingConsumer<StringMessage>
     {
         private StringMessage _message = null;
