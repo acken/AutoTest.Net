@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using AutoTest.Core.BuildRunners;
-using AutoTest.Messages;
-using AutoTest.Core;
 
 namespace AutoTest
 {
     public static class OS
     {
-        private static bool? _isWindows = null;
-        private static bool? _isUnix = null;
-        private static bool? _isOSX = null;
+        private static bool? _isWindows;
+        private static bool? _isUnix;
+        private static bool? _isOSX;
 
         public static bool IsWindows {
             get {
@@ -61,12 +55,17 @@ namespace AutoTest
                     _isOSX = false;
                     _isUnix = false;
                 } else  {
-                    Process process = new Process();
-                    process.StartInfo = new ProcessStartInfo("uname", "-a");
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
+                    var process = new Process
+                                      {
+                                          StartInfo =
+                                              new ProcessStartInfo("uname", "-a")
+                                                  {
+                                                      RedirectStandardOutput = true,
+                                                      WindowStyle = ProcessWindowStyle.Hidden,
+                                                      UseShellExecute = false,
+                                                      CreateNoWindow = true
+                                                  }
+                                      };
 
                     process.Start();
                     var output = process.StandardOutput.ReadToEnd();
