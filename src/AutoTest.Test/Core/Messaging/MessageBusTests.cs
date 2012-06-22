@@ -9,7 +9,6 @@ using Castle.MicroKernel.Registration;
 using System.Threading;
 using AutoTest.Test.Core.Messaging.TestClasses;
 using AutoTest.Core.TestRunners;
-using BlockedMessage=AutoTest.Core.Messaging.BlockedMessage;
 using Rhino.Mocks;
 using AutoTest.Messages;
 
@@ -35,8 +34,6 @@ namespace AutoTest.Test.Core.Messaging
             _container.Container
                 .Register(Component.For<IConsumerOf<StringMessage>>().ImplementedBy<Listener>())
                 .Register(Component.For<IConsumerOf<StringMessage>>().Forward<IConsumerOf<IntMessage>>().ImplementedBy<BigListener>())
-                .Register(Component.For<IBlockingConsumerOf<BlockingMessage>>().ImplementedBy<BlockingConsumer>())
-                .Register(Component.For<IBlockingConsumerOf<BlockingMessage2>>().ImplementedBy<BlockingConsumer2>())
                 .Register(Component.For<IOverridingConsumer<StringMessage>>().ImplementedBy<OverridingConsumer>().LifeStyle.Singleton);
 
             _bus = _container.Services.Locate<IMessageBus>();
@@ -86,44 +83,6 @@ namespace AutoTest.Test.Core.Messaging
             _bus.Publish(message);
             waitForAsyncCall();
             message.Consumed.ShouldBeTrue();
-        }
-
-        [Test]
-        public void When_blocking_consumer_is_running_it_should_block()
-        {
-            var message1 = new BlockingMessage();
-            var message2 = new BlockingMessage();
-            BlockingConsumer.SleepTime = 100;
-            _bus.Publish(message1);
-            _bus.Publish(message2);
-            waitForAsyncCall();
-            message1.Consumed.ShouldBeTrue();
-            message2.Consumed.ShouldBeFalse();
-        }
-
-        [Test]
-        public void On_blocking_message_it_should_consme_withheld_messages()
-        {
-            var message1 = new BlockingMessage2();
-            var message2 = new BlockingMessage2();
-            _bus.Publish(message1);
-            _bus.Publish(message2);
-            Thread.Sleep(200);
-            message1.Consumed.ShouldBeTrue();
-            message2.Consumed.ShouldBeTrue();
-        }
-
-        [Test]
-        public void Should_remove_block_when_witheld_messages_are_published()
-        {
-            var message1 = new BlockingMessage2();
-            var message2 = new BlockingMessage2();
-            _bus.Publish(message1);
-            Thread.Sleep(20);
-            _bus.Publish(message2);
-            waitForAsyncCall();
-            message1.Consumed.ShouldBeTrue();
-            message2.Consumed.ShouldBeTrue();
         }
 
         [Test]

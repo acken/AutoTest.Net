@@ -10,8 +10,6 @@ namespace AutoTest.Core.Messaging
     public class MessageBus : IMessageBus
     {
         private readonly IServiceLocator _services;
-        private object _padLock = new object();
-        private List<BlockedMessage> _blockedMessages = new List<BlockedMessage>();
 		private string _buildProvider = "MSBuild";
 
         public string BuildProvider { get { return _buildProvider; } }
@@ -35,20 +33,10 @@ namespace AutoTest.Core.Messaging
 
         public void Publish<T>(T message)
         {
-            lock (_padLock)
-            {
-                if (message == null)
-                    throw new ArgumentNullException("message");
-                Debug.Publishing<T>();
-                if (isBlockingConsumers<T>())
-                {
-                    withhold(message);
-                    return;
-                }
-                if (hasBlockingConsumers<T>())
-                    block<T>();
-                ThreadPool.QueueUserWorkItem(tryPublish<T>, message);
-            }
+            if (message == null)
+                throw new ArgumentNullException("message");
+            Debug.Publishing<T>();
+            ThreadPool.QueueUserWorkItem(tryPublish<T>, message);
         }
 		
 		public void SetBuildProvider(string buildProvider)
@@ -56,32 +44,6 @@ namespace AutoTest.Core.Messaging
 			_buildProvider = buildProvider;
 			Debug.ChangedBuildProvider(_buildProvider);
 		}
-
-        private bool isBlockingConsumers<T>()
-        {
-            return _blockedMessages.FindIndex(0, m => m.Type.Equals(typeof (T))) >= 0;
-        }
-
-        private void withhold(object message)
-        {
-            Debug.WitholdingMessage(message);
-            var item = _blockedMessages.Find(m => m.Type.Equals(message.GetType()));
-            item.Push(message);
-        }
-
-        private bool hasBlockingConsumers<T>()
-        {
-            var consumers = _services.LocateAll<IBlockingConsumerOf<T>>();
-            if (consumers == null)
-                return false;
-            return consumers.Length > 0;
-        }
-
-        private void block<T>()
-        {
-            Debug.Blocking<T>();
-            _blockedMessages.Add(new BlockedMessage(typeof(T)));
-        }
 
         private void tryPublish<T>(object threadContext)
         {
@@ -101,20 +63,11 @@ namespace AutoTest.Core.Messaging
 			// Used to return after this. Silly events ;)
             handleByType<T>(message);
 
-            var blockingConsumers = _services.LocateAll<IBlockingConsumerOf<T>>();
-            if (blockingConsumers != null && blockingConsumers.Length > 0)
-            {
-                foreach (var consumer in blockingConsumers)
-                    consumer.Consume(message);
-            }
-
             var consumers = locateConsumers<T>();
             foreach (var instance in consumers)
                 instance.Consume(message);
 
             consumeByOveriddenConsumers<T>(message);
-
-            publishWithheldMessages<T>();
         }
 
         private void consumeByOveriddenConsumers<T>(T message)
@@ -139,19 +92,6 @@ namespace AutoTest.Core.Messaging
 				return new IConsumerOf<T>[] { _services.Locate<IConsumerOf<T>>(_buildProvider) };
 			return _services.LocateAll<IConsumerOf<T>>();
 		}
-
-        private void publishWithheldMessages<T>()
-        {
-            var item = _blockedMessages.Find(m => m.Type.Equals(typeof (T)));
-            if (item ==  null)
-                return;
-
-            while (item.HasBlockedMessages)
-            {
-                publish<T>(item.Pop());
-            }
-            _blockedMessages.Remove(item);
-        }
 
         private bool handleByType<T>(T message)
         {

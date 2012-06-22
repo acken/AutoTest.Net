@@ -7,8 +7,8 @@ namespace AutoTest.Messages
 	{
 		private string _project;
         private TimeSpan _timeSpent;
-        private List<BuildMessage> _errors = new List<BuildMessage>();
-        private List<BuildMessage> _warnings = new List<BuildMessage>();
+        private readonly List<BuildMessage> _errors = new List<BuildMessage>();
+        private readonly List<BuildMessage> _warnings = new List<BuildMessage>();
 
         public string Project { get { return _project; } }
         public TimeSpan TimeSpent { get { return _timeSpent; } }

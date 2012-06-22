@@ -68,7 +68,7 @@ namespace AutoTest.TestRunners.NUnit
             {
 				_channel.RunStarted();
 				var harvester = new TestHarvester(_channel);
-                result = _testRunner.Run(harvester, testFilter);
+                result = testRunner.Run(harvester, testFilter, false, LoggingThreshold.Off);
 				_channel.RunFinished(harvester.Results.Count());
             }
             catch (Exception ex)
