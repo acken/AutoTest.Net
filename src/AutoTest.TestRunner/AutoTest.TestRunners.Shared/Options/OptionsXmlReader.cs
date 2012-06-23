@@ -6,7 +6,7 @@ using AutoTest.TestRunners.Shared;
 using System.IO;
 using System.Xml;
 using AutoTest.TestRunners.Shared.Plugins;
-using AutoTest.TestRunners.Shared.Logging
+using AutoTest.TestRunners.Shared.Logging;
 
 namespace AutoTest.TestRunners.Shared.Options
 {
@@ -56,8 +56,8 @@ namespace AutoTest.TestRunners.Shared.Options
 
 		public static TestRunOptions ParseOptions(string xml)
 		{
+			var options = new TestRunOptions();
 			try {
-				var options = new TestRunOptions();
 				using (var reader = XmlReader.Create(new StringReader(xml)))
 				{
 					while (reader.Read())

@@ -180,7 +180,7 @@ namespace AutoTest.UI
                 	setProgress(ImageStates.Progress, "processing changes...", false, null);
                 _isRunning = true;
                 organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            }, text);
+            }, "");
         }
 
         public void SetProgress(bool on, string information, string picture)

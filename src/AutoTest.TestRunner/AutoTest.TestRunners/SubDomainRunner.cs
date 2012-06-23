@@ -64,7 +64,18 @@ namespace AutoTest.TestRunners
                 // Create the child AppDomain used for the service tool at runtime.
                 Logger.Debug("");
                 Logger.Debug("Starting sub domain");
-                childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
+
+				try
+				{
+                	childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
+				}
+				catch (Exception ex)
+				{
+					Logger.Debug("First try Domain exception, fails now and then on serialization. " +
+							     "Try again and it works.. go figure.. grrrrrrrrr");
+					Logger.Debug(ex);
+					childDomain = AppDomain.CreateDomain(_plugin.Type + " app domain", null, domainSetup);
+				}
 
                 // Create an instance of the runtime in the second AppDomain. 
                 // A proxy to the object is returned.
@@ -87,6 +98,8 @@ namespace AutoTest.TestRunners
             }
             catch (Exception ex)
             {
+				Logger.Debug("Domain exception");
+				Logger.Debug(ex);
                 if (!_compatibilityMode)
                     Program.Channel.TestFinished(ErrorHandler.GetError("Any", ex));
             }

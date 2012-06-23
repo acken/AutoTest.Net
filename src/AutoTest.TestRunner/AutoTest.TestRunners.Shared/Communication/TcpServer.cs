@@ -41,11 +41,15 @@ namespace AutoTest.TestRunners.Shared.Communication
 			public bool IsRunner { get; private set; }
 			public string ID { get; private set; }
 			public NetworkStream Stream { get; private set; }
+			public MemoryStream Buffer;
+			public byte[] ReadBuffer;
 
 			public Client(NetworkStream stream)
 			{
 				ID = Guid.NewGuid().ToString();
 				Stream = stream;
+				Buffer = new MemoryStream();
+				ReadBuffer = new byte[5000];
 			}
 
 			public void SetID(string id)
@@ -57,8 +61,6 @@ namespace AutoTest.TestRunners.Shared.Communication
 
 		private Socket _listener = null;
 		private List<Client> _clients = new List<Client>();
-		private byte[] _buffer = new byte[5000];
-		private MemoryStream _readBuffer = new MemoryStream();
 		private int _currentPort = 0;
 		private string _messageTermination = null;
 		private List<string> _unsentMessages = new List<string>();
@@ -99,7 +101,7 @@ namespace AutoTest.TestRunners.Shared.Communication
                 {
                     _clients.Add(clientStream);
                 }
-                clientStream.Stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, clientStream);
+                clientStream.Stream.BeginRead(clientStream.ReadBuffer, 0, clientStream.ReadBuffer.Length, ReadCompleted, clientStream);
                 if (ClientConnected != null)
 					ClientConnected(this, new EventArgs());
             }
@@ -122,26 +124,28 @@ namespace AutoTest.TestRunners.Shared.Communication
                 if(x == 0) return;
                 for (int i = 0; i < x;i++)
                 {
-					if (isEndOfMessage(i))
+					if (isEndOfMessage(stream.ReadBuffer, i))
                     {
-                        byte[] data = _readBuffer.ToArray();
+                        byte[] data = stream.Buffer.ToArray();
                         string actual;
 						if (_messageTermination == null)
 							actual = Encoding.UTF8.GetString(data, 0, data.Length);
 						else
 						    actual = Encoding.UTF8.GetString(data, 0, data.Length - (_messageTermination.Length - 1));
 
+						Logger.Debug("We got: " + actual);
+
 						if (!isInternalMessage(stream, actual)) {
 							forward(stream, actual);
 						}
-                        _readBuffer.SetLength(0);
+                        stream.Buffer.SetLength(0);
                     }
                     else
                     {
-                        _readBuffer.WriteByte(_buffer[i]);
+                        stream.Buffer.WriteByte(stream.ReadBuffer[i]);
                     }
                 }
-                stream.Stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, stream);
+                stream.Stream.BeginRead(stream.ReadBuffer, 0, stream.ReadBuffer.Length, ReadCompleted, stream);
             }
             catch (Exception ex)
             {
@@ -226,15 +230,15 @@ namespace AutoTest.TestRunners.Shared.Communication
 			return message.Substring(start, message.Length - start);
 		}
 		
-		private bool isEndOfMessage(int index)
+		private bool isEndOfMessage(byte[] buffer, int index)
 		{
 			if (_messageTermination == null)
-				return _buffer[index].Equals(0);
+				return buffer[index].Equals(0);
 			if (_messageTermination.Length > (index + 1))
 				return false;
 			for (int i = index; i > (index - _messageTermination.Length); i--)
 			{
-				if (!Encoding.UTF8.GetString(new byte[] { _buffer[i]}).Equals(_messageTermination.Substring(_messageTermination.Length - (index - i) - 1, 1)))
+				if (!Encoding.UTF8.GetString(new byte[] { buffer[i]}).Equals(_messageTermination.Substring(_messageTermination.Length - (index - i) - 1, 1)))
 					return false;
 			}
 			return true;

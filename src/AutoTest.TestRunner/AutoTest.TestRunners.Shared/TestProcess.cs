@@ -155,7 +155,7 @@ namespace AutoTest.TestRunners.Shared
 
 		public void Load()
 		{
-			_client.Send(string.Format("{0}load-assembly", _runnerID));
+			_client.SendAndWait(string.Format("{0}load-assembly", _runnerID));
 		}
 
 		public List<Results.TestResult> RunAllTests(
@@ -183,6 +183,7 @@ namespace AutoTest.TestRunners.Shared
 			_onTestFinished = testFinished;
 			_testsRan = -1;
 			_results.Clear();
+			_logger(string.Format("Sending: {0}{1}", _runnerID, message));
 			_client.Send(string.Format("{0}{1}", _runnerID, message));
 			while (!_abortQuery() && ( _testsRan == -1 || _testsRan != _results.Count))
 				Thread.Sleep(5);
@@ -206,17 +207,21 @@ namespace AutoTest.TestRunners.Shared
 				} else if (message.StartsWith(_runnerID + "Run started:")) {
 					_testsRan = _testsRan;
 				} else if (message.StartsWith(_runnerID + "Test started:")) {
-					_onTestStart(getMessage(message, _runnerID + "Test started:"));
+					if (_onTestStart != null)
+						_onTestStart(getMessage(message, _runnerID + "Test started:"));
 				} else if (message.StartsWith(_runnerID + "<?xml")) {
 					var result = Results.TestResult.FromXml(getMessage(message, _runnerID));
-					if (result == null)
+					if (result == null) {
 						return;
+					}
 					_results.Add(result);
-					_onTestFinished(result);
+					if (_onTestFinished != null)
+						_onTestFinished(result);
 				}
 			}
 			catch (Exception ex)
 			{
+				_logger("Crashed while handling message: " + message);
 				_logger(ex.ToString());
 			}
 		}

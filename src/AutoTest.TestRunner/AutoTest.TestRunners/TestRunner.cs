@@ -35,7 +35,9 @@ namespace AutoTest.TestRunners
 			var testAssembly = settings.Assembly.Assembly;
             _directories.Add(Path.GetDirectoryName(settings.Assembly.Assembly));
             _directories.Add(Path.GetDirectoryName(plugin.Assembly));
+			var clientID = settings.Assembly.Assembly + "|" + id.ToLower();
             Logger.Debug("About to create plugin {0} in {1} for {2}", plugin.Type, plugin.Assembly, id);
+			Logger.Debug("Client id is {0}", clientID);
             var runner = getRunner(plugin);
             var currentDirectory = Environment.CurrentDirectory;
             try
@@ -61,12 +63,13 @@ namespace AutoTest.TestRunners
 						runTests(runner, testAssembly, new TestRunOptions());
 					} else if (message == "exit") {
 						isRunning = false;
-					} else {
+					} else if (message.StartsWith("<")) {
+						Logger.Debug("Handling message: " + message);
 						var options = OptionsXmlReader.ParseOptions(message);
 						runTests(runner, testAssembly, options);
 					}
 				});
-				client.Send("RunnerID:" + settings.Assembly.Assembly + "|" + id.ToLower());
+				client.Send("RunnerID:" + clientID);
 				while (isRunning)
 					Thread.Sleep(10);
 				client.Disconnect();

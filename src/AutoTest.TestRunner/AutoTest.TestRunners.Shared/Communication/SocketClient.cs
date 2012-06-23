@@ -128,13 +128,13 @@ namespace AutoTest.TestRunners.Shared.Communication
         {
             if (IsSending)
                 throw new Exception("Cannot call send while doing SendAndWait, make up your mind");
-            lock (queue)
-            {
+            //lock (queue)
+            //{
                 queue.Enqueue(message);
                 if(!IsSending) {
 					SendFromQueue();                      
                 }
-            }
+            //}
         }
 
         public void SendAndWait(string message)
@@ -177,12 +177,12 @@ namespace AutoTest.TestRunners.Shared.Communication
             try
             {
                 client.EndWrite(result);
-                lock(queue)
-                {
+                //lock(queue)
+                //{
 		    		IsSending = false;
                     if (queue.Count > 0)
                         SendFromQueue();
-                }
+                //}
                 
             }
             catch (Exception ex)
@@ -195,11 +195,11 @@ namespace AutoTest.TestRunners.Shared.Communication
         private void SendFromQueue()
         {
             string message = null;
-            lock (queue)
-            {
+            //lock (queue)
+            //{
                 if (!IsSending && queue.Count > 0)
                     message = queue.Dequeue().ToString();
-            }
+            //}
             if (message != null)
             {
                 try
