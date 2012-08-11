@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 
@@ -26,7 +28,7 @@ namespace AutoTest.VS.Util
             }
             catch(Exception ex)
             {
-                Core.DebugLog.Debug.WriteDebug("Exception getting Method String : " + ex.ToString());
+                Core.DebugLog.Debug.WriteDebug("Exception getting Method String : " + ex);
                 return null;
             }
             return null;
@@ -38,26 +40,34 @@ namespace AutoTest.VS.Util
             var first = true;
             if (justfunction != null)
             {
+                if (justfunction.FunctionKind == vsCMFunction.vsCMFunctionConstant) return null;
                 if (justfunction.FunctionKind == vsCMFunction.vsCMFunctionPropertySet)
                     return GetSetterNameFrom(justfunction);
                 all = GetReturnType(justfunction) + " " + GetMethodName(justfunction) + "(";
                 foreach (CodeParameter2 param in justfunction.Parameters)
                 {
                     if (!first) all += ",";
-                    var type = param.Type.AsFullName;
-                    if (param.Type.TypeKind == vsCMTypeRef.vsCMTypeRefArray)
-                        type = getArray(param.Type);
-                    type = GenericNameMangler.MangleParameterName(type);
-                    if(param.ParameterKind == vsCMParameterKind.vsCMParameterKindOut || param.ParameterKind == vsCMParameterKind.vsCMParameterKindRef)
-                    {
-                        type += "&";
-                    }
-                    all += type;
+                    
+                    all += GetParameterName(param);
                     first = false;
                 }
                 all += ")";
             }
             return all;
+        }
+
+        private static string GetParameterName(CodeParameter2 param)
+        {
+            var typeString = param.Type.AsFullName;
+            GetTypeName(param.Type);
+            if (param.Type.TypeKind == vsCMTypeRef.vsCMTypeRefArray)
+                typeString = getArray(param.Type);
+            typeString = GenericNameMangler.MangleParameterName(typeString);
+            if (param.ParameterKind == vsCMParameterKind.vsCMParameterKindOut || param.ParameterKind == vsCMParameterKind.vsCMParameterKindRef)
+            {
+                typeString += "&";
+            }
+            return typeString;
         }
 
         private static string GetSetterNameFrom(CodeFunction justfunction)
@@ -66,6 +76,7 @@ namespace AutoTest.VS.Util
             ret += GetMethodName(justfunction) + "(";
 
             var type = justfunction.Type.AsFullName;
+            
             if (justfunction.Type.TypeKind == vsCMTypeRef.vsCMTypeRefArray)
                 type = getArray(justfunction.Type);
             type = GenericNameMangler.MangleParameterName(type);
@@ -77,6 +88,7 @@ namespace AutoTest.VS.Util
         private static string GetFieldStringFromElement(CodeElement elem)
         {
             var v = (CodeVariable) elem;
+            if (v.IsConstant) return null;
             var typeName = GenericNameMangler.MangleTypeName(GetTypeName(v.Parent));
             var oftype = GetVariableType(v);
             return oftype + " " + typeName + "::" + v.Name;
@@ -101,18 +113,27 @@ namespace AutoTest.VS.Util
                 case vsCMFunction.vsCMFunctionPropertySet:
                     method = "set_" + function.Name;
                     break;
+                case vsCMFunction.vsCMFunctionOperator:
+                    string translated;
+                    ops.TryGetValue(function.Name.Replace("operator ", ""), out translated);
+                    method = translated;
+                    break;
                 default:
                     method = GenericNameMangler.MangleMethodName(function.Name);
                     break;
             }
-            AutoTest.Core.DebugLog.Debug.WriteDebug("Method name is " + typename + "::" + method);
             return typename + "::" + method;
         }
 
-
+        
         private static string GetTypeName(object item)
         {
             var type = item as CodeElement;
+            if (type == null)
+            {
+                //MessageBox.Show(item.GetType()+ " " + item.GetType());
+                return null;
+            }
             if (type.Kind == vsCMElement.vsCMElementInterface)
                 return getInterfaceName((CodeInterface) type);
             if (type.Kind == vsCMElement.vsCMElementStruct)
@@ -181,6 +202,7 @@ namespace AutoTest.VS.Util
 
         private static string GetTypeNameWithoutNamespace(string fullName)
         {
+            if (fullName == null) return "";
             var lastdot = fullName.LastIndexOf(".");
             if (lastdot == -1) return fullName;
             return fullName.Substring(lastdot + 1, fullName.Length - lastdot - 1);
@@ -201,13 +223,6 @@ namespace AutoTest.VS.Util
             return GenericNameMangler.MangleParameterName(n.Type.AsFullName);
         }
 
-        public class Foo
-        {
-            public int Bar()
-            {
-                return 2;
-            }
-        }
 
         private static string getArray(CodeTypeRef type)
         {
@@ -221,5 +236,50 @@ namespace AutoTest.VS.Util
             }
         }
 
+
+        private static Dictionary<string, string> ops;
+
+        static MethodNameReader()
+        {
+            ops = new Dictionary<string, string>();
+            ops.Add("implicit", "op_Implicit");
+            ops.Add("explicit", "op_explicit");
+            ops.Add("+", "op_Addition");
+            ops.Add("-", "op_Subtraction");
+            ops.Add("*", "op_Multiply");
+            ops.Add("/", "op_Division");
+            ops.Add("%", "op_Modulus");
+            ops.Add("^", "op_ExclusiveOr");
+            ops.Add("&", "op_BitwiseAnd");
+            ops.Add("|", "op_BitwiseOr");
+            ops.Add("&&", "op_LogicalAnd");
+            ops.Add("||", "op_LogicalOr");
+            ops.Add("=", "op_Assign");
+            ops.Add("<<", "op_LeftShift");
+            ops.Add(">>", "op_RightShift");
+            //ops.Add("dunno", "op_SignedRightShift");
+            //ops.Add("dunno2", "op_UnsignedRightShift");
+            ops.Add("==", "op_Equality");
+            ops.Add(">", "op_GreaterThan");
+            ops.Add("<", "op_LessThan");
+            ops.Add("!=", "op_Inequality");
+            ops.Add(">=", "op_GreaterThanOrEqual");
+            ops.Add("<=", "op_LessThanOrEqual");
+            ops.Add("*=", "op_MultiplicationAssignment");
+            ops.Add("-=", "op_SubtractionAssignment");
+            ops.Add("^=", "op_ExclusiveOrAssignment");
+            ops.Add("<<=", "op_LeftShiftAssignment");
+            ops.Add("%=", "op_ModulusAssignment");
+            ops.Add("+=", "op_AdditionAssignment");
+            ops.Add("&=", "op_BitwiseAndAssignment");
+            ops.Add("|=", "op_BitwiseOrAssignment");
+            ops.Add("dunno", "op_Comma");
+            ops.Add("/=", "op_DivisionAssignment");
+            ops.Add("--", "op_Decrement");
+            ops.Add("++", "op_Increment");
+            //ops.Add("dunno", "op_UnaryNegation");
+            //ops.Add("dunno", "op_UnaryPlus");
+            //ops.Add("dunno", "op_OnesComplement");
+        }
     }
 }

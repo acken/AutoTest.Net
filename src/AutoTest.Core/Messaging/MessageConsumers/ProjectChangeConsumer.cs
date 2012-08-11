@@ -76,7 +76,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                 return;
             Debug.WriteDebug("Initiating termination of current run");
             _exit = true;
-            while (_isRunning)
+            var timeout = DateTime.Now.AddSeconds(4);
+            while (_isRunning && timeout > DateTime.Now)
                 Thread.Sleep(10);
         }
 
