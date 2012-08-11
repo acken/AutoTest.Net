@@ -139,6 +139,10 @@ namespace AutoTest.UI
                 runFinished((RunFinishedMessage)message);
             else if (message.GetType() == typeof(RunInformationMessage))
                 runInformationMessage((RunInformationMessage)message);
+			else if (message.GetType() == typeof(BuildRunMessage)) {
+				if (((BuildRunMessage)message).Results.Errors.Length == 0)
+					ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
+			}
         }
 
         private void handle(CacheMessages cacheMessages)
