@@ -139,6 +139,10 @@ namespace AutoTest.UI
                 runFinished((RunFinishedMessage)message);
             else if (message.GetType() == typeof(RunInformationMessage))
                 runInformationMessage((RunInformationMessage)message);
+			else if (message.GetType() == typeof(BuildRunMessage)) {
+				if (((BuildRunMessage)message).Results.Errors.Length == 0)
+					ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
+			}
         }
 
         private void handle(CacheMessages cacheMessages)
@@ -527,7 +531,12 @@ namespace AutoTest.UI
         {
             if (testItem.Test.StackTrace.Length > 0)
             {
-                // TODO: Add this again when type cache is faster
+				var exactLine = getMatchingStackLine(testItem);
+				if (exactLine != null) {
+					goToReference(exactLine.File, exactLine.LineNumber, 0);
+					return;
+				}
+				
                 if (CanGoToTypes)
                     if (goToType(testItem.Assembly, testItem.Test.Name))
                         return;
@@ -535,6 +544,15 @@ namespace AutoTest.UI
                 goToReference(testItem.Test.StackTrace[0].File, testItem.Test.StackTrace[0].LineNumber, 0);
             }
         }
+
+		private IStackLine getMatchingStackLine(CacheTestMessage testItem)
+		{
+			foreach (var line in testItem.Test.StackTrace) {
+				if (line.Method.Equals(testItem.Test.Name))
+					return line;
+			}
+			return null;
+		}
 
         private void goToReference(string file, int lineNumber, int column)
         {
