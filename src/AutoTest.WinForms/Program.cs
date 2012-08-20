@@ -33,6 +33,8 @@ namespace AutoTest.WinForms
 				if (userWantedCommandLineHelpPrinted(args))
 					return;
                 string directoryToWatch = getPossibleCommandArgs(args);
+                if (directoryToWatch != null)
+                    directoryToWatch = Path.GetFullPath(directoryToWatch);
                 if ((directoryToWatch = ConfigureApplication(directoryToWatch)) == null)
                     return;
         	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();

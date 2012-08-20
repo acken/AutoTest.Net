@@ -29,6 +29,7 @@ namespace AutoTest.WinForms
         public void SetWatchDirectory(string directory)
         {
             _watchToken = directory;
+            Text = "AutoTest.Net - " + _watchToken;
         }
         
         public FeedbackForm Form
