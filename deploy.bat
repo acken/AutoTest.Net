@@ -69,53 +69,73 @@ IF NOT EXIST %DEPLOYDIR% (
 )
 
 copy %BINARYDIR%\AutoTest.Messages.dll %DEPLOYDIR%\AutoTest.Messages.dll
+copy %BINARYDIR%\AutoTest.Messages.pdb %DEPLOYDIR%\AutoTest.Messages.pdb
 copy %BINARYDIR%\AutoTest.Core.dll %DEPLOYDIR%\AutoTest.Core.dll
+copy %BINARYDIR%\AutoTest.Core.pdb %DEPLOYDIR%\AutoTest.Core.pdb
 copy %BINARYDIR%\AutoTest.Console.exe %DEPLOYDIR%\AutoTest.Console.exe
+copy %BINARYDIR%\AutoTest.Console.pdb %DEPLOYDIR%\AutoTest.Console.pdb
 copy %BINARYDIR%\AutoTest.UI.dll %DEPLOYDIR%\AutoTest.UI.dll
+copy %BINARYDIR%\AutoTest.UI.pdb %DEPLOYDIR%\AutoTest.UI.pdb
 copy %BINARYDIR%\AutoTest.WinForms.exe %DEPLOYDIR%\AutoTest.WinForms.exe
+copy %BINARYDIR%\AutoTest.WinForms.pdb %DEPLOYDIR%\AutoTest.WinForms.pdb
 copy %BINARYDIR%\AutoTest.config.template %DEPLOYDIR%\AutoTest.config
 copy %DIR%README %DEPLOYDIR%\README
 copy %DIR%LICENSE %DEPLOYDIR%\AutoTest.License.txt
 
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.exe
+copy %BINARYDIR%\AutoTest.TestRunner.pdb %DEPLOYDIR%\AutoTest.TestRunner.pdb
 copy %BINARYDIR%\App_3.5.config %DEPLOYDIR%\AutoTest.TestRunner.exe.config
 copy %BINARYDIR%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe
+copy %BINARYDIR%\AutoTest.TestRunner.pdb %DEPLOYDIR%\AutoTest.TestRunner.v4.0.pdb
 copy %BINARYDIR%\AutoTest.TestRunner.exe.config %DEPLOYDIR%\AutoTest.TestRunner.v4.0.exe.config
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.x86.exe
+copy %BINARYDIRx86%\AutoTest.TestRunner.pdb %DEPLOYDIR%\AutoTest.TestRunner.x86.pdb
 copy %BINARYDIR%\App_3.5.config %DEPLOYDIR%\AutoTest.TestRunner.x86.exe.config
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe %DEPLOYDIR%\AutoTest.TestRunner.x86.v4.0.exe
+copy %BINARYDIRx86%\AutoTest.TestRunner.pdb %DEPLOYDIR%\AutoTest.TestRunner.x86.v4.0.pdb
 copy %BINARYDIRx86%\AutoTest.TestRunner.exe.config %DEPLOYDIR%\AutoTest.TestRunner.x86.v4.0.exe.config
 copy %BINARYDIR%\AutoTest.TestRunners.Shared.dll %DEPLOYDIR%\AutoTest.TestRunners.Shared.dll
+copy %BINARYDIR%\AutoTest.TestRunners.Shared.pdb %DEPLOYDIR%\AutoTest.TestRunners.Shared.pdb
 
 copy %BINARYDIR%\AutoTest.TestRunners.NUnit.dll %DEPLOYDIR%\TestRunners\NUnit\AutoTest.TestRunners.NUnit.dll
+copy %BINARYDIR%\AutoTest.TestRunners.NUnit.pdb %DEPLOYDIR%\TestRunners\NUnit\AutoTest.TestRunners.NUnit.pdb
 copy %BINARYDIR%\nunit.core.dll %DEPLOYDIR%\TestRunners\NUnit\nunit.core.dll
 copy %BINARYDIR%\nunit.core.interfaces.dll %DEPLOYDIR%\TestRunners\NUnit\nunit.core.interfaces.dll
 copy %BINARYDIR%\nunit.util.dll %DEPLOYDIR%\TestRunners\NUnit\nunit.util.dll
 
 copy %BINARYDIR%\AutoTest.TestRunners.XUnit.dll %DEPLOYDIR%\TestRunners\XUnit\AutoTest.TestRunners.XUnit.dll
+copy %BINARYDIR%\AutoTest.TestRunners.XUnit.pdb %DEPLOYDIR%\TestRunners\XUnit\AutoTest.TestRunners.XUnit.pdb
 copy %BINARYDIR%\xunit.runner.utility.dll %DEPLOYDIR%\TestRunners\XUnit\xunit.runner.utility.dll
 
 copy %BINARYDIR%\AutoTest.TestRunners.MSTest.dll %DEPLOYDIR%\TestRunners\MSTest\AutoTest.TestRunners.MSTest.dll
+copy %BINARYDIR%\AutoTest.TestRunners.MSTest.pdb %DEPLOYDIR%\TestRunners\MSTest\AutoTest.TestRunners.MSTest.pdb
 copy %BINARYDIR%\celer.Core.dll %DEPLOYDIR%\TestRunners\MSTest\celer.Core.dll
 
 copy %BINARYDIR%\AutoTest.TestRunners.MSpec.dll %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.dll
+copy %BINARYDIR%\AutoTest.TestRunners.MSpec.pdb %DEPLOYDIR%\TestRunners\MSpec\AutoTest.TestRunners.MSpec.pdb
 
 copy %BINARYDIR%\AutoTest.TestRunners.MbUnit.dll %DEPLOYDIR%\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.dll
+copy %BINARYDIR%\AutoTest.TestRunners.MbUnit.pdb %DEPLOYDIR%\TestRunners\MbUnit\AutoTest.TestRunners.MbUnit.pdb
 copy %BINARYDIR%\Gallio.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.dll
 
 copy %BINARYDIR%\AutoTest.TestRunners.SimpleTesting.dll %DEPLOYDIR%\TestRunners\SimpleTesting\AutoTest.TestRunners.SimpleTesting.dll
+copy %BINARYDIR%\AutoTest.TestRunners.SimpleTesting.pdb %DEPLOYDIR%\TestRunners\SimpleTesting\AutoTest.TestRunners.SimpleTesting.pdb
 copy %BINARYDIR%\Simple.Testing.Framework.dll %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.Framework.dll
+copy %BINARYDIR%\Simple.Testing.Framework.pdb %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.Framework.pdb
 copy %BINARYDIR%\Simple.Testing.ClientFramework.dll %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.ClientFramework.dll
+copy %BINARYDIR%\Simple.Testing.ClientFramework.pdb %DEPLOYDIR%\TestRunners\SimpleTesting\Simple.Testing.ClientFramework.pdb
 copy %BINARYDIR%\PowerAssert.dll %DEPLOYDIR%\TestRunners\SimpleTesting\PowerAssert.dll
 
 copy %DIR%\lib\Gallio\Gallio.XmlSerializers.dll %DEPLOYDIR%\TestRunners\MbUnit\Gallio.XmlSerializers.dll
 copy %BINARYDIR%\mbunit.config %DEPLOYDIR%\TestRunners\MbUnit\mbunit.config
 
 copy %BINARYDIR%\Worst.Testing.Framework.Ever.dll %DEPLOYDIR%\Worst.Testing.Framework.Ever.dll
+copy %BINARYDIR%\Worst.Testing.Framework.Ever.pdb %DEPLOYDIR%\Worst.Testing.Framework.Ever.pdb
 copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\Worst.Testing.Framework.Ever.License.txt %DEPLOYDIR%\Worst.Testing.Framework.Ever.License.txt
 copy %DIR%\src\AutoTest.TestRunner\Plugins\Microsoft.VisualStudio.QualityTools.UnitTestFramework\NUnit.License.txt %DEPLOYDIR%\NUnit.License.txt
 
 copy %BINARYDIR%\FSWatcher.dll %DEPLOYDIR%\FSWatcher.dll
+copy %BINARYDIR%\FSWatcher.pdb %DEPLOYDIR%\FSWatcher.pdb
 copy %BINARYDIR%\Castle.Core.dll %DEPLOYDIR%\Castle.Core.dll
 copy %BINARYDIR%\Castle.Facilities.Logging.dll %DEPLOYDIR%\Castle.Facilities.Logging.dll
 copy %CASTLEDIR%\Castle.license.txt %DEPLOYDIR%\Castle.license.txt

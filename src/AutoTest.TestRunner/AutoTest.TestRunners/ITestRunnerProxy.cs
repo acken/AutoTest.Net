@@ -9,9 +9,9 @@ using AutoTest.TestRunners.Shared.Plugins;
 
 namespace AutoTest.TestRunners
 {
-    interface ITestRunner
+    interface ITestRunnerProxy
     {
-        void SetupResolver(Arguments args);
+        void SetupResolver(bool silent, string fileLogger, bool logging);
         void Run(Plugin plugin, string id, RunSettings settings);
     }
 }

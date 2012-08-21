@@ -98,6 +98,7 @@ namespace AutoTest.TestRunners.Shared
 						process.RunInCompatibilityMode();
 					process
 						.AbortWhen(_abortWhen)
+                        .SetInternalLoggerTo(_logger)
 						.LogTo(_logFile);
 					var testProc = process.Start();
 					lock (processes) {

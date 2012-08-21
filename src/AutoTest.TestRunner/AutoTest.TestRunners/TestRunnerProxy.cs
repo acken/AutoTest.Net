@@ -16,16 +16,16 @@ using AutoTest.TestRunners.Shared.AssemblyAnalysis;
 
 namespace AutoTest.TestRunners
 {
-    class TestRunner : MarshalByRefObject, ITestRunner
+    class TestRunnerProxy : MarshalByRefObject, ITestRunnerProxy
     {
         private List<TestResult> _results = new List<TestResult>();
         private List<string> _directories = new List<string>();
         private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
 
-        public void SetupResolver(Arguments args)
+        public void SetupResolver(bool silent, string fileLogging, bool logging)
         {
             Logger.SetLogger(
-				Logger.PickFromArguments(args.Silent, args.FileLogging, args.Logging));
+				Logger.PickFromArguments(silent, fileLogging, logging));
             _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
@@ -47,6 +47,7 @@ namespace AutoTest.TestRunners
 				var isRunning = true;
 				var client = new SocketClient();
 				client.Connect(settings.ConnectOptions, (message) => {
+                    Logger.Debug("Got message: " + message);
 					if (message == "load-assembly") {
 						Logger.Debug(
 							"Matching plugin identifier ({0}) to test identifier ({1})",
@@ -108,6 +109,7 @@ namespace AutoTest.TestRunners
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            Logger.Debug("Looking for: " + args.Name);
             if (_assemblyCache.ContainsKey(args.Name))
             {
                 if (_assemblyCache[args.Name] == "NotFound")

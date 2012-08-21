@@ -16,12 +16,20 @@ using AutoTest.Core.Messaging;
 
 namespace AutoTest.Core.TestRunners.TestRunners
 {
+    enum ATRunnerStages
+    {
+        NoStarted,
+        Prepared,
+        AssembliesLoaded,
+        Testing
+    }
     public class AutoTestTestRunner : ITestRunner
     {
         private readonly IConfiguration _configuration;
         private readonly IMessageBus _bus;
         private readonly IRunResultCache _runCache;
         private bool _handleRunnerFeedback = true;
+        private ATRunnerStages _currentStage = ATRunnerStages.NoStarted;
 
         public AutoTestTestRunner(IConfiguration configuration, IMessageBus bus, IRunResultCache runCache)
         {
@@ -60,7 +68,6 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return false;
         }
 		
-		private object _sessionLock = new object();
 		private TestSession _session;
 		private RunOptions _options;
 		private IAutoTestNetTestRunner[] _plugins = null;
@@ -79,127 +86,131 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			_abortWhen = abortWhen;
 			
 			System.Threading.ThreadPool.QueueUserWorkItem((state) => {
-				lock (_sessionLock) {
-					DebugLog.Debug.WriteDebug("Preparing test runners");
-					if (_session != null)
-						_session.Kill();
-					var assemblies = (string[]) state;
+				DebugLog.Debug.WriteDebug("Preparing test runners");
+				if (_session != null)
+					_session.Kill();
+                _currentStage = ATRunnerStages.NoStarted;
+				var assemblies = (string[]) state;
 
-					_options = generateOptions(assemblies);
-					if (_options == null)
-						return;
-					AutoTestRunnerFeedback feedback = null;
-					if (_handleRunnerFeedback)
-						feedback = new AutoTestRunnerFeedback(_runCache, _bus, _options);
-					var runner = new TestRunProcess(feedback)
-						.WrapTestProcessWith(_currentWrapper)
-						.AbortWhen(_abortWhen)
-						.SetInternalLoggerTo((s) => DebugLog.Debug.WriteDebug(s));
-					if (_configuration.RunAssembliesInParallel)
-						runner.RunParallel();
-					if (_configuration.TestRunnerCompatibilityMode)
-						runner.RunInCompatibilityMode();
-					DebugLog.Debug.WriteDebug(
-						"Is debugging disabled? " +  DebugLog.Debug.IsDisabled.ToString());
-					if (!DebugLog.Debug.IsDisabled)
-						runner.LogTo(Path.GetTempFileName());
-					_session = runner.Prepare(_options);
+				_options = generateOptions(assemblies);
+				if (_options == null)
+					return;
+				AutoTestRunnerFeedback feedback = null;
+				if (_handleRunnerFeedback)
+					feedback = new AutoTestRunnerFeedback(_runCache, _bus, _options);
+				var runner = new TestRunProcess(feedback)
+					.WrapTestProcessWith(_currentWrapper)
+					.AbortWhen(_abortWhen)
+					.SetInternalLoggerTo((s) => DebugLog.Debug.WriteDebug(s));
+				if (_configuration.RunAssembliesInParallel)
+					runner.RunParallel();
+				if (_configuration.TestRunnerCompatibilityMode)
+					runner.RunInCompatibilityMode();
+				DebugLog.Debug.WriteDebug(
+					"Is debugging disabled? " +  DebugLog.Debug.IsDisabled.ToString());
+				if (!DebugLog.Debug.IsDisabled)
+					runner.LogTo(Path.GetTempFileName());
+				_session = runner.Prepare(_options);
 
-					if (_plugins == null) {
-						_plugins = 
-							new PluginLocator().Locate()
-							.Select(x => x.New()).ToArray();
-					}
-					DebugLog.Debug.WriteDebug("Done - Preparing test runners");
+				if (_plugins == null) {
+					_plugins = 
+						new PluginLocator().Locate()
+						.Select(x => x.New()).ToArray();
 				}
+                _currentStage = ATRunnerStages.Prepared;
+				DebugLog.Debug.WriteDebug("Done - Preparing test runners");
 			}, asms);
 		}
 
 		public void LoadAssemblies()
 		{
-			lock (_sessionLock) {
-				DebugLog.Debug.WriteDebug("Loading assemblies for test runner");
-				_session.Instances.ToList()
-					.ForEach(x => {
-						DebugLog.Debug.WriteDebug("Loading runner {1} for {0}", x.Assembly, x.Runner);
-						_session.CreateClient(x, _abortWhen).Load();
-					});
-				DebugLog.Debug.WriteDebug("Done - Loading assemblies for test runner");
+			while (_currentStage != ATRunnerStages.Prepared)
+                System.Threading.Thread.Sleep(5);
+
+			DebugLog.Debug.WriteDebug("Loading assemblies for test runner");
+			foreach (var instance in _session.Instances)
+            {
+				DebugLog.Debug.WriteDebug("Loading runner {1} for {0}", instance.Assembly, instance.Runner);
+				_session.CreateClient(instance, _abortWhen).Load();
 			}
+            _currentStage = ATRunnerStages.AssembliesLoaded;
+			DebugLog.Debug.WriteDebug("Done - Loading assemblies for test runner");
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
         {
-			lock (_sessionLock) {
-				AutoTestRunnerFeedback feedback = null;
-				if (_handleRunnerFeedback)
-					feedback = new AutoTestRunnerFeedback(_runCache, _bus, _options);
-				DebugLog.Debug.WriteDebug("Starting autotest test run");
-				var results = new List<TestRunResults>();
-				_session.Instances.ToList()
-					.ForEach(x => {
-						DebugLog.Debug.WriteDebug("Testing {0} - {1}", x.Runner, x.Assembly);
-						var runAll = false;
+            while (_currentStage != ATRunnerStages.AssembliesLoaded)
+                System.Threading.Thread.Sleep(5);
+			
+            _currentStage = ATRunnerStages.Testing;
+			AutoTestRunnerFeedback feedback = null;
+			if (_handleRunnerFeedback)
+				feedback = new AutoTestRunnerFeedback(_runCache, _bus, _options);
+			DebugLog.Debug.WriteDebug("Starting autotest test run");
+			var results = new List<TestRunResults>();
+			_session.Instances.ToList()
+				.ForEach(x => {
+					DebugLog.Debug.WriteDebug("Testing {0} - {1}", x.Runner, x.Assembly);
+					var runAll = false;
 
-						var plugin = 
-							_plugins.FirstOrDefault(y => y.Identifier.ToLower() == x.Runner.ToLower());
-						var testRunner = TestRunnerConverter.FromString(plugin.Identifier);
+					var plugin = 
+						_plugins.FirstOrDefault(y => y.Identifier.ToLower() == x.Runner.ToLower());
+					var testRunner = TestRunnerConverter.FromString(plugin.Identifier);
 						
-						if (plugin != null) {
-							DebugLog.Debug.WriteDebug("Plugin found");
-							var testRun = new TestRunOptions();
-							testRun.HasBeenVerified(true);
-							var infos = runInfos.Where(y => plugin.ContainsTestsFor(y.Assembly));
-							foreach (var info in  infos) {
-								testRun.AddTests(info.GetTestsFor(testRunner));
-								DebugLog.Debug.WriteDetail(
-									"Found {0} tests for assembly", testRun.Tests.Count());
-								testRun.AddMembers(info.GetMembersFor(testRunner));
-								DebugLog.Debug.WriteDetail(
-									"Found {0} members for assembly", testRun.Members.Count());
-								testRun.AddNamespaces(info.GetNamespacesFor(testRunner));
-								DebugLog.Debug.WriteDetail(
-									"Found {0} namespaces for assembly", testRun.Namespaces.Count());
-								DebugLog.Debug.WriteDetail(
-									"Run only specified tests for runner {0} is {1}",
-									testRunner,
-									info.OnlyRunSpcifiedTestsFor(testRunner));
+					if (plugin != null) {
+						DebugLog.Debug.WriteDebug("Plugin found");
+						var testRun = new TestRunOptions();
+						testRun.HasBeenVerified(true);
+						var infos = runInfos.Where(y => plugin.ContainsTestsFor(y.Assembly));
+						foreach (var info in  infos) {
+							testRun.AddTests(info.GetTestsFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} tests for assembly", testRun.Tests.Count());
+							testRun.AddMembers(info.GetMembersFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} members for assembly", testRun.Members.Count());
+							testRun.AddNamespaces(info.GetNamespacesFor(testRunner));
+							DebugLog.Debug.WriteDetail(
+								"Found {0} namespaces for assembly", testRun.Namespaces.Count());
+							DebugLog.Debug.WriteDetail(
+								"Run only specified tests for runner {0} is {1}",
+								testRunner,
+								info.OnlyRunSpcifiedTestsFor(testRunner));
 
-								if (info.OnlyRunSpcifiedTestsFor(testRunner)) {
-									runAll = true;
-									break;
-								}
+							if (info.OnlyRunSpcifiedTestsFor(testRunner)) {
+								runAll = true;
+								break;
 							}
-
-							if (runAll)
-								testRun = new TestRunOptions();
-
-							var client = _session.CreateClient(x, _abortWhen);
-							results.AddRange(
-								getResults(
-									client.RunTests(
-										testRun,
-										(test) => {
-											if (feedback != null)
-												feedback.TestStarted(test);
-											DebugLog.Debug.WriteDebug("\tTesting {0}", test);
-										},
-										(result) => {
-											if (feedback != null)
-												feedback.TestFinished(result);
-											DebugLog.Debug.WriteDebug("\tTesting {0} - {1}",
-												result.TestDisplayName, result.State);
-										}),
-									runInfos));
 						}
-					});
 
-				_handleRunnerFeedback = true;
-				DebugLog.Debug.WriteDebug("Result contains {0} records", results.Count);
-				foreach (var set in results)
-					DebugLog.Debug.WriteDebug("Resultset for {1} contains {0} tests", set.All.Count(), set.Assembly);
-				return results.ToArray();
-			}
+						if (runAll)
+							testRun = new TestRunOptions();
+
+						var client = _session.CreateClient(x, _abortWhen);
+						results.AddRange(
+							getResults(
+								client.RunTests(
+									testRun,
+									(test) => {
+										if (feedback != null)
+											feedback.TestStarted(test);
+										DebugLog.Debug.WriteDebug("\tTesting {0}", test);
+									},
+									(result) => {
+										if (feedback != null)
+											feedback.TestFinished(result);
+										DebugLog.Debug.WriteDebug("\tTesting {0} - {1}",
+											result.TestDisplayName, result.State);
+									}),
+								runInfos));
+					}
+				});
+
+			_handleRunnerFeedback = true;
+			DebugLog.Debug.WriteDebug("Result contains {0} records", results.Count);
+			foreach (var set in results)
+				DebugLog.Debug.WriteDebug("Resultset for {1} contains {0} tests", set.All.Count(), set.Assembly);
+			return results.ToArray();
         }
 
         private TestRunResults[] getResults(IEnumerable<AutoTest.TestRunners.Shared.Results.TestResult> tests, TestRunInfo[] runInfos)

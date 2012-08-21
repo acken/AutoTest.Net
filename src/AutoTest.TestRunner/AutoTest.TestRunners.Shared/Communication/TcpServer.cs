@@ -120,7 +120,17 @@ namespace AutoTest.TestRunners.Shared.Communication
             var stream = (Client) result.AsyncState;
             try
             {
-                var x = stream.Stream.EndRead(result);
+                int x;
+                try
+                {
+                    // This might fail since the client midht already have disconnected
+                    // Fail gracefully
+                    x = stream.Stream.EndRead(result);
+                }
+                catch
+                {
+                    x = 0;
+                }
                 if(x == 0) return;
                 for (int i = 0; i < x;i++)
                 {
@@ -138,6 +148,7 @@ namespace AutoTest.TestRunners.Shared.Communication
 						if (!isInternalMessage(stream, actual)) {
 							forward(stream, actual);
 						}
+                        
                         stream.Buffer.SetLength(0);
                     }
                     else
@@ -206,10 +217,11 @@ namespace AutoTest.TestRunners.Shared.Communication
 							(message == "exit" ||
 							 message.StartsWith(x.ID + ":") ||
 							 message.StartsWith(stripPluginID(x.ID) + "|any:"))).ToList();
-					if (clients.Count > 0)
+					if (clients.Count > 0) {
 						clients.ForEach(x => Send(stripReceiver(message), x.ID));
-					else
+                    } else {
 						_unsentMessages.Add(message);
+                    }
 				}
 			}
 		}
@@ -224,9 +236,9 @@ namespace AutoTest.TestRunners.Shared.Communication
 
 		private string stripReceiver(string message)
 		{
-			if (message.IndexOf(":") == -1)
+			if (message.LastIndexOf(":") == -1)
 				return message;
-			var start = message.IndexOf(":") + 1;
+			var start = message.LastIndexOf(":") + 1;
 			return message.Substring(start, message.Length - start);
 		}
 		

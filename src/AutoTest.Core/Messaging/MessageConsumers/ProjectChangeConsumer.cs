@@ -93,8 +93,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				_testWrapper = getWrapper();
 				var allAssemblies = _cache.GetAll<Project>()
 					.Select(x => x.GetAssembly(_configuration.CustomOutputPath)).ToArray();
-				_testRunners.ToList()
-					.ForEach(x => x.Prepare(allAssemblies, _testWrapper, () => { return _exit; }));
+				foreach (var runner in _testRunners)
+					runner.Prepare(allAssemblies, _testWrapper, () => { return _exit; });
 
                 Debug.WriteDebug("Starting project change run");
                 var changedProjects = getListOfChangedProjects(message);
@@ -112,8 +112,8 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     _abortedBuilds.Clear();
                 markAllAsBuilt(list);
 				Debug.WriteDebug("Builds done");
-				_testRunners.ToList()
-					.ForEach(x => x.LoadAssemblies());
+				foreach (var runner in _testRunners)
+					runner.LoadAssemblies();
 				Debug.WriteDebug("Running tests");
                 testAll(list, runReport);
             }

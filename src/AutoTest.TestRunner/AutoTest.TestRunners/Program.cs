@@ -33,8 +33,9 @@ namespace AutoTest.TestRunners
 				int port;
 				if (int.TryParse(args[1], out port)) {
 					var client = new SocketClient();
-					client.Connect(new ConnectionOptions(args[0], port), (meh) => {});
-					client.Send(args[2]);
+					client.Connect(new ConnectionOptions(args[0], port), (message) => Console.WriteLine(message));
+					client.SendAndWait(args[2]);
+                    client.Disconnect();
 					Console.Write("");
 				}
 				return;
@@ -58,6 +59,7 @@ namespace AutoTest.TestRunners
             tryRunTests();
 
 			// We do this since NUnit threads some times keep staing in running mode even after finished.
+            Logger.Debug("Killing remaining threads and exiting");
             killHaltedThreads();
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
@@ -85,9 +87,11 @@ namespace AutoTest.TestRunners
         private static void tryRunTests()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledExceptionHandler;
+            Logger.Debug("Parsing test run options");
 			var options = parseOptions();
 			if (options != null) {
 				try {
+                    Logger.Debug("Preparing runners");
                     prepareRunners(options);
                 } catch (Exception ex) {
                     try {

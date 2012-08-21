@@ -240,6 +240,7 @@ namespace AutoTest.TestRunners.Shared
         private bool _startSuspended = false;
         private Func<bool> _abortWhen = null;
 		private string _logFile = null;
+        private Action<string> _logger = (s) => {};
         private Action<Platform, Version, Action<ProcessStartInfo, bool>> _processWrapper = null;
         private bool _compatabilityMode = false;
         private string _executable;
@@ -282,6 +283,12 @@ namespace AutoTest.TestRunners.Shared
             _compatabilityMode = true;
             return this;
         }
+
+        public TestProcessLauncher SetInternalLoggerTo(Action<string> logger)
+		{
+			_logger = logger;
+			return this;
+		}
 
 		public TestProcessLauncher LogTo(string fileName)
 		{
@@ -346,6 +353,7 @@ namespace AutoTest.TestRunners.Shared
             proc.StartInfo.UseShellExecute = !doNotshellExecute;
             proc.StartInfo.CreateNoWindow = true;
             proc.StartInfo.WorkingDirectory = Path.GetDirectoryName(_executable);
+            _logger("Running: " + _executable + " " + arguments + " in " + proc.StartInfo.WorkingDirectory);
             proc.Start();
 
 			while (!File.Exists(connectionFile) || File.ReadAllText(connectionFile).Length == 0)

@@ -10,7 +10,8 @@ namespace AutoTest.TestConsole
 		public static void Main (string[] args)
 		{
 			var assembly = Path.GetFullPath(args[0]);
-			var runner = new TestRunProcess();
+			var runner = new TestRunProcess()
+                .SetInternalLoggerTo((s) => Console.WriteLine(s));
 			var options = 
 				new RunOptions()
 					.AddTestRun(
@@ -20,6 +21,7 @@ namespace AutoTest.TestConsole
 							)
 					);
 			var process = runner.Prepare(options);
+            System.Threading.Thread.Sleep(1000);
 			process.CreateClient(assembly, "nunit", () => false).Load();
 			//var client = process.CreateClient(assembly, "nunit", () => false);
 			//client.Load();
