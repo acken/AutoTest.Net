@@ -12,7 +12,7 @@ if "%2" == "get-command-definitions" (
 	REM 	param|"Param description" end
 	REM end
 
-	ECHO "Script description"
+	ECHO Deploy projects to ReleaseBinaries^|debug^|"Build using debug configuration" end
 	GOTO end
 )
 
