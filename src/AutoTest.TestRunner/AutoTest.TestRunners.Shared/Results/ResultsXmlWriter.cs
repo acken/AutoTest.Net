@@ -76,7 +76,7 @@ namespace AutoTest.TestRunners.Shared.Results
                                     writer.WriteEndElement();
                                     writer.WriteStartElement("file");
                                     writer.WriteAttributeString("line", line.Line.ToString());
-                                    writer.WriteRaw(line.File);
+                                    writer.WriteString(line.File);
                                     writer.WriteEndElement();
                                     writer.WriteEndElement();
                                 }

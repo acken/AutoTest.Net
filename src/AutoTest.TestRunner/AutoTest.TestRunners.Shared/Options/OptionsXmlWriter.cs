@@ -31,7 +31,7 @@ namespace AutoTest.TestRunners.Shared.Options
                 {
                     writer.WriteStartElement("plugin");
                     writer.WriteAttributeString("type", plugin.Type);
-                    writer.WriteRaw(plugin.Assembly);
+                    writer.WriteString(plugin.Assembly);
                     writer.WriteEndElement();
                 }
                 foreach (var testRun in _options.TestRuns)
