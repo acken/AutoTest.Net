@@ -332,8 +332,6 @@ namespace AutoTest.TestRunners.Shared
 				arguments += " --logging=" + _logFile;
 			else
 				arguments += " --silent";
-            if (_feedback != null)
-                _feedback.ProcessStart(_executable + " " + arguments);
 
 			var connectionFile = Path.GetTempFileName();
 			arguments += " --connectioninfo=\"" + connectionFile + "\"";
@@ -349,6 +347,10 @@ namespace AutoTest.TestRunners.Shared
             	proc.StartInfo.FileName = _executable;
 				proc.StartInfo.Arguments = arguments;
 			}
+
+            if (_feedback != null)
+                _feedback.ProcessStart(proc.StartInfo.FileName + " " + proc.StartInfo.Arguments);
+
             proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             proc.StartInfo.UseShellExecute = !doNotshellExecute;
             proc.StartInfo.CreateNoWindow = true;

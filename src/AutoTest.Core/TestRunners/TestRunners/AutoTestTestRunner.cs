@@ -111,7 +111,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				if (!DebugLog.Debug.IsDisabled)
 					runner.LogTo(Path.GetTempFileName());
 				_session = runner.Prepare(_options);
-
+                
 				if (_plugins == null) {
 					_plugins = 
 						new PluginLocator().Locate()

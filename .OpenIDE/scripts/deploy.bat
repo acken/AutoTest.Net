@@ -16,7 +16,6 @@ if "%2" == "get-command-definitions" (
 	GOTO end
 )
 
-build.bat
-deploy.bat
+build.bat %~2 && deploy.bat
 
 :end

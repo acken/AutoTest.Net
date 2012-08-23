@@ -22,15 +22,18 @@ IF NOT EXIST %BINARYDIR% (
 	del %BINARYDIR%\* /Q
 )
 
-%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.TestRunner.sln /property:OutDir=%BINARYDIRx86%\;Configuration=Release /target:rebuild
+SET CONFIG=Release
+if '%1' == 'debug' SET CONFIG=Debug
+
+%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.TestRunner.sln /property:OutDir=%BINARYDIRx86%\;Configuration=%CONFIG% /target:rebuild
 
 if %ERRORLEVEL% NEQ 0 goto errors
 
-%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.NET.sln /property:OutDir=%BINARYDIR%\;Configuration=Release /target:rebuild
+%WINDIR%\Microsoft.NET\Framework\v3.5\MSBuild.exe AutoTest.NET.sln /property:OutDir=%BINARYDIR%\;Configuration=%CONFIG% /target:rebuild
 
 if %ERRORLEVEL% NEQ 0 goto errors
 
-%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe addins\VisualStudio\AutoTest.VSAddin.sln /property:OutDir=%BINARYDIR%\;Configuration=Release /target:rebuild
+%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe addins\VisualStudio\AutoTest.VSAddin.sln /property:OutDir=%BINARYDIR%\;Configuration=%CONFIG% /target:rebuild
 
 if %ERRORLEVEL% NEQ 0 goto errors
 
