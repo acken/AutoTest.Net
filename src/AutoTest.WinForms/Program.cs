@@ -55,6 +55,7 @@ namespace AutoTest.WinForms
 			}
 			catch (Exception exception)
 			{
+                Console.WriteLine(exception.ToString());
 				logException(exception);
 			}
 		}
