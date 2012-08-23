@@ -40,8 +40,8 @@ cp $CONSOLEDIR/AutoTest.TestConsole.* $RUNDIR
 
 cd $RUNDIR
 
-mono AutoTest.TestConsole.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll"
-exit
+rem mono AutoTest.TestConsole.exe $RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll"
+rem exit
 
 echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?><run><runner id=\"NUnit\"><test_assembly name=\""$RUNDIR"/TestAssembly/AutoTest.TestRunners.NUnit.Tests.dll\" /></runner></run>" > $RUNDIR/input.xml
 
