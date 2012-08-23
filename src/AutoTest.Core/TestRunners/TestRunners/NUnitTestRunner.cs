@@ -164,6 +164,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return arguments;
 		}
 
+        public void Shutdown()
+        {
+        }
+
         #endregion
 		
 		private string getTestsList(TestRunInfo runInfo)

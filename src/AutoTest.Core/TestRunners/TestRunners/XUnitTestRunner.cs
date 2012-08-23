@@ -95,6 +95,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			return results.ToArray();
         }
 
+        public void Shutdown()
+        {
+        }
+
         #endregion
 		
 		private string getFramework(TestRunInfo runInfo)

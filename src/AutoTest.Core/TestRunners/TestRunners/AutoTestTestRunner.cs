@@ -68,6 +68,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return false;
         }
 		
+        private string[] _asssemblies = new string[] {};
 		private TestSession _session;
 		private RunOptions _options;
 		private IAutoTestNetTestRunner[] _plugins = null;
@@ -82,17 +83,21 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				   Action<ProcessStartInfo, bool>> processWrapper,
 				   Func<bool> abortWhen)
 		{
+            _asssemblies = asms;
 			_currentWrapper = processWrapper;
 			_abortWhen = abortWhen;
-			
+            prepare();
+        }
+
+        private void prepare()
+		{
+            _currentStage = ATRunnerStages.NoStarted;
 			System.Threading.ThreadPool.QueueUserWorkItem((state) => {
 				DebugLog.Debug.WriteDebug("Preparing test runners");
 				if (_session != null)
 					_session.Kill();
-                _currentStage = ATRunnerStages.NoStarted;
-				var assemblies = (string[]) state;
 
-				_options = generateOptions(assemblies);
+				_options = generateOptions(_asssemblies);
 				if (_options == null)
 					return;
 				AutoTestRunnerFeedback feedback = null;
@@ -119,7 +124,7 @@ namespace AutoTest.Core.TestRunners.TestRunners
 				}
                 _currentStage = ATRunnerStages.Prepared;
 				DebugLog.Debug.WriteDebug("Done - Preparing test runners");
-			}, asms);
+			}, null);
 		}
 
 		public void LoadAssemblies()
@@ -127,14 +132,16 @@ namespace AutoTest.Core.TestRunners.TestRunners
 			while (_currentStage != ATRunnerStages.Prepared)
                 System.Threading.Thread.Sleep(5);
 
-			DebugLog.Debug.WriteDebug("Loading assemblies for test runner");
-			foreach (var instance in _session.Instances)
-            {
-				DebugLog.Debug.WriteDebug("Loading runner {1} for {0}", instance.Assembly, instance.Runner);
-				_session.CreateClient(instance, _abortWhen).Load();
-			}
-            _currentStage = ATRunnerStages.AssembliesLoaded;
-			DebugLog.Debug.WriteDebug("Done - Loading assemblies for test runner");
+            System.Threading.ThreadPool.QueueUserWorkItem((state) => {
+			    DebugLog.Debug.WriteDebug("Loading assemblies for test runner");
+			    foreach (var instance in _session.Instances)
+                {
+				    DebugLog.Debug.WriteDebug("Loading runner {1} for {0}", instance.Assembly, instance.Runner);
+				    _session.CreateClient(instance, _abortWhen).Load();
+			    }
+                _currentStage = ATRunnerStages.AssembliesLoaded;
+			    DebugLog.Debug.WriteDebug("Done - Loading assemblies for test runner");
+            }, null);
 		}
 
         public TestRunResults[] RunTests(TestRunInfo[] runInfos)
@@ -316,6 +323,12 @@ namespace AutoTest.Core.TestRunners.TestRunners
                 runner.AddAssembly(assembly);
             }
             return runner;
+        }
+
+        public void Shutdown()
+        {
+            if (_session != null)
+                _session.Kill();
         }
     }
 

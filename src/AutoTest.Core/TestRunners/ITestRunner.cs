@@ -18,5 +18,6 @@ namespace AutoTest.Core.TestRunners
 				   Func<bool> abortWhen);
 		void LoadAssemblies();
         TestRunResults[] RunTests(TestRunInfo[] runInfos);
+        void Shutdown();
     }
 }

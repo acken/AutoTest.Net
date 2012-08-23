@@ -106,6 +106,10 @@ namespace AutoTest.Core.TestRunners.TestRunners
             return string.Format(" /runconfig:\"{0}\"", testRunConfig);
         }
 
+        public void Shutdown()
+        {
+        }
+
         #endregion
 		
 		private string getTestsList(TestRunInfo runInfo)

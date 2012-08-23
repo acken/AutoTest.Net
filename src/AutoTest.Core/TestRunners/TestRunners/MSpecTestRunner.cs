@@ -189,5 +189,9 @@ namespace AutoTest.Core.TestRunners.TestRunners
                     .SelectMany(x => x);
             }
         }
+
+        public void Shutdown()
+        {
+        }
     }
 }

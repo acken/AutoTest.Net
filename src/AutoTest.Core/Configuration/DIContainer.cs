@@ -179,6 +179,8 @@ namespace AutoTest.Core.Configuration
 
         public void Dispose()
         {
+            _services.LocateAll<ITestRunner>()
+                .ToList().ForEach(x => x.Shutdown());
             _services.UnregisterAll();
         }
 
