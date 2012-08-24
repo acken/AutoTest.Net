@@ -214,7 +214,7 @@ namespace AutoTest.Test.Core.FileSystem
 		[Test]
 		public void Should_glob_case_sensitive_on_unix()
 		{
-            if (!OS.IsPosix)
+            if (!OS.IsUnix)
                 return;
 			_configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
 			_configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });
@@ -222,9 +222,9 @@ namespace AutoTest.Test.Core.FileSystem
 		}
 
         [Test]
-        public void Should_not_glob_case_sensitive_on_non_unix_platforms()
+        public void Should_glob_case_insensitive_on_non_unix_platforms()
         {
-            if (!OS.IsPosix)
+            if (OS.IsUnix)
                 return;
             _configuration.Stub(c => c.ShouldUseBinaryChangeIgnoreLists).Return(false);
             _configuration.Stub(c => c.WatchIgnoreList).Return(new string[] { "myFolder/*" });

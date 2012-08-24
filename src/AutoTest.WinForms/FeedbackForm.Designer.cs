@@ -1,4 +1,5 @@
-﻿namespace AutoTest.WinForms
+﻿using System.Windows.Forms;
+namespace AutoTest.WinForms
 {
     partial class FeedbackForm
     {
