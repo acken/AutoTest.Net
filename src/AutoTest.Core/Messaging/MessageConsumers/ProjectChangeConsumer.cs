@@ -93,14 +93,18 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 				_testWrapper = getWrapper();
 				var allAssemblies = _cache.GetAll<Project>()
 					.Select(x => x.GetAssembly(_configuration.CustomOutputPath)).ToArray();
-				foreach (var runner in _testRunners)
-					runner.Prepare(allAssemblies, _testWrapper, () => { return _exit; });
+
+                // Prebuild action for build session (reset all test runners if assemblies are being built)
+				Action preBuildAction = () => {
+                    foreach (var runner in _testRunners)
+					    runner.Prepare(allAssemblies, _testWrapper, () => { return _exit; });
+                };
 
                 Debug.WriteDebug("Starting project change run");
                 var changedProjects = getListOfChangedProjects(message);
                 var list = getPrioritizedList(changedProjects);
                 Debug.WriteDebug("Building projects");
-                if (!_buildRunner.Build(changedProjects, list, runReport, () => { return _exit; }))
+                if (!_buildRunner.Build(changedProjects, list, runReport, preBuildAction, () => { return _exit; }))
                     return runReport;
                 if (_exit)
                 {

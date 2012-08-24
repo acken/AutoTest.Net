@@ -19,7 +19,7 @@ namespace AutoTest.Core.BuildRunners
 {
     public interface IBuildSessionRunner
     {
-        bool Build(string[] originalProjects, RunInfo[] projectList, RunReport runReport, Func<bool> exit);
+        bool Build(string[] originalProjects, RunInfo[] projectList, RunReport runReport, Action preBuildAction, Func<bool> exit);
     }
 
     public class BuildSessionRunner : IBuildSessionRunner
@@ -46,12 +46,14 @@ namespace AutoTest.Core.BuildRunners
             _preBuildProcessors = buildPreProcessors;
         }
 
-        public bool Build(string[] originalProjects, RunInfo[] projectList, RunReport runReport, Func<bool> exit)
+        public bool Build(string[] originalProjects, RunInfo[] projectList, RunReport runReport, Action preBuildAction, Func<bool> exit)
         {
             _exit = exit;
             projectList = preProcessBuildRun(projectList);
             if (projectList.Where(x => x.ShouldBeBuilt).Select(x => x).Count() == 0)
                 return true;
+            Debug.WriteDebug("Running pre build action");
+            preBuildAction();
 
             Debug.WriteInfo("Running builds");
             BuildRunResults results = null;
