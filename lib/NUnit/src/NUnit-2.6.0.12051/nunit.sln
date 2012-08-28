@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A65042E1-D8BC-48DD-8DE1-F0991F07EA77}"
 	ProjectSection(SolutionItems) = preProject
 		src\nunit.snk = src\nunit.snk
@@ -16,35 +16,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{A785
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{A2FF9F1B-1854-479A-859C-6ECEBF045E4C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientUtilities", "ClientUtilities", "{D448BA20-BA70-4F70-AF53-4C0E6C1E97E7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleRunner", "ConsoleRunner", "{1DBAF726-8009-41CC-B82A-4EFE94CBEEFC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiRunner", "GuiRunner", "{77D10207-CB02-4C3A-8734-5A5173E3C506}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitCore", "NUnitCore", "{AEAED2BD-F22D-42C8-9047-F293BEF70EAB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiComponents", "GuiComponents", "{168F8C38-129C-454A-B112-F456BC7F4FE4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiException", "GuiException", "{35A92AA3-A1E6-426E-8D96-322F3EBF1C8D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6142B985-EA14-4DE0-884F-E62D89949E1D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitMocks", "NUnitMocks", "{7740410A-54B5-4334-8DE3-6D6F616BD6A5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PNUnit", "PNUnit", "{979724B8-6FAA-400F-B40D-EB653A815C87}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitTestServer", "NUnitTestServer", "{D029F8FD-84E3-4AD3-8F1B-CCA0C856E659}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectEditor", "ProjectEditor", "{992367F7-9154-4424-B55E-3EF8673A2A36}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests", "src\NUnitFramework\tests\nunit.framework.tests.csproj", "{8C326431-AE57-4645-ACC1-A90A0B425129}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.dll", "src\NUnitFramework\framework\nunit.framework.dll.csproj", "{83DD7E12-A705-4DBA-9D71-09C8973D9382}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientUtilities", "ClientUtilities", "{D448BA20-BA70-4F70-AF53-4C0E6C1E97E7}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.util.tests", "src\ClientUtilities\tests\nunit.util.tests.csproj", "{74EF7165-117E-48ED-98EA-068EAE438E53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.util.dll", "src\ClientUtilities\util\nunit.util.dll.csproj", "{61CE9CE5-943E-44D4-A381-814DC1406767}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleRunner", "ConsoleRunner", "{1DBAF726-8009-41CC-B82A-4EFE94CBEEFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "src\ConsoleRunner\tests\nunit-console.tests.csproj", "{8597D2C6-804D-48CB-BFC7-ED2404D389B0}"
 EndProject
@@ -52,11 +34,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "src\Consol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.exe", "src\ConsoleRunner\nunit-console-exe\nunit-console.exe.csproj", "{53BF8787-CB9C-4BB8-AFB4-605DD3A5CA0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiRunner", "GuiRunner", "{77D10207-CB02-4C3A-8734-5A5173E3C506}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-gui", "src\GuiRunner\nunit-gui\nunit-gui.csproj", "{3FF340D5-D3B4-4DF0-BAF1-98B3C00B6148}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-gui.tests", "src\GuiRunner\tests\nunit-gui.tests.csproj", "{AAD27267-DE1F-4F61-A1FB-D1680A5B8001}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-gui.exe", "src\GuiRunner\nunit-gui-exe\nunit-gui.exe.csproj", "{AAB186A4-FA3D-404D-AD78-7EB5BB861655}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitCore", "NUnitCore", "{AEAED2BD-F22D-42C8-9047-F293BEF70EAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.core.tests", "src\NUnitCore\tests\nunit.core.tests.csproj", "{DD758D21-E5D5-4D40-9450-5F65A32F359C}"
 EndProject
@@ -64,13 +50,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.core.interfaces.dll",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.core.dll", "src\NUnitCore\core\nunit.core.dll.csproj", "{EBD43A7F-AFCA-4281-BB53-5CDD91F966A3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiComponents", "GuiComponents", "{168F8C38-129C-454A-B112-F456BC7F4FE4}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.uikit.tests", "src\GuiComponents\tests\nunit.uikit.tests.csproj", "{63EC3999-FA6B-4C5B-8805-5A88AF4CBD7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.uikit.dll", "src\GuiComponents\UiKit\nunit.uikit.dll.csproj", "{27531BBF-183D-4C3A-935B-D840B9F1A3A4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GuiException", "GuiException", "{35A92AA3-A1E6-426E-8D96-322F3EBF1C8D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.uiexception.tests", "src\GuiException\tests\nunit.uiexception.tests.csproj", "{092486D0-6AB9-4134-932F-0FDA10704455}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.uiexception.dll", "src\GuiException\UiException\nunit.uiexception.dll.csproj", "{3E87A106-EB20-4147-84C8-95B0BB43A1D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6142B985-EA14-4DE0-884F-E62D89949E1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "src\tests\mock-assembly\mock-assembly.csproj", "{2E368281-3BA8-4050-B05E-0E0E43F8F446}"
 EndProject
@@ -80,9 +72,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-utilities", "src\tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-assembly", "src\tests\test-assembly\test-assembly.csproj", "{1960CAC4-9A82-47C5-A9B3-55BC37572C3C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitMocks", "NUnitMocks", "{7740410A-54B5-4334-8DE3-6D6F616BD6A5}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.mocks.tests", "src\NUnitMocks\tests\nunit.mocks.tests.csproj", "{8667C588-1A05-4773-A9E8-272EB302B8AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.mocks", "src\NUnitMocks\mocks\nunit.mocks.csproj", "{EEE7C98B-23E6-472D-9036-C2D53B0DFE7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PNUnit", "PNUnit", "{979724B8-6FAA-400F-B40D-EB653A815C87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pnunit-agent", "src\PNUnit\agent\pnunit-agent.csproj", "{621C27DA-CC29-4663-9FE4-BF5A67970C18}"
 EndProject
@@ -92,7 +88,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pnunit.tests", "src\PNUnit\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pnunit.framework", "src\PNUnit\pnunit.framework\pnunit.framework.csproj", "{5261ABA1-98E6-4603-A4F0-59CAC307AC68}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitTestServer", "NUnitTestServer", "{D029F8FD-84E3-4AD3-8F1B-CCA0C856E659}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent.exe", "src\NUnitTestServer\nunit-agent-exe\nunit-agent.exe.csproj", "{3E469CD9-FED2-4955-AE4C-669A74CA6767}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectEditor", "ProjectEditor", "{992367F7-9154-4424-B55E-3EF8673A2A36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-editor", "src\ProjectEditor\editor\nunit-editor.csproj", "{ED57DCEC-3C16-4A90-BD3C-4D5BE5AD70FB}"
 EndProject
