@@ -34,7 +34,7 @@ namespace AutoTest.TestRunners
         {
             if (startLogger)
                 Logger.SetLogger(new ConsoleLogger());
-            Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
+            //Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
             _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }

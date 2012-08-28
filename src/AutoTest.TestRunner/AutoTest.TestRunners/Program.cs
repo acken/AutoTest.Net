@@ -38,9 +38,9 @@ namespace AutoTest.TestRunners
             _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
-            //if (_arguments.Logging)
-            //    Logger.SetLogger(new ConsoleLogger());
-            Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
+            if (_arguments.Logging)
+                Logger.SetLogger(new ConsoleLogger());
+            //Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
             writeHeader();
             if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
             {

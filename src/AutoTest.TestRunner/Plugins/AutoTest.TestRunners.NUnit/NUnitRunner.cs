@@ -63,7 +63,8 @@ namespace AutoTest.TestRunners.NUnit
             TestResult result = null;
             try
             {
-                result = testRunner.Run(harvester, testFilter, false, LoggingThreshold.Off);
+                //result = testRunner.Run(harvester, testFilter, false, LoggingThreshold.Off);
+                result = testRunner.Run(harvester, testFilter);
             }
             catch (Exception ex)
             {
