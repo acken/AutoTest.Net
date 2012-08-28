@@ -21,10 +21,20 @@ namespace AutoTest.TestRunners
         private List<string> _directories = new List<string>();
         private Dictionary<string, string> _assemblyCache = new Dictionary<string, string>();
 
+        private static string getPath()
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var atDir = Path.Combine(appData, "AutoTest.Net.Runner");
+            if (!Directory.Exists(atDir))
+                Directory.CreateDirectory(atDir);
+            return atDir;
+        }
+
         public void SetupResolver(bool startLogger)
         {
             if (startLogger)
                 Logger.SetLogger(new ConsoleLogger());
+            Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
             _directories.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
@@ -58,7 +68,7 @@ namespace AutoTest.TestRunners
                     resultSet = runner.Run(settings);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 throw;
             }

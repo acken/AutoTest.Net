@@ -23,14 +23,24 @@ namespace AutoTest.TestRunners
         private static int _mainThreadID = 0;
         private static List<Thread> _haltedThreads = new List<Thread>();
         
+        private static string getPath()
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var atDir = Path.Combine(appData, "AutoTest.Net.Runner");
+            if (!Directory.Exists(atDir))
+                Directory.CreateDirectory(atDir);
+            return atDir;
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
             _mainThreadID = Thread.CurrentThread.ManagedThreadId;
             var parser = new ArgumentParser(args);
             _arguments = parser.Parse();
-            if (_arguments.Logging)
-                Logger.SetLogger(new ConsoleLogger());
+            //if (_arguments.Logging)
+            //    Logger.SetLogger(new ConsoleLogger());
+            Logger.SetLogger(new FileLogger(true, Path.Combine(getPath(), "runner.log." + DateTime.Now.Ticks.ToString())));
             writeHeader();
             if (!File.Exists(_arguments.InputFile) || _arguments.OutputFile == null)
             {

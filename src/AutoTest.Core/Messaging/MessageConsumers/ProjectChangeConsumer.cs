@@ -139,8 +139,11 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
+            int a = 3;
+            Debug.WriteDebug("Running test preprosessor");
             var preProcessed = preProcessTestRun(projectList);
             preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());
+            Debug.WriteDebug("Done - Running test preprosessor");
             runPreProcessedTestRun(preProcessed, runReport);
 		}
 
@@ -172,6 +175,7 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                     {
                         _abortedTestRuns.Clear();
                         _abortedTestRuns.AddRange(preProcessed.RunInfos);
+                        Debug.WriteDebug("Aborting test run");
                         return;
                     }
 					
@@ -189,14 +193,17 @@ namespace AutoTest.Core.Messaging.MessageConsumers
                         {
                             _abortedTestRuns.Clear();
                             _abortedTestRuns.AddRange(preProcessed.RunInfos);
+                            Debug.WriteDebug("Abort test rerun");
                             return;
                         }
                     }
 				}
 			}
+            Debug.WriteDebug("Test run completed");
             if (_exit)
                 return;
             _abortedTestRuns.Clear();
+            Debug.WriteDebug("Test run completed and cleaned up");
 		}
 
         private PreProcessedTesRuns preProcessTestRun(RunInfo[] runInfos)

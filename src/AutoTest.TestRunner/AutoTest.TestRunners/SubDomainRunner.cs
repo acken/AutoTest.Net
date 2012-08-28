@@ -71,6 +71,7 @@ namespace AutoTest.TestRunners
             }
             catch (Exception ex)
             {
+                Logger.Write(ex);
                 if (!_compatibilityMode)
                     Program.AddResults(ErrorHandler.GetError("Any", ex));
             }
