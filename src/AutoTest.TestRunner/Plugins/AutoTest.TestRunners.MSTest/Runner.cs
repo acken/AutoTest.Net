@@ -38,11 +38,18 @@ namespace AutoTest.TestRunners.MSTest
         {
             using (var locator = _reflectionProviderFactory(assembly))
             {
+                var parentType = locator.GetParentType(member);
+                if (parentType == null)
+                    return false;
+                var parent = locator.LocateClass(parentType);
+                if (parent == null)
+                    return false;
                 var method = locator.LocateMethod(member);
                 if (method == null)
                     return false;
                 return method.Attributes.Contains("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute") &&
-                    !method.IsAbstract;
+                    !method.IsAbstract &&
+                    !parent.IsAbstract;
             }
         }
 

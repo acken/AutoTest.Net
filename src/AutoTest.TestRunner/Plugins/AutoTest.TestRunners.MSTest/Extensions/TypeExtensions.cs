@@ -11,6 +11,8 @@ namespace AutoTest.TestRunners.MSTest.Extensions
     {
         public static bool IsTestFixture(this Type type)
         {
+            if (type.IsAbstract)
+                return false;
             if (type.GetCustomAttributes(true).Any(x => x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.IgnoreAttribute")))
                 return false;
             return type.GetCustomAttributes(true).Any(x => x.GetType().FullName.Equals("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute"));
@@ -18,11 +20,15 @@ namespace AutoTest.TestRunners.MSTest.Extensions
 
         public static IEnumerable<MethodInfo> GetTests(this Type type, string[] ignoreCategories)
         {
+            if (type.IsAbstract)
+                return new MethodInfo[] {};
             return type.GetMethods().Where(method => method.IsTest(ignoreCategories)).Select(test => test);
         }
 
         public static IEnumerable<MethodInfo> GetTestsMatching(this Type type, RunSettings settings)
         {
+            if (type.IsAbstract)
+                return new MethodInfo[] {};
             return type.GetMethods().Where(method => method.IsTest(settings.IgnoreCategories) && shouldRun(getTestName(type, method), settings)).Select(test => test);
         }
 

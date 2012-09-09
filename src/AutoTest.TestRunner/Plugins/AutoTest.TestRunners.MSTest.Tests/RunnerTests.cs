@@ -17,7 +17,7 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var settings = new RunSettings(new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll")), new string[] {}, null);
             var runner = new Runner();
             var result = runner.Run(settings);
-            Assert.That(result.Count(), Is.EqualTo(10));
+            Assert.That(result.Count(), Is.EqualTo(11));
         }
 
         [Test]
@@ -126,6 +126,54 @@ namespace AutoTest.TestRunners.MSTest.Tests
             var runner = new Runner();
             var result = runner.Run(settings);
             Assert.That(result.Count(), Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Should_not_find_tests_on_abstract_classes()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var runner = new Runner();
+            Assert.That(runner.ContainsTestsFor(assemblyPath, "AutoTest.TestRunners.MSTest.Tests.TestResource.AbstractClass"), Is.False);
+        }
+
+        [Test]
+        public void Should_not_detect_test_on_abstract_classes()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var runner = new Runner();
+            Assert.That(runner.IsTest(assemblyPath, "AutoTest.TestRunners.MSTest.Tests.TestResource.AbstractClass.Test_on_abstract_class"), Is.False);
+        }
+
+        [Test]
+        public void Should_not_run_tests_on_abstract_classes()
+        {
+            var assembly = new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll"));
+            assembly.AddMember("AutoTest.TestRunners.MSTest.Tests.TestResource.AbstractClass");
+            var settings = new RunSettings(assembly, new string[] {}, null);
+            
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_find_tests_inherited_from_abstract_classes()
+        {
+            var assemblyPath = Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll");
+            var runner = new Runner();
+            Assert.That(runner.ContainsTestsFor(assemblyPath, "AutoTest.TestRunners.MSTest.Tests.TestResource.InheritingFromAbstractClass"), Is.True);
+        }
+
+        [Test]
+        public void Should_append_tests_from_abstract_class()
+        {
+            var assembly = new AssemblyOptions(Path.GetFullPath(@"AutoTest.TestRunners.MSTest.Tests.TestResource.dll"));
+            assembly.AddMember("AutoTest.TestRunners.MSTest.Tests.TestResource.InheritingFromAbstractClass");
+            var settings = new RunSettings(assembly, new string[] {}, null);
+            
+            var runner = new Runner();
+            var result = runner.Run(settings);
+            Assert.That(result.Count(), Is.EqualTo(1));
         }
     }
 }
