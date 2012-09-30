@@ -5,9 +5,9 @@ and desktop application for the .NET and Mono frameworks.
 
 It improves test-driven development (TDD) by automatically compiling and running testing in
 the background.  It determines which tests are affected from the code changes since the last
-build and only runs those tests to provide near real-time feedback faster than running all tests.
-Automatically generated graphs also allow you to visualize the relation between methods and
-the tests that call them.  Annotations alongside your code allow you to immediately see the
+build and only runs those tests to provide near real-time feedback faster than running all
+tests.Automatically generated graphs also allow you to visualize the relation between methods
+and the tests that call them.  Annotations alongside your code allow you to immediately see the
 risks taken when changing pieces of code.
 
 Supported Visual Studio versions:
@@ -44,43 +44,44 @@ File system watchers:
 
 Getting started
 
-Download the windows installer or binaries from http://continuoustests.com or clone or fork and build
-from the source code repository https://github.com/continuoustests/AutoTest.Net.
+Download the windows installer or binaries from http://continuoustests.com or clone or fork
+and build from the source code repository https://github.com/continuoustests/AutoTest.Net.
 
 It's recommended to uninstall any previous versions of AutoTest.Net before installing ContinuousTests.
 
-The Windows installer will install the Visual Studio Add-in, console application,
-and desktop application.  Once installed, a dialog will be displayed the next time you open a
-solution file to allow you to configure the settings for the solution.  Refer to the ContinuousTests
-menu item in Visual Studio to change configuration settings, perform actions, display output windows,
-and get additional help.
+The Windows installer will install the Visual Studio Add-in, console application, and desktop
+application.  Once installed, a dialog will be displayed the next time you open a solution file to
+allow you to configure the settings for the solution.  Refer to the ContinuousTests menu item in
+Visual Studio to change configuration settings, perform actions, display output windows, and get
+additional help.
 
-Once configured, AutoTest.NET will detect any changes to files after being saved in your project and
-automatically start to build and run tests.  If assembly tracking is configured, AutoTest.NET will be
-triggered from building projects in Visual Studio for example.
+Once configured, AutoTest.NET will detect any changes to files after being saved in your
+project and automatically start to build and run tests.  If assembly tracking is configured,
+AutoTest.NET will be triggered from building projects in Visual Studio for example.
 
-If AutoTest.NET keeps building your solution in an infinite loop, it is probably detecting changes
-from files outside the typical output path and those paths need to be ignored in the configuration
-settings.  The debug log will contain the files that AutoTest.NET detected have changed.
+If AutoTest.NET keeps building your solution in an infinite loop, it is probably detecting
+changes from files outside the typical output path and those paths need to be ignored in the
+configuration settings.  The debug log will contain the files that AutoTest.NET detected have
+changed.
 
 NUnit and XUnit are configured out of the box with AutoTest.NET’s internal runner.
 
-See the instructional videos on http://continuoustests.com for working with ContinuousTests inside
-Visual Studio.
+See the instructional videos on http://continuoustests.com for working with ContinuousTests
+inside Visual Studio.
 
 The console and desktop applications can be used to run continuous tests outside of Visual Studio.
 
-A watch directory must be specified which is the root directory from where AutoTest.NET recursively
-watches for file/assembly changes.
+A watch directory must be specified which is the root directory from where AutoTest.NET
+recursively watches for file/assembly changes.
 
-To specify a watch directory on startup you can pass the path to the directory you want to watch as the
-first command line parameter to AutoTest.Console.exe and AutoTest.WinForms.exe.
+To specify a watch directory on startup you can pass the path to the directory you want to
+watch as the first command line parameter to AutoTest.Console.exe and AutoTest.WinForms.exe.
 
 
 Configuration Files
 
-There are two types of configuration files, global and project.  Project configuration settings 
-will be merged with the global configuration.
+There are two types of configuration files, global and project.  Project configuration
+settings will be merged with the global configuration.
 
 The global configuration file can be found here:
 %LOCALAPPDATA%\MightyMoose\AutoTest.config
@@ -88,7 +89,8 @@ The global configuration file can be found here:
 Solution configuration files are specific to each solution file and can be found here:
 %LOCALAPPDATA%\MightyMoose\storage\Configuration\%SolutionName%_%hash%\AutoTest.config
 
-An AutoTest.config can be placed in the root of the watch directory when using the console or desktop application.
+An AutoTest.config can be placed in the root of the watch directory when using the console or
+desktop application.
 
 
 AutoTest.config template:
@@ -119,16 +121,18 @@ A project specific configuration file can look something like this:
 
 Notifications
 
-notify-send can be installed by running "sudo apt-get install notify-osd".  The Growl application
-can be configured with the growlnotify configuration setting.  AutoTest.NET will automatically
-send notifications when test runs have started and finished by default, but settings are configurable.
+notify-send can be installed by running "sudo apt-get install notify-osd".  The Growl
+application can be configured with the growlnotify configuration setting.  AutoTest.NET will
+automatically send notifications when test runs have started and finished by default, but
+settings are configurable.
 
 
 Ignore File Configuration
 
-The IgnoreFile option can be set to an absolute path or a path relative to the watch directory of the
-file where paths AutoTest.NET should ignore when detecting changes are configured.  This file uses
-.gitignore syntax and existing .gitignore files are compatible with AutoTest.NET.
+The IgnoreFile option can be set to an absolute path or a path relative to the watch
+directory of the file where paths AutoTest.NET should ignore when detecting changes are
+configured.  This file uses .gitignore syntax and existing .gitignore files are compatible
+with AutoTest.NET.
 
 An example ignore file:
 
@@ -156,8 +160,9 @@ Special Thanks:
 Thanks to Philip Laureano for letting us embed the Linfu Dynamic Proxy source into the
 MSpec runner enabling us to support all MSpec versions out of the box.
 
-AutoTest.NET is based off of autotest which is a popular Ruby tool for running your unit tests as soon as your save your files.
-This project was originally started by James Avery at http://code.google.com/p/autotestnet/
+AutoTest.NET is based off of autotest which is a popular Ruby tool for running your unit
+tests as soon as your save your files. This project was originally started by James Avery
+at http://code.google.com/p/autotestnet/
 
 
 Wiki:
