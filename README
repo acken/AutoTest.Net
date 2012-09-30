@@ -103,7 +103,7 @@ A project specific configuration file can look something like this:
     <BuildExecutable override="exclude"></BuildExecutable>
 
     <!-- Merge these changes in with what's already in the base configuration -->
-    <!-- The overide attrubte will be read for the first occurrence in the setting family --> 
+    <!-- The override attribute will be read for the first occurrence in the setting family --> 
     <NUnitTestRunner framework="v3.5" override="merge">NewTestRunner for fw 3.5</NUnitTestRunner>
     <NUnitTestRunner framework="v4.0">NewTestRunner for fw 4.0</NUnitTestRunner>
     

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
-  <!-- You have the posibility to specify multiple build executables based on framework version or -->
+  <!-- You have the possibility to specify multiple build executables based on framework version or -->
   <!-- product version from within the csproj/vbproj file using the framework attribute. -->
   <!-- If you remove all configured build executables AutoTest.NET will start tracking assembly changes -->
   <!-- instead and you can use Visual Studio or equal to build and AutoTest.NET will -->
@@ -37,30 +37,30 @@
   <!-- Determines how many projects msbuild will run in parallel (Optional) -->
   <!-- <MSBuildParallelBuildCount>2</MSBuildParallelBuildCount> -->
   
-  <!-- To change the default resycle size of the logs (1024000 = 1M) Set the number of bytes you -->
+  <!-- To change the default recycle size of the logs (1024000 = 1M) Set the number of bytes you -->
   <!-- want the logs to roll at here -->
   <!--<LogRecycleSize>1024000000</LogRecycleSize>-->
   
-  <!-- Rerun failed tests before doing a full testrun (Optional) -->
+  <!-- Rerun failed tests before doing a full test run (Optional) -->
   <!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
   
   <!-- Directory to watch (Optional) -->
   <!-- You can have zero or multiple watch directories specified in the config file. -->
-  <!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
+  <!-- When AutoTest.NET starts it will let you pick from the specified directories -->
   <!-- or you can choose to pass a directory when executing the application. Usually -->
   <!-- the solution root folder -->
   <!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
   
-  <!-- Wether to use AutoTest.NET's own testrunner (Optional)-->
+  <!-- Whether to use AutoTest.NET's own test runner (Optional)-->
   <!--<UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
   
   <!-- Testing test assemblies in parallel-->
   <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
   
-  <!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
+  <!-- NUnit test runner. Specifies the path to the nunit console test runner (Optional) -->
   <!-- Default NUnit runner is AutoTest.TestRunner. This is an optional console runner -->
   <!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
-  <!-- You have the posibility to specify multiple build executables based on framework version -->
+  <!-- You have the possibility to specify multiple build executables based on framework version -->
   <!-- from within the csproj/vbproj file using the framework attribute. -->
   <!-- (framework only, not framework and product version like with the build exe) -->
   <!--<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>-->
@@ -125,7 +125,7 @@
   <!--<TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode>-->
   
   <!-- Adjust watch path to nearest common path (Optional) -->
-  <!-- Wether to adjust watch path to the lowest common path used by all projects -->
+  <!-- Whether to adjust watch path to the lowest common path used by all projects -->
   <!-- included in a solution -->
   <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
 </configuration>
