@@ -6,7 +6,7 @@ and desktop application for the .NET and Mono frameworks.
 It improves test-driven development (TDD) by automatically compiling and running testing in
 the background.  It determines which tests are affected from the code changes since the last
 build and only runs those tests to provide near real-time feedback faster than running all tests.
-Automatically generated graphs also allow you to visualization the relation between methods and
+Automatically generated graphs also allow you to visualize the relation between methods and
 the tests that call them.  Annotations alongside your code allow you to immediately see the
 risks taken when changing pieces of code.
 
@@ -50,7 +50,7 @@ from the source code repository https://github.com/continuoustests/AutoTest.Net.
 It's recommended to uninstall any previous versions of AutoTest.Net before installing ContinuousTests.
 
 The Windows installer will install the Visual Studio Add-in, console application,
-and desktop application.  Once installed, a dialog will will be displayed the next time you open a
+and desktop application.  Once installed, a dialog will be displayed the next time you open a
 solution file to allow you to configure the settings for the solution.  Refer to the ContinuousTests
 menu item in Visual Studio to change configuration settings, perform actions, display output windows,
 and get additional help.
@@ -93,137 +93,7 @@ An AutoTest.config can be placed in the root of the watch directory when using t
 
 AutoTest.config template:
 
-<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
-	<!-- You have the posibility to specify multiple build executables based on framework version or -->
-	<!-- product version from within the csproj/vbproj file using the framework attribute. -->
-	<!-- If you remove all configured build executables AutoTest.NET will start tracking assembly changes -->
-	<!-- instead and you can use Visual Studio or equal to build and AutoTest.NET will -->
-	<!-- run all tests for any built assembly. -->
-	<BuildExecutable parameters="">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
-  
-	<!-- If set it will always use msbuild to build solution file instead of only changed projects -->
-	<!-- when AutoTest.NET is set to watch a solution file -->
-	<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
-	
-	<!-- Machine.Specifications test runner. (Optional) -->
-	<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>
-	
-	<!-- Code editor configuration. You can specify a code editor to open files in. (Optional) -->
-	<!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
-	<!-- the line to goto. These will be filled in by the application when executing -->
-	<!-- the statement -->
-	<CodeEditor>
-	    <Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
-	    <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
-	</CodeEditor>
-	
-	<!-- When set this will enable logging to the debug.log file in the root directory -->
-	<Debugging>false</Debugging>
-
-    <!-- Additional parameters to msbuild command line (Optional) -->
-    <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
-  
-    <!-- Determines how many projects msbuild will run in parallel (Optional) -->
-    <!-- <MSBuildParallelBuildCount>2</MSBuildParallelBuildCount> -->
-
-    <!-- To change the default resycle size of the logs (1024000 = 1M) Set the number of bytes you -->
-    <!-- want the logs to roll at here -->
-    <!--<LogRecycleSize>1024000000</LogRecycleSize>-->
-	
-	<!-- Rerun failed tests before doing a full testrun (Optional) -->
-	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
-	
-	<!-- Directory to watch (Optional) -->
-	<!-- You can have zero or multiple watch directories specified in the config file. -->
-	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
-	<!-- or you can choose to pass a directory when executing the application. Usually -->
-	<!-- the solution root folder -->
-	<!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
-	
-	<!-- Wether to use AutoTest.NET's own testrunner (Optional)-->
-	<!--<UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
-
-    <!-- Testing test assemblies in parallel-->
-    <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
-	
-	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
-	<!-- Default NUnit runner is AutoTest.TestRunner. This is an optional console runner -->
-	<!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
-	<!-- You have the posibility to specify multiple build executables based on framework version -->
-	<!-- from within the csproj/vbproj file using the framework attribute. -->
-	<!-- (framework only, not framework and product version like with the build exe) -->
-	<!--<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>-->
-	
-	<!-- XUnit test runner. (Optional) -->
-	<!-- Default XUnit runner is AutoTest.TestRunner. This is an optional console runner -->
-	<!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
-	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<!--<XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>-->
-	
-	<!-- MSTest test runner. (Optional) -->
-	<!-- Has support for the framework attribute like NUnit test runner config -->
-	<!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
-	
-	<!-- Wildcard expressions for excluding test assemblies (Optional)-->
-	<!--<ShouldIgnoreTestAssembly>-->
-	<!--	<Assembly>*whatever.dll</Assembly>-->
-	<!--</ShouldIgnoreTestAssembly>-->
-	
-	<!-- Test categories to ignore. Only supported by NUnit (Optional) -->
-	<!--<ShouldIgnoreTestCategories>-->
-	<!--	<Category>MyIgnoreCategory</Category>-->
-	<!--</ShouldIgnoreTestCategories>-->
-	
-	<!-- Notification provider (Optional) -->
-	<!-- The supported providers right now are notify-send on linux and growl on -->
-	<!-- windows and Mac. notify-send will configure automatically while growl -->
-	<!-- might need some configuration. You can specify when to push notifications-->
-	<!-- below. -->
-	<!--<notify_on_run_started>true</notify_on_run_started>-->
-	<!--<notify_on_run_completed>true</notify_on_run_completed>-->
-	
-	<!-- Growl notify path (Optional) -->
-	<!-- If growl doesn't work out of the box use the setting below to set the path -->
-	<!-- to growlnotify(.exe) -->
-	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
-	
-	<!-- To specify a set of files\directories that autotest should not track changes (Optional) -->
-	<!-- for create a file containing those exceptions. All patterns should use / -->
-	<!-- instead of \ It works the same way as the .gitignore file in the git source -->
-	<!-- control system. (bin/Debug, bin/Release, bin/x86, obj/Debug, obj/Release and -->
-	<!-- obj/x86 are ignored by default. The file is expected at the root of the path to watch -->
-	<!-- This setting is not in use when using assembly tracking -->
-	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
-	
-	<!-- Change detection delay (Optional) -->
-	<!-- The time in milliseconds that AuotTest.NET will wait between finding changes -->
-	<!-- and running build and tests -->
-	<!--<changedetectiondelay>200</changedetectiondelay>-->
-
-    <!-- Watch all files in watch directories (Optional) -->
-    <!-- By default AutoTest.NET only looks for changes to files belonging to watched projects -->
-    <!-- With this setting it will look for changes to all files in watched folders -->
-    <!--<WatchAllFiles>true</WatchAllFiles>-->
-  
-	<!-- Custom output folder (Optional) -->
-	<!-- Custom folder to use as as build output folder -->
-	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->
-	
-	<!-- Makes the file change watcher start in paused state -->
-	<!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
-	<!--<StartPaused>true</StartPaused>-->
-  
-    <!-- Runs test runner in compatibility mode. A lot of test runners out there simply swallow -->
-    <!-- app domain and background thread exception. Compatibility mode does the same -->
-    <!--<TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode>-->
-  
-    <!-- Adjust watch path to nearest common path (Optional) -->
-    <!-- Wether to adjust watch path to the lowest common path used by all projects -->
-    <!-- included in a solution -->
-    <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
-</configuration>
+https://github.com/continuoustests/AutoTest.Net/blob/master/src/AutoTest.Core/AutoTest.config.template
 
 A project specific configuration file can look something like this:
 
