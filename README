@@ -1,75 +1,306 @@
-(View in WordPad or similar on windows since the file uses Unix line endings)
+(Best viewed in a UNIX-friendly editor like WordPad)
 
-AutoTest.Net (http://groups.google.com/group/autotestnet)
-This product provides continuous testing for the .Net platform. It contains a 
-Visual Studio Addin through a windows installer (AutoTest-v*.*.*.exe),
-winforms app and a console app.
-The Visual Studio Addin will by default start as paused so after opening a
-solution click AutoTest.Net->Resume Engine. To have it always run afeter
-opening a solution set the StartPaused setting to false and restart the engine.
+AutoTest.NET is a cross-platform continuous testing Visual Studio Add-in, console application,
+and desktop application for the .NET and Mono frameworks.
 
-Features
-	* Watch directory or solution file
-	* File tracking: Automatic builds and testruns
-	* Assembly tracking: Automatic test runs for built assemblies (if 
-	  BuildExecutable is removed from config)
-		* You can then build through Visual Studio or something similar while
-		  still having your tests run automatically
-	* Cross platform support through Mono
-	* Supports C# and Visual Basic and F# projects
-	* Supported build tools
-		* MSBuild.exe
-		* Mono's xbuild
-	* Supported test runners
-		* AutoTest.TestRunner (Built in runner) supporting:
-			* NUnit
-			* XUnit
-			* MSTest
-			* MSpec
-			* MbUnit
-		* Native Console runner for NUnit
-		* Native Console runner for XUnit
-		* Native Console runner for MSpec
-		* Native Console runner for MSTest
-	* Supports notifications through
-		* notify-send (Linux)
-		* Snarl through it's tcp interface (Windows)
-		* Growl (Mac, Windows)
-	* Supports configurable ignore files using the .gitignore format
-		* The attribute override="merge" will merge with original
-		* The attribute override="exclude" will remove it all together
+It improves test-driven development (TDD) by automatically compiling and running testing in
+the background.  It determines which tests are affected from the code changes since the last
+build and only runs those tests to provide near real-time feedback faster than running all tests.
+Automatically generated graphs also allow you to visualization the relation between methods and
+the tests that call them.  Annotations alongside your code allow you to immediately see the
+risks taken when changing pieces of code.
 
-Geting started
-To get started using this application edit AutoTest.config to suite your system.
-When done start either the winforms app or the console app. In the winforms 
-application the little button in the top rightcorner will display some nice to 
-know messages now and then. When set up just edita file within the watched folder 
-and save it. AutoTest.Net will detect any changes and start builds and run tests.
-If you end up in a scenario where it goes in to an endless loop it's probably
-detecting changes in a file generated either by build or testrun. If so use the
-ignore posibility in the configuration file. To figure out what files are being
-generated turn on logging and check the debug.log file.
+Supported Visual Studio versions:
+  2008
+  2010
+  2012 (experimental)
 
-Build from source
-To build the whole thing from source just clone or fork the repository. If you want
-to build AutoTest.Net with Microsoft .Net instead fo mono go to the Settings folder.
-In there you will find the UppercuT.config and UppercuTx86.config files. Locate this
-line (<property name="microsoft.framework" value="mono-3.5" overwrite="false" />) in
-both files and switch from mono-3.5 to net-3.5.
+Supported build frameworks:
+  MSBuild
+  XBuild
 
-When done go in and run build and deploy scripts (build.sh/build.bat and 
-deploy.sh/deploy.bat depending on whether you are on Windows(bat) or something else(sh)).
-After running build and deploy scripts you will find the built binaries under the 
-ReleaseBinaries folder.
+Supported projects:
+  C#
+  Visual Basic
+  F#
 
-Build Visual Studio Addin from source
-Go through the steps described in the previous section except for the actual build and
-deploy part. Now download Inno Setup and install it to the path specified in package.bat.
-After it's installed run package.bat and find the installer in ReleaseBinaries\Installer.
+Supported test runners:
+  NUnit
+  XUnit
+  MSTest
+  MSpec
+  MbUnit
 
-PS!! For building on mono you need 2.8 or later and it uses Git's core.autocrlf=true
+Supported notification systems:
+  notify-send (Linux)
+  Snarl through it's tcp interface (Windows)
+  Growl (Mac, Windows)
+
+File system watchers:
+  Solution file
+  Directory
+  Files \ Assemblies
 
 
-Special thanks:
+Getting started
+
+Download the windows installer or binaries from http://continuoustests.com or clone or fork and build
+from the source code repository https://github.com/continuoustests/AutoTest.Net.
+
+It's recommended to uninstall any previous versions of AutoTest.Net before installing ContinuousTests.
+
+The Windows installer will install the Visual Studio Add-in, console application,
+and desktop application.  Once installed, a dialog will will be displayed the next time you open a
+solution file to allow you to configure the settings for the solution.  Refer to the ContinuousTests
+menu item in Visual Studio to change configuration settings, perform actions, display output windows,
+and get additional help.
+
+Once configured, AutoTest.NET will detect any changes to files after being saved in your project and
+automatically start to build and run tests.  If assembly tracking is configured, AutoTest.NET will be
+triggered from building projects in Visual Studio for example.
+
+If AutoTest.NET keeps building your solution in an infinite loop, it is probably detecting changes
+from files outside the typical output path and those paths need to be ignored in the configuration
+settings.  The debug log will contain the files that AutoTest.NET detected have changed.
+
+NUnit and XUnit are configured out of the box with AutoTest.NET’s internal runner.
+
+See the instructional videos on http://continuoustests.com for working with ContinuousTests inside
+Visual Studio.
+
+The console and desktop applications can be used to run continuous tests outside of Visual Studio.
+
+A watch directory must be specified which is the root directory from where AutoTest.NET recursively
+watches for file/assembly changes.
+
+To specify a watch directory on startup you can pass the path to the directory you want to watch as the
+first command line parameter to AutoTest.Console.exe and AutoTest.WinForms.exe.
+
+
+Configuration Files
+
+There are two types of configuration files, global and project.  Project configuration settings 
+will be merged with the global configuration.
+
+The global configuration file can be found here:
+%LOCALAPPDATA%\MightyMoose\AutoTest.config
+
+Solution configuration files are specific to each solution file and can be found here:
+%LOCALAPPDATA%\MightyMoose\storage\Configuration\%SolutionName%_%hash%\AutoTest.config
+
+An AutoTest.config can be placed in the root of the watch directory when using the console or desktop application.
+
+
+AutoTest.config template:
+
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<!-- Build executables. Supported are MSBuild.exe and Mono's xbuild (Optional) -->
+	<!-- You have the posibility to specify multiple build executables based on framework version or -->
+	<!-- product version from within the csproj/vbproj file using the framework attribute. -->
+	<!-- If you remove all configured build executables AutoTest.NET will start tracking assembly changes -->
+	<!-- instead and you can use Visual Studio or equal to build and AutoTest.NET will -->
+	<!-- run all tests for any built assembly. -->
+	<BuildExecutable parameters="">C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe</BuildExecutable>
+  
+	<!-- If set it will always use msbuild to build solution file instead of only changed projects -->
+	<!-- when AutoTest.NET is set to watch a solution file -->
+	<WhenWatchingSolutionBuildSolution>true</WhenWatchingSolutionBuildSolution>
+	
+	<!-- Machine.Specifications test runner. (Optional) -->
+	<MachineSpecificationsTestRunner>C:\WhereverYouHave\MSpec\mspec.exe</MachineSpecificationsTestRunner>
+	
+	<!-- Code editor configuration. You can specify a code editor to open files in. (Optional) -->
+	<!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
+	<!-- the line to goto. These will be filled in by the application when executing -->
+	<!-- the statement -->
+	<CodeEditor>
+	    <Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
+	    <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
+	</CodeEditor>
+	
+	<!-- When set this will enable logging to the debug.log file in the root directory -->
+	<Debugging>false</Debugging>
+
+    <!-- Additional parameters to msbuild command line (Optional) -->
+    <!-- <MSBuildAdditionalParameters></MSBuildAdditionalParameters> -->
+  
+    <!-- Determines how many projects msbuild will run in parallel (Optional) -->
+    <!-- <MSBuildParallelBuildCount>2</MSBuildParallelBuildCount> -->
+
+    <!-- To change the default resycle size of the logs (1024000 = 1M) Set the number of bytes you -->
+    <!-- want the logs to roll at here -->
+    <!--<LogRecycleSize>1024000000</LogRecycleSize>-->
+	
+	<!-- Rerun failed tests before doing a full testrun (Optional) -->
+	<!--<RerunFailedTestsFirst>true</RerunFailedTestsFirst>-->
+	
+	<!-- Directory to watch (Optional) -->
+	<!-- You can have zero or multiple watch directories specified in the config file. -->
+	<!-- When AutoTest.NET starts it will let you pick from the spcified directories -->
+	<!-- or you can choose to pass a directory when executing the application. Usually -->
+	<!-- the solution root folder -->
+	<!--<DirectoryToWatch>C:\WhateverDirectoryYouWantTo\Watch</DirectoryToWatch>-->
+	
+	<!-- Wether to use AutoTest.NET's own testrunner (Optional)-->
+	<!--<UseAutoTestTestRunner>false</UseAutoTestTestRunner>-->
+
+    <!-- Testing test assemblies in parallel-->
+    <!--<RunAssembliesInParallel>true</RunAssembliesInParallel>-->
+	
+	<!-- NUnit test runner. Spesifies the path to the nunit console test runner (Optional) -->
+	<!-- Default NUnit runner is AutoTest.TestRunner. This is an optional console runner -->
+	<!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
+	<!-- You have the posibility to specify multiple build executables based on framework version -->
+	<!-- from within the csproj/vbproj file using the framework attribute. -->
+	<!-- (framework only, not framework and product version like with the build exe) -->
+	<!--<NUnitTestRunner>C:\WhereverYouHave\NUnit\nunit-console.exe</NUnitTestRunner>-->
+	
+	<!-- XUnit test runner. (Optional) -->
+	<!-- Default XUnit runner is AutoTest.TestRunner. This is an optional console runner -->
+	<!-- User <UseAutoTestTestRunner>false</UseAutoTestTestRunner> to disable default runner -->
+	<!-- Has support for the framework attribute like NUnit test runner config -->
+	<!--<XUnitTestRunner>C:\WhereverYouHave\XUnit\xunit.console.exe</XUnitTestRunner>-->
+	
+	<!-- MSTest test runner. (Optional) -->
+	<!-- Has support for the framework attribute like NUnit test runner config -->
+	<!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
+	
+	<!-- Wildcard expressions for excluding test assemblies (Optional)-->
+	<!--<ShouldIgnoreTestAssembly>-->
+	<!--	<Assembly>*whatever.dll</Assembly>-->
+	<!--</ShouldIgnoreTestAssembly>-->
+	
+	<!-- Test categories to ignore. Only supported by NUnit (Optional) -->
+	<!--<ShouldIgnoreTestCategories>-->
+	<!--	<Category>MyIgnoreCategory</Category>-->
+	<!--</ShouldIgnoreTestCategories>-->
+	
+	<!-- Notification provider (Optional) -->
+	<!-- The supported providers right now are notify-send on linux and growl on -->
+	<!-- windows and Mac. notify-send will configure automatically while growl -->
+	<!-- might need some configuration. You can specify when to push notifications-->
+	<!-- below. -->
+	<!--<notify_on_run_started>true</notify_on_run_started>-->
+	<!--<notify_on_run_completed>true</notify_on_run_completed>-->
+	
+	<!-- Growl notify path (Optional) -->
+	<!-- If growl doesn't work out of the box use the setting below to set the path -->
+	<!-- to growlnotify(.exe) -->
+	<!--<growlnotify>Path to growlnotify application</growlnotify>-->
+	
+	<!-- To specify a set of files\directories that autotest should not track changes (Optional) -->
+	<!-- for create a file containing those exceptions. All patterns should use / -->
+	<!-- instead of \ It works the same way as the .gitignore file in the git source -->
+	<!-- control system. (bin/Debug, bin/Release, bin/x86, obj/Debug, obj/Release and -->
+	<!-- obj/x86 are ignored by default. The file is expected at the root of the path to watch -->
+	<!-- This setting is not in use when using assembly tracking -->
+	<!--<IgnoreFile>.gitignore</IgnoreFile>-->
+	
+	<!-- Change detection delay (Optional) -->
+	<!-- The time in milliseconds that AuotTest.NET will wait between finding changes -->
+	<!-- and running build and tests -->
+	<!--<changedetectiondelay>200</changedetectiondelay>-->
+
+    <!-- Watch all files in watch directories (Optional) -->
+    <!-- By default AutoTest.NET only looks for changes to files belonging to watched projects -->
+    <!-- With this setting it will look for changes to all files in watched folders -->
+    <!--<WatchAllFiles>true</WatchAllFiles>-->
+  
+	<!-- Custom output folder (Optional) -->
+	<!-- Custom folder to use as as build output folder -->
+	<!--<CustomOutput>bin\MyOwnOutputFolder</CustomOutput>-->
+	
+	<!-- Makes the file change watcher start in paused state -->
+	<!-- To have changes run in this mode you will have to publish FileChangeMessages manually -->
+	<!--<StartPaused>true</StartPaused>-->
+  
+    <!-- Runs test runner in compatibility mode. A lot of test runners out there simply swallow -->
+    <!-- app domain and background thread exception. Compatibility mode does the same -->
+    <!--<TestRunnerCompatibilityMode>true</TestRunnerCompatibilityMode>-->
+  
+    <!-- Adjust watch path to nearest common path (Optional) -->
+    <!-- Wether to adjust watch path to the lowest common path used by all projects -->
+    <!-- included in a solution -->
+    <!--<UseLowestCommonDenominatorAsWatchPath>false</UseLowestCommonDenominatorAsWatchPath>-->
+</configuration>
+
+A project specific configuration file can look something like this:
+
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <!-- Exclude all build executable configuration all together -->
+    <BuildExecutable override="exclude"></BuildExecutable>
+
+    <!-- Merge these changes in with what's already in the base configuration -->
+    <!-- The overide attrubte will be read for the first occurrence in the setting family --> 
+    <NUnitTestRunner framework="v3.5" override="merge">NewTestRunner for fw 3.5</NUnitTestRunner>
+    <NUnitTestRunner framework="v4.0">NewTestRunner for fw 4.0</NUnitTestRunner>
+    
+    <!-- This will just override whatever XUnit config is in the base configuration -->
+    <XUnitTestRunner>C:\XUnit\xunit.console.exe</XUnitTestRunner>
+
+    <!-- merges in some extra assemblies to ignore -->
+    <ShouldIgnoreTestAssembly override="merge">
+        <Assembly>*System.dll</Assembly>
+    </ShouldIgnoreTestAssembly>
+</configuration>
+
+
+Notifications
+
+notify-send can be installed by running "sudo apt-get install notify-osd".  The Growl application
+can be configured with the growlnotify configuration setting.  AutoTest.NET will automatically
+send notifications when test runs have started and finished by default, but settings are configurable.
+
+
+Ignore File Configuration
+
+The IgnoreFile option can be set to an absolute path or a path relative to the watch directory of the
+file where paths AutoTest.NET should ignore when detecting changes are configured.  This file uses
+.gitignore syntax and existing .gitignore files are compatible with AutoTest.NET.
+
+An example ignore file:
+
+# Making sure the file IgnoreThisOne.xml is ignored
+IgnoreThisOne.xml
+
+# Should ignore any file or directory called TestResults
+TestResults
+
+# Should ignore all output xmls
+*output.xml
+
+
+Building from source
+
+1. Clone or fork the repository.
+2. Run package.bat (Windows) or package.sh (non-Windows)
+
+The built binaries will be located under the ReleaseBinaries folder.
+On Windows, the windows installer will be located in the Installer subfolder.
+
+
+Special Thanks:
+
 Thanks to Philip Laureano for letting us embed the Linfu Dynamic Proxy source into the
 MSpec runner enabling us to support all MSpec versions out of the box.
+
+AutoTest.NET is based off of autotest which is a popular Ruby tool for running your unit tests as soon as your save your files.
+This project was originally started by James Avery at http://code.google.com/p/autotestnet/
+
+
+Wiki:
+
+https://github.com/continuoustests/AutoTest.Net/wiki
+
+
+Keyboard Shortcuts CheatSheet:
+
+http://continuoustests.com/cheatsheet.html
+
+
+Discussion group \ Mailing list:
+
+http://groups.google.com/group/autotestnet)
+
