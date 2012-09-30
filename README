@@ -7,8 +7,8 @@ It improves test-driven development (TDD) by automatically compiling and running
 the background.  It determines which tests are affected from the code changes since the last
 build and only runs those tests to provide near real-time feedback faster than running all
 tests.Automatically generated graphs also allow you to visualize the relation between methods
-and the tests that call them.  Annotations alongside your code allow you to immediately see the
-risks taken when changing pieces of code.
+and the tests that call them.  Annotations alongside your code allow you to immediately see
+the risks taken when changing pieces of code.
 
 Supported Visual Studio versions:
   2008
@@ -47,13 +47,14 @@ Getting started
 Download the windows installer or binaries from http://continuoustests.com or clone or fork
 and build from the source code repository https://github.com/continuoustests/AutoTest.Net.
 
-It's recommended to uninstall any previous versions of AutoTest.Net before installing ContinuousTests.
+It's recommended to uninstall any previous versions of AutoTest.Net before installing
+ContinuousTests.
 
 The Windows installer will install the Visual Studio Add-in, console application, and desktop
-application.  Once installed, a dialog will be displayed the next time you open a solution file to
-allow you to configure the settings for the solution.  Refer to the ContinuousTests menu item in
-Visual Studio to change configuration settings, perform actions, display output windows, and get
-additional help.
+application.  Once installed, a dialog will be displayed the next time you open a solution
+file to allow you to configure the settings for the solution.  Refer to the ContinuousTests
+menu item in Visual Studio to change configuration settings, perform actions, display output
+windows, and get additional help.
 
 Once configured, AutoTest.NET will detect any changes to files after being saved in your
 project and automatically start to build and run tests.  If assembly tracking is configured,
