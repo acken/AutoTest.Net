@@ -538,8 +538,6 @@ namespace AutoTest.UI
                 if (CanGoToTypes)
                     if (goToType(testItem.Assembly, testItem.Test.Name))
                         return;
-
-                goToReference(testItem.Test.StackTrace[0].File, testItem.Test.StackTrace[0].LineNumber, 0);
             }
         }
 
@@ -549,6 +547,10 @@ namespace AutoTest.UI
 				if (line.Method.Equals(testItem.Test.Name))
 					return line;
 			}
+            var lastWithLine = testItem.Test.StackTrace.LastOrDefault(x => x.LineNumber > 0);
+            if (lastWithLine != null)
+                return lastWithLine;
+
 			return null;
 		}
 
