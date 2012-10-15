@@ -179,7 +179,7 @@ namespace AutoTest.UI
                 generateSummary(null);
                 organizeListItemBehaviors(null);
                 clearRunnerTypeAnyItems();
-                setProgress(ImageStates.Progress, "processing changes...", false, null);
+                setProgress(ImageStates.Progress, "processing changes...", false, null, true);
                 _isRunning = true;
                 organizeListItemBehaviors(listViewFeedback.SelectedItems);
             }, text);
@@ -202,7 +202,12 @@ namespace AutoTest.UI
 
         private void setProgress(ImageStates state, string information, bool external, string picture)
         {
-            if (_progressUpdatedExternally && !external)
+            setProgress(state, information, external, picture, false);
+        }
+
+        private void setProgress(ImageStates state, string information, bool external, string picture, bool force)
+        {
+            if (!force && _progressUpdatedExternally && !external)
                 return;
             if (picture == null)
                 picture = _progressPicture;
@@ -283,8 +288,10 @@ namespace AutoTest.UI
                             text = "locating affected tests";
                         break;
                 }
-                if (text != "")
+                if (text != "") {
+                    setProgress(ImageStates.Progress, text.ToString(), false, null);
                     printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
+                }
             }, msg);
         }
 
@@ -538,8 +545,6 @@ namespace AutoTest.UI
                 if (CanGoToTypes)
                     if (goToType(testItem.Assembly, testItem.Test.Name))
                         return;
-
-                goToReference(testItem.Test.StackTrace[0].File, testItem.Test.StackTrace[0].LineNumber, 0);
             }
         }
 
@@ -549,6 +554,10 @@ namespace AutoTest.UI
 				if (line.Method.Equals(testItem.Test.Name))
 					return line;
 			}
+            var lastWithLine = testItem.Test.StackTrace.LastOrDefault(x => x.LineNumber > 0);
+            if (lastWithLine != null)
+                return lastWithLine;
+
 			return null;
 		}
 
