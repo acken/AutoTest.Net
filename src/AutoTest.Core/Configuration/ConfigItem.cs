@@ -18,7 +18,6 @@ namespace AutoTest.Core.Configuration
 		
 		public ConfigItem<T> SetValue(T newValue)
 		{
-            int a = 9;
 			Value = newValue;
 			WasReadFromConfig = true;
 			ShouldExclude = false;

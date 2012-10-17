@@ -59,8 +59,8 @@ namespace AutoTest.VS.Util.Debugger
                     }
                     else
                     {
-                        if (process.Framework == new Version(4, 0))
-                            dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed (v4.0)") };
+                        if (process.Framework >= new Version(4, 0))
+                            dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item(string.Format("Managed (v{0}.{1})", process.Framework.Major, process.Framework.Minor)) };
                         else
                             dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed (v2.0, v1.1, v1.0)") };
                     }

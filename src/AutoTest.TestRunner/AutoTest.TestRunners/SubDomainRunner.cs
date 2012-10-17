@@ -73,7 +73,7 @@ namespace AutoTest.TestRunners
             {
                 Logger.Write(ex);
                 if (!_compatibilityMode)
-                    Program.AddResults(ErrorHandler.GetError("Any", ex));
+                    Program.AddResults(ErrorHandler.GetError(_id, ex));
             }
             finally
             {
