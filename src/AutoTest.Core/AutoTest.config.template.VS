@@ -74,7 +74,12 @@
 	<!-- MSTest test runner. (Optional) -->
 	<!-- Has support for the framework attribute like NUnit test runner config -->
 	<!--<MSTestRunner>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\MSTest.exe</MSTestRunner>-->
-	
+
+  <!-- Wildcard expressions for excluding test assemblies (Optional)-->
+  <!--<ShouldIgnoreProject>-->
+  <!--	<Project>*MyIgnoredProject.csproj</Project>-->
+  <!--</ShouldIgnoreProject>-->
+  
 	<!-- Wildcard expressions for excluding test assemblies (Optional)-->
 	<!--<ShouldIgnoreTestAssembly>-->
 	<!--	<Assembly>*whatever.dll</Assembly>-->

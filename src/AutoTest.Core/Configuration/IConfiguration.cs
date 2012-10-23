@@ -44,6 +44,7 @@ namespace AutoTest.Core.Configuration
         bool RunAssembliesInParallel { get; }
         bool TestRunnerCompatibilityMode { get; }
 		long LogRecycleSize { get; }
+        string[] ProjectsToIgnore { get; }
 
         string IgnoreFile { get; }
 

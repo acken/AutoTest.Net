@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.Configuration;
 using NUnit.Framework;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using AutoTest.Core.FileSystem;
 using System.IO;
+using Rhino.Mocks;
 using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core.Caching.Projects
@@ -16,12 +18,14 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectParser _parser;
         private FakeFileSystemService _fs;
+        private IConfiguration _config;
 
         [SetUp]
         public void SetUp()
         {
+            _config = MockRepository.GenerateMock<IConfiguration>();
             _fs = new FakeFileSystemService();
-            _parser = new ProjectParser(_fs);
+            _parser = new ProjectParser(_fs, _config);
         }
 
         [Test]
@@ -149,6 +153,13 @@ namespace AutoTest.Test.Core.Caching.Projects
             document.Files[2].Type.ShouldEqual(FileType.Resource);
             document.Files[3].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Resources{0}MM_shaded.bmp", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
             document.Files[3].Type.ShouldEqual(FileType.None);
+        }
+
+        [Test]
+        public void Should_not_parse_ignored_projects()
+        {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new[] { "*IgnoredProject.csproj" });
+            Assert.That(_parser.Parse("An/IgnoredProject.csproj", null), Is.Null);
         }
 
         private string getCSharpProject()

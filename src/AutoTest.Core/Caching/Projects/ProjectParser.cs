@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+using AutoTest.Core.Configuration;
 using AutoTest.Core.FileSystem;
 using AutoTest.Core.DebugLog;
 using System.Xml;
@@ -17,18 +18,22 @@ namespace AutoTest.Core.Caching.Projects
         private const string FSHARP_PROJECT_EXTENTION = ".fsproj";
 
         private IFileSystemService _fsService;
+        private IConfiguration _config;
         private string _projectFile;
         private string _fileContent;
         private XmlDocument _xml = null;
         private XmlNamespaceManager _nsManager = null;
 
-        public ProjectParser(IFileSystemService fsService)
+        public ProjectParser(IFileSystemService fsService, IConfiguration config)
         {
             _fsService = fsService;
+            _config = config;
         }
 
         public ProjectDocument Parse(string projectFile, ProjectDocument existingDocument)
         {
+            if (isToBeIgnored(projectFile))
+                return null;
             _projectFile = projectFile;
             readFile();
             var newDocument = new ProjectDocument(getType());
@@ -42,6 +47,24 @@ namespace AutoTest.Core.Caching.Projects
             setReferencedBy(newDocument, existingDocument);
             setFiles(newDocument);
             return newDocument;
+        }
+
+        private bool isToBeIgnored(string projectFile)
+        {
+            return _config.ProjectsToIgnore.Any(x => optimisticWildcardMatch(x, projectFile));
+        }
+
+        private bool optimisticWildcardMatch(string pattern, string text)
+        {
+            if (pattern.StartsWith("*") && pattern.EndsWith("*") && text.Contains(pattern.Substring(1, pattern.Length - 2)))
+				return true;
+			if (pattern.StartsWith("*") && text.EndsWith(pattern.Substring(1, pattern.Length - 1)))
+				return true;
+			if (pattern.EndsWith("*") && text.StartsWith(pattern.Substring(0, pattern.Length - 1)))
+				return true;
+			if (pattern.Equals(text))
+				return true;
+            return false;
         }
 
         private void readFile()

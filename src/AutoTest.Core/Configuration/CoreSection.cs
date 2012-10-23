@@ -49,6 +49,7 @@ namespace AutoTest.Core.Configuration
         public ConfigItem<bool> RunAssembliesInParallel { get; private set; }
         public ConfigItem<bool> TestRunnerCompatibilityMode { get; private set; }
         public ConfigItem<long> LogRecycleSize { get; private set; }
+        public ConfigItem<string[]> ProjectsToIgnore { get; private set; }
 
         public List<KeyValuePair<string, string>> Keys { get; private set; }
 
@@ -81,6 +82,7 @@ namespace AutoTest.Core.Configuration
             RunAssembliesInParallel = new ConfigItem<bool>(false);
             TestRunnerCompatibilityMode = new ConfigItem<bool>(false);
             LogRecycleSize = new ConfigItem<long>(1024000);
+            ProjectsToIgnore = new ConfigItem<string[]>(new string[] {});
             Keys = new List<KeyValuePair<string, string>>();
         }
 
@@ -115,6 +117,7 @@ namespace AutoTest.Core.Configuration
             RunAssembliesInParallel = getBoolItem("configuration/RunAssembliesInParallel", false);
             TestRunnerCompatibilityMode = getBoolItem("configuration/TestRunnerCompatibilityMode", false);
             LogRecycleSize = getLongItem("configuration/LogRecycleSize", 1024000);
+            ProjectsToIgnore = getValues("configuration/ShouldIgnoreProject/Project", true);
             Keys = getAllKeys("configuration/*");
         }
 		

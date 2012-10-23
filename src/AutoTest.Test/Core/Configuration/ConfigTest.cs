@@ -348,6 +348,13 @@ namespace AutoTest.Test.Core.Configuration
             Assert.That(_config.MSBuildParallelBuildCount, Is.EqualTo(3));
         }
 
+        [Test]
+		public void Should_get_projects_to_ignore()
+		{
+			_config.ProjectsToIgnore[0].ShouldEqual("*MyProject.csproj");
+			_config.ProjectsToIgnore[1].ShouldEqual("FullPathTo/aproject.csproj");
+		}
+
 		private void createMergeFile()
 		{
 			if (File.Exists(_overridConfig))
