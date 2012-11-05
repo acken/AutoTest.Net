@@ -118,6 +118,25 @@ namespace AutoTest.Test.Core.BuildRunners
             result.ErrorCount.ShouldEqual(2);
         }
 
+        [Test]
+        public void Should_parse_msbuild_solution_errors()
+        {
+			// Test will fail on other platforms than windows because of Path.GetDirectoryName
+			if (!isWindows())
+				return;
+            var resultfile = getPath(string.Format("TestResources{0}MSBuild{0}msbuild_solution_error.txt", Path.DirectorySeparatorChar));
+            var result = new BuildRunResults("");
+            var parser = new MSBuildOutputParser(result, File.ReadAllLines(resultfile));
+            parser.Parse();
+            result.Errors.Length.ShouldEqual(1);
+            result.Errors[0].File
+                .Replace('/', Path.DirectorySeparatorChar)
+                .ShouldEqual(@"C:\Some\Solution\File.sln");
+            result.Errors[0].LineNumber.ShouldEqual(200);
+            result.Errors[0].LinePosition.ShouldEqual(0);
+            result.Errors[0].ErrorMessage.ShouldEqual("MSB 5023: Error parsing solution file.");
+        }
+
         private string getPath(string relativePath)
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
