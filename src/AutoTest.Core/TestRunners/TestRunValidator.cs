@@ -15,13 +15,15 @@ namespace AutoTest.Core.TestRunners
 		}
 		
 		#region IDetermineIfAssemblyShouldBeTested implementation
-		public bool ShouldNotTestAssembly(string assembly)
+		public bool ShouldNotTestAssembly(string asm)
 		{
-            if (!_fs.FileExists(assembly))
+            if (!_fs.FileExists(asm))
                 return false;
 
-			foreach (var pattern in _configuration.TestAssembliesToIgnore)
+            var assembly = asm.ToLower();
+			foreach (var item in _configuration.TestAssembliesToIgnore)
 			{
+                var pattern = item.ToLower();
 				if (pattern.StartsWith("*") && pattern.EndsWith("*") && assembly.Contains(pattern.Substring(1, pattern.Length - 2)))
 					return true;
 				if (pattern.StartsWith("*") && assembly.EndsWith(pattern.Substring(1, pattern.Length - 1)))

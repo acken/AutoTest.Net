@@ -58,6 +58,13 @@ namespace AutoTest.Test.Core.TestRunners
 			_configuration.Stub(c => c.TestAssembliesToIgnore).Return(new string[] { "*alidA*" });
 			_validator.ShouldNotTestAssembly("InvalidAssembly.dll").ShouldBeTrue();
 		}
+
+        [Test]
+		public void Should_not_be_case_sensitive()
+		{
+			_configuration.Stub(c => c.TestAssembliesToIgnore).Return(new string[] { "*alida*" });
+			_validator.ShouldNotTestAssembly("InvalidAssembly.dll").ShouldBeTrue();
+		}
 		
 		[Test]
 		public void Should_handle_multiple_patterns()
