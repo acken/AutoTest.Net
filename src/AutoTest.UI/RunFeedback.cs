@@ -66,44 +66,60 @@ namespace AutoTest.UI
 
         public new void Resize()
         {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            _syncContext.Post(message =>
+            {
+                organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            }, null);
         }
 
         public void PrepareForFocus()
         {
-            if (listViewFeedback.Items.Count > 0 && listViewFeedback.SelectedItems.Count == 0)
-                listViewFeedback.Items[0].Selected = true;
-            listViewFeedback.Select();
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            _syncContext.Post(x =>
+            {
+                if (listViewFeedback.Items.Count > 0 && listViewFeedback.SelectedItems.Count == 0)
+                    listViewFeedback.Items[0].Selected = true;
+                listViewFeedback.Select();
+                organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            }, null);
         }
 
         public void ClearList()
         {
-            listViewFeedback.Items.Clear();
+            _syncContext.Post(x =>
+            {
+                listViewFeedback.Items.Clear();
+            }, null);
         }
 
         public void ClearBuilds()
         {
-            foreach (ListViewItem listItem in listViewFeedback.Items)
+            _syncContext.Post(x =>
             {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
+                foreach (ListViewItem listItem in listViewFeedback.Items)
                 {
-                    listViewFeedback.Items.Remove(listItem);
+                    if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
+                    {
+                        listViewFeedback.Items.Remove(listItem);
+                    }
                 }
-            }
+            }, null);
         }
 
-        public void ClearBuilds(string project)
+        public void ClearBuilds(string proj)
         {
-            foreach (ListViewItem listItem in listViewFeedback.Items)
+            _syncContext.Post(x =>
             {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
+                var project = x.ToString();
+                foreach (ListViewItem listItem in listViewFeedback.Items)
                 {
-                    var item = (CacheBuildMessage)listItem.Tag;
-                    if (item.Project.Equals(project))
-                        listViewFeedback.Items.Remove(listItem);
+                    if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
+                    {
+                        var item = (CacheBuildMessage)listItem.Tag;
+                        if (item.Project.Equals(project))
+                            listViewFeedback.Items.Remove(listItem);
+                    }
                 }
-            }
+            }, proj);
         }
 
         public bool IsInFocus()
@@ -119,7 +135,10 @@ namespace AutoTest.UI
             _showWarnings = showWarnings;
             _showFailing = showFailingTests;
             _showIgnored = showIgnoredTests;
-            ClearList();
+            _syncContext.Post(x =>
+            {
+                ClearList();
+            }, null);
         }
 
         public bool isTheSameTestAs(CacheTestMessage original, CacheTestMessage item)
@@ -127,62 +146,60 @@ namespace AutoTest.UI
             return original.Assembly.Equals(item.Assembly) && original.Test.Runner.Equals(item.Test.Runner) && original.Test.Name.Equals(item.Test.Name)  && original.Test.DisplayName.Equals(item.Test.DisplayName);
         }
 
-        public void ConsumeMessage(object message)
+        public void ConsumeMessage(object msg)
         {
-            if (message.GetType() == typeof(CacheMessages))
-                handle((CacheMessages)message);
-            else if (message.GetType() == typeof(LiveTestStatusMessage))
-                handle((LiveTestStatusMessage)message);
-            else if (message.GetType() == typeof(RunStartedMessage))
-                runStarted("Detected file changes...");
-            else if (message.GetType() == typeof(RunFinishedMessage))
-                runFinished((RunFinishedMessage)message);
-            else if (message.GetType() == typeof(RunInformationMessage))
-                runInformationMessage((RunInformationMessage)message);
-			else if (message.GetType() == typeof(BuildRunMessage)) {
-				if (((BuildRunMessage)message).Results.Errors.Length == 0)
-					ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
-			}
+            _syncContext.Post(message =>
+            {
+                lock (_messagLock)
+                {
+                    try
+                    {
+                        if (message.GetType() == typeof(CacheMessages))
+                            handle((CacheMessages)message);
+                        else if (message.GetType() == typeof(LiveTestStatusMessage))
+                            handle((LiveTestStatusMessage)message);
+                        else if (message.GetType() == typeof(RunStartedMessage))
+                            runStarted("Detected file changes...");
+                        else if (message.GetType() == typeof(RunFinishedMessage))
+                            runFinished((RunFinishedMessage)message);
+                        else if (message.GetType() == typeof(RunInformationMessage))
+                            runInformationMessage((RunInformationMessage)message);
+			            else if (message.GetType() == typeof(BuildRunMessage)) {
+				            if (((BuildRunMessage)message).Results.Errors.Length == 0)
+					            ClearBuilds(((BuildRunMessage)message).Results.Project); // Make sure no errors remain in log
+                        }
+                    }
+                    catch
+                    {
+                    }
+
+                }
+            }, msg);
         }
 
         private void handle(CacheMessages cacheMessages)
         {
-            _syncContext.Post(x =>
-            {
-                lock (_messagLock)
-                {
-                    Handle((CacheMessages)x);
-                    label1.Refresh();
-                }
-            }, cacheMessages);
+            Handle(cacheMessages);
+            label1.Refresh();
         }
 
         private void handle(LiveTestStatusMessage liveTestStatusMessage)
         {
-            _syncContext.Post(x =>
-            {
-                lock (_messagLock)
-                {
-                    Handle((LiveTestStatusMessage)x);
-                    label1.Refresh();
-                }
-            }, liveTestStatusMessage);
+            Handle(liveTestStatusMessage);
+            label1.Refresh();
         }
 
-        private void runStarted(string text)
+        private void runStarted(string x)
         {
-            _syncContext.Post(x =>
-            {
-                if (!ShowRunInformation)
-                    x = "processing changes...";
-                printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
-                generateSummary(null);
-                organizeListItemBehaviors(null);
-                clearRunnerTypeAnyItems();
-                setProgress(ImageStates.Progress, "processing changes...", false, null, true);
-                _isRunning = true;
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            }, text);
+            if (!ShowRunInformation)
+                x = "processing changes...";
+            printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
+            generateSummary(null);
+            organizeListItemBehaviors(null);
+            clearRunnerTypeAnyItems();
+            setProgress(ImageStates.Progress, "processing changes...", false, null, true);
+            _isRunning = true;
+            organizeListItemBehaviors(listViewFeedback.SelectedItems);
         }
 
         public void SetProgress(bool on, string information, string picture)
@@ -225,29 +242,26 @@ namespace AutoTest.UI
                 _lastInternalState = state;
         }
 
-        private void runFinished(RunFinishedMessage msg)
+        private void runFinished(RunFinishedMessage x)
         {
-            _syncContext.Post(x =>
+            if (((RunFinishedMessage)x).Report.Aborted)
             {
-                if (((RunFinishedMessage)x).Report.Aborted)
+                if (ShowRunInformation)
                 {
-                    if (ShowRunInformation)
-                    {
-                        setProgress(ImageStates.None, "", false, null);
-                        printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
-                    }
+                    setProgress(ImageStates.None, "", false, null);
+                    printMessage(new RunMessages(RunMessageType.Normal, "last build/test run was aborted"));
                 }
-                else
-                {
-                    var i = getRunFinishedInfo((RunFinishedMessage)x);
-                    var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
-                    setProgress(runType == RunMessageType.Succeeded ? ImageStates.Green : ImageStates.Red, "", false, null);
-                    printMessage(new RunMessages(runType, i.Text));
-                    generateSummary(i.Report);
-                }
-                _isRunning = false;
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
-            }, msg);
+            }
+            else
+            {
+                var i = getRunFinishedInfo((RunFinishedMessage)x);
+                var runType = i.Succeeded ? RunMessageType.Succeeded : RunMessageType.Failed;
+                setProgress(runType == RunMessageType.Succeeded ? ImageStates.Green : ImageStates.Red, "", false, null);
+                printMessage(new RunMessages(runType, i.Text));
+                generateSummary(i.Report);
+            }
+            _isRunning = false;
+            organizeListItemBehaviors(listViewFeedback.SelectedItems);
         }
 
         private RunFinishedInfo getRunFinishedInfo(RunFinishedMessage message)
@@ -266,33 +280,30 @@ namespace AutoTest.UI
             return new RunFinishedInfo(text, succeeded, report);
         }
 
-        private void runInformationMessage(RunInformationMessage msg)
+        private void runInformationMessage(RunInformationMessage x)
         {
-            _syncContext.Post(x =>
+            if (!_isRunning)
+                return;
+            var text = "";
+            var message = (RunInformationMessage)x;
+            switch (message.Type)
             {
-                if (!_isRunning)
-                    return;
-                var text = "";
-                var message = (RunInformationMessage)x;
-                switch (message.Type)
-                {
-                    case InformationType.Build:
-                        if (ShowRunInformation)
-                            text = string.Format("building {0}", Path.GetFileName(message.Project));
-                        break;
-                    case InformationType.TestRun:
-                        text = "testing...";
-                        break;
-                    case InformationType.PreProcessing:
-                        if (ShowRunInformation)
-                            text = "locating affected tests";
-                        break;
-                }
-                if (text != "") {
-                    setProgress(ImageStates.Progress, text.ToString(), false, null);
-                    printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
-                }
-            }, msg);
+                case InformationType.Build:
+                    if (ShowRunInformation)
+                        text = string.Format("building {0}", Path.GetFileName(message.Project));
+                    break;
+                case InformationType.TestRun:
+                    text = "testing...";
+                    break;
+                case InformationType.PreProcessing:
+                    if (ShowRunInformation)
+                        text = "locating affected tests";
+                    break;
+            }
+            if (text != "") {
+                setProgress(ImageStates.Progress, text.ToString(), false, null);
+                printMessage(new RunMessages(RunMessageType.Normal, text.ToString()));
+            }
         }
 
         public void PrintMessage(RunMessages message)
