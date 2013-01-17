@@ -59,15 +59,13 @@ namespace AutoTest.VS.Util.Debugger
                     }
                     else
                     {
-                        if (process.Framework >= new Version(4, 0)) {
-                            foreach (EnvDTE80.Engine engine in trans.Engines) {
-                                if (engine.Name.Contains(string.Format("v{0}.{1}", process.Framework.Major, process.Framework.Minor))) {
-                                    dbgeng = new EnvDTE80.Engine[] { engine };
-                                    break;
-                                }
+                        foreach (var item in trans.Engines) {
+                            var engine = (EnvDTE80.Engine)item;
+                            if (engine.Name.Contains(string.Format("v{0}.{1}", process.Framework.Major, process.Framework.Minor))) {
+                                dbgeng = new EnvDTE80.Engine[] { engine };
+                                break;
                             }
-                        } else
-                            dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed (v2.0, v1.1, v1.0)") };
+                        }
                     }
                     
                     EnvDTE80.Process2 proc2 = null;
