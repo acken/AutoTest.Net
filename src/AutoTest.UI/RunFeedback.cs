@@ -491,8 +491,19 @@ namespace AutoTest.UI
             item.SubItems.Add(message);
             item.ForeColor = colour;
             item.Tag = tag;
-            if (selected != null && tag.GetType() == selected.GetType() && tag.Equals(selected))
-                item.Selected = true;
+            if (isWindows()) {
+                if (selected != null && tag.GetType() == selected.GetType() && tag.Equals(selected))
+                    item.Selected = true;
+            }
+        }
+
+        private bool isWindows() {
+            return 
+                Environment.OSVersion.Platform == PlatformID.Win32S ||
+                Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform == PlatformID.WinCE ||
+                Environment.OSVersion.Platform == PlatformID.Xbox;
         }
 
         private bool testExists(object tag)
