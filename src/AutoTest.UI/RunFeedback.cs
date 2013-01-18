@@ -87,6 +87,8 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
+                if (!isWindows())
+                    listViewFeedback.SelectedItems.Clear();
                 listViewFeedback.Items.Clear();
             }, null);
         }
@@ -95,6 +97,8 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
+                if (!isWindows())
+                    listViewFeedback.SelectedItems.Clear();
                 foreach (ListViewItem listItem in listViewFeedback.Items)
                 {
                     if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
@@ -109,6 +113,8 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
+                if (!isWindows())
+                    listViewFeedback.SelectedItems.Clear();
                 var project = x.ToString();
                 foreach (ListViewItem listItem in listViewFeedback.Items)
                 {
