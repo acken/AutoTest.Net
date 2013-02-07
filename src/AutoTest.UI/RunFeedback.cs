@@ -481,7 +481,8 @@ namespace AutoTest.UI
                         toRemove.Add(listItem);
                 }
             }
-            toRemove.ForEach(x => listViewFeedback.Items.Remove(x));
+            foreach (var itm in toRemove)
+                listViewFeedback.Items.Remove(itm);
         }
 
         private bool existsIn(IEnumerable<CacheTestMessage> cacheTestMessages, CacheTestMessage item)
