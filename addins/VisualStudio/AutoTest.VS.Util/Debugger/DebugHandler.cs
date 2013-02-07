@@ -52,17 +52,20 @@ namespace AutoTest.VS.Util.Debugger
                     AutoTest.Core.DebugLog.Debug.WriteDebug("Locating debugger for Visual Studio " + _application.Version);
                     var dbg2 = (EnvDTE80.Debugger2)_application.Debugger;
                     var trans = (EnvDTE80.Transport)dbg2.Transports.Item("Default");
-                    EnvDTE80.Engine[] dbgeng;
+                    EnvDTE80.Engine[] dbgeng = null;
                     if (_application.Version == "9.0")
                     {
                         dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed") };
                     }
                     else
                     {
-                        if (process.Framework >= new Version(4, 0))
-                            dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item(string.Format("Managed (v{0}.{1})", process.Framework.Major, process.Framework.Minor)) };
-                        else
-                            dbgeng = new EnvDTE80.Engine[] { trans.Engines.Item("Managed (v2.0, v1.1, v1.0)") };
+                        foreach (var item in trans.Engines) {
+                            var engine = (EnvDTE80.Engine)item;
+                            if (engine.Name.Contains(string.Format("v{0}.{1}", process.Framework.Major, process.Framework.Minor))) {
+                                dbgeng = new EnvDTE80.Engine[] { engine };
+                                break;
+                            }
+                        }
                     }
                     
                     EnvDTE80.Process2 proc2 = null;

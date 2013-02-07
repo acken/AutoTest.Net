@@ -27,9 +27,9 @@ namespace AutoTest.Core.BuildRunners
 				_line = line;
 				if (!foundOutputMarker())
 					continue;
-				if (!detectAndValidateBuildTarget())
+				if (!detectAndValidateBuildTarget() && !isSolutionError())
 					break;
-				if (_currentProjectPath == null)
+				if (_currentProjectPath == null && !isSolutionError())
 				    continue;
 				parseLine();
 			}
@@ -91,7 +91,17 @@ namespace AutoTest.Core.BuildRunners
                 if (!_results.Errors.Contains(message))
                     _results.AddError(message);
             }
+            else if (isSolutionError())
+            {
+                BuildMessage message = parseMessage(": Solution file error");
+                if (!_results.Errors.Contains(message))
+                    _results.AddError(message);
+            }
 		}
+
+        private bool isSolutionError() {
+            return _line.Contains(": Solution file error");
+        }
 
         private BuildMessage parseMessage(string type)
         {
@@ -100,10 +110,15 @@ namespace AutoTest.Core.BuildRunners
             {
                 if (_line.IndexOf('(') != -1)
                 {
-                    message.File = Path.Combine(_currentProjectPath, _line.Substring(0, _line.IndexOf('(')).Trim());
+                    var pathChunk = _line.Substring(0, _line.IndexOf('(')).Trim();
+                    if (Path.IsPathRooted(pathChunk))
+                        message.File = pathChunk;
+                    else
+                        message.File = Path.Combine(_currentProjectPath, pathChunk);
                     var position = _line.Substring(_line.IndexOf('(') + 1, _line.IndexOf(')') - (_line.IndexOf('(') + 1)).Split(',');
                     message.LineNumber = int.Parse(position[0]);
-                    message.LinePosition = int.Parse(position[1]);
+                    if (position.Length > 1)
+                        message.LinePosition = int.Parse(position[1]);
                 }
                 message.ErrorMessage = _line.Substring(_line.IndexOf(type) + type.Length,
                                                        _line.Length - (_line.IndexOf(type) + type.Length)).Trim();

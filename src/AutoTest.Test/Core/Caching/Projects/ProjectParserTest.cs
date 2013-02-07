@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoTest.Core.Configuration;
 using NUnit.Framework;
 using AutoTest.Core.Caching.Projects;
 using AutoTest.Test.Core.Caching.Projects.Fakes;
 using AutoTest.Core.FileSystem;
 using System.IO;
+using Rhino.Mocks;
 using AutoTest.Core.Caching;
 
 namespace AutoTest.Test.Core.Caching.Projects
@@ -16,17 +18,20 @@ namespace AutoTest.Test.Core.Caching.Projects
     {
         private ProjectParser _parser;
         private FakeFileSystemService _fs;
+        private IConfiguration _config;
 
         [SetUp]
         public void SetUp()
         {
+            _config = MockRepository.GenerateMock<IConfiguration>();
             _fs = new FakeFileSystemService();
-            _parser = new ProjectParser(_fs);
+            _parser = new ProjectParser(_fs, _config);
         }
 
         [Test]
         public void Should_mark_found_project_as_read()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.IsReadFromFile.ShouldBeTrue();
         }
@@ -34,6 +39,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_find_CSharp_references()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.References.Length.ShouldEqual(1);
             document.References[0].ShouldEqual(
@@ -46,6 +52,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_find_VisualBasic_references()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getVisualBasicProject(), null);
             document.References.Length.ShouldEqual(1);
         }
@@ -53,6 +60,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_find_FSharp_references()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getFSharpProject(), null);
             document.References.Length.ShouldEqual(1);
             document.References[0].ShouldEqual(
@@ -65,6 +73,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_add_exists_referencedby_records()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var existingDocument = new ProjectDocument(ProjectType.CSharp);
             existingDocument.AddReferencedBy("someproject");
             var document = _parser.Parse(getCSharpProject(), existingDocument);
@@ -74,6 +83,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_find_default_namespace()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.DefaultNamespace.ShouldEqual("CSharpNUnitTestProject");
 
@@ -84,6 +94,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_set_assembly_name()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.AssemblyName.ShouldEqual("CSharpNUnitTestProject.dll");
 
@@ -94,6 +105,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_force_output_path_to_out_own_custom()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.OutputPath.ShouldEqual(string.Format("bin{0}AutoTest.Net{0}", Path.DirectorySeparatorChar));
 
@@ -104,6 +116,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_set_framework_version()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.Framework.Equals("v3.5");
 
@@ -114,6 +127,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_set_product_version()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.ProductVersion.Equals("9.0.30729");
 
@@ -124,6 +138,7 @@ namespace AutoTest.Test.Core.Caching.Projects
 		[Test]
         public void Should_find_binary_reference()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.BinaryReferences.Length.ShouldEqual(10);
             document.BinaryReferences[0].ShouldEqual("nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL");
@@ -141,6 +156,7 @@ namespace AutoTest.Test.Core.Caching.Projects
         [Test]
         public void Should_read_files()
         {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new string[] {});
             var document = _parser.Parse(getCSharpProject(), null);
             document.Files[0].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Class1.cs", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
             document.Files[0].Type.ShouldEqual(FileType.Compile);
@@ -149,6 +165,13 @@ namespace AutoTest.Test.Core.Caching.Projects
             document.Files[2].Type.ShouldEqual(FileType.Resource);
             document.Files[3].File.ShouldEqual(Path.GetFullPath(string.Format("TestResources{0}VS2008{0}Resources{0}MM_shaded.bmp", Path.DirectorySeparatorChar).Replace("\\", Path.DirectorySeparatorChar.ToString())));
             document.Files[3].Type.ShouldEqual(FileType.None);
+        }
+
+        [Test]
+        public void Should_not_parse_ignored_projects()
+        {
+            _config.Stub(x => x.ProjectsToIgnore).Return(new[] { "*IgnoredProject.csproj" });
+            Assert.That(_parser.Parse("An/IgnoredProject.csproj", null), Is.Null);
         }
 
         private string getCSharpProject()

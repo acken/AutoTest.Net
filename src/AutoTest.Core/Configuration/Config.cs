@@ -61,6 +61,7 @@ namespace AutoTest.Core.Configuration
         public bool RunAssembliesInParallel { get; private set; }
         public bool TestRunnerCompatibilityMode { get; private set; }
 		public long LogRecycleSize { get; private set; }
+        public string[] ProjectsToIgnore { get; private set; }
 
         public string IgnoreFile { get { return _ignoreFile; } }
 
@@ -200,6 +201,8 @@ namespace AutoTest.Core.Configuration
                 TestRunnerCompatibilityMode = core.TestRunnerCompatibilityMode.Value;
 			if (core.LogRecycleSize.WasReadFromConfig)
                 LogRecycleSize = core.LogRecycleSize.Value;
+            if (core.ProjectsToIgnore.WasReadFromConfig)
+                ProjectsToIgnore = mergeValues(ProjectsToIgnore, core.ProjectsToIgnore);
             core.Keys.ForEach(x => mergeKey(x));
 		}
 
@@ -240,6 +243,7 @@ namespace AutoTest.Core.Configuration
                 RunAssembliesInParallel = core.RunAssembliesInParallel.Value;
                 TestRunnerCompatibilityMode = core.TestRunnerCompatibilityMode.Value;
                 LogRecycleSize = core.LogRecycleSize.Value;
+                ProjectsToIgnore = core.ProjectsToIgnore.Value;
                 _keys = core.Keys;
             }
             catch (Exception ex)
