@@ -66,8 +66,8 @@ cp $GALLIODIR/Gallio.XmlSerializers.dll $DEPLOYDIR/TestRunners/MbUnit/Gallio.Xml
 cp $BINARYDIR/mbunit.config $DEPLOYDIR/TestRunners/MbUnit/mbunit.config
 
 cp $BINARYDIR/Worst.Testing.Framework.Ever.dll $DEPLOYDIR/Worst.Testing.Framework.Ever.dll
-cp $DIR/src/AutoTest.TestRunner/Plugins/Microsoft.VisualStudio.QualityTools.UnitTestFramework/Worst.Testing.Framework.Ever.License.txt $DEPLOYDIR/Worst.Testing.Framework.Ever.License.txt
-cp $DIR/src/AutoTest.TestRunner/Plugins/Microsoft.VisualStudio.QualityTools.UnitTestFramework/NUnit.License.txt $DEPLOYDIR/NUnit.License.txt
+cp ./src/AutoTest.TestRunner/Plugins/Microsoft.VisualStudio.QualityTools.UnitTestFramework/Worst.Testing.Framework.Ever.License.txt $DEPLOYDIR/Worst.Testing.Framework.Ever.License.txt
+cp ./src/AutoTest.TestRunner/Plugins/Microsoft.VisualStudio.QualityTools.UnitTestFramework/NUnit.License.txt $DEPLOYDIR/NUnit.License.txt
 
 cp $BINARYDIR/FSWatcher.dll $DEPLOYDIR/FSWatcher.dll
 cp $BINARYDIR/Castle.Core.dll $DEPLOYDIR/Castle.Core.dll
