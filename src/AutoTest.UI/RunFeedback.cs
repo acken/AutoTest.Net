@@ -482,7 +482,7 @@ namespace AutoTest.UI
                 foreach (ListViewItem item in listViewFeedback.Items) {
                     if (item.Tag.GetType() != typeof(CacheBuildMessage))
                         continue;
-                    var itm = (WarningsToRemove)item.Tag;
+                    var itm = (CacheBuildMessage)item.Tag;
                     if (itm.Equals(warning)) {
                         item.Remove();
                         break;
