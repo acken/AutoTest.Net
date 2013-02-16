@@ -463,26 +463,44 @@ namespace AutoTest.UI
             return position;
         }
 
+
         private void removeItems(CacheMessages cache)
         {
-            var toRemove = new List<ListViewItem>();
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                {
-                    var item = (CacheBuildMessage)listItem.Tag;
-                    if (cache.ErrorsToRemove.Count(x => x.Equals(item)) > 0 || cache.WarningsToRemove.Count(x => x.Equals(item)) > 0)
-                        toRemove.Add(listItem);
+            foreach (var error in cache.ErrorsToRemove) {
+                foreach (ListViewItem item in listViewFeedback.Items) {
+                    if (item.Tag.GetType() != typeof(CacheBuildMessage))
+                        continue;
+                    var itm = (CacheBuildMessage)item.Tag;
+                    if (itm.Equals(error)) {
+                        item.Remove();
+                        break;
+                    }
                 }
-                if (listItem.Tag.GetType() == typeof(CacheTestMessage))
-                {
-                    var item = (CacheTestMessage)listItem.Tag;
-                    if (existsIn(cache.TestsToRemove, item))
-                        toRemove.Add(listItem);
+           }
+
+           foreach (var warning in cache.WarningsToRemove) {
+                foreach (ListViewItem item in listViewFeedback.Items) {
+                    if (item.Tag.GetType() != typeof(CacheBuildMessage))
+                        continue;
+                    var itm = (WarningsToRemove)item.Tag;
+                    if (itm.Equals(warning)) {
+                        item.Remove();
+                        break;
+                    }
                 }
             }
-            foreach (var itm in toRemove)
-                listViewFeedback.Items.Remove(itm);
+
+            foreach (var test in cache.TestsToRemove) {
+                foreach (ListViewItem item in listViewFeedback.Items) {
+                    if (item.Tag.GetType() != typeof(CacheTestMessage))
+                        continue;
+                    var i = (CacheTestMessage)item.Tag;
+                    if (i.Assembly.Equals(test.Assembly) && i.Test.Runner.Equals(test.Test.Runner) && i.Test.Name.Equals(test.Test.Name)) {
+                        item.Remove();
+                        break;
+                    }
+                }
+            }
         }
 
         private bool existsIn(IEnumerable<CacheTestMessage> cacheTestMessages, CacheTestMessage item)
