@@ -30,7 +30,7 @@ namespace AutoTest.UI
         private Func<bool> _isInFocus = () => false;
         private Action<string,ImageStates,string> _updatePicture = (picture, state, information) => {};
         private Action<string,string,bool> _printMessage = (message,color,normal) => {};
-        private Action _storeSelected () => {};
+        private Action _storeSelected = () => {};
         private Action _restoreSelected () => {};
         private Action<Func<CacheTestMessage,bool> _removeTest = ((t) => false) => {};
         private Action<Func<CacheBuildMessage,bool> _removeBuildItem = ((t) => false) => {};
