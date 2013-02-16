@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,15 +12,30 @@ using AutoTest.UI.TextFormatters;
 
 namespace AutoTest.UI
 {
-    public partial class RunFeedback : UserControl
-    {
-        private readonly SynchronizationContext _syncContext;
+	public class FeedbackProvider
+	{
+		private readonly SynchronizationContext _syncContext;
         private TestDetailsForm _testDetails;
         private readonly object _messagLock = new object();
         private bool _isRunning;
         private bool _progressUpdatedExternally;
         private ImageStates _lastInternalState = ImageStates.None;
         private readonly string _progressPicture;
+        private bool _iconVisible = true;
+
+        private Action<bool> _setIconVisibility = (visible) => {};
+        private Action _prepareForFocus = () => {};
+        private Action _clearList = () => {};
+        private Action<string> _clearBuilds = (project) => {};
+        private Func<bool> _isInFocus = () => false;
+        private Action<string,ImageStates,string> _updatePicture = (picture, state, information) => {};
+        private Action<string,string,bool> _printMessage = (message,color,normal) => {};
+        private Action _storeSelected () => {};
+        private Action _restoreSelected () => {};
+        private Action<Func<CacheTestMessage,bool> _removeTest = ((t) => false) => {};
+        private Action<Func<CacheBuildMessage,bool> _removeBuildItem = ((t) => false) => {};
+        private Action<string,string,string,object> _addItem = (type, message, color, tag) => {};
+        private Action<string> _setSummary = (m) => {};
 
         private bool _showErrors = true;
         private bool _showWarnings = true;
@@ -36,39 +52,36 @@ namespace AutoTest.UI
         public int ListViewWidthOffset { get; set; }
         public bool ShowRunInformation { get; set; }
 
+
         public bool ShowIcon
         {
             get
             {
-                return pictureMoose.Visible;
+                return _iconVisible;
             }
             set
             {
-                pictureMoose.Visible = value;
-                label1.Left = pictureMoose.Left + pictureMoose.Width + 5;
-
+                _iconVisible = value;
+                _setIconVisibility(value);
             }
         }
 
-        public RunFeedback()
+        public FeedbackProvider()
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
-            InitializeComponent();
-            ShowIcon = true;
             CanDebug = false;
             CanGoToTypes = false;
             ShowRunInformation = true;
-            if (ListViewWidthOffset > 0)
-                listViewFeedback.Width = Width - ListViewWidthOffset;
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            organizeListItemBehaviors();
             _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
         }
 
-        public new void Resize()
+        // Move stuff around on the form
+        public void ReOrganize()
         {
             _syncContext.Post(message =>
             {
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
+                organizeListItemBehaviors();
             }, null);
         }
 
@@ -76,10 +89,8 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                if (listViewFeedback.Items.Count > 0 && listViewFeedback.SelectedItems.Count == 0)
-                    listViewFeedback.Items[0].Selected = true;
-                listViewFeedback.Select();
-                organizeListItemBehaviors(listViewFeedback.SelectedItems);
+                _prepareForFocus();
+                organizeListItemBehaviors();
             }, null);
         }
 
@@ -87,9 +98,7 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                if (!isWindows())
-                    listViewFeedback.SelectedItems.Clear();
-                listViewFeedback.Items.Clear();
+                _clearList();
             }, null);
         }
 
@@ -97,15 +106,7 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                if (!isWindows())
-                    listViewFeedback.SelectedItems.Clear();
-                foreach (ListViewItem listItem in listViewFeedback.Items)
-                {
-                    if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                    {
-                        listViewFeedback.Items.Remove(listItem);
-                    }
-                }
+                _clearBuilds(null);
             }, null);
         }
 
@@ -113,26 +114,13 @@ namespace AutoTest.UI
         {
             _syncContext.Post(x =>
             {
-                if (!isWindows())
-                    listViewFeedback.SelectedItems.Clear();
-                var project = x.ToString();
-                foreach (ListViewItem listItem in listViewFeedback.Items)
-                {
-                    if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                    {
-                        var item = (CacheBuildMessage)listItem.Tag;
-                        if (item.Project.Equals(project))
-                            listViewFeedback.Items.Remove(listItem);
-                    }
-                }
+                _clearBuilds(proj);
             }, proj);
         }
 
         public bool IsInFocus()
         {
-            if (Focused)
-                return true;
-            return Controls.Cast<Control>().Any(control => control.Focused);
+            return _isInFocus();
         }
 
         public void SetVisibilityConfiguration(bool showErrors, bool showWarnings, bool showFailingTests, bool showIgnoredTests)
@@ -149,7 +137,11 @@ namespace AutoTest.UI
 
         public bool isTheSameTestAs(CacheTestMessage original, CacheTestMessage item)
         {
-            return original.Assembly.Equals(item.Assembly) && original.Test.Runner.Equals(item.Test.Runner) && original.Test.Name.Equals(item.Test.Name)  && original.Test.DisplayName.Equals(item.Test.DisplayName);
+            return 
+                original.Assembly.Equals(item.Assembly) &&
+                original.Test.Runner.Equals(item.Test.Runner) &&
+                original.Test.Name.Equals(item.Test.Name) &&
+                original.Test.DisplayName.Equals(item.Test.DisplayName);
         }
 
         public void ConsumeMessage(object msg)
@@ -186,13 +178,11 @@ namespace AutoTest.UI
         private void handle(CacheMessages cacheMessages)
         {
             Handle(cacheMessages);
-            label1.Refresh();
         }
 
         private void handle(LiveTestStatusMessage liveTestStatusMessage)
         {
             Handle(liveTestStatusMessage);
-            label1.Refresh();
         }
 
         private void runStarted(string x)
@@ -201,11 +191,11 @@ namespace AutoTest.UI
                 x = "processing changes...";
             printMessage(new RunMessages(RunMessageType.Normal, x.ToString()));
             generateSummary(null);
-            organizeListItemBehaviors(null);
+            organizeListItemBehaviors();
             clearRunnerTypeAnyItems();
             setProgress(ImageStates.Progress, "processing changes...", false, null, true);
             _isRunning = true;
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            organizeListItemBehaviors();
         }
 
         public void SetProgress(bool on, string information, string picture)
@@ -234,16 +224,9 @@ namespace AutoTest.UI
                 return;
             if (picture == null)
                 picture = _progressPicture;
-            if (pictureBoxWorking.ImageLocation != picture)
-            {
-                pictureBoxWorking.ImageLocation = picture;
-                pictureBoxWorking.Refresh();
-            }
-            pictureBoxRed.Visible = state == ImageStates.Red;
-            pictureMoose.Visible = state == ImageStates.Green;
-            pictureBoxGray.Visible = state == ImageStates.None;
-            pictureBoxWorking.Visible = state == ImageStates.Progress;
-            _toolTipProvider.SetToolTip(pictureBoxWorking, information);
+
+            _updatePicture(picture, state, information);
+
             if (!external)
                 _lastInternalState = state;
         }
@@ -270,7 +253,7 @@ namespace AutoTest.UI
                 generateSummary(i.Report);
             }
             _isRunning = false;
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
+            organizeListItemBehaviors();
         }
 
         private RunFinishedInfo getRunFinishedInfo(RunFinishedMessage message)
@@ -323,32 +306,28 @@ namespace AutoTest.UI
         private void printMessage(RunMessages message)
         {
             var msg = message;
+            var normal = true;
+            var color = "black";
             label1.Text = msg.Message;
-            if (msg.Type == RunMessageType.Normal)
-            {
-                label1.ForeColor = Color.Black;
-                label1.Font = new Font(label1.Font, FontStyle.Regular);
-            }
+
             if (msg.Type == RunMessageType.Succeeded)
             {
-                label1.ForeColor = Color.Green;
-                label1.Font = new Font(label1.Font, FontStyle.Bold);
+                color = "green";
+                normal = false;
             }
             if (msg.Type == RunMessageType.Failed)
             {
-                label1.ForeColor = Color.Red;
-                label1.Font = new Font(label1.Font, FontStyle.Bold);
+                color = "red";
+                normal = false;
             }
-            label1.Refresh();
+
+            _printMessage(msg.Message, color, normal);
         }
 
         private new void Handle(CacheMessages cache)
         {
-            object selected = null;
-            if (listViewFeedback.SelectedItems.Count == 1)
-                selected = listViewFeedback.SelectedItems[0].Tag;
-
-            listViewFeedback.SuspendLayout();
+            _storeSelected();
+            
             removeItems(cache);
             if (_showErrors)
             {
@@ -376,7 +355,8 @@ namespace AutoTest.UI
                 foreach (var ignored in cache.IgnoredToAdd)
                     addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected, position);
             }
-            listViewFeedback.ResumeLayout();
+            
+            _restoreSelected();
         }
 
         private new void Handle(LiveTestStatusMessage liveStatus)
@@ -384,7 +364,8 @@ namespace AutoTest.UI
             if (!_isRunning)
                 return;
 
-            listViewFeedback.SuspendLayout();
+            _storeSelected();
+
             var ofCount = liveStatus.TotalNumberOfTests > 0 ? string.Format(" of {0}", liveStatus.TotalNumberOfTests) : "";
             var testName = liveStatus.CurrentTest;
             if (testName.Trim().Length > 0)
@@ -396,115 +377,47 @@ namespace AutoTest.UI
                 foreach (var test in liveStatus.FailedButNowPassingTests)
                 {
                     var testItem = new CacheTestMessage(test.Assembly, test.Test);
-                    foreach (ListViewItem item in listViewFeedback.Items)
-                    {
-                        if (item.Tag.GetType() != typeof(CacheTestMessage))
-                            continue;
-                        var itm = (CacheTestMessage)item.Tag;
-                        if (isTheSameTestAs(itm, testItem))
-                        {
-                            item.Remove();
-                            break;
-                        }
-                    }
+                    _removeTest((t) => isTheSameTestAs(testItem, t));
                 }
 
-                object selected = null;
-                if (listViewFeedback.SelectedItems.Count == 1)
-                    selected = listViewFeedback.SelectedItems[0].Tag;
                 foreach (var test in liveStatus.FailedTests)
                 {
                     var testItem = new CacheTestMessage(test.Assembly, test.Test);
-                    ListViewItem toRemove = null;
-                    foreach (ListViewItem item in listViewFeedback.Items)
-                    {
-                        if (item.Tag.GetType() != typeof(CacheTestMessage))
-                            continue;
-                        var itm = (CacheTestMessage)item.Tag;
-                        if (isTheSameTestAs(itm, testItem))
-                        {
-                            toRemove = item;
-                            break;
-                        }
-                    }
-                    int index = toRemove == null ? 0 : toRemove.Index;
-                    if (toRemove != null)
-                        toRemove.Remove();
+                    _removeTest((t) => isTheSameTestAs(testItem, t));
                     addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem, selected, index);
                 }
             }
-            listViewFeedback.ResumeLayout();
+
+            _restoreSelected();
         }
 
         private void clearRunnerTypeAnyItems()
         {
             var toRemove = new List<ListViewItem>();
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheTestMessage))
-                {
-                    var item = (CacheTestMessage)listItem.Tag;
-                    if (item.Test.Runner == TestRunner.Any)
-                        toRemove.Add(listItem);
-                }
-            }
-            toRemove.ForEach(x => listViewFeedback.Items.Remove(x));
-        }
-
-        private int getFirstItemPosition(string[] placeBefore)
-        {
-            int position = 0;
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if ((from p in placeBefore where p.Equals(listItem.Text) select p).Any())
-                    return position;
-                position++;
-            }
-            return position;
+            _removeTest((t) => t.Test.Runner == TestRunner.Any);
         }
 
         private void removeItems(CacheMessages cache)
         {
-            var toRemove = new List<ListViewItem>();
-            foreach (ListViewItem listItem in listViewFeedback.Items)
-            {
-                if (listItem.Tag.GetType() == typeof(CacheBuildMessage))
-                {
-                    var item = (CacheBuildMessage)listItem.Tag;
-                    if (cache.ErrorsToRemove.Count(x => x.Equals(item)) > 0 || cache.WarningsToRemove.Count(x => x.Equals(item)) > 0)
-                        toRemove.Add(listItem);
-                }
-                if (listItem.Tag.GetType() == typeof(CacheTestMessage))
-                {
-                    var item = (CacheTestMessage)listItem.Tag;
-                    if (existsIn(cache.TestsToRemove, item))
-                        toRemove.Add(listItem);
-                }
-            }
-            foreach (var itm in toRemove)
-                listViewFeedback.Items.Remove(itm);
+            foreach (var item in cache.ErrorsToRemove)
+                _removeBuildItem((itm) => itm.Equals(item));
+            foreach (var item in cache.WarningsToRemove)
+                _removeBuildItem((itm) => itm.Equals(item));
+
+            foreach (var item in cache.TestsToRemove)
+                _removeTest((t) => {
+                        return
+                            t.Assembly.Equals(item.Assembly) &&
+                            t.Test.Runner.Equals(item.Test.Runner) &&
+                            t.Test.Name.Equals(item.Test.Name);
+                    });
         }
 
-        private bool existsIn(IEnumerable<CacheTestMessage> cacheTestMessages, CacheTestMessage item)
-        {
-            var query = from i in cacheTestMessages
-                        where i.Assembly.Equals(item.Assembly) && i.Test.Runner.Equals(item.Test.Runner) && i.Test.Name.Equals(item.Test.Name)
-                        select i;
-            return query.Any();
-        }
-
-        private void addFeedbackItem(string type, string message, Color colour, object tag, object selected, int position)
+        private void addFeedbackItem(string type, string message, Color colour, object tag)
         {
             if (testExists(tag))
                 return;
-            var item = listViewFeedback.Items.Insert(position, type);
-            item.SubItems.Add(message);
-            item.ForeColor = colour;
-            item.Tag = tag;
-            if (isWindows()) {
-                if (selected != null && tag.GetType() == selected.GetType() && tag.Equals(selected))
-                    item.Selected = true;
-            }
+            _addItem(type, message, colour.ToString().ToLower(), tag);
         }
 
         private bool isWindows() {
@@ -521,7 +434,7 @@ namespace AutoTest.UI
             if (tag.GetType() != typeof(CacheTestMessage))
                 return false;
             var test = (CacheTestMessage)tag;
-            return (from ListViewItem item in listViewFeedback.Items where item.Tag.GetType() == typeof (CacheTestMessage) select (CacheTestMessage) item.Tag).Any(itm => isTheSameTestAs(test, itm));
+            return _exists((item) => item.GetType() == typeof(CacheTestMessage) && isTheSameTestAs(test, item));
         }
 
         private string formatBuildResult(CacheBuildMessage item)
@@ -534,29 +447,12 @@ namespace AutoTest.UI
             return string.Format("{0} -> ({1}) {2}", item.Test.Status, item.Test.Runner.ToString(), item.Test.DisplayName);
         }
 
-        private void listViewFeedback_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-        }
-
-        private void organizeListItemBehaviors(ListView.SelectedListViewItemCollection collection)
+        private void organizeListItemBehaviors()
         {
             using (var handler = new ListItemBehaviourHandler(this))
             {
                 handler.Organize(collection, _isRunning);
             }
-        }
-
-        private void listViewFeedback_DoubleClick(object sender, EventArgs e)
-        {
-            if (listViewFeedback.SelectedItems.Count != 1)
-                return;
-
-            var item = listViewFeedback.SelectedItems[0].Tag;
-            if (item.GetType() == typeof(CacheBuildMessage))
-                goToBuildItemReference((CacheBuildMessage)item);
-            if (item.GetType() == typeof(CacheTestMessage))
-                goToTestItemReference((CacheTestMessage)item);
         }
 
         private void goToBuildItemReference(CacheBuildMessage buildItem)
@@ -617,150 +513,27 @@ namespace AutoTest.UI
             }
 
             var builder = new SummaryBuilder(report);
-            _toolTipProvider.SetToolTip(label1, builder.Build());
+            _setSummary(builder.Build());
         }
+    }
 
-        private void linkLabelDebugTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (DebugTest == null)
-                return;
+    public class GoToReferenceArgs : EventArgs
+    {
+        public CodePosition Position { get; private set; }
+        public GoToReferenceArgs(CodePosition position) { Position = position; }
+    }
 
-            if (listViewFeedback.SelectedItems.Count != 1)
-                return;
-            if (listViewFeedback.SelectedItems[0].Tag.GetType() != typeof(CacheTestMessage))
-                return;
-            
-            var test = (CacheTestMessage)listViewFeedback.SelectedItems[0].Tag;
-            DebugTest(this, new DebugTestArgs(test));
-        }
+    public class GoToTypeArgs : EventArgs
+    {
+        public bool Handled = true;
+        public string Assembly { get; private set; }
+        public string TypeName { get; private set; }
+        public GoToTypeArgs(string assembly, string typename) { Assembly = assembly; TypeName = typename; }
+    }
 
-        private void listViewFeedback_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.KeyCode.Equals(Keys.Enter))
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    listViewFeedback_DoubleClick(this, new EventArgs());
-                    return;
-                }
-                if (e.KeyCode.Equals(Keys.D))
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    if (linkLabelDebugTest.Visible == true)
-                        linkLabelDebugTest_LinkClicked(this, new LinkLabelLinkClickedEventArgs(new LinkLabel.Link(0, 1)));
-                    return;
-                }
-
-                if (e.KeyCode.Equals(Keys.I))
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    if (linkLabelTestDetails.Visible)
-                        linkLabelTestDetails_LinkClicked(this, new LinkLabelLinkClickedEventArgs(null));
-                    else if (linkLabelErrorDescription.Visible)
-                        linkLabelErrorDescription_LinkClicked(this, new LinkLabelLinkClickedEventArgs(new LinkLabel.Link(0, 1)));
-                    return;
-                }
-
-                if (e.KeyCode.Equals(Keys.A))
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    if (linkLabelCancelRun.Visible)
-                        linkLabelSystemMessages_LinkClicked(this, new LinkLabelLinkClickedEventArgs(new LinkLabel.Link(0, 1)));
-                    return;
-                }
-                if (e.KeyCode.Equals(Keys.K) || (e.Shift && e.KeyCode.Equals(Keys.F8)))
-                {
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
-                    SendKeys.Send("{UP}");
-                    if (e.KeyCode.Equals(Keys.F8))
-                        listViewFeedback_DoubleClick(this, new EventArgs());
-                    return;
-                }
-                if (e.KeyCode.Equals(Keys.J) || (e.KeyCode.Equals(Keys.F8)))
-                {
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    SendKeys.Send("{DOWN}");
-                    if (e.KeyCode.Equals(Keys.F8))
-                        listViewFeedback_DoubleClick(this, new EventArgs());
-                }
-            }
-            catch
-            {
-                // Pft who logs!?
-            }
-        }
-
-        private void linkLabelTestDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                var item = (CacheTestMessage)listViewFeedback.SelectedItems[0].Tag;
-                var builder = new DetailBuilder(item);
-                var details = builder.Text;
-                var links = builder.Links;
-                if (CanGoToTypes)
-                    links.Insert(0, new Link(details.IndexOf(item.Test.Name), details.IndexOf(item.Test.Name) + item.Test.Name.Length, item.Assembly, item.Test.Name));
-                showDetailsWindow(details, "Test output", links, Screen.PrimaryScreen.WorkingArea.Width > 1024 ? Screen.PrimaryScreen.WorkingArea.Width - 500 : Screen.PrimaryScreen.WorkingArea.Width);
-            }
-            catch
-            {
-                // Pft who logs!?
-            }
-        }
-
-        private void linkLabelErrorDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                var item = (CacheBuildMessage)listViewFeedback.SelectedItems[0].Tag;
-                var builder = new DetailBuilder(item);
-                var details = builder.Text;
-                var links = builder.Links;
-                showDetailsWindow(details, "Build output", links, Screen.PrimaryScreen.WorkingArea.Width > 1024 ? 1024 : Screen.PrimaryScreen.WorkingArea.Width);
-            }
-            catch
-            {
-                // Pft who logs!?
-            }
-        }
-
-        private void showDetailsWindow(string message, string caption, List<Link> links, int maxWidth)
-        {
-            var hasTestDetails = _testDetails != null;
-            var x = -1;
-            var y = -1;
-            if (hasTestDetails)
-            {
-                x = _testDetails.Left;
-                y = _testDetails.Top;
-            }
-
-            _testDetails = new TestDetailsForm((file, line) => goToReference(file, line, 0), goToType, x, y, message, caption, links, maxWidth);
-            _testDetails.Show();
-            _testDetails.BringToFront();
-        }
-
-        private void linkLabelSystemMessages_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (CancelRun != null)
-                CancelRun(this, new EventArgs());
-        }
-
-        private void RunFeedback_Resize(object sender, EventArgs e)
-        {
-            organizeListItemBehaviors(listViewFeedback.SelectedItems);
-        }
-
-        private void listViewFeedback_Resize(object sender, EventArgs e)
-        {
-            listViewFeedback.Columns[1].Width = listViewFeedback.Width - (listViewFeedback.Columns[0].Width + 25);
-        }
+    public class DebugTestArgs : EventArgs
+    {
+        public CacheTestMessage Test { get; private set; }
+        public DebugTestArgs(CacheTestMessage test) { Test = test; }
     }
 }
