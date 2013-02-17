@@ -93,6 +93,74 @@ namespace AutoTest.UI
             _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
         }
 
+
+        // Client events
+
+        public FeedbackProvider OnIconVisibliltyChange(Action<bool> setIconVisibility) {
+            _setIconVisibility = setIconVisibility;
+            return this;
+        }
+        public FeedbackProvider OnPrepareForFocus(Action prepareForFocus) {
+            _prepareForFocus = prepareForFocus;
+            return this;
+        }
+        public FeedbackProvider OnClearList(Action clearList) {
+            _clearList = clearList;
+            return this;
+        }
+        public FeedbackProvider OnClearBuilds(Action<string> clearBuilds) {
+            _clearBuilds = clearBuilds;
+            return this;
+        }
+        public FeedbackProvider OnIsInFocus(Func<bool> isInFocus) {
+            _isInFocus = isInFocus;
+            return this;
+        }
+        public FeedbackProvider OnUpdatePicture(Action<string,ImageStates,string> updatePicture) {
+            _updatePicture = updatePicture;
+            return this;
+        }
+        public FeedbackProvider OnPrintMessage(Action<string,string,bool> printMessage) {
+            _printMessage = printMessage;
+            return this;
+        }
+        public FeedbackProvider OnStoreSelectedItem(Action storeSelected) {
+            _storeSelected = storeSelected;
+            return this;
+        }
+        public FeedbackProvider OnReStoreSelectedItem(Action reStoreSelected) {
+            _restoreSelected = reStoreSelected;
+            return this;
+        }
+        public FeedbackProvider OnRemoveTest(Action<Func<CacheTestMessage,bool>> removeTest) {
+            _removeTest = removeTest;
+            return this;
+        }
+        public FeedbackProvider OnRemoveBuildItem(Action<Func<CacheBuildMessage,bool>> removeBuildItem) {
+            _removeBuildItem = removeBuildItem;
+            return this;
+        }
+        public FeedbackProvider OnAddItem(Action<string,string,string,object> addItem) {
+            _addItem = addItem;
+            return this;
+        }
+        public FeedbackProvider OnSetSummary(Action<string> setSummary) {
+            _setSummary = setSummary;
+            return this;
+        }
+        public FeedbackProvider OnExists(Func<Func<object,bool>,bool> exists) {
+            _exists = exists;
+            return this;
+        }
+        public FeedbackProvider OnGetWidth(Func<int> getWidth) {
+            _getWidth = getWidth;
+            return this;
+        }
+        public FeedbackProvider OnGetSelectedItem(Func<object> getSelectedItem) {
+            _getSelectedItem = getSelectedItem;
+            return this;
+        }
+
         // Move stuff around on the form
         public void ReOrganize()
         {
