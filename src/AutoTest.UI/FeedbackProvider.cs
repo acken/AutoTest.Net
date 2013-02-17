@@ -15,7 +15,6 @@ namespace AutoTest.UI
 	public class FeedbackProvider
 	{
 		private readonly SynchronizationContext _syncContext;
-        private TestDetailsForm _testDetails;
         private readonly object _messagLock = new object();
         private bool _isRunning;
         private bool _progressUpdatedExternally;
