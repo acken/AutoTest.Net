@@ -541,10 +541,11 @@ namespace AutoTest.UI
 
         private void organizeListItemBehaviors(ListView.SelectedListViewItemCollection collection)
         {
-            using (var handler = new ListItemBehaviourHandler(this))
+            // Fix when mergine with FeedbackProvider
+            /*using (var handler = new ListItemBehaviourHandler(this))
             {
                 handler.Organize(collection, _isRunning);
-            }
+            }*/
         }
 
         private void listViewFeedback_DoubleClick(object sender, EventArgs e)

@@ -31,11 +31,19 @@ namespace AutoTest.UI
         private Action<string,ImageStates,string> _updatePicture = (picture, state, information) => {};
         private Action<string,string,bool> _printMessage = (message,color,normal) => {};
         private Action _storeSelected = () => {};
-        private Action _restoreSelected () => {};
-        private Action<Func<CacheTestMessage,bool> _removeTest = ((t) => false) => {};
-        private Action<Func<CacheBuildMessage,bool> _removeBuildItem = ((t) => false) => {};
+        private Action _restoreSelected = () => {};
+        private Action<Func<CacheTestMessage,bool>> _removeTest = (check) => {};
+        private Action<Func<CacheBuildMessage,bool>> _removeBuildItem = (check) => {};
         private Action<string,string,string,object> _addItem = (type, message, color, tag) => {};
         private Action<string> _setSummary = (m) => {};
+        private Func<Func<object,bool>,bool> _exists = (check) => false;
+        private Func<int> _getWidth = () => 0;
+        private Func<object> _getSelectedItem = () => null;
+
+        private IListItemBehaviour _cancelRun;
+        private IListItemBehaviour _debugTest;
+        private IListItemBehaviour _testDetailsLink;
+        private IListItemBehaviour _errorDescription;
 
         private bool _showErrors = true;
         private bool _showWarnings = true;
@@ -51,6 +59,7 @@ namespace AutoTest.UI
         public bool CanDebug { get; set; }
         public int ListViewWidthOffset { get; set; }
         public bool ShowRunInformation { get; set; }
+        public int Width { get { return _getWidth(); } }
 
 
         public bool ShowIcon
@@ -66,9 +75,17 @@ namespace AutoTest.UI
             }
         }
 
-        public FeedbackProvider()
+        public FeedbackProvider(
+            IListItemBehaviour cancelRun,
+            IListItemBehaviour debugTest,
+            IListItemBehaviour testDetails,
+            IListItemBehaviour errorDescription)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
+            _cancelRun = cancelRun;
+            _debugTest = debugTest;
+            _testDetailsLink = testDetails;
+            _errorDescription = errorDescription;
             CanDebug = false;
             CanGoToTypes = false;
             ShowRunInformation = true;
@@ -308,7 +325,6 @@ namespace AutoTest.UI
             var msg = message;
             var normal = true;
             var color = "black";
-            label1.Text = msg.Message;
 
             if (msg.Type == RunMessageType.Succeeded)
             {
@@ -332,28 +348,25 @@ namespace AutoTest.UI
             if (_showErrors)
             {
                 foreach (var error in cache.ErrorsToAdd)
-                    addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error, selected, 0);
+                    addFeedbackItem("Build error", formatBuildResult(error), Color.Red, error);
             }
 
             if (_showFailing)
             {
-                var position = getFirstItemPosition(new[] { "Test failed", "Build warning", "Test ignored" });
                 foreach (var failed in cache.FailedToAdd)
-                    addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed, selected, position);
+                    addFeedbackItem("Test failed", formatTestResult(failed), Color.Red, failed);
             }
 
             if (_showWarnings)
             {
-                var position = getFirstItemPosition(new[] { "Build warning", "Test ignored" });
                 foreach (var warning in cache.WarningsToAdd)
-                    addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning, selected, position);
+                    addFeedbackItem("Build warning", formatBuildResult(warning), Color.Black, warning);
             }
 
             if (_showIgnored)
             {
-                var position = getFirstItemPosition(new[] { "Test ignored" });
                 foreach (var ignored in cache.IgnoredToAdd)
-                    addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored, selected, position);
+                    addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored);
             }
             
             _restoreSelected();
@@ -384,7 +397,7 @@ namespace AutoTest.UI
                 {
                     var testItem = new CacheTestMessage(test.Assembly, test.Test);
                     _removeTest((t) => isTheSameTestAs(testItem, t));
-                    addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem, selected, index);
+                    addFeedbackItem("Test failed", formatTestResult(testItem), Color.Red, testItem);
                 }
             }
 
@@ -393,7 +406,6 @@ namespace AutoTest.UI
 
         private void clearRunnerTypeAnyItems()
         {
-            var toRemove = new List<ListViewItem>();
             _removeTest((t) => t.Test.Runner == TestRunner.Any);
         }
 
@@ -434,7 +446,7 @@ namespace AutoTest.UI
             if (tag.GetType() != typeof(CacheTestMessage))
                 return false;
             var test = (CacheTestMessage)tag;
-            return _exists((item) => item.GetType() == typeof(CacheTestMessage) && isTheSameTestAs(test, item));
+            return _exists((item) => item.GetType() == typeof(CacheTestMessage) && isTheSameTestAs(test, item as CacheTestMessage));
         }
 
         private string formatBuildResult(CacheBuildMessage item)
@@ -449,9 +461,15 @@ namespace AutoTest.UI
 
         private void organizeListItemBehaviors()
         {
-            using (var handler = new ListItemBehaviourHandler(this))
+            var selected = _getSelectedItem();
+            using (var handler = new ListItemBehaviourHandler(
+                                        this,
+                                        _cancelRun,
+                                        _debugTest,
+                                        _testDetailsLink,
+                                        _errorDescription))
             {
-                handler.Organize(collection, _isRunning);
+                handler.Organize(selected, _isRunning);
             }
         }
 
@@ -508,7 +526,7 @@ namespace AutoTest.UI
         {
             if (report == null)
             {
-                _toolTipProvider.RemoveAll();
+                _setSummary("");
                 return;
             }
 
