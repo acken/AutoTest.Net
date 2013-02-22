@@ -19,10 +19,13 @@ namespace AutoTest.UI
         private bool _isRunning;
         private bool _progressUpdatedExternally;
         private ImageStates _lastInternalState = ImageStates.None;
-        private readonly string _progressPicture;
+        private string _progressPicture;
         private bool _iconVisible = true;
 
-        private Action<bool> _setIconVisibility = (visible) => {};
+        private Action<string,int,int> _goToReference = (file,line,column) => {};
+        private Func<string,string,bool> _goToType = (assembly,typename) => false;
+        private Action<CacheTestMessage> _debugTest = (t) => {};
+        private Action _cancelRun = () => {};
         private Action _prepareForFocus = () => {};
         private Action _clearList = () => {};
         private Action<string> _clearBuilds = (project) => {};
@@ -30,49 +33,29 @@ namespace AutoTest.UI
         private Action<string,ImageStates,string> _updatePicture = (picture, state, information) => {};
         private Action<string,string,bool> _printMessage = (message,color,normal) => {};
         private Action _storeSelected = () => {};
-        private Action _restoreSelected = () => {};
+        private Action<Func<object,object,bool>> _restoreSelected = (check) => {};
         private Action<Func<CacheTestMessage,bool>> _removeTest = (check) => {};
         private Action<Func<CacheBuildMessage,bool>> _removeBuildItem = (check) => {};
         private Action<string,string,string,object> _addItem = (type, message, color, tag) => {};
         private Action<string> _setSummary = (m) => {};
         private Func<Func<object,bool>,bool> _exists = (check) => false;
-        private Func<int> _getWidth = () => 0;
         private Func<object> _getSelectedItem = () => null;
+        private Func<int> _getWidth = () => 0;
 
-        private IListItemBehaviour _cancelRun;
-        private IListItemBehaviour _debugTest;
-        private IListItemBehaviour _testDetailsLink;
-        private IListItemBehaviour _errorDescription;
+        private IListItemBehaviour _cancelRunItem;
+        private IListItemBehaviour _debugTestItem;
+        private IListItemBehaviour _testDetailsLinkItem;
+        private IListItemBehaviour _errorDescriptionItem;
 
         private bool _showErrors = true;
         private bool _showWarnings = true;
         private bool _showFailing = true;
         private bool _showIgnored = true;
 
-        public event EventHandler<GoToReferenceArgs> GoToReference;
-        public event EventHandler<GoToTypeArgs> GoToType;
-        public event EventHandler<DebugTestArgs> DebugTest;
-        public event EventHandler CancelRun;
-
         public bool CanGoToTypes { get; set; }
         public bool CanDebug { get; set; }
-        public int ListViewWidthOffset { get; set; }
         public bool ShowRunInformation { get; set; }
         public int Width { get { return _getWidth(); } }
-
-
-        public bool ShowIcon
-        {
-            get
-            {
-                return _iconVisible;
-            }
-            set
-            {
-                _iconVisible = value;
-                _setIconVisibility(value);
-            }
-        }
 
         public FeedbackProvider(
             IListItemBehaviour cancelRun,
@@ -81,22 +64,34 @@ namespace AutoTest.UI
             IListItemBehaviour errorDescription)
         {
             _syncContext = AsyncOperationManager.SynchronizationContext;
-            _cancelRun = cancelRun;
-            _debugTest = debugTest;
-            _testDetailsLink = testDetails;
-            _errorDescription = errorDescription;
-            CanDebug = false;
+            _cancelRunItem = cancelRun;
+            _debugTestItem = debugTest;
+            _testDetailsLinkItem = testDetails;
+            _errorDescriptionItem = errorDescription;
             CanGoToTypes = false;
             ShowRunInformation = true;
-            organizeListItemBehaviors();
-            _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
         }
 
+        public void Initialize() {
+            organizeListItemBehaviors();
+            _progressPicture = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "progress.gif");
+            setProgress(ImageStates.None, "", false, null, false);
+        }
 
-        // Client events
-
-        public FeedbackProvider OnIconVisibliltyChange(Action<bool> setIconVisibility) {
-            _setIconVisibility = setIconVisibility;
+        public FeedbackProvider OnGoToReference(Action<string,int,int> goToReference) {
+            _goToReference = goToReference;
+            return this;
+        }
+        public FeedbackProvider OnGoToType(Func<string,string,bool> goToType) {
+            _goToType = goToType;
+            return this;
+        }
+        public FeedbackProvider OnDebugTest(Action<CacheTestMessage> debugTest) {
+            _debugTest = debugTest;
+            return this;
+        }
+        public FeedbackProvider OnCancelRun(Action cancelRun) {
+            _cancelRun = cancelRun;
             return this;
         }
         public FeedbackProvider OnPrepareForFocus(Action prepareForFocus) {
@@ -123,11 +118,11 @@ namespace AutoTest.UI
             _printMessage = printMessage;
             return this;
         }
-        public FeedbackProvider OnStoreSelectedItem(Action storeSelected) {
+        public FeedbackProvider OnStoreSelected(Action storeSelected) {
             _storeSelected = storeSelected;
             return this;
         }
-        public FeedbackProvider OnReStoreSelectedItem(Action reStoreSelected) {
+        public FeedbackProvider OnRestoreSelected(Action<Func<object,object,bool>> reStoreSelected) {
             _restoreSelected = reStoreSelected;
             return this;
         }
@@ -151,12 +146,12 @@ namespace AutoTest.UI
             _exists = exists;
             return this;
         }
-        public FeedbackProvider OnGetWidth(Func<int> getWidth) {
-            _getWidth = getWidth;
-            return this;
-        }
         public FeedbackProvider OnGetSelectedItem(Func<object> getSelectedItem) {
             _getSelectedItem = getSelectedItem;
+            return this;
+        }
+        public FeedbackProvider OnGetWidth(Func<int> getWidth) {
+            _getWidth = getWidth;
             return this;
         }
 
@@ -167,6 +162,21 @@ namespace AutoTest.UI
             {
                 organizeListItemBehaviors();
             }, null);
+        }
+
+        public void GoTo(object item) {
+            if (item.GetType() == typeof(CacheBuildMessage))
+                goToBuildItemReference((CacheBuildMessage)item);
+            if (item.GetType() == typeof(CacheTestMessage))
+                goToTestItemReference((CacheTestMessage)item);
+        }
+
+        public void GoTo(string file, int line, int column) {
+            goToReference(file, line, column);
+        }
+
+        public bool GoTo(string assembly, string type) {
+            return goToType(assembly, type);
         }
 
         public void PrepareForFocus()
@@ -436,7 +446,7 @@ namespace AutoTest.UI
                     addFeedbackItem("Test ignored", formatTestResult(ignored), Color.Black, ignored);
             }
             
-            _restoreSelected();
+            _restoreSelected(isSame);
         }
 
         private new void Handle(LiveTestStatusMessage liveStatus)
@@ -468,7 +478,7 @@ namespace AutoTest.UI
                 }
             }
 
-            _restoreSelected();
+            _restoreSelected(isSame);
         }
 
         private void clearRunnerTypeAnyItems()
@@ -516,6 +526,17 @@ namespace AutoTest.UI
             return _exists((item) => item.GetType() == typeof(CacheTestMessage) && isTheSameTestAs(test, item as CacheTestMessage));
         }
 
+        private bool isSame(object obj1, object obj2)
+        {
+            if (obj1.GetType() != obj2.GetType())
+                return false;
+            if (obj1.GetType() == typeof(CacheBuildMessage))
+                return ((CacheBuildMessage)obj1).Equals((CacheBuildMessage)obj2);
+            if (obj1.GetType() == typeof(CacheTestMessage))
+                return isTheSameTestAs((CacheTestMessage)obj1, (CacheTestMessage)obj2);
+            return false;
+        }
+
         private string formatBuildResult(CacheBuildMessage item)
         {
             return string.Format("{0}, {1}", item.BuildItem.ErrorMessage, item.BuildItem.File);
@@ -531,10 +552,10 @@ namespace AutoTest.UI
             var selected = _getSelectedItem();
             using (var handler = new ListItemBehaviourHandler(
                                         this,
-                                        _cancelRun,
-                                        _debugTest,
-                                        _testDetailsLink,
-                                        _errorDescription))
+                                        _cancelRunItem,
+                                        _debugTestItem,
+                                        _testDetailsLinkItem,
+                                        _errorDescriptionItem))
             {
                 handler.Organize(selected, _isRunning);
             }
@@ -576,17 +597,13 @@ namespace AutoTest.UI
 
         private void goToReference(string file, int lineNumber, int column)
         {
-            if (GoToReference != null)
-                GoToReference(this, new GoToReferenceArgs(new CodePosition(file, lineNumber, column)));
+            _goToReference(file, lineNumber, column);
         }
 
         private bool goToType(string assembly, string typename)
         {
             var type = typename.Replace("+", ".");
-            var args = new GoToTypeArgs(assembly, type);
-            if (GoToType != null)
-                GoToType(this, args);
-            return args.Handled;
+            return _goToType(assembly, type);
         }
 
         private void generateSummary(RunReport report)
@@ -600,25 +617,5 @@ namespace AutoTest.UI
             var builder = new SummaryBuilder(report);
             _setSummary(builder.Build());
         }
-    }
-
-    public class GoToReferenceArgs : EventArgs
-    {
-        public CodePosition Position { get; private set; }
-        public GoToReferenceArgs(CodePosition position) { Position = position; }
-    }
-
-    public class GoToTypeArgs : EventArgs
-    {
-        public bool Handled = true;
-        public string Assembly { get; private set; }
-        public string TypeName { get; private set; }
-        public GoToTypeArgs(string assembly, string typename) { Assembly = assembly; TypeName = typename; }
-    }
-
-    public class DebugTestArgs : EventArgs
-    {
-        public CacheTestMessage Test { get; private set; }
-        public DebugTestArgs(CacheTestMessage test) { Test = test; }
     }
 }

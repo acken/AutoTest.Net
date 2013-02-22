@@ -4,14 +4,30 @@ using AutoTest.Core.Launchers;
 using AutoTest.Core.Messaging;
 using AutoTest.Messages;
 using AutoTest.Core.DebugLog;
+using AutoTest.UI;
 
 namespace AutoTest.WinForms
 {
+    public class LabelItembehaviour : IListItemBehaviour
+    {
+        private Label _label;
+
+        public LabelItembehaviour(Label label) {
+            _label = label;
+        }
+
+        public int Left { get { return _label.Left; } set { _label.Left = value; } }
+        public int Width { get { return _label.Width; } set { _label.Width = value; } }
+        public string Name { get { return _label.Name; } }
+        public bool Visible { get { return _label.Visible; } set { _label.Visible = value; } }
+    }
+
     public partial class FeedbackForm : Form, IOverviewForm, IMessageForwarder
     {
         private IApplicatonLauncher _launcher;
         private IMessageBus _bus;
         private string _watchToken = null;
+        private FeedbackProvider _provider;
 
         public FeedbackForm(IApplicatonLauncher launcher, IMessageBus bus)
         {
@@ -19,7 +35,13 @@ namespace AutoTest.WinForms
             _bus = bus;
             addContextMenues();
             InitializeComponent();
-            runFeedback.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Listening for changes"));
+            _provider = new FeedbackProvider(
+                new LabelItembehaviour(runFeedback.linkLabelCancelRun),
+                new LabelItembehaviour(runFeedback.linkLabelDebugTest),
+                new LabelItembehaviour(runFeedback.linkLabelTestDetails),
+                new LabelItembehaviour(runFeedback.linkLabelErrorDescription));
+            runFeedback.SetFeedbackProvider(_provider);
+            _provider.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Listening for changes"));
         }
 
         private void addContextMenues()
@@ -63,7 +85,7 @@ namespace AutoTest.WinForms
         public void Forward(object message)
         {
             Debug.WriteDetail("Handling {0}", message.GetType());
-            runFeedback.ConsumeMessage(message);
+            _provider.ConsumeMessage(message);
             if (message.GetType().Equals(typeof(ExternalCommandMessage)))
             {
                 var commandMessage = (ExternalCommandMessage)message;
@@ -83,7 +105,7 @@ namespace AutoTest.WinForms
 						msg.Arguments[1].ToLower() == "setfocus")
                     {
                         Activate();
-                        runFeedback.PrepareForFocus();
+                        _provider.PrepareForFocus();
                     }
                 }
             }
