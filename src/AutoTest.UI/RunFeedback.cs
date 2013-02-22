@@ -183,6 +183,9 @@ namespace AutoTest.UI
                     })
                 .OnGetWidth(() => this.Width);
 
+            _provider.CanGoToTypes = CanGoToTypes;
+            _provider.ShowRunInformation = ShowRunInformation;
+            _provider.CanDebug = CanDebug;
             _provider.Initialize();
         }
 
@@ -194,18 +197,9 @@ namespace AutoTest.UI
         public event EventHandler<DebugTestArgs> DebugTest;
         public event EventHandler CancelRun;
 
-        public bool CanGoToTypes { 
-            get { return _provider.CanGoToTypes; }
-            set { _provider.CanGoToTypes = value; }
-        }
-        public bool ShowRunInformation { 
-            get { return _provider.ShowRunInformation; }
-            set { _provider.ShowRunInformation = value; }
-        }
-        public bool CanDebug { 
-            get { return _provider.CanDebug; }
-            set { _provider.CanDebug = value; }
-        }
+        public bool CanGoToTypes { get; set; }
+        public bool ShowRunInformation { get; set; }
+        public bool CanDebug { get; set; }
         public int ListViewWidthOffset { get; set; }
 
         public bool ShowIcon {
