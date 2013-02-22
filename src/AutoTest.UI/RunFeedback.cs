@@ -15,6 +15,7 @@ namespace AutoTest.UI
     {
         private object _selected = null;
         private FeedbackProvider _provider;
+
         public void SetFeedbackProvider(FeedbackProvider provider) {
             _provider = provider;
 
