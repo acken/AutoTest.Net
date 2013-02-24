@@ -401,16 +401,16 @@ namespace AutoTest.UI
         {
             var msg = message;
             var normal = true;
-            var color = "black";
+            var color = "Black";
 
             if (msg.Type == RunMessageType.Succeeded)
             {
-                color = "green";
+                color = "Green";
                 normal = false;
             }
             if (msg.Type == RunMessageType.Failed)
             {
-                color = "red";
+                color = "Red";
                 normal = false;
             }
 
@@ -506,7 +506,7 @@ namespace AutoTest.UI
         {
             if (testExists(tag))
                 return;
-            _addItem(type, message, colour.ToString().ToLower(), tag);
+            _addItem(type, message, colour.Name, tag);
         }
 
         private bool isWindows() {

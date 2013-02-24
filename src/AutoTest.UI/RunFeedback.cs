@@ -94,14 +94,7 @@ namespace AutoTest.UI
                             label1.Font = new Font(label1.Font, FontStyle.Bold);
 
                         label1.Text = msg;
-                        
-                        if (color == "green")
-                            label1.ForeColor = Color.Green;
-                        else if (color == "red")
-                            label1.ForeColor = Color.Red;
-                        else 
-                            label1.ForeColor = Color.Black;
-
+                        label1.ForeColor = Color.FromName(color);
                         label1.Refresh();
                     })
                 .OnStoreSelected(
@@ -120,6 +113,7 @@ namespace AutoTest.UI
                             }
                         }
                         listViewFeedback.ResumeLayout();
+                        listViewFeedback.Refresh();
                     })
                 .OnAddItem(
                     (type, message, color, tag) => {
