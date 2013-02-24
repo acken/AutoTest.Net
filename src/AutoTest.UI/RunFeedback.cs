@@ -213,7 +213,8 @@ namespace AutoTest.UI
         }
 
         public new void Resize() {
-            _provider.ReOrganize();
+            if (_provider != null)
+                _provider.ReOrganize();
         }
 
         private int getFirstItemPosition(string[] placeBefore)
