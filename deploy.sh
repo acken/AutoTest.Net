@@ -34,6 +34,7 @@ cp $BINARYDIR/AutoTest.Console.exe $DEPLOYDIR/AutoTest.Console.exe
 cp $BINARYDIR/AutoTest.UI.dll $DEPLOYDIR/AutoTest.UI.dll
 cp $BINARYDIR/AutoTest.WinForms.exe $DEPLOYDIR/AutoTest.WinForms.exe
 cp $BINARYDIR/AutoTest.config.template $DEPLOYDIR/AutoTest.config
+sed -i "s/C:\\\Windows\\\Microsoft.NET\\\Framework\\\v4.0.30319\\\MSBuild.exe/\/usr\/bin\/xbuild/g" $DEPLOYDIR/AutoTest.config
 cp ./README $DEPLOYDIR/README
 cp ./LICENSE $DEPLOYDIR/AutoTest.License.txt
 
