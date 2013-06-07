@@ -58,6 +58,7 @@ namespace AutoTest.WinForms
             this.Controls.Add(this.runFeedback);
             this.Name = "FeedbackForm";
             this.Text = "AutoTest.Net";
+            this.Resize += new System.EventHandler(this.FeedbackFormResize);
             this.ResumeLayout(false);
 
         }

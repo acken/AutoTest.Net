@@ -115,5 +115,15 @@ namespace AutoTest.WinForms
         {
             _bus.Publish(new AbortMessage(""));
         }
+
+        private void FeedbackFormResize(object sender, EventArgs e)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                runFeedback.Width = Width - (runFeedback.Left * 2) - 10;
+                runFeedback.Height = Height - (runFeedback.Top * 2) - 30;
+            }
+            runFeedback.Resize();
+        }
     }
 }
