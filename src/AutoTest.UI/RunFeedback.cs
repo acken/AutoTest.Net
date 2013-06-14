@@ -182,6 +182,7 @@ namespace AutoTest.UI
             _provider.ShowRunInformation = ShowRunInformation;
             _provider.CanDebug = CanDebug;
             _provider.Initialize();
+            _provider.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Collecting source and project information..."));			
         }
 
         private TestDetailsForm _testDetails;
