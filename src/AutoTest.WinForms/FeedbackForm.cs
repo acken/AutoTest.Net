@@ -41,7 +41,7 @@ namespace AutoTest.WinForms
                 new LabelItembehaviour(runFeedback.linkLabelTestDetails),
                 new LabelItembehaviour(runFeedback.linkLabelErrorDescription));
             runFeedback.SetFeedbackProvider(_provider);
-            _provider.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Listening for changes"));
+            _provider.PrintMessage(new UI.RunMessages(UI.RunMessageType.Normal, "Collecting source and project information..."));
         }
 
         private void addContextMenues()
