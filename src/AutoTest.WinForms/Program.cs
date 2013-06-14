@@ -53,6 +53,7 @@ namespace AutoTest.WinForms
 			}
 			catch (Exception exception)
 			{
+                throw;
 				logException(exception);
 			}
 		}

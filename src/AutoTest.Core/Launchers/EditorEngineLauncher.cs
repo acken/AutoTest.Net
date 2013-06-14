@@ -36,7 +36,7 @@ namespace AutoTest.Core.Launchers
 		{
 			if (!isConnected())
 				return;
-			_client.Send(string.Format("goto {0}|{1}|{2}", file, line, column));
+			send(string.Format("goto {0}|{1}|{2}", file, line, column));
 		}
 
 		public void Consume(BuildRunMessage message) {
@@ -44,7 +44,7 @@ namespace AutoTest.Core.Launchers
 			var state = "succeeded";
 			if (message.Results.ErrorCount > 0)
 				state = "failed";
-			_client.Send(
+			send(
 				string.Format("autotest.net build \"{0}\" {1}",
 					message.Results.Project,
 					state));
@@ -55,7 +55,7 @@ namespace AutoTest.Core.Launchers
 			var state = "succeeded";
 			if (message.Results.Failed.Length > 0)
 				state = "failed";
-			_client.Send(
+			send(
 				string.Format("autotest.net testrun \"{0}\" {1} {2}",
 					message.Results.Assembly,
 					message.Results.Runner.ToString(),
@@ -64,12 +64,12 @@ namespace AutoTest.Core.Launchers
 		
 		public void Consume(RunStartedMessage message) {
 			if (!isConnected()) return;
-			_client.Send("autotest.net runstarted");
+			send("autotest.net runstarted");
 		}
 		
 		public void Consume(RunFinishedMessage message) {
 			if (!isConnected()) return;
-			_client.Send(
+			send(
 				string.Format("autotest.net runfinished {0} {1}",
 					message.Report.NumberOfBuildsFailed,
 					message.Report.NumberOfTestsFailed));
@@ -103,6 +103,12 @@ namespace AutoTest.Core.Launchers
 		{
 			Debug.WriteDebug("Dispatching editor message: " + e.Message);
 			_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
+		}
+
+		private void send(string message)
+		{
+			Debug.WriteDebug("Sending to editor engine: " + message);
+			_client.Send(message);
 		}
 	}
 	
