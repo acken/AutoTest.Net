@@ -23,9 +23,13 @@
   <!-- The [[CodeFile]] tag is the file to be edited and the [[LineNumber]] tag is -->
   <!-- the line to goto. These will be filled in by the application when executing -->
   <!-- the statement -->
+  <!--<CodeEditor>
+  	<Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
+  	<Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
+  </CodeEditor>
+  -->
   <CodeEditor>
-  <Executable>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</Executable>
-  <Arguments>/Edit "[[CodeFile]]" /command "Edit.Goto [[LineNumber]]"</Arguments>
+  	<Executable>EditorEngine</Executable>
   </CodeEditor>
   
   <!-- When set this will enable logging to the debug.log file in the root directory -->
