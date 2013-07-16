@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Configuration;
 using System.IO;
@@ -17,6 +18,7 @@ namespace AutoTest.Core.Launchers
 		private IMessageBus _bus;		
 		private string _path = null;
 		private SocketClient _client = null;
+        private Thread _shutdownWhenDisconnected = null;
 		
 		public EditorEngineLauncher(IMessageBus bus)
 		{
@@ -75,28 +77,43 @@ namespace AutoTest.Core.Launchers
 					message.Report.NumberOfTestsFailed));
 		}
 		
+        private object _clientLock = new object();
 		private bool isConnected()
 		{
-			try
-			{
-				if (_client != null && _client.IsConnected)
-					return true;
-				var instance = new EngineLocator().GetInstance(_path);
-				if (instance == null)
-					return false;
-				_client = new SocketClient();
-				_client.IncomingMessage += Handle_clientIncomingMessage;
-				_client.Connect(instance.Port);
-				if (_client.IsConnected)
-					return true;
-				_client = null;
-				return false;
+            lock (_clientLock)
+            {
+			    try
+			    {
+				    if (_client != null && _client.IsConnected)
+					    return true;
+				    var instance = new EngineLocator().GetInstance(_path);
+				    if (instance == null)
+					    return false;
+				    _client = new SocketClient();
+				    _client.IncomingMessage += Handle_clientIncomingMessage;
+				    _client.Connect(instance.Port);
+				    if (_client.IsConnected) {
+                        _shutdownWhenDisconnected = new Thread(exitWhenDisconnected);
+						_shutdownWhenDisconnected.Start();
+					    return true;
+                    }
+				    _client = null;
+				    return false;
+			    }
+			    catch (Exception ex)
+			    {
+				    Debug.WriteError(ex.ToString());
+				    return false;
+			    }
+            }
+		}
+
+        private void exitWhenDisconnected()
+		{
+			while (isConnected()) {
+				Thread.Sleep(200);
 			}
-			catch (Exception ex)
-			{
-				Debug.WriteError(ex.ToString());
-				return false;
-			}
+			_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 		}
 
 		void Handle_clientIncomingMessage(object sender, IncomingMessageArgs e)
