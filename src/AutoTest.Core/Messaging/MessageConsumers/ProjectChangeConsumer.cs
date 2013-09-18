@@ -139,7 +139,6 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 		
 		private void testAll(RunInfo[] projectList, RunReport runReport)
 		{
-            int a = 3;
             Debug.WriteDebug("Running test preprosessor");
             var preProcessed = preProcessTestRun(projectList);
             preProcessed = new PreProcessedTesRuns(preProcessed.ProcessWrapper, new TestRunInfoMerger(preProcessed.RunInfos).MergeByAssembly(_abortedTestRuns).ToArray());

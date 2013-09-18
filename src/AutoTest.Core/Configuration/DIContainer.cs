@@ -112,7 +112,11 @@ namespace AutoTest.Core.Configuration
                                     .Forward<IConsumerOf<RunFinishedMessage>>()
                                     .ImplementedBy<OnDemanTestrunPreprocessor>().LifeStyle.Singleton)
                 .Register(Component.For<IPreProcessBuildruns>().ImplementedBy<MSTestCrossPlatformPreProcessor>().LifeStyle.Singleton)
-                .Register(Component.For<IBuildSessionRunner>().ImplementedBy<BuildSessionRunner>());
+                .Register(Component.For<IBuildSessionRunner>().ImplementedBy<BuildSessionRunner>())
+				.Register(Component.For<IOverridingConsumer<FileChangeMessage>>()
+									.Forward<IConsumerOf<AbortMessage>>()
+									.ImplementedBy<PhpFileChangeConsumer>()
+									.LifeStyle.Singleton);
 
             if (defaultConfigurationLocator == null)
                 defaultConfigurationLocator = new DefaultConfigurationLocator();

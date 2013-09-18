@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AutoTest.Test</RootNamespace>
     <AssemblyName>AutoTest.Test</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -178,6 +178,7 @@
     <Compile Include="Core\Messaging\MessageConsumers\ProjectRebuildMarkerTest.cs" />
     <Compile Include="Launchers\EditorEngineMessageTests.cs" />
     <Compile Include="Core\FileSystem\PathParserTests.cs" />
+    <Compile Include="Core\Messaging\MessageConsumers\JUnitXmlParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoTest.Core\AutoTest.Core.csproj">
