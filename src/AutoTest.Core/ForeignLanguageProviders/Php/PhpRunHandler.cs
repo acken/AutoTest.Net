@@ -28,16 +28,16 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             _bus.Publish(new RunStartedMessage(files.ToArray()));
             var runReport = new RunReport();
 
-            var pattern = _config.AllSettings("php.Convention.Pattern");
+            var patterns = _config.AllSettings("php.Convention.Pattern");
             var testPaths = _config.AllSettings("php.Convention.TestPaths");
 
             var testLocations = new List<string>();
-            if (pattern.Length == 0 && testPaths.Length == 0) {
+            if (patterns.Length == 0 && testPaths.Length == 0) {
                 testLocations.Add("");
             } else {
                 var matcher = new PhpFileConventionMatcher(
                                     _config.WatchPath,
-                                    pattern,
+                                    patterns.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
                                     testPaths.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
                 foreach (var file in files) {
                     foreach (var location in matcher.Match(file.FullName)) {

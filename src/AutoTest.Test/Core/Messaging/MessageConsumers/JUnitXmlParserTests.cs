@@ -264,7 +264,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[TestCase("/token/having/MyBundle/some/file.php", new[] {"/token/having/MyBundle/Tests"})]
 		public void When_given_matching_path_it_will_respond_with_test_path(string file, string[] responses)
 		{
-			var matcher = new PhpFileConventionMatcher("/token", "Bundle/", new[] {"Tests"});
+			var matcher = new PhpFileConventionMatcher("/token", new[] {"Bundle/"}, new[] {"Tests"});
 			assert(matcher, file, responses);
 		}
 
@@ -272,7 +272,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[TestCase("/token/having/MyBundle/some/file.php", new[] {"/token/having/MyBundle/Tests/some"})]
 		public void When_testpath_ends_with_star_it_will_apply_directorys_after_pattern(string file, string[] responses)
 		{
-			var matcher = new PhpFileConventionMatcher("/token", "Bundle/", new[] {"Tests*"});
+			var matcher = new PhpFileConventionMatcher("/token", new[] {"Bundle/"}, new[] {"Tests*"});
 			assert(matcher, file, responses);
 		}
 
@@ -280,7 +280,17 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[TestCase("/MyBundle/file.php", new[] {"/MyBundle/Tests/1","/MyBundle/Tests/2"})]
 		public void When_having_multiple_test_paths_it_will_return_all_variations(string file, string[] responses)
 		{
-			var matcher = new PhpFileConventionMatcher("/", "Bundle/", new[] {"Tests/1","Tests/2"});
+			var matcher = new PhpFileConventionMatcher("/", new[] {"Bundle/"}, new[] {"Tests/1","Tests/2"});
+			assert(matcher, file, responses);
+		}
+
+
+		[Test]
+		[TestCase("/MyBundle/file.php", new[] {"/MyBundle/Tests/1","/MyBundle/Tests/2"})]
+		[TestCase("/Framework/file.php", new[] {"/Framework/Tests/1","/Framework/Tests/2"})]
+		public void When_having_multiple_patterns_and_multiple_test_paths_it_will_return_all_variations(string file, string[] responses)
+		{
+			var matcher = new PhpFileConventionMatcher("/", new[] {"Bundle/","Framework/"}, new[] {"Tests/1","Tests/2"});
 			assert(matcher, file, responses);
 		}
 
