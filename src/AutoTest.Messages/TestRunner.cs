@@ -11,7 +11,8 @@ namespace AutoTest.Messages
         MSpec = 4,
         MbUnit = 5,
         SimpleTesting = 6,
-        PhpUnit = 7
+        PhpUnit = 7,
+        PhpParseError = 8
     }
 
     public static class TestRunnerConverter

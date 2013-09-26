@@ -13,16 +13,18 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		[Test]
 		public void When_parsing_an_invalid_xml_it_returns_emptylist()
 		{
-			Assert.That(JUnitXmlParser.Parse("bleh").Count, Is.EqualTo(0));
+			Assert.That(
+				JUnitXmlParser.Parse("bleh", "/mytest/location").Count,
+				Is.EqualTo(0));
 		}
 
 		[Test]
 		public void When_parsing_a_valid_xml_it_will_return_tests()
 		{
-			var result = JUnitXmlParser.Parse(getXml());
+			var result = JUnitXmlParser.Parse(getXml(), "/mytest/location");
 			Assert.That(result.Count, Is.EqualTo(2));
 			Assert.That(result[0].Project, Is.EqualTo("Acme\\DemoBundle\\Tests\\Utility\\ParserTestst"));
-			Assert.That(result[0].Assembly, Is.EqualTo("Acme\\DemoBundle\\Tests\\Utility\\ParserTestst"));
+			Assert.That(result[0].Assembly, Is.EqualTo("/mytest/location"));
 			Assert.That(result[0].TimeSpent, Is.EqualTo(TimeSpan.FromMilliseconds(4)));
 			Assert.That(result[0].Runner, Is.EqualTo(TestRunner.PhpUnit));
 			Assert.That(result[0].All.Length, Is.EqualTo(2));
@@ -51,7 +53,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 			Assert.That(result[0].Failed[0].StackTrace[1].ToString(), Is.EqualTo("/home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Tests/Utility/ParserTest.php:11"));
 
 			Assert.That(result[1].Project, Is.EqualTo("Acme\\DemoBundle\\Tests\\Controller\\DemoControllerTest"));
-			Assert.That(result[1].Assembly, Is.EqualTo("Acme\\DemoBundle\\Tests\\Controller\\DemoControllerTest"));
+			Assert.That(result[1].Assembly, Is.EqualTo("/mytest/location"));
 			Assert.That(result[1].TimeSpent, Is.EqualTo(TimeSpan.FromMilliseconds(195)));
 			Assert.That(result[1].Runner, Is.EqualTo(TestRunner.PhpUnit));
 			Assert.That(result[1].All.Length, Is.EqualTo(2));
@@ -128,7 +130,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		{
 			var test = PhpUnitParseErrorParser.Parse("some error");
 
-			Assert.That(test.Runner, Is.EqualTo(TestRunner.Any));
+			Assert.That(test.Runner, Is.EqualTo(TestRunner.PhpParseError));
 			Assert.That(test.Status, Is.EqualTo(TestRunStatus.Failed));
 			Assert.That(test.Name, Is.EqualTo("some error"));
 			Assert.That(test.Message, Is.EqualTo("some error"));
@@ -140,7 +142,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		{
 			var test = PhpUnitParseErrorParser.Parse(getParseError());
 
-			Assert.That(test.Runner, Is.EqualTo(TestRunner.Any));
+			Assert.That(test.Runner, Is.EqualTo(TestRunner.PhpParseError));
 			Assert.That(test.Status, Is.EqualTo(TestRunStatus.Failed));
 			Assert.That(test.Name, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN) in /home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Utility/Parser.php on line 8"));
 			Assert.That(test.Message, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN) in /home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Utility/Parser.php on line 8"));
@@ -162,7 +164,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		{
 			var test = PhpUnitParseErrorParser.Parse("PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Utility/Parser.php on line 8");
 
-			Assert.That(test.Runner, Is.EqualTo(TestRunner.Any));
+			Assert.That(test.Runner, Is.EqualTo(TestRunner.PhpParseError));
 			Assert.That(test.Status, Is.EqualTo(TestRunStatus.Failed));
 			Assert.That(test.Name, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN) in /home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Utility/Parser.php on line 8"));
 			Assert.That(test.Message, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN) in /home/ack/src/tmp/SymfonyTest/src/Acme/DemoBundle/Utility/Parser.php on line 8"));
@@ -174,7 +176,7 @@ namespace AutoTest.Test.Core.Messaging.MessageConsumers
 		{
 			var test = PhpUnitParseErrorParser.Parse("PHP Parse error:  syntax error, unexpected 'return' (T_RETURN)");
 
-			Assert.That(test.Runner, Is.EqualTo(TestRunner.Any));
+			Assert.That(test.Runner, Is.EqualTo(TestRunner.PhpParseError));
 			Assert.That(test.Status, Is.EqualTo(TestRunStatus.Failed));
 			Assert.That(test.Name, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN)"));
 			Assert.That(test.Message, Is.EqualTo("syntax error, unexpected 'return' (T_RETURN)"));

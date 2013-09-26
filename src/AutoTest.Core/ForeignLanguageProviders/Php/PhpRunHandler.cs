@@ -3,9 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using AutoTest.Messages;
+using AutoTest.Core.Caching.Projects;
 using AutoTest.Core.Messaging;
+using AutoTest.Core.Messaging.MessageConsumers;
 using AutoTest.Core.ForeignLanguageProviders.Php;
 using AutoTest.Core.Configuration;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.ForeignLanguageProviders.Php
 {
@@ -13,13 +16,17 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
 	{
         private IMessageBus _bus;
         private IConfiguration _config;
+        private ILocateRemovedTests _removedTestLocator;
+        private IRunResultCache _cache; 
 
         public bool IsRunning { get; private set; }
 
-        public PhpRunHandler(IMessageBus bus, IConfiguration config)
+        public PhpRunHandler(IMessageBus bus, IConfiguration config, ILocateRemovedTests removedTestLocator, IRunResultCache cache)
         {
         	_bus = bus;
             _config = config;
+            _removedTestLocator = removedTestLocator;
+            _cache = cache;
         }
 
         public void Handle(List<ChangedFile> files)
@@ -28,6 +35,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             _bus.Publish(new RunStartedMessage(files.ToArray()));
             var runReport = new RunReport();
 
+            var configLocation = _config.AllSettings("php.phpunit.configlocation");
             var patterns = _config.AllSettings("php.Convention.Pattern");
             var testPaths = _config.AllSettings("php.Convention.TestPaths");
 
@@ -49,17 +57,25 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
                 }
             }
 
+            if (configLocation != "")
+                configLocation = "-c " + configLocation + " ";
+
             foreach (var location in testLocations) {
                 var results 
-                    = new PhpUnitRunner()
+                    = new PhpUnitRunner(_cache)
                     .Run(
-                        "-c app " + location,
+                        configLocation + location,
                         _config.WatchPath,
+                        location,
                         (line) => {
                             sendLiveFeedback(line);
                         });
                 AutoTest.Core.DebugLog.Debug.WriteDebug("Returned " + results.Count.ToString() + " results");
-                foreach (var result in results) {
+                var resultList = new List<TestRunResults>();
+                var runInfos = results.Select(x => new TestRunInfo(new Project(x.Project, null), x.Assembly)).ToArray();
+                resultList.AddRange(results);
+                resultList.AddRange(_removedTestLocator.RemoveUnmatchedRunInfoTests(results.ToArray(), runInfos));
+                foreach (var result in resultList) {
                     AutoTest.Core.DebugLog.Debug.WriteDebug("Result contains " + result.All.Length.ToString() + " tests");
                     runReport.AddTestRun(
                         result.Project,

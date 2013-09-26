@@ -17,7 +17,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             }
             var test =
                 new TestResult(
-                    TestRunner.Any,
+                    TestRunner.PhpParseError,
                     TestRunStatus.Failed,
                     trimMessage(error));
             test.Message = trimMessage(error);
@@ -42,7 +42,7 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
                 stackLines.Insert(0, msgStackLine);
             var test =
                 new TestResult(
-                    TestRunner.Any,
+                    TestRunner.PhpParseError,
                     TestRunStatus.Failed,
                     message);
             test.Message = message;

@@ -5,6 +5,7 @@ using AutoTest.Messages;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Configuration;
 using AutoTest.Core.ForeignLanguageProviders.Php;
+using AutoTest.Core.Caching.RunResultCache;
 
 namespace AutoTest.Core.Messaging.MessageConsumers
 {
@@ -16,10 +17,9 @@ namespace AutoTest.Core.Messaging.MessageConsumers
 
         public bool IsRunning { get { return _handler.IsRunning; } }
 
-        public PhpFileChangeConsumer(IMessageBus bus, IConfiguration config) {
+        public PhpFileChangeConsumer(IMessageBus bus, IConfiguration config, ILocateRemovedTests removedTestLocator, IRunResultCache cache) {
             _config = config;
-            _handler = new PhpRunHandler(bus, config);
-            
+            _handler = new PhpRunHandler(bus, config, removedTestLocator, cache);
         }
 
 		public void Consume(FileChangeMessage message)

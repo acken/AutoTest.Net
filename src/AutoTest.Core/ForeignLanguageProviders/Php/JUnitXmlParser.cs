@@ -9,28 +9,28 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
 {
 	public class JUnitXmlParser
     {
-        public static List<TestRunResults> Parse(string xml) {
+        public static List<TestRunResults> Parse(string xml, string testLocation) {
             try {
                 var results = new List<TestRunResults>();
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(xml);
                 var suites = doc.SelectNodes("testsuites/testsuite");
-                handleSuite(suites, results);
+                handleSuite(suites, results, testLocation);
                 return results;
             } catch {
                 return new List<TestRunResults>();
             }
         }
 
-        private static void handleSuite(XmlNodeList suites, List<TestRunResults> results) {
+        private static void handleSuite(XmlNodeList suites, List<TestRunResults> results, string testLocation) {
             foreach (XmlNode suite in suites) {
-                handleSuite(suite.SelectNodes("testsuite"), results);
+                handleSuite(suite.SelectNodes("testsuite"), results, testLocation);
                 var tests = getTests(suite);
                 if (tests.Count() > 0) {
                     var result 
                         = new TestRunResults(
                             suite.Attributes["name"].Value,
-                            suite.Attributes["name"].Value,
+                            testLocation,
                             false,
                             TestRunner.PhpUnit, tests.ToArray());
                     result.SetTimeSpent(TimeSpan.FromMilliseconds(1000*double.Parse(suite.Attributes["time"].Value)));
