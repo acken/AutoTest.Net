@@ -17,6 +17,7 @@ namespace AutoTest.Core.Launchers
 		private IMessageBus _bus;		
 		private string _path = null;
 		private SocketClient _client = null;
+		private SocketClient _eventendpoint = null;
 		
 		public EditorEngineLauncher(IMessageBus bus)
 		{
@@ -30,6 +31,7 @@ namespace AutoTest.Core.Launchers
 				_client.Disconnect();
 			_client = null;
 			isConnected();
+			connectToEventEndpoint();
 		}
 		
 		public void GoTo(string file, int line, int column)
@@ -81,7 +83,7 @@ namespace AutoTest.Core.Launchers
 			{
 				if (_client != null && _client.IsConnected)
 					return true;
-				var instance = new EngineLocator().GetInstance(_path);
+				var instance = new InstanceLocator("EditorEngine").GetInstance(_path);
 				if (instance == null)
 					return false;
 				_client = new SocketClient();
@@ -99,10 +101,39 @@ namespace AutoTest.Core.Launchers
 			}
 		}
 
+		private void connectToEventEndpoint()
+		{
+			try
+			{
+				if (_eventendpoint != null && _eventendpoint.IsConnected)
+					return;
+				var instance = new InstanceLocator("OpenIDE.Events").GetInstance(_path);
+				if (instance == null) {
+					return;
+				}
+				_eventendpoint = new SocketClient();
+				_eventendpoint.IncomingMessage += Handle_eventIncomingMessage;
+				_eventendpoint.Connect(instance.Port);
+				if (_eventendpoint.IsConnected)
+					return;
+				_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteError(ex.ToString());
+			}
+		}
+
 		void Handle_clientIncomingMessage(object sender, IncomingMessageArgs e)
 		{
 			Debug.WriteDebug("Dispatching editor message: " + e.Message);
 			_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
+		}
+
+		void Handle_eventIncomingMessage(object sender, IncomingMessageArgs e)
+		{
+			if (e.Message == "shutdown")
+				_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
 		}
 
 		private void send(string message)
@@ -112,8 +143,15 @@ namespace AutoTest.Core.Launchers
 		}
 	}
 	
-	class EngineLocator
+	class InstanceLocator
 	{
+		private string _instanceFileDirectory;
+
+		public InstanceLocator(string instanceFileDirectory)
+		{
+			_instanceFileDirectory = instanceFileDirectory;
+		}
+
 		public Instance GetInstance(string path)
 		{
 			var instances = getInstances(path);
@@ -124,7 +162,7 @@ namespace AutoTest.Core.Launchers
 		
 		private IEnumerable<Instance> getInstances(string path)
 		{
-			var dir = Path.Combine(Path.GetTempPath(), "EditorEngine");
+			var dir = Path.Combine(Path.GetTempPath(), _instanceFileDirectory);
 			if (Directory.Exists(dir))
 			{
 				foreach (var file in Directory.GetFiles(dir, "*.pid"))

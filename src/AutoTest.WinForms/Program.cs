@@ -34,8 +34,13 @@ namespace AutoTest.WinForms
 					return;
                 var arguments = getPossibleCommandArgs(args);
                 string directoryToWatch = null; 
-                if (arguments.WatchToken != null)
-                    directoryToWatch = new PathParser(Environment.CurrentDirectory).ToAbsolute(arguments.WatchToken);
+                if (arguments.WatchToken != null) {
+                    var tokenExists = Directory.Exists(arguments.WatchToken) || File.Exists(arguments.WatchToken);
+                    if (arguments.WatchToken.Contains(".." + Path.DirectorySeparatorChar) || !tokenExists)
+                        directoryToWatch = new PathParser(Environment.CurrentDirectory).ToAbsolute(arguments.WatchToken);
+                    else
+                        directoryToWatch = arguments.WatchToken;
+                }
                 if ((directoryToWatch = ConfigureApplication(directoryToWatch)) == null)
                     return;
         	    var overviewForm = BootStrapper.Services.Locate<IOverviewForm>();
