@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AutoTest.Core.Messaging;
 using AutoTest.Core.Configuration;
 using System.IO;
@@ -18,6 +19,7 @@ namespace AutoTest.Core.Launchers
 		private string _path = null;
 		private SocketClient _client = null;
 		private SocketClient _eventendpoint = null;
+        private Thread _shutdownWhenDisconnected = null;
 		
 		public EditorEngineLauncher(IMessageBus bus)
 		{
@@ -77,6 +79,7 @@ namespace AutoTest.Core.Launchers
 					message.Report.NumberOfTestsFailed));
 		}
 		
+        private object _clientLock = new object();
 		private bool isConnected()
 		{
 			try
@@ -89,8 +92,11 @@ namespace AutoTest.Core.Launchers
 				_client = new SocketClient();
 				_client.IncomingMessage += Handle_clientIncomingMessage;
 				_client.Connect(instance.Port);
-				if (_client.IsConnected)
+				if (_client.IsConnected) {
+					_shutdownWhenDisconnected = new Thread(exitWhenDisconnected);
+					_shutdownWhenDisconnected.Start();
 					return true;
+				}
 				_client = null;
 				return false;
 			}
@@ -98,7 +104,15 @@ namespace AutoTest.Core.Launchers
 			{
 				Debug.WriteError(ex.ToString());
 				return false;
+            }
+		}
+
+        private void exitWhenDisconnected()
+		{
+			while (isConnected()) {
+				Thread.Sleep(200);
 			}
+			_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 		}
 
 		private void connectToEventEndpoint()
