@@ -35,56 +35,60 @@ namespace AutoTest.Core.ForeignLanguageProviders.Php
             _bus.Publish(new RunStartedMessage(files.ToArray()));
             var runReport = new RunReport();
 
-            var configLocation = _config.AllSettings("php.phpunit.configlocation");
-            var patterns = _config.AllSettings("php.Convention.Pattern");
-            var testPaths = _config.AllSettings("php.Convention.TestPaths");
+            var configsString = _config.AllSettings("php.phpunit.configs");
+            var configs = configsString.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var config in configs) {
+                var configLocation = _config.AllSettings("php.phpunit." + config + ".configlocation");
+                var patterns = _config.AllSettings("php.phpunit." + config + ".Convention.Pattern");
+                var testPaths = _config.AllSettings("php.phpunit." + config + ".Convention.TestPaths");
 
-            var testLocations = new List<string>();
-            if (patterns.Length == 0 && testPaths.Length == 0) {
-                testLocations.Add("");
-            } else {
-                var matcher = new PhpFileConventionMatcher(
-                                    _config.WatchPath,
-                                    patterns.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
-                                    testPaths.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
-                foreach (var file in files) {
-                    foreach (var location in matcher.Match(file.FullName)) {
-                        if (!Directory.Exists(location))
-                            continue;
-                        if (!testLocations.Contains(location))
-                            testLocations.Add(location);
+                var testLocations = new List<string>();
+                if (patterns.Length == 0 && testPaths.Length == 0) {
+                    testLocations.Add("");
+                } else {
+                    var matcher = new PhpFileConventionMatcher(
+                                        _config.WatchPath,
+                                        patterns.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
+                                        testPaths.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
+                    foreach (var file in files) {
+                        foreach (var location in matcher.Match(file.FullName)) {
+                            if (!Directory.Exists(location))
+                                continue;
+                            if (!testLocations.Contains(location))
+                                testLocations.Add(location);
+                        }
                     }
                 }
-            }
 
-            if (configLocation != "")
-                configLocation = "-c " + configLocation + " ";
+                if (configLocation != "")
+                    configLocation = "-c " + configLocation + " ";
 
-            foreach (var location in testLocations) {
-                var results 
-                    = new PhpUnitRunner(_cache)
-                    .Run(
-                        configLocation + location,
-                        _config.WatchPath,
-                        location,
-                        (line) => {
-                            sendLiveFeedback(line);
-                        });
-                AutoTest.Core.DebugLog.Debug.WriteDebug("Returned " + results.Count.ToString() + " results");
-                var resultList = new List<TestRunResults>();
-                var runInfos = results.Select(x => new TestRunInfo(new Project(x.Project, null), x.Assembly)).ToArray();
-                resultList.AddRange(results);
-                resultList.AddRange(_removedTestLocator.RemoveUnmatchedRunInfoTests(results.ToArray(), runInfos));
-                foreach (var result in resultList) {
-                    AutoTest.Core.DebugLog.Debug.WriteDebug("Result contains " + result.All.Length.ToString() + " tests");
-                    runReport.AddTestRun(
-                        result.Project,
-                        result.Assembly,
-                        result.TimeSpent,
-                        result.Passed.Length,
-                        result.Ignored.Length,
-                        result.Failed.Length);
-                    _bus.Publish(new TestRunMessage(result));
+                foreach (var location in testLocations) {
+                    var results 
+                        = new PhpUnitRunner(_cache)
+                        .Run(
+                            configLocation + location,
+                            _config.WatchPath,
+                            location,
+                            (line) => {
+                                sendLiveFeedback(line);
+                            });
+                    AutoTest.Core.DebugLog.Debug.WriteDebug("Returned " + results.Count.ToString() + " results");
+                    var resultList = new List<TestRunResults>();
+                    var runInfos = results.Select(x => new TestRunInfo(new Project(x.Project, null), x.Assembly)).ToArray();
+                    resultList.AddRange(results);
+                    resultList.AddRange(_removedTestLocator.RemoveUnmatchedRunInfoTests(results.ToArray(), runInfos));
+                    foreach (var result in resultList) {
+                        AutoTest.Core.DebugLog.Debug.WriteDebug("Result contains " + result.All.Length.ToString() + " tests");
+                        runReport.AddTestRun(
+                            result.Project,
+                            result.Assembly,
+                            result.TimeSpent,
+                            result.Passed.Length,
+                            result.Ignored.Length,
+                            result.Failed.Length);
+                        _bus.Publish(new TestRunMessage(result));
+                    }
                 }
             }
             // Oh my god.. please fix this
