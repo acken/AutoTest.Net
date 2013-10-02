@@ -20,6 +20,7 @@ namespace AutoTest.Core.Launchers
 		private SocketClient _client = null;
 		private SocketClient _eventendpoint = null;
         private Thread _shutdownWhenDisconnected = null;
+        private bool _eventPointShutdownTriggered = false;
 		
 		public EditorEngineLauncher(IMessageBus bus)
 		{
@@ -93,8 +94,7 @@ namespace AutoTest.Core.Launchers
 				_client.IncomingMessage += Handle_clientIncomingMessage;
 				_client.Connect(instance.Port);
 				if (_client.IsConnected) {
-					_shutdownWhenDisconnected = new Thread(exitWhenDisconnected);
-					_shutdownWhenDisconnected.Start();
+					startBackgroundShutdownHandler();
 					return true;
 				}
 				_client = null;
@@ -107,14 +107,7 @@ namespace AutoTest.Core.Launchers
             }
 		}
 
-        private void exitWhenDisconnected()
-		{
-			while (isConnected()) {
-				Thread.Sleep(200);
-			}
-			_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
-		}
-
+        
 		private void connectToEventEndpoint()
 		{
 			try
@@ -128,14 +121,32 @@ namespace AutoTest.Core.Launchers
 				_eventendpoint = new SocketClient();
 				_eventendpoint.IncomingMessage += Handle_eventIncomingMessage;
 				_eventendpoint.Connect(instance.Port);
-				if (_eventendpoint.IsConnected)
+				if (_eventendpoint.IsConnected) {
+					startBackgroundShutdownHandler();
 					return;
+				}
 				_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 			}
 			catch (Exception ex)
 			{
 				Debug.WriteError(ex.ToString());
 			}
+		}
+
+		private void startBackgroundShutdownHandler()
+		{
+			if (_shutdownWhenDisconnected != null)
+				return;
+			_shutdownWhenDisconnected = new Thread(exitWhenDisconnected);
+			_shutdownWhenDisconnected.Start();
+		}
+
+		private void exitWhenDisconnected()
+		{
+			while (isConnected() && !_eventPointShutdownTriggered) {
+				Thread.Sleep(200);
+			}
+			_bus.Publish(new ExternalCommandMessage("EditorEngine", "shutdown"));
 		}
 
 		void Handle_clientIncomingMessage(object sender, IncomingMessageArgs e)
@@ -147,7 +158,7 @@ namespace AutoTest.Core.Launchers
 		void Handle_eventIncomingMessage(object sender, IncomingMessageArgs e)
 		{
 			if (e.Message == "shutdown")
-				_bus.Publish(new ExternalCommandMessage("EditorEngine", e.Message));
+				_eventPointShutdownTriggered = true;
 		}
 
 		private void send(string message)
